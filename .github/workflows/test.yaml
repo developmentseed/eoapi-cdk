@@ -1,0 +1,71 @@
+name: Test & Build
+
+on:
+  push:
+
+jobs:
+  test-build:
+    runs-on: ubuntu-latest
+    steps:
+      # To make git commits made by semantic-release be made to our bot and not
+      # "github-actions" user which doesn't trigger other Action Workflows.
+      # https://github.com/semantic-release/semantic-release/discussions/1906#discussioncomment-656651
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: "npm"
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Compile project
+        run: npm run build
+
+      - name: Generate distribution packages
+        run: npm run package
+
+      - name: Generate documentation
+        run: npm run docgen
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: docs
+          path: |
+            docs
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: python
+          path: |
+            dist/python/*
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: js
+          path: |
+            dist/js/*
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: jsii
+          path: |
+            .jsii
+
+      - name: Get Release Bot Token
+        id: get-token
+        uses: getsentry/action-github-app-token@v1
+        with:
+          app_id: ${{ secrets.DS_RELEASE_BOT_ID }}
+          private_key: ${{ secrets.DS_RELEASE_BOT_PRIVATE_KEY }}
+
+      - name: Maybe Release 🚀
+        if: github.ref == 'refs/heads/main'
+        run: |
+          npm run semantic-release
+        env:
+          GITHUB_TOKEN: ${{ steps.get-token.outputs.token }}

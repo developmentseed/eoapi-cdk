@@ -1,0 +1,76 @@
+{
+  "name": "cdk-pgstac",
+  "version": "1.1.0",
+  "description": "A set of constructs deploying pgSTAC with CDK",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "scripts": {
+    "build": "jsii",
+    "dev": "run-p dev:*",
+    "dev:build": "jsii --watch",
+    "dev:docgen": "nodemon -w .jsii -e .jsii --exec npm run docgen",
+    "package": "jsii-pacmak -v",
+    "docgen": "mkdir -p docs && jsii-docgen -o docs/index.md",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "semantic-release": "semantic-release"
+  },
+  "keywords": [],
+  "author": {
+    "name": "Anthony Lukach",
+    "email": "anthony@developmentseed.org"
+  },
+  "repository": {
+    "url": "https://github.com/developmentseed/cdk-pgstac.git"
+  },
+  "license": "ISC",
+  "stability": "experimental",
+  "jsii": {
+    "outdir": "dist",
+    "versionFormat": "full",
+    "targets": {
+      "python": {
+        "distName": "cdk-pgstac",
+        "module": "cdk_pgstac"
+      }
+    }
+  },
+  "devDependencies": {
+    "@qiwi/semantic-release-gh-pages-plugin": "^5.2.3",
+    "@semantic-release/changelog": "^6.0.1",
+    "@semantic-release/git": "^10.0.1",
+    "@types/node": "^18.7.23",
+    "jsii": "^1.68.0",
+    "jsii-docgen": "^7.0.119",
+    "jsii-pacmak": "^1.68.0",
+    "nodemon": "^2.0.20",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^2.7.1",
+    "semantic-release": "^19.0.5"
+  },
+  "dependencies": {
+    "aws-cdk-lib": "^2.46.0",
+    "constructs": "^10.1.113"
+  },
+  "peerDependencies": {
+    "constructs": "^10.1.113"
+  },
+  "release": {
+    "branches": [
+      "main",
+      "next"
+    ],
+    "plugins": [
+      "@semantic-release/commit-analyzer",
+      "@semantic-release/changelog",
+      "@semantic-release/release-notes-generator",
+      [
+        "@semantic-release/npm",
+        {
+          "npmPublish": false
+        }
+      ],
+      "@semantic-release/git",
+      "@semantic-release/github"
+    ]
+  }
+}

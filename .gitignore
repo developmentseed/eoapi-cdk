@@ -1,0 +1,7 @@
+node_modules/
+tsconfig.*
+lib/**/*.js
+lib/**/*.d.ts
+.jsii
+dist
+docs

@@ -1,0 +1,4 @@
+{
+    "name": "VS Code DEV Container for AWS CDK development",
+    "image": "jsii/superchain:1-buster-slim-node16"
+}
