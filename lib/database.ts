@@ -30,10 +30,6 @@ export class PgStacDatabase extends Construct {
 
     this.db = new rds.DatabaseInstance(this, "db", {
       instanceIdentifier: Stack.of(this).stackName,
-      instanceType: ec2.InstanceType.of(
-        ec2.InstanceClass.BURSTABLE3,
-        ec2.InstanceSize.SMALL
-      ),
       parameterGroup,
       ...props,
     });
