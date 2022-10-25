@@ -16,7 +16,7 @@ export class PgStacDatabase extends Construct {
   db: rds.DatabaseInstance;
   pgstacSecret: secretsmanager.ISecret;
 
-  constructor(scope: Construct, id: string, props: Props) {
+  constructor(scope: Construct, id: string, props: PgStacDatabaseProps) {
     super(scope, id);
 
     const parameterGroup = new rds.ParameterGroup(this, "parameterGroup", {
@@ -55,4 +55,4 @@ export class PgStacDatabase extends Construct {
   }
 }
 
-export interface Props extends rds.DatabaseInstanceProps {}
+export interface PgStacDatabaseProps extends rds.DatabaseInstanceProps {}
