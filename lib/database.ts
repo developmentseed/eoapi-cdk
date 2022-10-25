@@ -35,9 +35,6 @@ export class PgStacDatabase extends Construct {
         ec2.InstanceSize.SMALL
       ),
       parameterGroup,
-      vpcSubnets: {
-        subnetType: ec2.SubnetType.PRIVATE_ISOLATED,
-      },
       ...props,
     });
 
