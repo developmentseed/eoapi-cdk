@@ -9,6 +9,7 @@
     "dev": "run-p dev:*",
     "dev:build": "jsii --watch",
     "dev:docgen": "nodemon -w .jsii -e .jsii --exec npm run docgen",
+    "dev:package": "nodemon -w .jsii -e .jsii --exec npm run package",
     "clean": "git clean -Xdf lib",
     "package": "jsii-pacmak -v",
     "docgen": "mkdir -p docs && jsii-docgen -o docs/index.md",
