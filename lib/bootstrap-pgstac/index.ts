@@ -31,7 +31,7 @@ export class BootstrapPgStac extends Construct {
       runtime: aws_lambda.Runtime.PYTHON_3_8,
       code: aws_lambda.Code.fromDockerBuild(__dirname, {
         file: "runtime/Dockerfile",
-        buildArgs: { PGSTAC_VERSION: props.pgstacVersion },
+        buildArgs: { PGSTAC_VERSION: props.pgstacVersion || "0.6.8" },
       }),
       timeout: Duration.minutes(2),
       vpc: hasVpc(props.database) ? props.database.vpc : props.vpc,
@@ -112,26 +112,28 @@ export interface BootstrapPgStacProps {
   /**
    * Name of database that is to be created and onto which pgSTAC will be installed.
    *
-   * @default - "pgstac"
+   * @default pgstac
    */
   readonly pgstacDbName?: string;
 
   /**
    * Name of user that will be generated for connecting to the pgSTAC database.
    *
-   * @default - "pgstac_user"
+   * @default pgstac_user
    */
   readonly pgstacUsername?: string;
 
   /**
    * pgSTAC version to be installed.
+   *
+   * @default 0.6.8
    */
-  readonly pgstacVersion: string;
+  readonly pgstacVersion?: string;
 
   /**
    * Prefix to assign to the generated `secrets_manager.Secret`
    *
-   * @default - "pgstac"
+   * @default pgstac
    */
-  readonly secretsPrefix: string;
+  readonly secretsPrefix?: string;
 }

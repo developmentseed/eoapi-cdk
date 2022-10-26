@@ -1,16 +1,15 @@
 import {
   Stack,
-  aws_ec2 as ec2,
   aws_rds as rds,
   aws_secretsmanager as secretsmanager,
 } from "aws-cdk-lib";
 import { Construct } from "constructs";
-import { BootstrapPgStac } from "./bootstrap-pgstac";
+import { BootstrapPgStac, BootstrapPgStacProps } from "./bootstrap-pgstac";
 
 /**
- * An RDS instance with pgSTAC installed.
- *
- * Will default to installing a `t3.small` Postgres instance.
+ * An RDS instance with pgSTAC installed. This is a wrapper around the
+ * `rds.DatabaseInstance` higher-level construct making use
+ * of the BootstrapPgStac construct.
  */
 export class PgStacDatabase extends Construct {
   db: rds.DatabaseInstance;
@@ -38,14 +37,19 @@ export class PgStacDatabase extends Construct {
       vpc: props.vpc,
       database: this.db,
       dbSecret: this.db.secret!,
-      pgstacDbName: "pgstac",
-      pgstacVersion: "0.6.8",
-      pgstacUsername: "pgstac_user",
-      secretsPrefix: "pgstac",
+      pgstacDbName: props.pgstacDbName,
+      pgstacVersion: props.pgstacVersion,
+      pgstacUsername: props.pgstacUsername,
+      secretsPrefix: props.secretsPrefix,
     });
 
     this.pgstacSecret = bootstrap.secret;
   }
 }
 
-export interface PgStacDatabaseProps extends rds.DatabaseInstanceProps {}
+export interface PgStacDatabaseProps extends rds.DatabaseInstanceProps {
+  readonly pgstacDbName?: BootstrapPgStacProps["pgstacDbName"];
+  readonly pgstacVersion?: BootstrapPgStacProps["pgstacVersion"];
+  readonly pgstacUsername?: BootstrapPgStacProps["pgstacUsername"];
+  readonly secretsPrefix?: BootstrapPgStacProps["secretsPrefix"];
+}
