@@ -4,7 +4,7 @@ import {
   aws_secretsmanager as secretsmanager,
 } from "aws-cdk-lib";
 import { Construct } from "constructs";
-import { BootstrapPgStac, BootstrapPgStacProps } from "./bootstrap-pgstac";
+import { BootstrapPgStac, BootstrapPgStacProps } from "../bootstrapper";
 
 /**
  * An RDS instance with pgSTAC installed. This is a wrapper around the

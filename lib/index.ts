@@ -1,2 +1,2 @@
-export * from "./bootstrap-pgstac";
+export * from "./bootstrapper";
 export * from "./database";
