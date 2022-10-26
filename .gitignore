@@ -5,3 +5,4 @@ lib/**/*.d.ts
 .jsii
 dist
 docs
+__pycache__

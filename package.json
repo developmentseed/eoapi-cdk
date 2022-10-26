@@ -9,6 +9,7 @@
     "dev": "run-p dev:*",
     "dev:build": "jsii --watch",
     "dev:docgen": "nodemon -w .jsii -e .jsii --exec npm run docgen",
+    "clean": "git clean -Xdf lib",
     "package": "jsii-pacmak -v",
     "docgen": "mkdir -p docs && jsii-docgen -o docs/index.md",
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -48,10 +49,13 @@
     "semantic-release": "^19.0.5"
   },
   "dependencies": {
+    "@aws-cdk/aws-apigatewayv2-integrations-alpha": "^2.47.0-alpha.0",
+    "@aws-cdk/aws-lambda-python-alpha": "^2.47.0-alpha.0",
     "aws-cdk-lib": "^2.46.0",
     "constructs": "^10.1.113"
   },
   "peerDependencies": {
+    "aws-cdk-lib": "^2.46.0",
     "constructs": "^10.1.113"
   },
   "release": {
