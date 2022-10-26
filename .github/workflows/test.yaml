@@ -64,7 +64,6 @@ jobs:
           private_key: ${{ secrets.DS_RELEASE_BOT_PRIVATE_KEY }}
 
       - name: Maybe Release 🚀
-        if: github.ref == 'refs/heads/main'
         run: |
           npm run semantic-release
         env:
