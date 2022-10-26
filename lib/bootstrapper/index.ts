@@ -17,6 +17,8 @@ function hasVpc(
   return (instance as aws_rds.DatabaseInstance).vpc !== undefined;
 }
 
+const DEFAULT_PGSTAC_VERSION = "0.6.8";
+
 /**
  * Bootstraps a database instance, installing pgSTAC onto the database.
  */
@@ -26,12 +28,13 @@ export class BootstrapPgStac extends Construct {
   constructor(scope: Construct, id: string, props: BootstrapPgStacProps) {
     super(scope, id);
 
+    const { pgstacVersion = DEFAULT_PGSTAC_VERSION } = props;
     const handler = new aws_lambda.Function(this, "lambda", {
       handler: "handler.handler",
       runtime: aws_lambda.Runtime.PYTHON_3_8,
       code: aws_lambda.Code.fromDockerBuild(__dirname, {
         file: "runtime/Dockerfile",
-        buildArgs: { PGSTAC_VERSION: props.pgstacVersion || "0.6.8" },
+        buildArgs: { PGSTAC_VERSION: pgstacVersion },
       }),
       timeout: Duration.minutes(2),
       vpc: hasVpc(props.database) ? props.database.vpc : props.vpc,
@@ -74,7 +77,7 @@ export class BootstrapPgStac extends Construct {
       properties: {
         // By setting pgstac_version in the properties assures
         // that Create/Update events will be passed to the service token
-        pgstac_version: props.pgstacVersion,
+        pgstac_version: pgstacVersion,
         conn_secret_arn: props.dbSecret.secretArn,
         new_user_secret_arn: this.secret.secretArn,
       },

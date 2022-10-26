@@ -309,7 +309,8 @@ def handler(event, context):
 
     except Exception as e:
         print(f"Unable to bootstrap database with exception={e}")
-        return send(event, context, "FAILED", {"message": str(e)})
+        send(event, context, "FAILED", {"message": str(e)})
+        raise e
 
     print("Complete.")
     return send(event, context, "SUCCESS", {})
