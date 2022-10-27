@@ -57,6 +57,7 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: docs
+          path: docs
 
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@v4
