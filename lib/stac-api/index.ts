@@ -15,6 +15,8 @@ import { HttpLambdaIntegration } from "@aws-cdk/aws-apigatewayv2-integrations-al
 import { Construct } from "constructs";
 
 export class PgStacApiLambda extends Construct {
+  readonly url: string;
+
   constructor(scope: Construct, id: string, props: PgStacApiLambdaProps) {
     super(scope, id);
 
@@ -58,9 +60,11 @@ export class PgStacApiLambda extends Construct {
       defaultIntegration: new HttpLambdaIntegration("integration", handler),
     });
 
+    this.url = stacApi.url!;
+
     new CfnOutput(this, "stac-api-output", {
       exportName: `${Stack.of(this).stackName}-url`,
-      value: stacApi.url!,
+      value: this.url,
     });
   }
 }
