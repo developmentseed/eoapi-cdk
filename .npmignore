@@ -13,3 +13,6 @@ dist
 # Include .jsii and .jsii.gz
 !.jsii
 !.jsii.gz
+
+# Exclude any dev environments
+.venv
