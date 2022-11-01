@@ -1,3 +1,11 @@
+# [1.3.0](https://github.com/developmentseed/cdk-pgstac/compare/v1.2.0...v1.3.0) (2022-11-01)
+
+
+### Features
+
+* **ingestor-api:** add StacIngestor construct ([d34c6cd](https://github.com/developmentseed/cdk-pgstac/commit/d34c6cdd2c0df838467289a19c2b96adf1c0777e))
+* **stac-api:** export API url from pgStacApi construct ([261dbd2](https://github.com/developmentseed/cdk-pgstac/commit/261dbd2bb85ad895f61922740d211fa8b96c3761))
+
 # [1.2.0](https://github.com/developmentseed/cdk-pgstac/compare/v1.1.0...v1.2.0) (2022-10-26)
 
 
