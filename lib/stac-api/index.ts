@@ -56,7 +56,7 @@ export class PgStacApiLambda extends Construct {
     props.dbSecret.grantRead(handler);
     handler.connections.allowTo(props.db, ec2.Port.tcp(5432));
 
-    const stacApi = new HttpApi(this, "api", {
+    const stacApi = new HttpApi(this, `${Stack.of(this).stackName}-stac-api`, {
       defaultIntegration: new HttpLambdaIntegration("integration", handler),
     });
 
