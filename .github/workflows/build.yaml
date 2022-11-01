@@ -9,9 +9,9 @@ on:
         default: false
     secrets:
       DS_RELEASE_BOT_ID:
-        required: true
+        required: false
       DS_RELEASE_BOT_PRIVATE_KEY:
-        required: true
+        required: false
 
 jobs:
   build_and_package:
