@@ -7,6 +7,11 @@ on:
         required: false
         type: boolean
         default: false
+    secrets:
+      DS_RELEASE_BOT_ID:
+        required: true
+      DS_RELEASE_BOT_PRIVATE_KEY:
+        required: true
 
 jobs:
   build_and_package:

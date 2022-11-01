@@ -8,3 +8,6 @@ jobs:
     uses: ./.github/workflows/build.yaml
     with:
       release: true
+    secrets:
+      DS_RELEASE_BOT_ID: ${{ DS_RELEASE_BOT_ID }}
+      DS_RELEASE_BOT_PRIVATE_KEY: ${{ DS_RELEASE_BOT_PRIVATE_KEY }}
