@@ -1,3 +1,17 @@
+# [2.0.0](https://github.com/developmentseed/cdk-pgstac/compare/v1.3.0...v2.0.0) (2022-11-01)
+
+
+### chore
+
+* **ci:** bump version ([d10c5b2](https://github.com/developmentseed/cdk-pgstac/commit/d10c5b2afcd7e38effedb5181a1ed7595b03495f))
+
+
+### BREAKING CHANGES
+
+* **ci:** Experiencing issues publishing GitHub releases
+due to past deleted release. Bumping codebase to 2.0.0 to avoid
+future issues.
+
 # [1.3.0](https://github.com/developmentseed/cdk-pgstac/compare/v1.2.0...v1.3.0) (2022-11-01)
 
 
