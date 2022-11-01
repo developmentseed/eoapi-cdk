@@ -4,9 +4,9 @@
 
 ### BastionHost <a name="BastionHost" id="cdk-pgstac.BastionHost"></a>
 
-## Bastion Host.
+The database is located in an isolated subnet, meaning that it is not accessible from the public internet.
 
-The database is located in an isolated subnet, meaning that it is not accessible from the public internet. As such, to interact with the database directly, a user must tunnel through a bastion host.
+As such, to interact with the database directly, a user must tunnel through a bastion host.
 
 ### Configuring
 
@@ -23,11 +23,9 @@ The `BastionHost` construct takes in an `ipv4Allowlist` array as an argument. Fi
 
 Add an entry to the `users` array with a username (likely matching your local systems username, which you can get by running the `whoami` command in your terminal) and a public key (likely your default public key, which you can get by running `cat ~/.ssh/id_*.pub` in your terminal).
 
-<details>
+#### Tips & Tricks when using the Bastion Host
 
-<summary>Tips & Tricks when using the Bastion Host</summary>
-
-#### Connecting to RDS Instance via SSM
+**Connecting to RDS Instance via SSM**
 
 ```sh
 aws ssm start-session --target $INSTANCE_ID \
@@ -56,7 +54,7 @@ Connect directly to Bastion Host:
 aws ssm start-session --target $INSTANCE_ID --profile $AWS_PROFILE
 ```
 
-#### Setting up an SSH tunnel
+**Setting up an SSH tunnel**
 
 In your `~/.ssh/config` file, add an entry like:
 
@@ -78,7 +76,7 @@ And a connection to the DB can be made via:
 psql -h 127.0.0.1 -p 5433 -U {username} -d {database}
 ```
 
-#### Handling `REMOTE HOST IDENTIFICATION HAS CHANGED!` error
+**Handling `REMOTE HOST IDENTIFICATION HAS CHANGED!` error**
 
 If you've redeployed a bastion host that you've previously connected to, you may see an error like:
 
