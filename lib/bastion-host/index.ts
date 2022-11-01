@@ -27,11 +27,9 @@ import { Construct } from "constructs";
  *
  * Add an entry to the `users` array with a username (likely matching your local systems username, which you can get by running the `whoami` command in your terminal) and a public key (likely your default public key, which you can get by running `cat ~/.ssh/id_*.pub` in your terminal).
  *
- * <details>
+ * #### Tips & Tricks when using the Bastion Host
  *
- * <summary>Tips & Tricks when using the Bastion Host</summary>
- *
- * #### Connecting to RDS Instance via SSM
+ * ##### Connecting to RDS Instance via SSM
  *
  * ```sh
  * aws ssm start-session --target $INSTANCE_ID \
@@ -60,7 +58,7 @@ import { Construct } from "constructs";
  * aws ssm start-session --target $INSTANCE_ID --profile $AWS_PROFILE
  * ```
  *
- * #### Setting up an SSH tunnel
+ * ##### Setting up an SSH tunnel
  *
  * In your `~/.ssh/config` file, add an entry like:
  *
@@ -82,7 +80,7 @@ import { Construct } from "constructs";
  * psql -h 127.0.0.1 -p 5433 -U {username} -d {database}
  * ```
  *
- * #### Handling `REMOTE HOST IDENTIFICATION HAS CHANGED!` error
+ * ##### Handling `REMOTE HOST IDENTIFICATION HAS CHANGED!` error
  *
  * If you've redeployed a bastion host that you've previously connected to, you may see an error like:
  *
@@ -108,7 +106,6 @@ import { Construct } from "constructs";
  * ssh-keygen -R 12.34.56.789
  * ```
  *
- * </details>
  */
 export class BastionHost extends Construct {
   instance: ec2.Instance;
