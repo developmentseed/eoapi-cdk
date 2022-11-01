@@ -1905,7 +1905,6 @@ const stacIngestorProps: StacIngestorProps = { ... }
 
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
-| <code><a href="#cdk-pgstac.StacIngestorProps.property.apiEnv">apiEnv</a></code> | <code>{[ key: string ]: string}</code> | Environment variables to be sent to Lambda. |
 | <code><a href="#cdk-pgstac.StacIngestorProps.property.dataAccessRole">dataAccessRole</a></code> | <code>aws-cdk-lib.aws_iam.IRole</code> | ARN of AWS Role used to validate access to S3 data. |
 | <code><a href="#cdk-pgstac.StacIngestorProps.property.stacDbSecret">stacDbSecret</a></code> | <code>aws-cdk-lib.aws_secretsmanager.ISecret</code> | Secret containing pgSTAC DB connection information. |
 | <code><a href="#cdk-pgstac.StacIngestorProps.property.stacDbSecurityGroup">stacDbSecurityGroup</a></code> | <code>aws-cdk-lib.aws_ec2.ISecurityGroup</code> | Security Group used by pgSTAC DB. |
@@ -1914,19 +1913,8 @@ const stacIngestorProps: StacIngestorProps = { ... }
 | <code><a href="#cdk-pgstac.StacIngestorProps.property.subnetSelection">subnetSelection</a></code> | <code>aws-cdk-lib.aws_ec2.SubnetSelection</code> | Boolean indicating whether or not pgSTAC DB is in a public subnet. |
 | <code><a href="#cdk-pgstac.StacIngestorProps.property.vpc">vpc</a></code> | <code>aws-cdk-lib.aws_ec2.IVpc</code> | VPC running pgSTAC DB. |
 | <code><a href="#cdk-pgstac.StacIngestorProps.property.apiEndpointConfiguration">apiEndpointConfiguration</a></code> | <code>aws-cdk-lib.aws_apigateway.EndpointConfiguration</code> | API Endpoint Configuration, useful for creating private APIs. |
+| <code><a href="#cdk-pgstac.StacIngestorProps.property.apiEnv">apiEnv</a></code> | <code>{[ key: string ]: string}</code> | Environment variables to be sent to Lambda. |
 | <code><a href="#cdk-pgstac.StacIngestorProps.property.apiPolicy">apiPolicy</a></code> | <code>aws-cdk-lib.aws_iam.PolicyDocument</code> | API Policy Document, useful for creating private APIs. |
-
----
-
-##### `apiEnv`<sup>Required</sup> <a name="apiEnv" id="cdk-pgstac.StacIngestorProps.property.apiEnv"></a>
-
-```typescript
-public readonly apiEnv: {[ key: string ]: string};
-```
-
-- *Type:* {[ key: string ]: string}
-
-Environment variables to be sent to Lambda.
 
 ---
 
@@ -2023,6 +2011,18 @@ public readonly apiEndpointConfiguration: EndpointConfiguration;
 - *Type:* aws-cdk-lib.aws_apigateway.EndpointConfiguration
 
 API Endpoint Configuration, useful for creating private APIs.
+
+---
+
+##### `apiEnv`<sup>Optional</sup> <a name="apiEnv" id="cdk-pgstac.StacIngestorProps.property.apiEnv"></a>
+
+```typescript
+public readonly apiEnv: {[ key: string ]: string};
+```
+
+- *Type:* {[ key: string ]: string}
+
+Environment variables to be sent to Lambda.
 
 ---
 
