@@ -8,8 +8,6 @@ import {
 import { Construct } from "constructs";
 
 /**
- * ## Bastion Host
- *
  * The database is located in an isolated subnet, meaning that it is not accessible from the public internet. As such, to interact with the database directly, a user must tunnel through a bastion host.
  *
  * ### Configuring
@@ -29,7 +27,7 @@ import { Construct } from "constructs";
  *
  * #### Tips & Tricks when using the Bastion Host
  *
- * ##### Connecting to RDS Instance via SSM
+ * **Connecting to RDS Instance via SSM**
  *
  * ```sh
  * aws ssm start-session --target $INSTANCE_ID \
@@ -58,7 +56,7 @@ import { Construct } from "constructs";
  * aws ssm start-session --target $INSTANCE_ID --profile $AWS_PROFILE
  * ```
  *
- * ##### Setting up an SSH tunnel
+ * **Setting up an SSH tunnel**
  *
  * In your `~/.ssh/config` file, add an entry like:
  *
@@ -80,7 +78,7 @@ import { Construct } from "constructs";
  * psql -h 127.0.0.1 -p 5433 -U {username} -d {database}
  * ```
  *
- * ##### Handling `REMOTE HOST IDENTIFICATION HAS CHANGED!` error
+ * **Handling `REMOTE HOST IDENTIFICATION HAS CHANGED!` error**
  *
  * If you've redeployed a bastion host that you've previously connected to, you may see an error like:
  *
