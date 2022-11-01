@@ -1,3 +1,10 @@
+# [2.1.0](https://github.com/developmentseed/cdk-pgstac/compare/v2.0.0...v2.1.0) (2022-11-01)
+
+
+### Features
+
+* **ingestor-api:** Make apiEnv optional ([5841734](https://github.com/developmentseed/cdk-pgstac/commit/584173458e35a69cd7bc398acd3482dd21c58228))
+
 # [2.0.0](https://github.com/developmentseed/cdk-pgstac/compare/v1.3.0...v2.0.0) (2022-11-01)
 
 
