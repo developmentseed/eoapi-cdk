@@ -242,7 +242,7 @@ export interface StacIngestorProps {
   /**
    * Environment variables to be sent to Lambda.
    */
-  readonly apiEnv: Record<string, string>;
+  readonly apiEnv?: Record<string, string>;
 
   /**
    * API Endpoint Configuration, useful for creating private APIs.
