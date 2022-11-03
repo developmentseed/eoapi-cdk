@@ -1,3 +1,10 @@
+# [2.2.0](https://github.com/developmentseed/cdk-pgstac/compare/v2.1.0...v2.2.0) (2022-11-03)
+
+
+### Features
+
+* **stac-db:** Provide sensible defaults for pgSTAC db parameters ([#1](https://github.com/developmentseed/cdk-pgstac/issues/1)) ([11eb89e](https://github.com/developmentseed/cdk-pgstac/commit/11eb89e45c8a6d4a5b07134b8957a1298f9305c8))
+
 # [2.1.0](https://github.com/developmentseed/cdk-pgstac/compare/v2.0.0...v2.1.0) (2022-11-01)
 
 
