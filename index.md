@@ -501,6 +501,7 @@ new PgStacDatabase(scope: Construct, id: string, props: PgStacDatabaseProps)
 | **Name** | **Description** |
 | --- | --- |
 | <code><a href="#cdk-pgstac.PgStacDatabase.toString">toString</a></code> | Returns a string representation of this construct. |
+| <code><a href="#cdk-pgstac.PgStacDatabase.getParameters">getParameters</a></code> | *No description.* |
 
 ---
 
@@ -511,6 +512,24 @@ public toString(): string
 ```
 
 Returns a string representation of this construct.
+
+##### `getParameters` <a name="getParameters" id="cdk-pgstac.PgStacDatabase.getParameters"></a>
+
+```typescript
+public getParameters(instanceType: string, parameters?: {[ key: string ]: string}): DatabaseParameters
+```
+
+###### `instanceType`<sup>Required</sup> <a name="instanceType" id="cdk-pgstac.PgStacDatabase.getParameters.parameter.instanceType"></a>
+
+- *Type:* string
+
+---
+
+###### `parameters`<sup>Optional</sup> <a name="parameters" id="cdk-pgstac.PgStacDatabase.getParameters.parameter.parameters"></a>
+
+- *Type:* {[ key: string ]: string}
+
+---
 
 #### Static Functions <a name="Static Functions" id="Static Functions"></a>
 
@@ -969,6 +988,131 @@ VPC in which the database resides.
 Note - Must be explicitely set if the `database` only conforms to the
 `aws_rds.IDatabaseInstace` interface (ie it is a reference to a database instance
 rather than a database instance.)
+
+---
+
+### DatabaseParameters <a name="DatabaseParameters" id="cdk-pgstac.DatabaseParameters"></a>
+
+#### Initializer <a name="Initializer" id="cdk-pgstac.DatabaseParameters.Initializer"></a>
+
+```typescript
+import { DatabaseParameters } from 'cdk-pgstac'
+
+const databaseParameters: DatabaseParameters = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#cdk-pgstac.DatabaseParameters.property.effectiveCacheSize">effectiveCacheSize</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#cdk-pgstac.DatabaseParameters.property.maintenanceWorkMem">maintenanceWorkMem</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#cdk-pgstac.DatabaseParameters.property.maxConnections">maxConnections</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#cdk-pgstac.DatabaseParameters.property.maxLocksPerTransaction">maxLocksPerTransaction</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#cdk-pgstac.DatabaseParameters.property.randomPageCost">randomPageCost</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#cdk-pgstac.DatabaseParameters.property.seqPageCost">seqPageCost</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#cdk-pgstac.DatabaseParameters.property.sharedBuffers">sharedBuffers</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#cdk-pgstac.DatabaseParameters.property.tempBuffers">tempBuffers</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#cdk-pgstac.DatabaseParameters.property.workMem">workMem</a></code> | <code>string</code> | *No description.* |
+
+---
+
+##### `effectiveCacheSize`<sup>Required</sup> <a name="effectiveCacheSize" id="cdk-pgstac.DatabaseParameters.property.effectiveCacheSize"></a>
+
+```typescript
+public readonly effectiveCacheSize: string;
+```
+
+- *Type:* string
+- *Default:* 75% of instance memory
+
+---
+
+##### `maintenanceWorkMem`<sup>Required</sup> <a name="maintenanceWorkMem" id="cdk-pgstac.DatabaseParameters.property.maintenanceWorkMem"></a>
+
+```typescript
+public readonly maintenanceWorkMem: string;
+```
+
+- *Type:* string
+- *Default:* 25% of shared buffers
+
+---
+
+##### `maxConnections`<sup>Required</sup> <a name="maxConnections" id="cdk-pgstac.DatabaseParameters.property.maxConnections"></a>
+
+```typescript
+public readonly maxConnections: string;
+```
+
+- *Type:* string
+- *Default:* LEAST({DBInstanceClassMemory/9531392}, 5000)
+
+---
+
+##### `maxLocksPerTransaction`<sup>Required</sup> <a name="maxLocksPerTransaction" id="cdk-pgstac.DatabaseParameters.property.maxLocksPerTransaction"></a>
+
+```typescript
+public readonly maxLocksPerTransaction: string;
+```
+
+- *Type:* string
+- *Default:* 1024
+
+---
+
+##### `randomPageCost`<sup>Required</sup> <a name="randomPageCost" id="cdk-pgstac.DatabaseParameters.property.randomPageCost"></a>
+
+```typescript
+public readonly randomPageCost: string;
+```
+
+- *Type:* string
+- *Default:* 1.1
+
+---
+
+##### `seqPageCost`<sup>Required</sup> <a name="seqPageCost" id="cdk-pgstac.DatabaseParameters.property.seqPageCost"></a>
+
+```typescript
+public readonly seqPageCost: string;
+```
+
+- *Type:* string
+- *Default:* 1
+
+---
+
+##### `sharedBuffers`<sup>Required</sup> <a name="sharedBuffers" id="cdk-pgstac.DatabaseParameters.property.sharedBuffers"></a>
+
+```typescript
+public readonly sharedBuffers: string;
+```
+
+- *Type:* string
+- *Default:* 25% of instance memory
+
+---
+
+##### `tempBuffers`<sup>Required</sup> <a name="tempBuffers" id="cdk-pgstac.DatabaseParameters.property.tempBuffers"></a>
+
+```typescript
+public readonly tempBuffers: string;
+```
+
+- *Type:* string
+- *Default:* 131172 (128 * 1024)
+
+---
+
+##### `workMem`<sup>Required</sup> <a name="workMem" id="cdk-pgstac.DatabaseParameters.property.workMem"></a>
+
+```typescript
+public readonly workMem: string;
+```
+
+- *Type:* string
+- *Default:* shared buffers divided by max connections
 
 ---
 
