@@ -1,3 +1,10 @@
+## [2.2.1](https://github.com/developmentseed/cdk-pgstac/compare/v2.2.0...v2.2.1) (2022-11-04)
+
+
+### Bug Fixes
+
+* **stac-db:** Report shared buffers in 8kb units ([d34f2cd](https://github.com/developmentseed/cdk-pgstac/commit/d34f2cd1a833438ffa4e24f062cf16901f8d5584))
+
 # [2.2.0](https://github.com/developmentseed/cdk-pgstac/compare/v2.1.0...v2.2.0) (2022-11-03)
 
 
