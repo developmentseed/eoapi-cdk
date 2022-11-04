@@ -1011,7 +1011,7 @@ const databaseParameters: DatabaseParameters = { ... }
 | <code><a href="#cdk-pgstac.DatabaseParameters.property.maxLocksPerTransaction">maxLocksPerTransaction</a></code> | <code>string</code> | *No description.* |
 | <code><a href="#cdk-pgstac.DatabaseParameters.property.randomPageCost">randomPageCost</a></code> | <code>string</code> | *No description.* |
 | <code><a href="#cdk-pgstac.DatabaseParameters.property.seqPageCost">seqPageCost</a></code> | <code>string</code> | *No description.* |
-| <code><a href="#cdk-pgstac.DatabaseParameters.property.sharedBuffers">sharedBuffers</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#cdk-pgstac.DatabaseParameters.property.sharedBuffers">sharedBuffers</a></code> | <code>string</code> | Note, should be represented in units of 8KB. |
 | <code><a href="#cdk-pgstac.DatabaseParameters.property.tempBuffers">tempBuffers</a></code> | <code>string</code> | *No description.* |
 | <code><a href="#cdk-pgstac.DatabaseParameters.property.workMem">workMem</a></code> | <code>string</code> | *No description.* |
 
@@ -1091,6 +1091,8 @@ public readonly sharedBuffers: string;
 
 - *Type:* string
 - *Default:* 25% of instance memory
+
+Note, should be represented in units of 8KB.
 
 ---
 
