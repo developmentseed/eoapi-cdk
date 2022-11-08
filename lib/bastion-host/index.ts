@@ -117,7 +117,7 @@ export class BastionHost extends Construct {
     this.instance = new ec2.Instance(this, "bastion-host", {
       vpc: props.vpc,
       vpcSubnets: { subnetType: ec2.SubnetType.PUBLIC },
-      instanceName: stackName,
+      instanceName: `${stackName} bastion host`,
       instanceType: ec2.InstanceType.of(
         ec2.InstanceClass.BURSTABLE4_GRAVITON,
         ec2.InstanceSize.NANO
