@@ -131,7 +131,7 @@ export class BastionHost extends Construct {
     });
 
     // Assign elastic IP
-    if (props.createElasticIp) {
+    if (props.createElasticIp ?? true) {
       new ec2.CfnEIP(this, "IP", {
         instanceId: this.instance.instanceId,
         tags: [{ key: "Name", value: stackName }],
@@ -191,7 +191,7 @@ export interface BastionHostProps {
   /**
    * Whether or not an elastic IP should be created for the bastion host.
    *
-   * @default true
+   * @default false
    */
   readonly createElasticIp?: boolean;
 }
