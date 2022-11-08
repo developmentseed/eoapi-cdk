@@ -1,3 +1,10 @@
+## [2.3.1](https://github.com/developmentseed/cdk-pgstac/compare/v2.3.0...v2.3.1) (2022-11-08)
+
+
+### Bug Fixes
+
+* **bastion-host:** `createElasticIp` default to true ([ec99fad](https://github.com/developmentseed/cdk-pgstac/commit/ec99fad9d3606f4ca572229e82d992f3295f9045))
+
 # [2.3.0](https://github.com/developmentseed/cdk-pgstac/compare/v2.2.1...v2.3.0) (2022-11-08)
 
 
