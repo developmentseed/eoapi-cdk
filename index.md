@@ -814,6 +814,7 @@ const bastionHostProps: BastionHostProps = { ... }
 | <code><a href="#cdk-pgstac.BastionHostProps.property.ipv4Allowlist">ipv4Allowlist</a></code> | <code>string[]</code> | *No description.* |
 | <code><a href="#cdk-pgstac.BastionHostProps.property.userData">userData</a></code> | <code>aws-cdk-lib.aws_ec2.UserData</code> | *No description.* |
 | <code><a href="#cdk-pgstac.BastionHostProps.property.vpc">vpc</a></code> | <code>aws-cdk-lib.aws_ec2.IVpc</code> | *No description.* |
+| <code><a href="#cdk-pgstac.BastionHostProps.property.createElasticIp">createElasticIp</a></code> | <code>boolean</code> | Whether or not an elastic IP should be created for the bastion host. |
 | <code><a href="#cdk-pgstac.BastionHostProps.property.sshPort">sshPort</a></code> | <code>number</code> | *No description.* |
 
 ---
@@ -855,6 +856,19 @@ public readonly vpc: IVpc;
 ```
 
 - *Type:* aws-cdk-lib.aws_ec2.IVpc
+
+---
+
+##### `createElasticIp`<sup>Optional</sup> <a name="createElasticIp" id="cdk-pgstac.BastionHostProps.property.createElasticIp"></a>
+
+```typescript
+public readonly createElasticIp: boolean;
+```
+
+- *Type:* boolean
+- *Default:* true
+
+Whether or not an elastic IP should be created for the bastion host.
 
 ---
 
@@ -1011,7 +1025,7 @@ const databaseParameters: DatabaseParameters = { ... }
 | <code><a href="#cdk-pgstac.DatabaseParameters.property.maxLocksPerTransaction">maxLocksPerTransaction</a></code> | <code>string</code> | *No description.* |
 | <code><a href="#cdk-pgstac.DatabaseParameters.property.randomPageCost">randomPageCost</a></code> | <code>string</code> | *No description.* |
 | <code><a href="#cdk-pgstac.DatabaseParameters.property.seqPageCost">seqPageCost</a></code> | <code>string</code> | *No description.* |
-| <code><a href="#cdk-pgstac.DatabaseParameters.property.sharedBuffers">sharedBuffers</a></code> | <code>string</code> | Note, should be represented in units of 8KB. |
+| <code><a href="#cdk-pgstac.DatabaseParameters.property.sharedBuffers">sharedBuffers</a></code> | <code>string</code> | Note: This value is measured in 8KB blocks. |
 | <code><a href="#cdk-pgstac.DatabaseParameters.property.tempBuffers">tempBuffers</a></code> | <code>string</code> | *No description.* |
 | <code><a href="#cdk-pgstac.DatabaseParameters.property.workMem">workMem</a></code> | <code>string</code> | *No description.* |
 
@@ -1090,9 +1104,9 @@ public readonly sharedBuffers: string;
 ```
 
 - *Type:* string
-- *Default:* 25% of instance memory
+- *Default:* '{DBInstanceClassMemory/32768}' 25% of instance memory, ie `{(DBInstanceClassMemory/(1024*8)) * 0.25}`
 
-Note, should be represented in units of 8KB.
+Note: This value is measured in 8KB blocks.
 
 ---
 
