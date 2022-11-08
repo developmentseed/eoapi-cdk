@@ -86,7 +86,7 @@ export class PgStacDatabase extends Construct {
 
     return {
       maxConnections: `${maxConnections}`,
-      sharedBuffers: `${sharedBuffers / 8}`,
+      sharedBuffers: `${sharedBuffers / 8}`, // Represented in 8kb blocks
       effectiveCacheSize: `${effectiveCacheSize}`,
       workMem: `${workMem}`,
       maintenanceWorkMem: `${maintenanceWorkMem}`,
@@ -112,9 +112,9 @@ export interface DatabaseParameters {
   readonly maxConnections: string;
 
   /**
-   * Note, should be represented in units of 8KB
-   * 
-   * @default - 25% of instance memory
+   * Note: This value is measured in 8KB blocks.
+   *
+   * @default '{DBInstanceClassMemory/32768}' 25% of instance memory, ie `{(DBInstanceClassMemory/(1024*8)) * 0.25}`
    */
   readonly sharedBuffers: string;
 
