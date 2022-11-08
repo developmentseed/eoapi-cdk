@@ -1,3 +1,10 @@
+# [2.3.0](https://github.com/developmentseed/cdk-pgstac/compare/v2.2.1...v2.3.0) (2022-11-08)
+
+
+### Features
+
+* **bastion-host:** Make elastic IP optional ([d77b578](https://github.com/developmentseed/cdk-pgstac/commit/d77b578df0a713a993bfa81709485df7fbc423c3))
+
 ## [2.2.1](https://github.com/developmentseed/cdk-pgstac/compare/v2.2.0...v2.2.1) (2022-11-04)
 
 
