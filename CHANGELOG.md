@@ -1,3 +1,10 @@
+# [2.4.0](https://github.com/developmentseed/cdk-pgstac/compare/v2.3.1...v2.4.0) (2022-11-08)
+
+
+### Features
+
+* **bastion-host:** Append ec2 instance with 'bastion host' ([4ee8599](https://github.com/developmentseed/cdk-pgstac/commit/4ee8599b5e03799152e07df935be047821554a32))
+
 ## [2.3.1](https://github.com/developmentseed/cdk-pgstac/compare/v2.3.0...v2.3.1) (2022-11-08)
 
 
