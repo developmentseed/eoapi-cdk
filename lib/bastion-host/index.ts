@@ -131,10 +131,12 @@ export class BastionHost extends Construct {
     });
 
     // Assign elastic IP
-    new ec2.CfnEIP(this, "IP", {
-      instanceId: this.instance.instanceId,
-      tags: [{ key: "Name", value: stackName }],
-    });
+    if (props.createElasticIp) {
+      new ec2.CfnEIP(this, "IP", {
+        instanceId: this.instance.instanceId,
+        tags: [{ key: "Name", value: stackName }],
+      });
+    }
 
     // Allow bastion host to connect to db
     this.instance.connections.allowTo(
@@ -185,4 +187,11 @@ export interface BastionHostProps {
   readonly userData: ec2.UserData;
   readonly ipv4Allowlist: string[];
   readonly sshPort?: number;
+
+  /**
+   * Whether or not an elastic IP should be created for the bastion host.
+   *
+   * @default true
+   */
+  readonly createElasticIp?: boolean;
 }
