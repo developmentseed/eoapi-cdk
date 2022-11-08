@@ -866,7 +866,7 @@ public readonly createElasticIp: boolean;
 ```
 
 - *Type:* boolean
-- *Default:* true
+- *Default:* false
 
 Whether or not an elastic IP should be created for the bastion host.
 
