@@ -24,9 +24,15 @@ def s3_object_is_accessible(bucket: str, key: str):
     """
     Ensure we can send HEAD requests to S3 objects.
     """
+    from .main import settings
+    
     client = boto3.client("s3", **get_s3_credentials())
     try:
-        client.head_object(Bucket=bucket, Key=key)
+        client.head_object(
+            Bucket=bucket,
+            Key=key,
+            **{"RequestPayer": 'requester'} if settings.requester_pays else {}
+        )
     except client.exceptions.ClientError as e:
         raise ValueError(
             f"Asset not accessible: {e.__dict__['response']['Error']['Message']}"
