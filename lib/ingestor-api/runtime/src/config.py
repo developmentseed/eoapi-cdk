@@ -24,6 +24,10 @@ class Settings(BaseSettings):
         description="ARN of AWS Role used to validate access to S3 data"
     )
 
+    requester_pays: Optional[bool] = Field(
+        description="Path from where to serve this URL.", default=False
+    )
+
     class Config(AwsSsmSourceConfig):
         env_file = ".env"
 
