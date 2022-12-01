@@ -1,6 +1,6 @@
 {
   "name": "cdk-pgstac",
-  "version": "2.4.0",
+  "version": "2.5.0",
   "description": "A set of constructs deploying pgSTAC with CDK",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",

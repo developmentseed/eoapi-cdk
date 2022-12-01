@@ -1,3 +1,10 @@
+# [2.5.0](https://github.com/developmentseed/cdk-pgstac/compare/v2.4.0...v2.5.0) (2022-12-01)
+
+
+### Features
+
+* **ingestor:** Add flag to enable requester pays ([efc160d](https://github.com/developmentseed/cdk-pgstac/commit/efc160d3530a70d1fc8f88ef9dce4a4d48456834))
+
 # [2.4.0](https://github.com/developmentseed/cdk-pgstac/compare/v2.3.1...v2.4.0) (2022-11-08)
 
 
