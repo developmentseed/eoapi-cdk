@@ -5,7 +5,7 @@ import requests
 
 @functools.cache
 def get_s3_credentials():
-    from .main import settings
+    from .config import settings
 
     print("Fetching S3 Credentials...")
 
@@ -24,7 +24,7 @@ def s3_object_is_accessible(bucket: str, key: str):
     """
     Ensure we can send HEAD requests to S3 objects.
     """
-    from .main import settings
+    from .config import settings
 
     client = boto3.client("s3", **get_s3_credentials())
     try:
@@ -56,7 +56,7 @@ def collection_exists(collection_id: str) -> bool:
     """
     Ensure collection exists in STAC
     """
-    from .main import settings
+    from .config import settings
 
     url = "/".join(
         f'{url.strip("/")}' for url in [settings.stac_url, "collections", collection_id]
