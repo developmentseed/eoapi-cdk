@@ -1,6 +1,12 @@
 from fastapi import Depends, FastAPI, HTTPException
 
-from . import config, dependencies, schemas, services
+from . import (
+    config,
+    dependencies,
+    schemas,
+    services,
+    collection as collection_loader,
+)
 
 app = FastAPI(
     root_path=config.settings.root_path,
@@ -82,6 +88,38 @@ def cancel_ingestion(
             ),
         )
     return ingestion.cancel(db)
+
+
+@app.post(
+    "/collections",
+    tags=["Collection"],
+    status_code=201,
+    dependencies=[Depends(dependencies.get_username)],
+)
+def publish_collection(collection: schemas.StacCollection):
+    # pgstac create collection
+    try:
+        collection_loader.ingest(collection)
+        return {f"Successfully published: {collection.id}"}
+    except Exception as e:
+        raise HTTPException(
+            status_code=400,
+            detail=(f"Unable to publish collection: {e}"),
+        )
+
+
+@app.delete(
+    "/collections/{collection_id}",
+    tags=["Collection"],
+    dependencies=[Depends(dependencies.get_username)],
+)
+def delete_collection(collection_id: str):
+    try:
+        collection_loader.delete(collection_id=collection_id)
+        return {f"Successfully deleted: {collection_id}"}
+    except Exception as e:
+        print(e)
+        raise HTTPException(status_code=400, detail=(f"{e}"))
 
 
 @app.get("/auth/me")

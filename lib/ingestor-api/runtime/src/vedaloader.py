@@ -35,3 +35,10 @@ class VEDALoader(Loader):
                 cur.execute(
                     "SELECT pgstac.collection_temporal_extent(%s)", collection_id
                 )
+
+
+    def delete_collection(self, collection_id: str) -> None:
+        with self.conn.cursor() as cur:
+            with self.conn.transaction():
+                logger.info(f"Deleting collection: {collection_id}.")
+                cur.execute("SELECT pgstac.delete_collection(%s);", (collection_id,))
