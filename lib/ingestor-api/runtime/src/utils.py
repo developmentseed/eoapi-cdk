@@ -10,7 +10,7 @@ import pydantic
 from pypgstac.load import Methods
 from pypgstac.db import PgstacDB
 
-from .schemas import AccessibleItem, DashboardCollection
+from .schemas import AccessibleItem, StacCollection
 from .vedaloader import VEDALoader
 
 
@@ -82,7 +82,7 @@ def load_items(items: Sequence[AccessibleItem], loader):
     return loading_result
 
 
-def load_collection(collection: Sequence[DashboardCollection], loader):
+def load_collection(collection: Sequence[StacCollection], loader):
     """
     Loads the collection to the PgSTAC database
     """
@@ -95,7 +95,7 @@ def load_collection(collection: Sequence[DashboardCollection], loader):
 
 def load_into_pgstac(
     db: "PgstacDB",
-    ingestions: Union[Sequence[AccessibleItem], Sequence[DashboardCollection]],
+    ingestions: Union[Sequence[AccessibleItem], Sequence[StacCollection]],
     table: IngestionType,
 ):
     """
