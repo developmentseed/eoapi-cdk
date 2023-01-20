@@ -36,6 +36,10 @@ export class StacIngestor extends Construct {
       env,
       dataAccessRole: props.dataAccessRole,
       stage: props.stage,
+      dbSecret: props.stacDbSecret,
+      dbVpc: props.vpc,
+      dbSecurityGroup: props.stacDbSecurityGroup,
+      subnetSelection: props.subnetSelection,
     });
 
     this.buildApiEndpoint({
