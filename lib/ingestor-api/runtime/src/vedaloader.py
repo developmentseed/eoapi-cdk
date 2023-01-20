@@ -9,15 +9,18 @@ logger = logging.getLogger(__name__)
 class VEDALoader(Loader):
     """Utilities for loading data and updating collection summaries/extents."""
 
+    def __init__(self, db) -> None:
+        super().__init__(db)
+        self.check_version()
+        self.conn = self.db.connect()
+
     def update_collection_summaries(self, collection_id: str) -> None:
         """Update collection-level summaries for a single collection.
         This includes dashboard summaries (i.e. datetime and cog_default) as well as
         STAC-conformant bbox and temporal extent."""
-        self.check_version()
-
-        conn = self.db.connect()
-        with conn.cursor() as cur:
-            with conn.transaction():
+    
+        with self.conn.cursor() as cur:
+            with self.conn.transaction():
                 logger.info(
                     "Updating dashboard summaries for collection: {}.".format(
                         collection_id
