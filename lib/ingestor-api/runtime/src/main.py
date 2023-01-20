@@ -94,7 +94,7 @@ def cancel_ingestion(
     "/collections",
     tags=["Collection"],
     status_code=201,
-    dependencies=[Depends(dependencies.get_username)],
+    # dependencies=[Depends(dependencies.get_username)],
 )
 def publish_collection(collection: schemas.StacCollection):
     # pgstac create collection

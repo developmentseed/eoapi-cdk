@@ -84,6 +84,10 @@ export class StacIngestor extends Construct {
     env: Record<string, string>;
     dataAccessRole: iam.IRole;
     stage: string;
+    dbSecret: secretsmanager.ISecret;
+    dbVpc: ec2.IVpc;
+    dbSecurityGroup: ec2.ISecurityGroup;
+    subnetSelection: ec2.SubnetSelection;
   }): PythonFunction {
     const handler_role = new iam.Role(this, "execution-role", {
       description:
@@ -101,11 +105,24 @@ export class StacIngestor extends Construct {
       entry: `${__dirname}/runtime`,
       index: "src/handler.py",
       runtime: lambda.Runtime.PYTHON_3_9,
-      environment: props.env,
       timeout: Duration.seconds(30),
+      environment: { DB_SECRET_ARN: props.dbSecret.secretArn, ...props.env },
+      vpc: props.dbVpc,
+      vpcSubnets: props.subnetSelection,
+      allowPublicSubnet: true,
       role: handler_role,
       memorySize: 2048,
     });
+
+    // Allow handler to read DB secret
+    props.dbSecret.grantRead(handler);
+
+    // Allow handler to connect to DB
+    props.dbSecurityGroup.addIngressRule(
+      handler.connections.securityGroups[0],
+      ec2.Port.tcp(5432),
+      "Allow connections from STAC Ingestor"
+    );
 
     props.table.grantReadWriteData(handler);
     props.dataAccessRole.grant(handler.grantPrincipal, "sts:AssumeRole");

@@ -44,9 +44,11 @@ class AccessibleItem(Item):
 
 
 class StacCollection(Collection):
-    pass
+    id: str
+    item_assets: Dict
 
 class Status(str, enum.Enum):
+    started = "started"
     queued = "queued"
     failed = "failed"
     succeeded = "succeeded"
