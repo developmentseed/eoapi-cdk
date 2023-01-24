@@ -107,8 +107,14 @@ export class StacIngestor extends Construct {
       memorySize: 2048,
     });
 
-    props.table.grantReadWriteData(handler);
     props.dataAccessRole.grant(handler.grantPrincipal, "sts:AssumeRole");
+    handler.addToRolePolicy(
+      new iam.PolicyStatement({
+        actions: ["s3:Get*", "s3:List*"],
+        resources: ["arn:aws:s3:::*"],
+      })
+    );
+    props.table.grantReadWriteData(handler);
 
     return handler;
   }
