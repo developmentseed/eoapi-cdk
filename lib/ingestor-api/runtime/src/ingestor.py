@@ -10,7 +10,8 @@ import pydantic
 from pypgstac.load import Methods
 from pypgstac.db import PgstacDB
 
-from .dependencies import get_settings, get_table
+from .dependencies import get_table
+from .config import settings
 from .schemas import Ingestion, Status
 from .vedaloader import VEDALoader
 
@@ -80,6 +81,7 @@ def load_into_pgstac(creds: DbCreds, ingestions: Sequence[Ingestion]):
     """
     Bulk insert STAC records into pgSTAC.
     """
+    print("Connecting to pgstac")
     with PgstacDB(dsn=creds.dsn_string, debug=True) as db:
         loader = VEDALoader(db=db)
 
@@ -88,18 +90,16 @@ def load_into_pgstac(creds: DbCreds, ingestions: Sequence[Ingestion]):
             convert_decimals_to_float(i.item)
             for i in ingestions
         ]
-
-        print(f"Ingesting {len(items)} items")
         loading_result = loader.load_items(
             file=items,
             # use insert_ignore to avoid overwritting existing items or upsert to replace
             insert_mode=Methods.upsert,
         )
-
+        
         # Trigger update on summaries and extents
-        collections = set([item.collection for item in items])
-        for collection in collections:
-            loader.update_collection_summaries(collection)
+        #  collections = set([item["collection"] for item in items])
+        #  for collection in collections:
+            #  loader.update_collection_summaries(collection)
 
         return loading_result
 
@@ -114,7 +114,7 @@ def update_dynamodb(
     """
     # Update records in DynamoDB
     print(f"Updating ingested items status in DynamoDB, marking as {status}...")
-    table = get_table(get_settings())
+    table = get_table(settings)
     with table.batch_writer(overwrite_by_pkeys=["created_by", "id"]) as batch:
         for ingestion in ingestions:
             batch.put_item(
