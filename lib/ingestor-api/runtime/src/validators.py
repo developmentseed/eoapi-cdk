@@ -24,7 +24,6 @@ def s3_object_is_accessible(bucket: str, key: str):
     """
     Ensure we can send HEAD requests to S3 objects.
     """
-    from .config import settings
 
     #  client = boto3.client("s3", **get_s3_credentials())
     client = boto3.client("s3")

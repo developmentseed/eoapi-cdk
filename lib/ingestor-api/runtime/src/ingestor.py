@@ -95,11 +95,11 @@ def load_into_pgstac(creds: DbCreds, ingestions: Sequence[Ingestion]):
             # use insert_ignore to avoid overwritting existing items or upsert to replace
             insert_mode=Methods.upsert,
         )
-        
+
         # Trigger update on summaries and extents
         #  collections = set([item["collection"] for item in items])
         #  for collection in collections:
-            #  loader.update_collection_summaries(collection)
+        #       loader.update_collection_summaries(collection)
 
         return loading_result
 
