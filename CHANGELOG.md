@@ -1,3 +1,10 @@
+## [2.5.1](https://github.com/developmentseed/cdk-pgstac/compare/v2.5.0...v2.5.1) (2022-12-06)
+
+
+### Bug Fixes
+
+* **ingestor-api:** Correct import path for settings ([be40af7](https://github.com/developmentseed/cdk-pgstac/commit/be40af70326f04d7ed9583569ad49f12da416d6f))
+
 # [2.5.0](https://github.com/developmentseed/cdk-pgstac/compare/v2.4.0...v2.5.0) (2022-12-01)
 
 
