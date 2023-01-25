@@ -5,6 +5,9 @@ on:
 
 jobs:
   test:
+    env:
+      AWS_DEFAULT_REGION: us-west-2
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         python: [3.9]
