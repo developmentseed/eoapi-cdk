@@ -108,7 +108,7 @@ export class StacIngestor extends Construct {
     });
 
     props.table.grantReadWriteData(handler);
-    props.dataAccessRole.grantAssumeRole(handler);
+    props.dataAccessRole.grantAssumeRole(handler_role);
 
     return handler;
   }
