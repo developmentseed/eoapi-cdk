@@ -62,7 +62,7 @@ def handler(event: "events.DynamoDBStreamEvent", context: "context_.Context"):
     if not ingestions:
         print("No queued ingestions to process")
         return
-    
+
     items = [
         # NOTE: Important to deserialize values to convert decimals to floats
         convert_decimals_to_float(ingestion.item)

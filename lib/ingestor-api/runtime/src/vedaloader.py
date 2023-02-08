@@ -18,7 +18,7 @@ class VEDALoader(Loader):
         """Update collection-level summaries for a single collection.
         This includes dashboard summaries (i.e. datetime and cog_default) as well as
         STAC-conformant bbox and temporal extent."""
-    
+
         with self.conn.cursor() as cur:
             with self.conn.transaction():
                 logger.info(
@@ -38,7 +38,6 @@ class VEDALoader(Loader):
                 cur.execute(
                     "SELECT pgstac.collection_temporal_extent(%s)", collection_id
                 )
-
 
     def delete_collection(self, collection_id: str) -> None:
         with self.conn.cursor() as cur:
