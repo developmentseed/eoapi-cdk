@@ -1,6 +1,6 @@
 Authlib==1.0.1
 cachetools==5.1.0
-fastapi>=0.75.1
+fastapi==0.89.1
 mangum>=0.15.0
 orjson>=3.6.8
 psycopg[binary,pool]>=3.0.15
