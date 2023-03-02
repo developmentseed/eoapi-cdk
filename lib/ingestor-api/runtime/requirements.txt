@@ -6,6 +6,7 @@ orjson>=3.6.8
 psycopg[binary,pool]>=3.0.15
 pydantic_ssm_settings>=0.2.0
 pydantic>=1.9.0
+smart-open==6.0.0
 pypgstac==0.6.8
 requests>=2.27.1
 # Waiting for https://github.com/stac-utils/stac-pydantic/pull/116
