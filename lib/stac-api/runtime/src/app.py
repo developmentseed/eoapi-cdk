@@ -9,12 +9,10 @@ from stac_fastapi.pgstac.core import CoreCrudClient
 from stac_fastapi.pgstac.db import close_db_connection, connect_to_db
 from starlette_cramjam.middleware import CompressionMiddleware
 
-from .config import (
-    ApiSettings,
-    extensions as PgStacExtensions,
-    get_request_model as GETModel,
-    post_request_model as POSTModel,
-)
+from .config import ApiSettings
+from .config import extensions as PgStacExtensions
+from .config import get_request_model as GETModel
+from .config import post_request_model as POSTModel
 
 api_settings = ApiSettings()
 

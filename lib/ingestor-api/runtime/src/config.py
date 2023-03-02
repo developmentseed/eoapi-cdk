@@ -2,9 +2,8 @@ import os
 from getpass import getuser
 from typing import Optional
 
-from pydantic import BaseSettings, Field, AnyHttpUrl, constr
+from pydantic import AnyHttpUrl, BaseSettings, Field, constr
 from pydantic_ssm_settings import AwsSsmSourceConfig
-
 
 AwsArn = constr(regex=r"^arn:aws:iam::\d{12}:role/.+")
 

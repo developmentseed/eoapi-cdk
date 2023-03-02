@@ -3,12 +3,11 @@ from typing import Optional
 
 import boto3
 import requests
-from authlib.jose import JsonWebToken, JsonWebKey, KeySet, JWTClaims, errors
-from cachetools import cached, TTLCache
-from fastapi import Depends, HTTPException, security, Request
+from authlib.jose import JsonWebKey, JsonWebToken, JWTClaims, KeySet, errors
+from cachetools import TTLCache, cached
+from fastapi import Depends, HTTPException, Request, security
 
 from . import config, services
-
 
 logger = logging.getLogger(__name__)
 

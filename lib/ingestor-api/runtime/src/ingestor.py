@@ -1,21 +1,22 @@
-from datetime import datetime
-import os
 import decimal
+import os
+from datetime import datetime
 from typing import TYPE_CHECKING, Any, Dict, Iterator, List, Optional, Sequence
 
 import boto3
-from boto3.dynamodb.types import TypeDeserializer
 import orjson
 import pydantic
-from pypgstac.load import Methods
+from boto3.dynamodb.types import TypeDeserializer
 from pypgstac.db import PgstacDB
+from pypgstac.load import Methods
 
 from .dependencies import get_settings, get_table
 from .schemas import Ingestion, Status
 from .vedaloader import VEDALoader
 
 if TYPE_CHECKING:
-    from aws_lambda_typing import context as context_, events
+    from aws_lambda_typing import context as context_
+    from aws_lambda_typing import events
     from aws_lambda_typing.events.dynamodb_stream import DynamodbRecord
 
 
