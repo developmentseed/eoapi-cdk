@@ -1,5 +1,6 @@
-import boto3
 import functools
+
+import boto3
 import requests
 
 
