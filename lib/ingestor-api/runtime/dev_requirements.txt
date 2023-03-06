@@ -1,0 +1,2 @@
+httpx
+moto[dynamodb, ssm]>=4.0.9
