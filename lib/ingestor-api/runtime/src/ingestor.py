@@ -1,14 +1,9 @@
-import decimal
 import os
 from datetime import datetime
-from typing import TYPE_CHECKING, Any, Dict, Iterator, List, Optional, Sequence
+from typing import TYPE_CHECKING, Iterator, List, Optional, Sequence
 
-import boto3
-import orjson
-import pydantic
 from boto3.dynamodb.types import TypeDeserializer
 from pypgstac.db import PgstacDB
-from pypgstac.load import Methods
 
 from .dependencies import get_settings, get_table
 from .schemas import Ingestion, Status
@@ -68,7 +63,7 @@ def handler(event: "events.DynamoDBStreamEvent", context: "context_.Context"):
     if not ingestions:
         print("No queued ingestions to process")
         return
-    
+
     items = [
         # NOTE: Important to deserialize values to convert decimals to floats
         convert_decimals_to_float(ingestion.item)

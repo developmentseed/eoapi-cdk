@@ -47,6 +47,7 @@ class StacCollection(Collection):
     id: str
     item_assets: Dict
 
+
 class Status(str, enum.Enum):
     started = "started"
     queued = "queued"
