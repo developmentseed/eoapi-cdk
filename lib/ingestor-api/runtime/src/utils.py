@@ -1,14 +1,13 @@
-import json
 import decimal
+import json
 from enum import Enum
-from typing import Any, Dict, Union, Sequence
-
+from typing import Any, Dict, Sequence, Union
 
 import boto3
 import orjson
 import pydantic
-from pypgstac.load import Methods
 from pypgstac.db import PgstacDB
+from pypgstac.load import Methods
 
 from .schemas import AccessibleItem, StacCollection
 from .vedaloader import VEDALoader

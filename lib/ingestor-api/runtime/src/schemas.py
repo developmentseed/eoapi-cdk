@@ -9,7 +9,7 @@ from urllib.parse import urlparse
 
 from fastapi.exceptions import RequestValidationError
 from pydantic import BaseModel, PositiveInt, dataclasses, error_wrappers, validator
-from stac_pydantic import Item, Collection, shared
+from stac_pydantic import Collection, Item, shared
 
 from . import validators
 

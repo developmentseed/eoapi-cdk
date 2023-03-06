@@ -4,10 +4,10 @@ from pypgstac.db import PgstacDB
 
 from .schemas import StacCollection
 from .utils import (
-    get_db_credentials,
-    convert_decimals_to_float,
-    load_into_pgstac,
     IngestionType,
+    convert_decimals_to_float,
+    get_db_credentials,
+    load_into_pgstac,
 )
 from .vedaloader import VEDALoader
 

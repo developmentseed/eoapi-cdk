@@ -1,12 +1,7 @@
 from fastapi import Depends, FastAPI, HTTPException
 
-from . import (
-    config,
-    dependencies,
-    schemas,
-    services,
-    collection as collection_loader,
-)
+from . import collection as collection_loader
+from . import config, dependencies, schemas, services
 
 app = FastAPI(
     root_path=config.settings.root_path,

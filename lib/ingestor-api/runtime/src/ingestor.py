@@ -9,8 +9,8 @@ from .dependencies import get_settings, get_table
 from .schemas import Ingestion, Status
 from .utils import (
     IngestionType,
-    get_db_credentials,
     convert_decimals_to_float,
+    get_db_credentials,
     load_into_pgstac,
 )
 
