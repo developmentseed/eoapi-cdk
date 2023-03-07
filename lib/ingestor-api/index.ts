@@ -100,7 +100,10 @@ export class StacIngestor extends Construct {
       assumedBy: new iam.ServicePrincipal("lambda.amazonaws.com"),
       managedPolicies: [
         iam.ManagedPolicy.fromAwsManagedPolicyName(
-          "service-role/AWSLambdaBasicExecutionRole"
+          "service-role/AWSLambdaBasicExecutionRole",
+        ),
+        iam.ManagedPolicy.fromAwsManagedPolicyName(
+          "service-role/AWSLambdaVPCAccessExecutionRole",
         ),
       ],
     });
