@@ -9,7 +9,7 @@ from urllib.parse import urlparse
 
 from fastapi.exceptions import RequestValidationError
 from pydantic import BaseModel, PositiveInt, dataclasses, error_wrappers, validator
-from stac_pydantic import Item, shared
+from stac_pydantic import Collection, Item, shared
 
 from . import validators
 
@@ -43,7 +43,13 @@ class AccessibleItem(Item):
         return collection
 
 
+class StacCollection(Collection):
+    id: str
+    item_assets: Dict
+
+
 class Status(str, enum.Enum):
+    started = "started"
     queued = "queued"
     failed = "failed"
     succeeded = "succeeded"

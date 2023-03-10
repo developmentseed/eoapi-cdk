@@ -141,6 +141,137 @@ def example_stac_item():
 
 
 @pytest.fixture
+def example_stac_collection():
+    return {
+        "id": "simple-collection",
+        "type": "Collection",
+        "stac_extensions": [
+            "https://stac-extensions.github.io/eo/v1.0.0/schema.json",
+            "https://stac-extensions.github.io/projection/v1.0.0/schema.json",
+            "https://stac-extensions.github.io/view/v1.0.0/schema.json",
+        ],
+        "item_assets": {
+            "data": {
+                "type": "image/tiff; application=geotiff; profile=cloud-optimized",
+                "roles": ["data"],
+            }
+        },
+        "stac_version": "1.0.0",
+        "description": "A simple collection demonstrating core catalog fields with links to a couple of items",
+        "title": "Simple Example Collection",
+        "providers": [
+            {
+                "name": "Remote Data, Inc",
+                "description": "Producers of awesome spatiotemporal assets",
+                "roles": ["producer", "processor"],
+                "url": "http://remotedata.io",
+            }
+        ],
+        "extent": {
+            "spatial": {
+                "bbox": [
+                    [
+                        172.91173669923782,
+                        1.3438851951615003,
+                        172.95469614953714,
+                        1.3690476620161975,
+                    ]
+                ]
+            },
+            "temporal": {
+                "interval": [["2020-12-11T22:38:32.125Z", "2020-12-14T18:02:31.437Z"]]
+            },
+        },
+        "license": "CC-BY-4.0",
+        "summaries": {
+            "platform": ["cool_sat1", "cool_sat2"],
+            "constellation": ["ion"],
+            "instruments": ["cool_sensor_v1", "cool_sensor_v2"],
+            "gsd": {"minimum": 0.512, "maximum": 0.66},
+            "eo:cloud_cover": {"minimum": 1.2, "maximum": 1.2},
+            "proj:epsg": {"minimum": 32659, "maximum": 32659},
+            "view:sun_elevation": {"minimum": 54.9, "maximum": 54.9},
+            "view:off_nadir": {"minimum": 3.8, "maximum": 3.8},
+            "view:sun_azimuth": {"minimum": 135.7, "maximum": 135.7},
+        },
+        "links": [
+            {
+                "rel": "root",
+                "href": "./collection.json",
+                "type": "application/json",
+                "title": "Simple Example Collection",
+            },
+            {
+                "rel": "item",
+                "href": "./simple-item.json",
+                "type": "application/geo+json",
+                "title": "Simple Item",
+            },
+            {
+                "rel": "item",
+                "href": "./core-item.json",
+                "type": "application/geo+json",
+                "title": "Core Item",
+            },
+            {
+                "rel": "item",
+                "href": "./extended-item.json",
+                "type": "application/geo+json",
+                "title": "Extended Item",
+            },
+            {
+                "rel": "self",
+                "href": "https://raw.githubusercontent.com/radiantearth/stac-spec/v1.0.0/examples/collection.json",
+                "type": "application/json",
+            },
+        ],
+    }
+
+
+@pytest.fixture
+def client(app):
+    """
+    Return an API Client
+    """
+    app.dependency_overrides = {}
+    return TestClient(app)
+
+
+@pytest.fixture
+def client_authenticated(app):
+    """
+    Returns an API client which skips the authentication
+    """
+    from src.dependencies import get_username
+
+    def skip_auth():
+        pass
+
+    app.dependency_overrides[get_username] = skip_auth
+    return TestClient(app)
+
+
+@pytest.fixture
+def stac_collection(example_stac_collection):
+    from src import schemas
+
+    return schemas.StacCollection(
+        id=example_stac_collection["id"],
+        type=example_stac_collection["type"],
+        stac_extensions=example_stac_collection["stac_extensions"],
+        item_assets=example_stac_collection["item_assets"],
+        stac_version=example_stac_collection["stac_version"],
+        description=example_stac_collection["description"],
+        title=example_stac_collection["title"],
+        providers=example_stac_collection["providers"],
+        extent=example_stac_collection["extent"],
+        license=example_stac_collection["license"],
+        summaries=example_stac_collection["summaries"],
+        links=example_stac_collection["links"],
+    )
+
+
+@pytest.fixture
 def example_ingestion(example_stac_item):
     from src import schemas
 

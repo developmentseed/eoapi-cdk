@@ -1,18 +1,18 @@
-import decimal
 import os
 from datetime import datetime
-from typing import TYPE_CHECKING, Any, Dict, Iterator, List, Optional, Sequence
+from typing import TYPE_CHECKING, Iterator, List, Optional, Sequence
 
-import boto3
-import orjson
-import pydantic
 from boto3.dynamodb.types import TypeDeserializer
 from pypgstac.db import PgstacDB
-from pypgstac.load import Methods
 
 from .dependencies import get_settings, get_table
 from .schemas import Ingestion, Status
-from .vedaloader import VEDALoader
+from .utils import (
+    IngestionType,
+    convert_decimals_to_float,
+    get_db_credentials,
+    load_into_pgstac,
+)
 
 if TYPE_CHECKING:
     from aws_lambda_typing import context as context_
@@ -31,78 +31,6 @@ def get_queued_ingestions(records: List["DynamodbRecord"]) -> Iterator[Ingestion
         ingestion = Ingestion.construct(**parsed)
         if ingestion.status == Status.queued:
             yield ingestion
-
-
-class DbCreds(pydantic.BaseModel):
-    username: str
-    password: str
-    host: str
-    port: int
-    dbname: str
-    engine: str
-
-    @property
-    def dsn_string(self) -> str:
-        return f"{self.engine}://{self.username}:{self.password}@{self.host}:{self.port}/{self.dbname}"  # noqa
-
-
-def get_db_credentials(secret_arn: str) -> DbCreds:
-    """
-    Load pgSTAC database credentials from AWS Secrets Manager.
-    """
-    print("Fetching DB credentials...")
-    session = boto3.session.Session(region_name=secret_arn.split(":")[3])
-    client = session.client(service_name="secretsmanager")
-    response = client.get_secret_value(SecretId=secret_arn)
-    return DbCreds.parse_raw(response["SecretString"])
-
-
-def convert_decimals_to_float(item: Dict[str, Any]) -> Dict[str, Any]:
-    """
-    DynamoDB stores floats as Decimals. We want to convert them back to floats
-    before inserting them into pgSTAC to avoid any issues when the records are
-    converted to JSON by pgSTAC.
-    """
-
-    def decimal_to_float(obj):
-        if isinstance(obj, decimal.Decimal):
-            return float(obj)
-        raise TypeError
-
-    return orjson.loads(
-        orjson.dumps(
-            item,
-            default=decimal_to_float,
-        )
-    )
-
-
-def load_into_pgstac(creds: DbCreds, ingestions: Sequence[Ingestion]):
-    """
-    Bulk insert STAC records into pgSTAC.
-    """
-    with PgstacDB(dsn=creds.dsn_string, debug=True) as db:
-        loader = VEDALoader(db=db)
-
-        items = [
-            # NOTE: Important to deserialize values to convert decimals to floats
-            convert_decimals_to_float(i.item)
-            for i in ingestions
-        ]
-
-        print(f"Ingesting {len(items)} items")
-        loading_result = loader.load_items(
-            file=items,
-            # use insert_ignore to avoid overwritting existing items or upsert to replace
-            insert_mode=Methods.upsert,
-        )
-
-        # Trigger update on summaries and extents
-        collections = set([item.collection for item in items])
-        for collection in collections:
-            loader.update_collection_summaries(collection)
-
-        return loading_result
 
 
 def update_dynamodb(
@@ -136,14 +64,24 @@ def handler(event: "events.DynamoDBStreamEvent", context: "context_.Context"):
         print("No queued ingestions to process")
         return
 
+    items = [
+        # NOTE: Important to deserialize values to convert decimals to floats
+        convert_decimals_to_float(ingestion.item)
+        for ingestion in ingestions
+    ]
+
+    creds = get_db_credentials(os.environ["DB_SECRET_ARN"])
+
     # Insert into PgSTAC DB
     outcome = Status.succeeded
     message = None
     try:
-        load_into_pgstac(
-            creds=get_db_credentials(os.environ["DB_SECRET_ARN"]),
-            ingestions=ingestions,
-        )
+        with PgstacDB(dsn=creds.dsn_string, debug=True) as db:
+            load_into_pgstac(
+                db=db,
+                ingestions=items,
+                table=IngestionType.items,
+            )
     except Exception as e:
         print(f"Encountered failure loading items into pgSTAC: {e}")
         outcome = Status.failed
