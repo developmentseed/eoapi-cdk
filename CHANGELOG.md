@@ -1,3 +1,10 @@
+# [2.6.0](https://github.com/developmentseed/cdk-pgstac/compare/v2.5.1...v2.6.0) (2023-03-10)
+
+
+### Features
+
+* collection endpoint ([#18](https://github.com/developmentseed/cdk-pgstac/issues/18)) ([d3e9911](https://github.com/developmentseed/cdk-pgstac/commit/d3e991155644d9da08ff7293976a284c252a383b))
+
 ## [2.5.1](https://github.com/developmentseed/cdk-pgstac/compare/v2.5.0...v2.5.1) (2022-12-06)
 
 
