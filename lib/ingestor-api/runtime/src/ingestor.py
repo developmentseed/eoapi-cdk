@@ -4,7 +4,8 @@ from typing import TYPE_CHECKING, Iterator, List, Optional, Sequence
 
 from boto3.dynamodb.types import TypeDeserializer
 
-from .dependencies import get_settings, get_table
+from .dependencies import get_table
+from .config import settings
 from .schemas import Ingestion, Status
 from .utils import get_db_credentials, load_items
 
@@ -37,7 +38,7 @@ def update_dynamodb(
     """
     # Update records in DynamoDB
     print(f"Updating ingested items status in DynamoDB, marking as {status}...")
-    table = get_table(get_settings())
+    table = get_table(settings)
     with table.batch_writer(overwrite_by_pkeys=["created_by", "id"]) as batch:
         for ingestion in ingestions:
             batch.put_item(
