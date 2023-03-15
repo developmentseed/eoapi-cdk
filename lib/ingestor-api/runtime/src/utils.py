@@ -77,8 +77,8 @@ def load_items(creds: DbCreds, ingestions: Sequence[Ingestion]):
         )
 
         # Trigger update on summaries and extents
-        #  collections = set([item.collection for item in items])
-        #  for collection in collections:
-            #  loader.update_collection_summaries(collection)
+        collections = set([item["collection"] for item in items])
+        for collection in collections:
+            loader.update_collection_summaries(collection)
 
         return loading_result
