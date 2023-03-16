@@ -1,12 +1,12 @@
 """Utilities to bulk load data into pgstac from json/ndjson."""
 import logging
 
-from pypgstac.load import Loader
+from pypgstac.load import Loader as BaseLoader
 
 logger = logging.getLogger(__name__)
 
 
-class VEDALoader(Loader):
+class Loader(BaseLoader):
     """Utilities for loading data and updating collection summaries/extents."""
 
     def __init__(self, db) -> None:
