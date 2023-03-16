@@ -4,8 +4,8 @@ from typing import TYPE_CHECKING, Iterator, List, Optional, Sequence
 
 from boto3.dynamodb.types import TypeDeserializer
 
-from .dependencies import get_table
 from .config import settings
+from .dependencies import get_table
 from .schemas import Ingestion, Status
 from .utils import get_db_credentials, load_items
 
