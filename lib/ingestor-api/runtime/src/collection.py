@@ -1,14 +1,10 @@
 import os
 
 from pypgstac.db import PgstacDB
+from pypgstac.load import Methods
 
 from .schemas import StacCollection
-from .utils import (
-    IngestionType,
-    convert_decimals_to_float,
-    get_db_credentials,
-    load_into_pgstac,
-)
+from .utils import get_db_credentials
 from .vedaloader import VEDALoader
 
 
@@ -18,12 +14,13 @@ def ingest(collection: StacCollection):
     does necessary preprocessing,
     and loads into the PgSTAC collection table
     """
-    creds = get_db_credentials(os.environ["DB_SECRET_ARN"])
-    collection = [
-        convert_decimals_to_float(collection.dict(by_alias=True, exclude_unset=True))
-    ]
-    with PgstacDB(dsn=creds.dsn_string, debug=True) as db:
-        load_into_pgstac(db=db, ingestions=collection, table=IngestionType.collections)
+    try:
+        creds = get_db_credentials(os.environ["DB_SECRET_ARN"])
+        with PgstacDB(dsn=creds.dsn_string, debug=True) as db:
+            loader = VEDALoader(db=db)
+            loader.load_collection(file=collection, insert_mode=Methods.upsert)
+    except Exception as e:
+        print(f"Encountered failure loading collection into pgSTAC: {e}")
 
 
 def delete(collection_id: str):

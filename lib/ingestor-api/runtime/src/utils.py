@@ -1,7 +1,6 @@
 import decimal
 import json
-from enum import Enum
-from typing import Any, Dict, Sequence, Union
+from typing import Any, Dict, Sequence
 
 import boto3
 import orjson
@@ -9,13 +8,8 @@ import pydantic
 from pypgstac.db import PgstacDB
 from pypgstac.load import Methods
 
-from .schemas import AccessibleItem, StacCollection
+from .schemas import Ingestion
 from .vedaloader import VEDALoader
-
-
-class IngestionType(str, Enum):
-    collections = "collections"
-    items = "items"
 
 
 class DbCreds(pydantic.BaseModel):
@@ -62,47 +56,29 @@ def convert_decimals_to_float(item: Dict[str, Any]) -> Dict[str, Any]:
     )
 
 
-def load_items(items: Sequence[AccessibleItem], loader):
-    """
-    Loads items into the PgSTAC database and
-    updates the summaries and extent for the collections involved
-    """
-    loading_result = loader.load_items(
-        file=items,
-        # use insert_ignore to avoid overwritting existing items or upsert to replace
-        insert_mode=Methods.upsert,
-    )
-
-    # Trigger update on summaries and extents
-    collections = set([item["collection"] for item in items])
-    for collection in collections:
-        loader.update_collection_summaries(collection)
-
-    return loading_result
-
-
-def load_collection(collection: Sequence[StacCollection], loader):
-    """
-    Loads the collection to the PgSTAC database
-    """
-    return loader.load_collections(
-        file=collection,
-        # use insert_ignore to avoid overwritting existing items or upsert to replace
-        insert_mode=Methods.upsert,
-    )
-
-
-def load_into_pgstac(
-    db: "PgstacDB",
-    ingestions: Union[Sequence[AccessibleItem], Sequence[StacCollection]],
-    table: IngestionType,
-):
+def load_items(creds: DbCreds, ingestions: Sequence[Ingestion]):
     """
     Bulk insert STAC records into pgSTAC.
-    The ingestion can be items or collection, determined by the `table` arg.
     """
-    loader = VEDALoader(db=db)
-    loading_function = load_items
-    if table == IngestionType.collections:
-        loading_function = load_collection
-    return loading_function(ingestions, loader)
+    with PgstacDB(dsn=creds.dsn_string, debug=True) as db:
+        loader = VEDALoader(db=db)
+
+        items = [
+            # NOTE: Important to deserialize values to convert decimals to floats
+            convert_decimals_to_float(i.item)
+            for i in ingestions
+        ]
+
+        print(f"Ingesting {len(items)} items")
+        loading_result = loader.load_items(
+            file=items,
+            # use insert_ignore to avoid overwritting existing items or upsert to replace
+            insert_mode=Methods.upsert,
+        )
+
+        # Trigger update on summaries and extents
+        collections = set([item["collection"] for item in items])
+        for collection in collections:
+            loader.update_collection_summaries(collection)
+
+        return loading_result
