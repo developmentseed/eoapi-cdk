@@ -1,3 +1,10 @@
+## [2.6.2](https://github.com/developmentseed/cdk-pgstac/compare/v2.6.1...v2.6.2) (2023-03-16)
+
+
+### Bug Fixes
+
+* **ingestor:** queries require sequences ([#23](https://github.com/developmentseed/cdk-pgstac/issues/23)) ([00d71cc](https://github.com/developmentseed/cdk-pgstac/commit/00d71cc1d253e77f1cd11afe9e4b513a577a67a2))
+
 ## [2.6.1](https://github.com/developmentseed/cdk-pgstac/compare/v2.6.0...v2.6.1) (2023-03-16)
 
 
