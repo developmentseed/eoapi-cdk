@@ -1,3 +1,10 @@
+## [2.6.1](https://github.com/developmentseed/cdk-pgstac/compare/v2.6.0...v2.6.1) (2023-03-16)
+
+
+### Reverts
+
+* Revert "Release 2.7.0. (#21)" (#22) ([f08e8e8](https://github.com/developmentseed/cdk-pgstac/commit/f08e8e8140c15ed608ab16a053641e20603bf7c5)), closes [#21](https://github.com/developmentseed/cdk-pgstac/issues/21) [#22](https://github.com/developmentseed/cdk-pgstac/issues/22)
+
 # [2.6.0](https://github.com/developmentseed/cdk-pgstac/compare/v2.5.1...v2.6.0) (2023-03-10)
 
 
