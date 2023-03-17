@@ -9,7 +9,7 @@ from pypgstac.db import PgstacDB
 from pypgstac.load import Methods
 
 from .schemas import Ingestion
-from .vedaloader import VEDALoader
+from .loader import Loader
 
 
 class DbCreds(pydantic.BaseModel):
@@ -61,7 +61,7 @@ def load_items(creds: DbCreds, ingestions: Sequence[Ingestion]):
     Bulk insert STAC records into pgSTAC.
     """
     with PgstacDB(dsn=creds.dsn_string, debug=True) as db:
-        loader = VEDALoader(db=db)
+        loader = Loader(db=db)
 
         items = [
             # NOTE: Important to deserialize values to convert decimals to floats
