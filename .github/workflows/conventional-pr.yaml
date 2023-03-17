@@ -1,0 +1,26 @@
+name: conventional-pr
+on:
+  pull_request:
+    branches:
+      - main
+      - master
+    types:
+      - opened
+      - edited
+      - synchronize
+jobs:
+  lint-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Get Release Bot Token
+        id: get-token
+        uses: getsentry/action-github-app-token@v1
+        with:
+          app_id: ${{ secrets.DS_RELEASE_BOT_ID }}
+          private_key: ${{ secrets.DS_RELEASE_BOT_PRIVATE_KEY }}
+
+      - uses: CondeNast/conventional-pull-request-action@v0.2.0
+        env:
+          GITHUB_TOKEN: ${{ steps.get-token.outputs.token }}
