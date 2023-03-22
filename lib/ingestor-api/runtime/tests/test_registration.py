@@ -36,11 +36,12 @@ class TestList:
 
     def test_simple_lookup(self):
         self.mock_table.put_item(Item=self.example_ingestion.dynamodb_dict())
-
+        ingestion = self.example_ingestion.dynamodb_dict()
+        ingestion["item"] = json.loads(ingestion["item"])
         response = self.api_client.get(ingestion_endpoint)
         assert response.status_code == 200
         assert response.json() == {
-            "items": [json.loads(self.example_ingestion.json(by_alias=True))],
+            "items": [ingestion],
             "next": None,
         }
 
@@ -57,10 +58,13 @@ class TestList:
         response = self.api_client.get(ingestion_endpoint, params={"limit": limit})
         assert response.status_code == 200
         assert json.loads(base64.b64decode(response.json()["next"])) == expected_next
-        assert response.json()["items"] == [
-            json.loads(ingestion.json(by_alias=True))
-            for ingestion in example_ingestions[:limit]
-        ]
+        ingestions = []
+        for ingestion in example_ingestions[:limit]:
+            item = ingestion.dynamodb_dict()
+            item["item"] = json.loads(item["item"])
+            ingestions.append(item)
+
+        assert response.json()["items"] == ingestions
 
     @pytest.mark.skip(reason="Test is currently broken")
     def test_get_next_page(self):

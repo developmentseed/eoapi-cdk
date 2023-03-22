@@ -3,9 +3,9 @@ import os
 from pypgstac.db import PgstacDB
 from pypgstac.load import Methods
 
+from .loader import Loader
 from .schemas import StacCollection
 from .utils import get_db_credentials
-from .loader import Loader
 
 
 def ingest(collection: StacCollection):

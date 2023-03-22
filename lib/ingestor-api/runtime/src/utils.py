@@ -8,8 +8,8 @@ import pydantic
 from pypgstac.db import PgstacDB
 from pypgstac.load import Methods
 
-from .schemas import Ingestion
 from .loader import Loader
+from .schemas import Ingestion
 
 
 class DbCreds(pydantic.BaseModel):

@@ -101,7 +101,10 @@ def example_stac_item():
                 ]
             ],
         },
-        "properties": {"datetime": "2020-12-11T22:38:32.125000Z"},
+        "properties": {
+            "datetime": "2020-12-11T22:38:32.125000Z",
+            "eo:cloud_cover": 1,
+        },
         "collection": "simple-collection",
         "links": [
             {
