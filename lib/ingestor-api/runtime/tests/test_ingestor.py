@@ -1,25 +1,26 @@
 from unittest.mock import patch
+
 import pytest
 
 
 @pytest.fixture()
 def dynamodb_stream_event():
-    return {
-        "Records": None
-    }
+    return {"Records": None}
 
 
 @pytest.fixture()
 def get_queued_ingestions(example_ingestion):
-    with patch("src.ingestor.get_queued_ingestions",
-               return_value=iter([example_ingestion]), autospec=True) as m:
+    with patch(
+        "src.ingestor.get_queued_ingestions",
+        return_value=iter([example_ingestion]),
+        autospec=True,
+    ) as m:
         yield m
 
 
 @pytest.fixture()
 def get_db_credentials():
-    with patch("src.ingestor.get_db_credentials",
-               return_value="", autospec=True) as m:
+    with patch("src.ingestor.get_db_credentials", return_value="", autospec=True) as m:
         yield m
 
 
@@ -47,13 +48,13 @@ def test_handler(
     mock_table,
 ):
     import src.ingestor as ingestor
+
     ingestor.handler(dynamodb_stream_event, {})
     load_items.assert_called_once_with(
         creds="",
         ingestions=list([example_ingestion]),
     )
-    response = mock_table.get_item(Key={
-        "created_by": example_ingestion.created_by,
-        "id": example_ingestion.id
-    })
+    response = mock_table.get_item(
+        Key={"created_by": example_ingestion.created_by, "id": example_ingestion.id}
+    )
     assert response["Item"]["status"] == "succeeded"

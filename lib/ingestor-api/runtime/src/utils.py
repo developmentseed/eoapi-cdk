@@ -42,10 +42,7 @@ def load_items(creds: DbCreds, ingestions: Sequence[Ingestion]):
     with PgstacDB(dsn=creds.dsn_string, debug=True) as db:
         loader = Loader(db=db)
 
-        items = [
-            json.loads(orjson.dumps(i.item.dict()))
-            for i in ingestions
-        ]
+        items = [json.loads(orjson.dumps(i.item.dict())) for i in ingestions]
         loading_result = loader.load_items(
             file=items,
             # use insert_ignore to avoid overwritting existing items or upsert to replace
