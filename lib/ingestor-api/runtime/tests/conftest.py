@@ -20,6 +20,7 @@ def test_environ():
     os.environ["JWKS_URL"] = "https://test-jwks.url"
     os.environ["STAC_URL"] = "https://test-stac.url"
     os.environ["DATA_ACCESS_ROLE"] = "arn:aws:iam::123456789012:role/test-role"
+    os.environ["DB_SECRET_ARN"] = "testing"
 
 
 @pytest.fixture
