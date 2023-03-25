@@ -3,7 +3,6 @@ from unittest.mock import Mock, patch
 
 import orjson
 import pytest
-
 from pypgstac.load import Methods
 from src.utils import DbCreds
 
@@ -23,21 +22,15 @@ def pgstacdb():
 
 @pytest.fixture()
 def dbcreds():
-    dbcreds = DbCreds(
-        username="",
-        password="",
-        host="",
-        port=1,
-        dbname="",
-        engine=""
-    )
+    dbcreds = DbCreds(username="", password="", host="", port=1, dbname="", engine="")
     return dbcreds
 
 
 def test_load_items(loader, pgstacdb, example_ingestion, dbcreds):
     import src.utils as utils
+
     utils.load_items(dbcreds, list([example_ingestion]))
     loader.return_value.load_items.assert_called_once_with(
         file=[json.loads(orjson.dumps(example_ingestion.item.dict()))],
-        insert_mode=Methods.upsert
+        insert_mode=Methods.upsert,
     )
