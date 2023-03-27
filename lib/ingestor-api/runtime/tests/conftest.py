@@ -129,13 +129,13 @@ def example_stac_item():
         ],
         "assets": {
             "visual": {
-                "href": "https://storage.googleapis.com/open-cogs/stac-examples/20201211_223832_CS2.tif",  # noqa
+                "href": "https://TEST_API.com/open-cogs/stac-examples/20201211_223832_CS2.tif",  # noqa
                 "type": "image/tiff; application=geotiff; profile=cloud-optimized",
                 "title": "3-Band Visual",
                 "roles": ["visual"],
             },
             "thumbnail": {
-                "href": "https://storage.googleapis.com/open-cogs/stac-examples/20201211_223832_CS2.jpg",  # noqa
+                "href": "https://TEST_API.com/open-cogs/stac-examples/20201211_223832_CS2.jpg",  # noqa
                 "title": "Thumbnail",
                 "type": "image/jpeg",
                 "roles": ["thumbnail"],
@@ -248,10 +248,7 @@ def client_authenticated(app):
     """
     from src.dependencies import get_username
 
-    def skip_auth():
-        pass
-
-    app.dependency_overrides[get_username] = skip_auth
+    app.dependency_overrides[get_username] = lambda: 'test_user'
     return TestClient(app)
 
 

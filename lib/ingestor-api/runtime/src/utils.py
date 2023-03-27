@@ -1,11 +1,10 @@
-import json
 from typing import Sequence
 
 import boto3
-import orjson
 import pydantic
 from pypgstac.db import PgstacDB
 from pypgstac.load import Methods
+from fastapi.encoders import jsonable_encoder
 
 from .loader import Loader
 from .schemas import Ingestion
@@ -42,7 +41,8 @@ def load_items(creds: DbCreds, ingestions: Sequence[Ingestion]):
     with PgstacDB(dsn=creds.dsn_string, debug=True) as db:
         loader = Loader(db=db)
 
-        items = [json.loads(orjson.dumps(i.item.dict())) for i in ingestions]
+        # serialize to JSON-friendly dicts (won't be necessary in Pydantic v2, https://github.com/pydantic/pydantic/issues/1409#issuecomment-1423995424)
+        items = jsonable_encoder(i.item for i in ingestions)
         loading_result = loader.load_items(
             file=items,
             # use insert_ignore to avoid overwritting existing items or upsert to replace

@@ -3,10 +3,10 @@ import binascii
 import enum
 import json
 from datetime import datetime
-from decimal import Decimal
 from typing import TYPE_CHECKING, Dict, List, Optional, Union
 from urllib.parse import urlparse
 
+from fastapi.encoders import jsonable_encoder
 from fastapi.exceptions import RequestValidationError
 from pydantic import (
     BaseModel,
@@ -30,7 +30,7 @@ class AccessibleAsset(shared.Asset):
         url = urlparse(href)
 
         if url.scheme in ["https", "http"]:
-            validators.url_is_accessible(href)
+            validators.url_is_accessible(href=href)
         elif url.scheme in ["s3"]:
             validators.s3_object_is_accessible(
                 bucket=url.hostname, key=url.path.lstrip("/")
@@ -73,19 +73,6 @@ class Ingestion(BaseModel):
 
     item: Union[Item, Json[Item]]
 
-    class Config:
-        json_encoders = {
-            # Custom JSON serializer to ensure that item encodes as string.
-            # NOTE: when serializing, must call as ingestion.json(models_as_dict=False)
-            Item: lambda item: item.json(by_alias=True),
-        }
-
-    def json(self, *args, **kwargs):
-        # Update default to not represent models (e.g. `items` property) as a dict to
-        # allow our `json_encoders` override to properly serialize `items` property
-        kwargs.setdefault("models_as_dict", False)
-        return super().json(*args, **kwargs)
-
     @validator("created_at", pre=True, always=True, allow_reuse=True)
     @validator("updated_at", pre=True, always=True, allow_reuse=True)
     def set_ts_now(cls, v):
@@ -104,9 +91,16 @@ class Ingestion(BaseModel):
         db.write(self)
         return self
 
-    def dynamodb_dict(self, by_alias=True):
+    def dynamodb_dict(self):
         """DynamoDB-friendly serialization"""
-        return json.loads(self.json(by_alias=by_alias), parse_float=Decimal)
+        # convert to dictionary
+        output = self.dict(exclude={"item"})
+
+        # add STAC item as string
+        output["item"] = self.item.json()
+
+        # make JSON-friendly (will be able to do with Pydantic V2, https://github.com/pydantic/pydantic/issues/1409#issuecomment-1423995424)
+        return jsonable_encoder(output)
 
 
 @dataclasses.dataclass
