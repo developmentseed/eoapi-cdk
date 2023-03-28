@@ -23,7 +23,7 @@ def get_queued_ingestions(records: List["DynamodbRecord"]) -> Iterator[Ingestion
             k: deserializer.deserialize(v)
             for k, v in record["dynamodb"]["NewImage"].items()
         }
-        ingestion = Ingestion.construct(**parsed)
+        ingestion = Ingestion.parse_obj(parsed)
         if ingestion.status == Status.queued:
             yield ingestion
 

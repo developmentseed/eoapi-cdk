@@ -27,7 +27,7 @@ class Loader(BaseLoader):
                     )
                 )
                 cur.execute(
-                    "SELECT dashboard.update_collection_default_summaries(%s)",
+                    "SELECT dashboard.update_default_summaries(%s)",
                     [collection_id],
                 )
                 logger.info("Updating bbox for collection: {}.".format(collection_id))

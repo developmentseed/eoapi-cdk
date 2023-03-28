@@ -1,15 +1,13 @@
-import decimal
-import json
-from typing import Any, Dict, Sequence
+from typing import Sequence
 
 import boto3
-import orjson
 import pydantic
 from pypgstac.db import PgstacDB
 from pypgstac.load import Methods
+from fastapi.encoders import jsonable_encoder
 
-from .schemas import Ingestion
 from .loader import Loader
+from .schemas import Ingestion
 
 
 class DbCreds(pydantic.BaseModel):
@@ -36,26 +34,6 @@ def get_db_credentials(secret_arn: str) -> DbCreds:
     return DbCreds.parse_raw(response["SecretString"])
 
 
-def convert_decimals_to_float(item: Dict[str, Any]) -> Dict[str, Any]:
-    """
-    DynamoDB stores floats as Decimals. We want to convert them back to floats
-    before inserting them into pgSTAC to avoid any issues when the records are
-    converted to JSON by pgSTAC.
-    """
-
-    def decimal_to_float(obj):
-        if isinstance(obj, decimal.Decimal):
-            return float(obj)
-        raise TypeError
-
-    return json.loads(
-        orjson.dumps(
-            item,
-            default=decimal_to_float,
-        )
-    )
-
-
 def load_items(creds: DbCreds, ingestions: Sequence[Ingestion]):
     """
     Bulk insert STAC records into pgSTAC.
@@ -63,13 +41,8 @@ def load_items(creds: DbCreds, ingestions: Sequence[Ingestion]):
     with PgstacDB(dsn=creds.dsn_string, debug=True) as db:
         loader = Loader(db=db)
 
-        items = [
-            # NOTE: Important to deserialize values to convert decimals to floats
-            convert_decimals_to_float(i.item)
-            for i in ingestions
-        ]
-
-        print(f"Ingesting {len(items)} items")
+        # serialize to JSON-friendly dicts (won't be necessary in Pydantic v2, https://github.com/pydantic/pydantic/issues/1409#issuecomment-1423995424)
+        items = jsonable_encoder(i.item for i in ingestions)
         loading_result = loader.load_items(
             file=items,
             # use insert_ignore to avoid overwritting existing items or upsert to replace

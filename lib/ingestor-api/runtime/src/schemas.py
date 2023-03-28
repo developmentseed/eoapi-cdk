@@ -3,12 +3,19 @@ import binascii
 import enum
 import json
 from datetime import datetime
-from decimal import Decimal
-from typing import TYPE_CHECKING, Dict, List, Optional
+from typing import TYPE_CHECKING, Dict, List, Optional, Union
 from urllib.parse import urlparse
 
+from fastapi.encoders import jsonable_encoder
 from fastapi.exceptions import RequestValidationError
-from pydantic import BaseModel, PositiveInt, dataclasses, error_wrappers, validator
+from pydantic import (
+    BaseModel,
+    Json,
+    PositiveInt,
+    dataclasses,
+    error_wrappers,
+    validator,
+)
 from stac_pydantic import Collection, Item, shared
 
 from . import validators
@@ -23,7 +30,7 @@ class AccessibleAsset(shared.Asset):
         url = urlparse(href)
 
         if url.scheme in ["https", "http"]:
-            validators.url_is_accessible(href)
+            validators.url_is_accessible(href=href)
         elif url.scheme in ["s3"]:
             validators.s3_object_is_accessible(
                 bucket=url.hostname, key=url.path.lstrip("/")
@@ -64,7 +71,7 @@ class Ingestion(BaseModel):
     created_at: datetime = None
     updated_at: datetime = None
 
-    item: Item
+    item: Union[Item, Json[Item]]
 
     @validator("created_at", pre=True, always=True, allow_reuse=True)
     @validator("updated_at", pre=True, always=True, allow_reuse=True)
@@ -84,9 +91,16 @@ class Ingestion(BaseModel):
         db.write(self)
         return self
 
-    def dynamodb_dict(self, by_alias=True):
+    def dynamodb_dict(self):
         """DynamoDB-friendly serialization"""
-        return json.loads(self.json(by_alias=by_alias), parse_float=Decimal)
+        # convert to dictionary
+        output = self.dict(exclude={"item"})
+
+        # add STAC item as string
+        output["item"] = self.item.json()
+
+        # make JSON-friendly (will be able to do with Pydantic V2, https://github.com/pydantic/pydantic/issues/1409#issuecomment-1423995424)
+        return jsonable_encoder(output)
 
 
 @dataclasses.dataclass

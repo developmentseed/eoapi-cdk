@@ -20,6 +20,7 @@ def test_environ():
     os.environ["JWKS_URL"] = "https://test-jwks.url"
     os.environ["STAC_URL"] = "https://test-stac.url"
     os.environ["DATA_ACCESS_ROLE"] = "arn:aws:iam::123456789012:role/test-role"
+    os.environ["DB_SECRET_ARN"] = "testing"
 
 
 @pytest.fixture
@@ -101,7 +102,10 @@ def example_stac_item():
                 ]
             ],
         },
-        "properties": {"datetime": "2020-12-11T22:38:32.125000Z"},
+        "properties": {
+            "datetime": "2020-12-11T22:38:32.125000Z",
+            "eo:cloud_cover": 1,
+        },
         "collection": "simple-collection",
         "links": [
             {
@@ -125,13 +129,13 @@ def example_stac_item():
         ],
         "assets": {
             "visual": {
-                "href": "https://storage.googleapis.com/open-cogs/stac-examples/20201211_223832_CS2.tif",  # noqa
+                "href": "https://TEST_API.com/open-cogs/stac-examples/20201211_223832_CS2.tif",  # noqa
                 "type": "image/tiff; application=geotiff; profile=cloud-optimized",
                 "title": "3-Band Visual",
                 "roles": ["visual"],
             },
             "thumbnail": {
-                "href": "https://storage.googleapis.com/open-cogs/stac-examples/20201211_223832_CS2.jpg",  # noqa
+                "href": "https://TEST_API.com/open-cogs/stac-examples/20201211_223832_CS2.jpg",  # noqa
                 "title": "Thumbnail",
                 "type": "image/jpeg",
                 "roles": ["thumbnail"],
@@ -244,10 +248,7 @@ def client_authenticated(app):
     """
     from src.dependencies import get_username
 
-    def skip_auth():
-        pass
-
-    app.dependency_overrides[get_username] = skip_auth
+    app.dependency_overrides[get_username] = lambda: 'test_user'
     return TestClient(app)
 
 
