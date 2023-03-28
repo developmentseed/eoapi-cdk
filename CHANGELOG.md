@@ -10,7 +10,7 @@
 
 ### Bug Fixes
 
-* **ingestor:** queries require sequences ([#23](https://github.com/developmentseed/cdk-pgstac/issues/23)) ([00d71cc](https://github.com/developmentseed/cdk-pgstac/commit/00d71cc1d253e77f1cd11afe9e4b513a577a67a2))
+* **ingestor-api:** queries require sequences ([#23](https://github.com/developmentseed/cdk-pgstac/issues/23)) ([00d71cc](https://github.com/developmentseed/cdk-pgstac/commit/00d71cc1d253e77f1cd11afe9e4b513a577a67a2))
 
 ## [2.6.1](https://github.com/developmentseed/cdk-pgstac/compare/v2.6.0...v2.6.1) (2023-03-16)
 
@@ -38,7 +38,7 @@
 
 ### Features
 
-* **ingestor:** Add flag to enable requester pays ([efc160d](https://github.com/developmentseed/cdk-pgstac/commit/efc160d3530a70d1fc8f88ef9dce4a4d48456834))
+* **ingestor-api:** Add flag to enable requester pays ([efc160d](https://github.com/developmentseed/cdk-pgstac/commit/efc160d3530a70d1fc8f88ef9dce4a4d48456834))
 
 # [2.4.0](https://github.com/developmentseed/cdk-pgstac/compare/v2.3.1...v2.4.0) (2022-11-08)
 
