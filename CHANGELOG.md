@@ -1,3 +1,10 @@
+## [2.6.3](https://github.com/developmentseed/cdk-pgstac/compare/v2.6.2...v2.6.3) (2023-03-28)
+
+
+### Bug Fixes
+
+* **ingestor-api:** store STAC item as string in DynamoDB ([#26](https://github.com/developmentseed/cdk-pgstac/issues/26)) ([bd7a1fa](https://github.com/developmentseed/cdk-pgstac/commit/bd7a1fa799cc9765df2939a444593205efa6bf4d))
+
 ## [2.6.2](https://github.com/developmentseed/cdk-pgstac/compare/v2.6.1...v2.6.2) (2023-03-16)
 
 
