@@ -48,5 +48,5 @@ def load_items(creds: DbCreds, ingestions: Sequence[Ingestion]):
             # use insert_ignore to avoid overwritting existing items or upsert to replace
             insert_mode=Methods.upsert,
         )
-        
+
         return loading_result

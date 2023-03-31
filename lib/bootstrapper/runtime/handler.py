@@ -133,6 +133,7 @@ def register_extensions(cursor) -> None:
     """Add PostGIS extension."""
     cursor.execute(sql.SQL("CREATE EXTENSION IF NOT EXISTS postgis;"))
 
+
 def handler(event, context):
     """Lambda Handler."""
     print(f"Handling {event}")
