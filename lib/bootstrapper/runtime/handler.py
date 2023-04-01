@@ -5,6 +5,7 @@ Source: https://github.com/developmentseed/eoAPI/blob/master/deployment/handlers
 import json
 
 import boto3
+import os
 import psycopg
 import requests
 from psycopg import sql
@@ -214,8 +215,12 @@ def handler(event, context):
 
     try:
         params = event["ResourceProperties"]
-        connection_params = get_secret(params["conn_secret_arn"])
-        user_params = get_secret(params["new_user_secret_arn"])
+        if os.environ['ENV'] == 'local':
+            connection_params = params["conn_secret_arn"]
+            user_params = params["new_user_secret_arn"]
+        else:
+            connection_params = get_secret(params["conn_secret_arn"])
+            user_params = get_secret(params["new_user_secret_arn"])
 
         print("Connecting to admin DB...")
         admin_db_conninfo = make_conninfo(
@@ -313,4 +318,26 @@ def handler(event, context):
         raise e
 
     print("Complete.")
-    return send(event, context, "SUCCESS", {})
+    if os.environ['ENV'] != 'local':
+        return send(event, context, "SUCCESS", {})
+
+if os.environ['ENV'] == 'local':
+    event = {
+        'RequestType': 'Create',
+        'ResourceProperties': {
+            'pgstac_version': '0.7.2',
+            'conn_secret_arn': {
+                'username': 'user',
+                'password': 'password',
+                'host': 'db',
+                'port': 5432,
+                'dbname': 'pgstac'
+            },
+            'new_user_secret_arn': {
+                'username': 'user',
+                'password': 'password',
+                'dbname': 'pgstac'
+            }
+        }
+    }
+    handler(event, {})

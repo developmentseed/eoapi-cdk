@@ -1,0 +1,15 @@
+ARG PYTHON_VERSION=3.9
+
+FROM ghcr.io/vincentsarago/uvicorn-gunicorn:${PYTHON_VERSION}
+
+ENV CURL_CA_BUNDLE /etc/ssl/certs/ca-certificates.crt
+
+COPY lib/stac-api/runtime /tmp/stac
+# Installing boto3, which isn't needed in the lambda container instance
+# since lambda execution environment includes boto3 by default
+RUN pip install boto3
+RUN pip install /tmp/stac
+RUN rm -rf /tmp/stac
+
+ENV MODULE_NAME src.app
+ENV VARIABLE_NAME app

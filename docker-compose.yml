@@ -1,0 +1,52 @@
+version: "3.9"
+
+services:
+  api:
+    container_name: api
+    build:
+      context: .
+      dockerfile: Dockerfile.stac
+      args:
+        PGSTAC_VERSION: 0.7.2 
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASS: password
+      POSTGRES_PORT: 5432
+      POSTGRES_DBNAME: pgstac 
+      postgres_host_reader: db
+      postgres_host_writer: db
+      PORT: 8000
+    networks:
+      - app_network
+
+  db:
+    container_name: db
+    build:
+      context: .
+      dockerfile: lib/bootstrapper/runtime/Dockerfile
+      args:
+        PGSTAC_VERSION: 0.7.2
+        ENV: local
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: pgstac
+      ENV: local
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - app_network
+    command: postgres -N 500
+
+networks:
+  app_network:
+    name: app_network
+
+volumes:
+  db_data:
