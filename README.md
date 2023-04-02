@@ -16,4 +16,14 @@ _Warning_: If you rebase `main`, you must ensure that the commits referenced by 
 ```bash
 docker-compose up
 docker exec db python3 /asset/handler.py
+# if you wish to insert test data
+docker exec db python3 /asset/insert-test-data.py
+```
+
+### Inspect the database
+
+
+```bash
+docker exec -it db psql -U user -d pgstac
+pgstac=# select * from pgstac.collections;
 ```

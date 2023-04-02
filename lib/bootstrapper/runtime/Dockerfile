@@ -14,6 +14,7 @@ WORKDIR /tmp
 RUN pip install boto3 requests psycopg[binary,pool] pypgstac==${PGSTAC_VERSION} -t /asset
 
 COPY lib/bootstrapper/runtime/handler.py /asset/handler.py
+COPY lib/bootstrapper/insert-test-data.py /asset/insert-test-data.py
 
 # https://stackoverflow.com/a/61746719
 # Tip from eoAPI
