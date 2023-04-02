@@ -327,16 +327,16 @@ if os.environ['ENV'] == 'local':
         'ResourceProperties': {
             'pgstac_version': '0.7.2',
             'conn_secret_arn': {
-                'username': 'user',
-                'password': 'password',
+                'username': os.environ['POSTGRES_USER'],
+                'password': os.environ['POSTGRES_PASSWORD'],
                 'host': 'db',
                 'port': 5432,
-                'dbname': 'pgstac'
+                'dbname': os.environ['POSTGRES_DB']
             },
             'new_user_secret_arn': {
-                'username': 'user',
-                'password': 'password',
-                'dbname': 'pgstac'
+                'username': os.environ['POSTGRES_USER'],
+                'password': os.environ['POSTGRES_PASSWORD'],
+                'dbname': os.environ['POSTGRES_DB']
             }
         }
     }
