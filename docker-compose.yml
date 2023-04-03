@@ -36,6 +36,7 @@ services:
       POSTGRES_PASSWORD: password
       POSTGRES_DB: pgstac
       ENV: local
+      PGSTAC_VERSION: 0.7.2
     volumes:
       - db_data:/var/lib/postgresql/data
     networks:

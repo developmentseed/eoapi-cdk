@@ -133,6 +133,22 @@ def register_extensions(cursor) -> None:
     """Add PostGIS extension."""
     cursor.execute(sql.SQL("CREATE EXTENSION IF NOT EXISTS postgis;"))
 
+def create_substring_search_function(cursor) -> None:
+    """Add substring search function."""
+    sql_string = """
+    CREATE OR REPLACE FUNCTION substring_search_collections(search_term TEXT)
+    RETURNS TABLE (id TEXT, content JSONB)
+    AS $$
+    BEGIN
+        RETURN QUERY
+        SELECT collections.id::text, collections.content::jsonb
+        FROM collections
+        WHERE collections.content::text ILIKE '%' || search_term || '%';
+    END;
+    $$ LANGUAGE plpgsql;
+    """
+    cursor.execute(sql.SQL(sql_string))
+
 def handler(event, context):
     """Lambda Handler."""
     print(f"Handling {event}")
@@ -228,6 +244,13 @@ def handler(event, context):
                     "CREATE INDEX IF NOT EXISTS searches_mosaic ON searches ((true)) WHERE metadata->>'type'='mosaic';"
                 )
             )
+
+        # Create search function
+        with psycopg.connect(stac_db_conninfo, autocommit=True) as conn:
+            with conn.cursor() as cur:
+                print("Creating search function...")
+                create_substring_search_function(cursor=cur)
+
     except Exception as e:
         print(f"Unable to bootstrap database with exception={e}")
         send(event, context, "FAILED", {"message": str(e)})
@@ -241,7 +264,7 @@ if os.environ['ENV'] == 'local':
     event = {
         'RequestType': 'Create',
         'ResourceProperties': {
-            'pgstac_version': '0.7.2',
+            'pgstac_version': os.environ['PGSTAC_VERSION'],
             'conn_secret_arn': {
                 'username': os.environ['POSTGRES_USER'],
                 'password': os.environ['POSTGRES_PASSWORD'],
