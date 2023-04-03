@@ -134,77 +134,6 @@ def register_extensions(cursor) -> None:
     cursor.execute(sql.SQL("CREATE EXTENSION IF NOT EXISTS postgis;"))
 
 
-def create_dashboard_schema(cursor, username: str) -> None:
-    """Create custom schema for dashboard-specific functions."""
-    cursor.execute(
-        sql.SQL(
-            "CREATE SCHEMA IF NOT EXISTS dashboard;"
-            "GRANT ALL ON SCHEMA dashboard TO {username};"
-            "ALTER ROLE {username} SET SEARCH_PATH TO dashboard, pgstac, public;"
-        ).format(username=sql.Identifier(username))
-    )
-
-
-def create_update_default_summaries_function(cursor) -> None:
-    """Create function to update collection summary metadata about default item assets."""
-
-    update_default_summary_sql = """
-    CREATE OR REPLACE FUNCTION dashboard.update_default_summaries(_collection_id text) RETURNS VOID AS $$
-    WITH coll_item_cte AS (
-        SELECT jsonb_build_object(
-            'summaries',
-            jsonb_build_object(
-                'datetime', (
-                    CASE
-                    WHEN (collections."content"->>'dashboard:is_periodic')::boolean
-                    THEN (to_jsonb(array[
-                        to_char(min(datetime) at time zone 'Z', 'YYYY-MM-DD"T"HH24:MI:SS"Z"'),
-                        to_char(max(datetime) at time zone 'Z', 'YYYY-MM-DD"T"HH24:MI:SS"Z"')]))
-                    ELSE jsonb_agg(distinct to_char(datetime at time zone 'Z', 'YYYY-MM-DD"T"HH24:MI:SS"Z"'))
-                    END
-                ),
-                'cog_default', (
-                    CASE
-                    WHEN collections."content"->'item_assets' ? 'cog_default'
-                    THEN jsonb_build_object(
-                        'min', min((items."content"->'assets'->'cog_default'->'raster:bands'-> 0 ->'statistics'->>'minimum')::float),
-                        'max', max((items."content"->'assets'->'cog_default'->'raster:bands'-> 0 ->'statistics'->>'maximum')::float)
-                        )
-                    ELSE NULL
-                    END
-                )
-            )
-        ) summaries,
-        collections.id coll_id
-        FROM items
-        JOIN collections on items.collection = collections.id
-        WHERE collections.id = _collection_id
-        GROUP BY collections."content" , collections.id
-    )
-    UPDATE collections SET "content" = "content" || coll_item_cte.summaries
-    FROM coll_item_cte
-    WHERE collections.id = coll_item_cte.coll_id;
-    $$ LANGUAGE SQL SET SEARCH_PATH TO dashboard, pgstac, public;
-    """
-
-    cursor.execute(sql.SQL(update_default_summary_sql))
-
-
-def create_update_all_default_summaries_function(cursor) -> None:
-    """Create function to update default summaries for all collections with required properties"""
-
-    update_all_default_summaries_sql = """
-    CREATE OR REPLACE FUNCTION dashboard.update_all_default_summaries() RETURNS VOID AS $$
-    SELECT
-        update_default_summaries(id)
-    FROM collections
-    WHERE collections."content" ?| array['item_assets', 'dashboard:is_periodic'];
-    $$ LANGUAGE SQL SET SEARCH_PATH TO dashboard, pgstac, public;
-    """
-
-    cursor.execute(sql.SQL(update_all_default_summaries_sql))
-
-
 def handler(event, context):
     """Lambda Handler."""
     print(f"Handling {event}")
@@ -296,16 +225,6 @@ def handler(event, context):
                     "CREATE INDEX IF NOT EXISTS searches_mosaic ON searches ((true)) WHERE metadata->>'type'='mosaic';"
                 )
             )
-
-        # As admin, create custom dashboard schema and functions and grant privileges to bootstrapped user
-        with psycopg.connect(stac_db_conninfo, autocommit=True) as conn:
-            with conn.cursor() as cur:
-                print("Creating dashboard schema...")
-                create_dashboard_schema(cursor=cur, username=user_params["username"])
-
-                print("Creating update_default_summaries functions...")
-                create_update_default_summaries_function(cursor=cur)
-                create_update_all_default_summaries_function(cursor=cur)
 
     except Exception as e:
         print(f"Unable to bootstrap database with exception={e}")
