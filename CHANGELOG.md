@@ -1,3 +1,15 @@
+# [3.0.0](https://github.com/developmentseed/cdk-pgstac/compare/v2.6.3...v3.0.0) (2023-04-04)
+
+
+### Code Refactoring
+
+* **bootstrapper:** remove VEDA logic ([#29](https://github.com/developmentseed/cdk-pgstac/issues/29)) ([e98039e](https://github.com/developmentseed/cdk-pgstac/commit/e98039ef4ace023faa205f0b0d1ad0efec38a69f))
+
+
+### BREAKING CHANGES
+
+* **bootstrapper:** remove dashboard schema and functions from the database bootstrapper and remove automatic collection summary udpate from ingestor.
+
 ## [2.6.3](https://github.com/developmentseed/cdk-pgstac/compare/v2.6.2...v2.6.3) (2023-03-28)
 
 
