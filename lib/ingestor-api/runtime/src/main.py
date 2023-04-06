@@ -126,6 +126,7 @@ def who_am_i(username=Depends(dependencies.get_username)):
     """
     return {"username": username}
 
+
 # exception handling
 @app.exception_handler(RequestValidationError)
 async def validation_exception_handler(request, exc):

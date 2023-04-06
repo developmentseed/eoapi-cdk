@@ -248,7 +248,7 @@ def client_authenticated(app):
     """
     from src.dependencies import get_username
 
-    app.dependency_overrides[get_username] = lambda: 'test_user'
+    app.dependency_overrides[get_username] = lambda: "test_user"
     return TestClient(app)
 
 
