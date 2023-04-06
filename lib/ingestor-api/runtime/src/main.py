@@ -1,4 +1,6 @@
 from fastapi import Depends, FastAPI, HTTPException
+from fastapi.exceptions import RequestValidationError
+from fastapi.responses import JSONResponse
 
 from . import collection as collection_loader
 from . import config, dependencies, schemas, services
@@ -123,3 +125,9 @@ def who_am_i(username=Depends(dependencies.get_username)):
     Return username for the provided request
     """
     return {"username": username}
+
+
+# exception handling
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request, exc):
+    return JSONResponse(str(exc), status_code=422)
