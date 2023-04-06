@@ -52,8 +52,7 @@ class AccessibleItem(Item):
 
 class StacCollection(Collection):
     id: str
-    item_assets: Dict
-
+    item_assets: Optional[Dict]
 
 class Status(str, enum.Enum):
     started = "started"
