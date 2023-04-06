@@ -119,12 +119,7 @@ class TestCreate:
         )
         assert response.status_code == 422, "should get validation error"
         for asset_type in self.example_ingestion.item.assets.keys():
-            assert any(
-                [
-                    err["loc"] == ["body", "assets", asset_type, "href"]
-                    for err in response.json()["detail"]
-                ]
-            ), "should reference asset type in validation error response"
+            assert asset_type in response.json(), "should reference asset type in validation error response"
         assert (
             len(self.db.fetch_many(status="queued")["items"]) == 0
         ), "data should not be stored in DB"
