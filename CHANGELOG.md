@@ -1,3 +1,10 @@
+## [3.0.1](https://github.com/developmentseed/cdk-pgstac/compare/v3.0.0...v3.0.1) (2023-04-14)
+
+
+### Bug Fixes
+
+* **bootstraper:** fix version inconsistencies and [#19](https://github.com/developmentseed/cdk-pgstac/issues/19) regressions ([#34](https://github.com/developmentseed/cdk-pgstac/issues/34)) ([ebeac2a](https://github.com/developmentseed/cdk-pgstac/commit/ebeac2a1b36ff5825157bea8e76392a14d613b91))
+
 # [3.0.0](https://github.com/developmentseed/cdk-pgstac/compare/v2.6.3...v3.0.0) (2023-04-04)
 
 
