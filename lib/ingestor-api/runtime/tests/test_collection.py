@@ -20,8 +20,7 @@ def pgstacdb():
         yield m
 
 
-def test_load_collections(example_stac_collection, loader, pgstacdb):
-    example_stac_collection = StacCollection(**example_stac_collection)
+def test_load_collections(stac_collection, loader, pgstacdb):
     with patch(
         "src.collection.get_db_credentials",
         return_value=DbCreds(
@@ -29,9 +28,9 @@ def test_load_collections(example_stac_collection, loader, pgstacdb):
         ),
     ):
         os.environ["DB_SECRET_ARN"] = ""
-        collection.ingest(example_stac_collection)
+        collection.ingest(stac_collection)
 
     loader.return_value.load_collections.assert_called_once_with(
-        file=[example_stac_collection.to_dict()],
+        file=[stac_collection.to_dict()],
         insert_mode=Methods.upsert,
     )
