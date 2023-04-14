@@ -2,7 +2,6 @@ from unittest.mock import Mock, patch
 import pytest
 from pypgstac.load import Methods
 from src.utils import DbCreds
-from src.schemas import StacCollection
 import src.collection as collection
 import os
 
