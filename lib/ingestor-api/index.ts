@@ -27,14 +27,14 @@ export class StacIngestor extends Construct {
       ROOT_PATH: `/${props.stage}`,
       NO_PYDANTIC_SSM_SETTINGS: "1",
       STAC_URL: props.stacUrl,
-      DATA_ACCESS_ROLE: props.dataAccessRole.roleArn,
+      DATA_ACCESS_ROLE: props.dataAccessRoleArn,
       ...props.apiEnv,
     };
 
     const handler = this.buildApiLambda({
       table: this.table,
       env,
-      dataAccessRole: props.dataAccessRole,
+      apiHandlerRoleArn: props.stacIngestorRoleArn,
       stage: props.stage,
       dbSecret: props.stacDbSecret,
       dbVpc: props.vpc,
@@ -86,27 +86,14 @@ export class StacIngestor extends Construct {
   private buildApiLambda(props: {
     table: dynamodb.ITable;
     env: Record<string, string>;
-    dataAccessRole: iam.IRole;
+    apiHandlerRoleArn: string;
     stage: string;
     dbSecret: secretsmanager.ISecret;
     dbVpc: ec2.IVpc;
     dbSecurityGroup: ec2.ISecurityGroup;
     subnetSelection: ec2.SubnetSelection;
   }): PythonFunction {
-    const handler_role = new iam.Role(this, "execution-role", {
-      description:
-        "Role used by STAC Ingestor. Manually defined so that we can choose a name that is supported by the data access roles trust policy",
-      roleName: `stac-ingestion-api-${props.stage}`,
-      assumedBy: new iam.ServicePrincipal("lambda.amazonaws.com"),
-      managedPolicies: [
-        iam.ManagedPolicy.fromAwsManagedPolicyName(
-          "service-role/AWSLambdaBasicExecutionRole",
-        ),
-        iam.ManagedPolicy.fromAwsManagedPolicyName(
-          "service-role/AWSLambdaVPCAccessExecutionRole",
-        ),
-      ],
-    });
+    const handler_role = iam.Role.fromRoleArn(this, "execution-role", props.apiHandlerRoleArn);
 
     const handler = new PythonFunction(this, "api-handler", {
       entry: `${__dirname}/runtime`,
@@ -132,7 +119,6 @@ export class StacIngestor extends Construct {
     );
 
     props.table.grantReadWriteData(handler);
-    props.dataAccessRole.grantAssumeRole(handler_role);
 
     return handler;
   }
@@ -229,9 +215,16 @@ export class StacIngestor extends Construct {
 
 export interface StacIngestorProps {
   /**
-   * ARN of AWS Role used to validate access to S3 data
+   * ARN of AWS Role used to validate access to S3 data. 
    */
-  readonly dataAccessRole: iam.IRole;
+  readonly dataAccessRoleArn: string;
+
+  /**
+   * ARN of AWS Role to be used by the ingestor API lambda. Must have permissions to
+   * assume the role represented by `dataAccessRoleArn` along with `service-role/AWSLambdaBasicExecutionRole` 
+   * and `service-role/AWSLambdaVPCAccessExecutionRole` managed policies.
+   */
+  readonly stacIngestorRoleArn: string;
 
   /**
    * URL of STAC API
