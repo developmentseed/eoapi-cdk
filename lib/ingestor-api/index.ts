@@ -16,7 +16,7 @@ import { Construct } from "constructs";
 
 export class StacIngestor extends Construct {
   table: dynamodb.Table;
-  public readonly handler_role: iam.Role;
+  public handlerRole: iam.Role;
 
   constructor(scope: Construct, id: string, props: StacIngestorProps) {
     super(scope, id);
@@ -32,7 +32,7 @@ export class StacIngestor extends Construct {
       ...props.apiEnv,
     };
 
-    this.handler_role = new iam.Role(this, "execution-role", {
+    this.handlerRole = new iam.Role(this, "execution-role", {
       description:
         "Role used by STAC Ingestor. Manually defined so that we can choose a name that is supported by the data access roles trust policy",
       assumedBy: new iam.ServicePrincipal("lambda.amazonaws.com"),
@@ -118,7 +118,7 @@ export class StacIngestor extends Construct {
       vpc: props.dbVpc,
       vpcSubnets: props.subnetSelection,
       allowPublicSubnet: true,
-      role: this.handler_role,
+      role: this.handlerRole,
       memorySize: 2048,
     });
 
