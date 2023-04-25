@@ -1,9 +1,10 @@
+import os
 from unittest.mock import Mock, patch
+
 import pytest
+import src.collection as collection
 from pypgstac.load import Methods
 from src.utils import DbCreds
-import src.collection as collection
-import os
 
 
 @pytest.fixture()
