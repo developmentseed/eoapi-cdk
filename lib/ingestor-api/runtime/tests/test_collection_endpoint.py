@@ -31,7 +31,7 @@ def test_auth_delete_collection(delete, example_stac_collection, client_authenti
         headers={"Authorization": f"bearer {token}"},
     )
     delete.assert_called_once_with(collection_id=example_stac_collection["id"])
-    assert response.status_code == 200
+    assert response.status_code == 204
 
 
 def test_unauth_delete_collection(client, example_stac_collection):
