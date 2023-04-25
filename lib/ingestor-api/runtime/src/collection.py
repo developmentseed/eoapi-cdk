@@ -17,7 +17,10 @@ def ingest(collection: StacCollection):
     creds = get_db_credentials(os.environ["DB_SECRET_ARN"])
     with PgstacDB(dsn=creds.dsn_string, debug=True) as db:
         loader = Loader(db=db)
-        loader.load_collection(file=collection, insert_mode=Methods.upsert)
+        collection = [
+            collection.to_dict()
+        ]  # pypgstac wants either a string or an Iterable of dicts.
+        loader.load_collections(file=collection, insert_mode=Methods.upsert)
 
 
 def delete(collection_id: str):

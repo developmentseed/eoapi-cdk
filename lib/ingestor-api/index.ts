@@ -16,6 +16,7 @@ import { Construct } from "constructs";
 
 export class StacIngestor extends Construct {
   table: dynamodb.Table;
+  public handlerRole: iam.Role;
 
   constructor(scope: Construct, id: string, props: StacIngestorProps) {
     super(scope, id);
@@ -31,6 +32,20 @@ export class StacIngestor extends Construct {
       ...props.apiEnv,
     };
 
+    this.handlerRole = new iam.Role(this, "execution-role", {
+      description:
+        "Role used by STAC Ingestor. Manually defined so that we can choose a name that is supported by the data access roles trust policy",
+      assumedBy: new iam.ServicePrincipal("lambda.amazonaws.com"),
+      managedPolicies: [
+        iam.ManagedPolicy.fromAwsManagedPolicyName(
+          "service-role/AWSLambdaBasicExecutionRole",
+        ),
+        iam.ManagedPolicy.fromAwsManagedPolicyName(
+          "service-role/AWSLambdaVPCAccessExecutionRole",
+        ),
+      ],
+    });
+    
     const handler = this.buildApiLambda({
       table: this.table,
       env,
@@ -91,23 +106,9 @@ export class StacIngestor extends Construct {
     dbSecret: secretsmanager.ISecret;
     dbVpc: ec2.IVpc;
     dbSecurityGroup: ec2.ISecurityGroup;
-    subnetSelection: ec2.SubnetSelection;
+    subnetSelection: ec2.SubnetSelection
   }): PythonFunction {
-    const handler_role = new iam.Role(this, "execution-role", {
-      description:
-        "Role used by STAC Ingestor. Manually defined so that we can choose a name that is supported by the data access roles trust policy",
-      roleName: `stac-ingestion-api-${props.stage}`,
-      assumedBy: new iam.ServicePrincipal("lambda.amazonaws.com"),
-      managedPolicies: [
-        iam.ManagedPolicy.fromAwsManagedPolicyName(
-          "service-role/AWSLambdaBasicExecutionRole",
-        ),
-        iam.ManagedPolicy.fromAwsManagedPolicyName(
-          "service-role/AWSLambdaVPCAccessExecutionRole",
-        ),
-      ],
-    });
-
+    
     const handler = new PythonFunction(this, "api-handler", {
       entry: `${__dirname}/runtime`,
       index: "src/handler.py",
@@ -117,7 +118,7 @@ export class StacIngestor extends Construct {
       vpc: props.dbVpc,
       vpcSubnets: props.subnetSelection,
       allowPublicSubnet: true,
-      role: handler_role,
+      role: this.handlerRole,
       memorySize: 2048,
     });
 
@@ -132,7 +133,6 @@ export class StacIngestor extends Construct {
     );
 
     props.table.grantReadWriteData(handler);
-    props.dataAccessRole.grantAssumeRole(handler_role);
 
     return handler;
   }

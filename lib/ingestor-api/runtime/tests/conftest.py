@@ -248,7 +248,7 @@ def client_authenticated(app):
     """
     from src.dependencies import get_username
 
-    app.dependency_overrides[get_username] = lambda: 'test_user'
+    app.dependency_overrides[get_username] = lambda: "test_user"
     return TestClient(app)
 
 
@@ -256,20 +256,7 @@ def client_authenticated(app):
 def stac_collection(example_stac_collection):
     from src import schemas
 
-    return schemas.StacCollection(
-        id=example_stac_collection["id"],
-        type=example_stac_collection["type"],
-        stac_extensions=example_stac_collection["stac_extensions"],
-        item_assets=example_stac_collection["item_assets"],
-        stac_version=example_stac_collection["stac_version"],
-        description=example_stac_collection["description"],
-        title=example_stac_collection["title"],
-        providers=example_stac_collection["providers"],
-        extent=example_stac_collection["extent"],
-        license=example_stac_collection["license"],
-        summaries=example_stac_collection["summaries"],
-        links=example_stac_collection["links"],
-    )
+    return schemas.StacCollection(**example_stac_collection)
 
 
 @pytest.fixture
