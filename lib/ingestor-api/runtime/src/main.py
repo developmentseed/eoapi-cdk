@@ -91,9 +91,7 @@ def cancel_ingestion(
     dependencies=[Depends(dependencies.get_username)],
     status_code=201,
 )
-def publish_collection(
-    collection: schemas.StacCollection
-) -> schemas.StacCollection:
+def publish_collection(collection: schemas.StacCollection) -> schemas.StacCollection:
     collection_loader.ingest(collection)
     return collection
 
