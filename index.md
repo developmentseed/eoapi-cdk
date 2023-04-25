@@ -711,6 +711,7 @@ Any object.
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
 | <code><a href="#cdk-pgstac.StacIngestor.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
+| <code><a href="#cdk-pgstac.StacIngestor.property.handlerRole">handlerRole</a></code> | <code>aws-cdk-lib.aws_iam.Role</code> | *No description.* |
 | <code><a href="#cdk-pgstac.StacIngestor.property.table">table</a></code> | <code>aws-cdk-lib.aws_dynamodb.Table</code> | *No description.* |
 
 ---
@@ -724,6 +725,16 @@ public readonly node: Node;
 - *Type:* constructs.Node
 
 The tree node.
+
+---
+
+##### `handlerRole`<sup>Required</sup> <a name="handlerRole" id="cdk-pgstac.StacIngestor.property.handlerRole"></a>
+
+```typescript
+public readonly handlerRole: Role;
+```
+
+- *Type:* aws-cdk-lib.aws_iam.Role
 
 ---
 
