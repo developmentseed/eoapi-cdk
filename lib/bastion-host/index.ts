@@ -63,7 +63,7 @@ import { Construct } from "constructs";
  * ```
  * Host db-tunnel
  * Hostname {the-bastion-host-address}
- * LocalForward 54322 {the-db-hostname}:5432
+ * LocalForward 9999 {the-db-hostname}:5432
  * ```
  *
  * Then a tunnel can be opened via:
@@ -75,7 +75,7 @@ import { Construct } from "constructs";
  * And a connection to the DB can be made via:
  *
  * ```
- * psql -h 127.0.0.1 -p 5433 -U {username} -d {database}
+ * psql -h 127.0.0.1 -p 9999 -U {username} -d {database}
  * ```
  *
  * **Handling `REMOTE HOST IDENTIFICATION HAS CHANGED!` error**
