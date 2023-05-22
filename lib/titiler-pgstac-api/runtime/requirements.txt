@@ -1,0 +1,3 @@
+titiler.pgstac==0.3.3
+boto3>=1.26.139
+psycopg[binary, pool]
