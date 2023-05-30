@@ -16,6 +16,7 @@ import { Construct } from "constructs";
 
 export class PgStacApiLambda extends Construct {
   readonly url: string;
+  public stacApiLambdaFunction: PythonFunction;
 
   constructor(scope: Construct, id: string, props: PgStacApiLambdaProps) {
     super(scope, id);
@@ -26,7 +27,7 @@ export class PgStacApiLambda extends Construct {
       handler: "handler",
     };
 
-    const handler = new PythonFunction(this, "stac-api", {
+    this.stacApiLambdaFunction = new PythonFunction(this, "stac-api", {
       ...apiCode,
       /**
        * NOTE: Unable to use Py3.9, due to issues with hashes:
@@ -53,11 +54,11 @@ export class PgStacApiLambda extends Construct {
       memorySize: 8192,
     });
 
-    props.dbSecret.grantRead(handler);
-    handler.connections.allowTo(props.db, ec2.Port.tcp(5432));
+    props.dbSecret.grantRead(this.stacApiLambdaFunction);
+    this.stacApiLambdaFunction.connections.allowTo(props.db, ec2.Port.tcp(5432));
 
     const stacApi = new HttpApi(this, `${Stack.of(this).stackName}-stac-api`, {
-      defaultIntegration: new HttpLambdaIntegration("integration", handler),
+      defaultIntegration: new HttpLambdaIntegration("integration", this.stacApiLambdaFunction),
     });
 
     this.url = stacApi.url!;
