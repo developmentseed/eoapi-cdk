@@ -428,6 +428,7 @@ Any object.
 | --- | --- | --- |
 | <code><a href="#cdk-pgstac.PgStacApiLambda.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
 | <code><a href="#cdk-pgstac.PgStacApiLambda.property.url">url</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#cdk-pgstac.PgStacApiLambda.property.stacApiLambdaFunction">stacApiLambdaFunction</a></code> | <code>@aws-cdk/aws-lambda-python-alpha.PythonFunction</code> | *No description.* |
 
 ---
 
@@ -450,6 +451,16 @@ public readonly url: string;
 ```
 
 - *Type:* string
+
+---
+
+##### `stacApiLambdaFunction`<sup>Required</sup> <a name="stacApiLambdaFunction" id="cdk-pgstac.PgStacApiLambda.property.stacApiLambdaFunction"></a>
+
+```typescript
+public readonly stacApiLambdaFunction: PythonFunction;
+```
+
+- *Type:* @aws-cdk/aws-lambda-python-alpha.PythonFunction
 
 ---
 
