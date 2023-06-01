@@ -53,13 +53,15 @@ class ApiSettings(pydantic.BaseSettings):
 
         secret = get_secret_dict(self.pgstac_secret_arn)
 
-        os.environ.update({
-            "postgres_host": secret["host"],
-            "postgres_dbname": secret["dbname"],
-            "postgres_user": secret["username"],
-            "postgres_pass": secret["password"],
-            "postgres_port": str(secret["port"]),
-        })            
+        os.environ.update(
+            {
+                "postgres_host": secret["host"],
+                "postgres_dbname": secret["dbname"],
+                "postgres_user": secret["username"],
+                "postgres_pass": secret["password"],
+                "postgres_port": str(secret["port"]),
+            }
+        )
 
     class Config:
         """model config"""
