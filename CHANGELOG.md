@@ -1,3 +1,10 @@
+# [4.1.0](https://github.com/developmentseed/cdk-pgstac/compare/v4.0.0...v4.1.0) (2023-05-30)
+
+
+### Features
+
+* **stac-api:** add stac api lambda function field ([#43](https://github.com/developmentseed/cdk-pgstac/issues/43)) ([3a91a37](https://github.com/developmentseed/cdk-pgstac/commit/3a91a37ec329c09a66c85c23adfb1afb1345ba16))
+
 # [4.0.0](https://github.com/developmentseed/cdk-pgstac/compare/v3.0.1...v4.0.0) (2023-04-25)
 
 
