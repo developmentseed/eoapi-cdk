@@ -1,7 +1,7 @@
 """titiler pgstac API settings."""
 import base64
 import json
-from typing import Optional, Any
+from typing import Optional
 import os
 
 import boto3
