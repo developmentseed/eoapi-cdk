@@ -41,7 +41,7 @@ import {
         runtime: lambda.Runtime.PYTHON_3_8,
         code: lambda.Code.fromDockerBuild(__dirname, {
           file: "runtime/Dockerfile",
-          buildArgs: { PYTHON_VERSION: '3.8' },
+          buildArgs: { PYTHON_VERSION: '3.10' },
         }),
         timeout: Duration.seconds(30),
         vpc: props.vpc,
