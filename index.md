@@ -760,6 +760,141 @@ public readonly table: Table;
 ---
 
 
+### TitilerPgstacApiLambda <a name="TitilerPgstacApiLambda" id="cdk-pgstac.TitilerPgstacApiLambda"></a>
+
+#### Initializers <a name="Initializers" id="cdk-pgstac.TitilerPgstacApiLambda.Initializer"></a>
+
+```typescript
+import { TitilerPgstacApiLambda } from 'cdk-pgstac'
+
+new TitilerPgstacApiLambda(scope: Construct, id: string, props: TitilerPgStacApiLambdaProps)
+```
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#cdk-pgstac.TitilerPgstacApiLambda.Initializer.parameter.scope">scope</a></code> | <code>constructs.Construct</code> | *No description.* |
+| <code><a href="#cdk-pgstac.TitilerPgstacApiLambda.Initializer.parameter.id">id</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#cdk-pgstac.TitilerPgstacApiLambda.Initializer.parameter.props">props</a></code> | <code><a href="#cdk-pgstac.TitilerPgStacApiLambdaProps">TitilerPgStacApiLambdaProps</a></code> | *No description.* |
+
+---
+
+##### `scope`<sup>Required</sup> <a name="scope" id="cdk-pgstac.TitilerPgstacApiLambda.Initializer.parameter.scope"></a>
+
+- *Type:* constructs.Construct
+
+---
+
+##### `id`<sup>Required</sup> <a name="id" id="cdk-pgstac.TitilerPgstacApiLambda.Initializer.parameter.id"></a>
+
+- *Type:* string
+
+---
+
+##### `props`<sup>Required</sup> <a name="props" id="cdk-pgstac.TitilerPgstacApiLambda.Initializer.parameter.props"></a>
+
+- *Type:* <a href="#cdk-pgstac.TitilerPgStacApiLambdaProps">TitilerPgStacApiLambdaProps</a>
+
+---
+
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#cdk-pgstac.TitilerPgstacApiLambda.toString">toString</a></code> | Returns a string representation of this construct. |
+
+---
+
+##### `toString` <a name="toString" id="cdk-pgstac.TitilerPgstacApiLambda.toString"></a>
+
+```typescript
+public toString(): string
+```
+
+Returns a string representation of this construct.
+
+#### Static Functions <a name="Static Functions" id="Static Functions"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#cdk-pgstac.TitilerPgstacApiLambda.isConstruct">isConstruct</a></code> | Checks if `x` is a construct. |
+
+---
+
+##### `isConstruct` <a name="isConstruct" id="cdk-pgstac.TitilerPgstacApiLambda.isConstruct"></a>
+
+```typescript
+import { TitilerPgstacApiLambda } from 'cdk-pgstac'
+
+TitilerPgstacApiLambda.isConstruct(x: any)
+```
+
+Checks if `x` is a construct.
+
+Use this method instead of `instanceof` to properly detect `Construct`
+instances, even when the construct library is symlinked.
+
+Explanation: in JavaScript, multiple copies of the `constructs` library on
+disk are seen as independent, completely different libraries. As a
+consequence, the class `Construct` in each copy of the `constructs` library
+is seen as a different class, and an instance of one class will not test as
+`instanceof` the other class. `npm install` will not create installations
+like this, but users may manually symlink construct libraries together or
+use a monorepo tool: in those cases, multiple copies of the `constructs`
+library can be accidentally installed, and `instanceof` will behave
+unpredictably. It is safest to avoid using `instanceof`, and using
+this type-testing method instead.
+
+###### `x`<sup>Required</sup> <a name="x" id="cdk-pgstac.TitilerPgstacApiLambda.isConstruct.parameter.x"></a>
+
+- *Type:* any
+
+Any object.
+
+---
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#cdk-pgstac.TitilerPgstacApiLambda.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
+| <code><a href="#cdk-pgstac.TitilerPgstacApiLambda.property.url">url</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#cdk-pgstac.TitilerPgstacApiLambda.property.titilerPgstacLambdaFunction">titilerPgstacLambdaFunction</a></code> | <code>aws-cdk-lib.aws_lambda.Function</code> | *No description.* |
+
+---
+
+##### `node`<sup>Required</sup> <a name="node" id="cdk-pgstac.TitilerPgstacApiLambda.property.node"></a>
+
+```typescript
+public readonly node: Node;
+```
+
+- *Type:* constructs.Node
+
+The tree node.
+
+---
+
+##### `url`<sup>Required</sup> <a name="url" id="cdk-pgstac.TitilerPgstacApiLambda.property.url"></a>
+
+```typescript
+public readonly url: string;
+```
+
+- *Type:* string
+
+---
+
+##### `titilerPgstacLambdaFunction`<sup>Required</sup> <a name="titilerPgstacLambdaFunction" id="cdk-pgstac.TitilerPgstacApiLambda.property.titilerPgstacLambdaFunction"></a>
+
+```typescript
+public readonly titilerPgstacLambdaFunction: Function;
+```
+
+- *Type:* aws-cdk-lib.aws_lambda.Function
+
+---
+
+
 ## Structs <a name="Structs" id="Structs"></a>
 
 ### ApiEntrypoint <a name="ApiEntrypoint" id="cdk-pgstac.ApiEntrypoint"></a>
@@ -2217,6 +2352,101 @@ public readonly apiPolicy: PolicyDocument;
 - *Type:* aws-cdk-lib.aws_iam.PolicyDocument
 
 API Policy Document, useful for creating private APIs.
+
+---
+
+### TitilerPgStacApiLambdaProps <a name="TitilerPgStacApiLambdaProps" id="cdk-pgstac.TitilerPgStacApiLambdaProps"></a>
+
+#### Initializer <a name="Initializer" id="cdk-pgstac.TitilerPgStacApiLambdaProps.Initializer"></a>
+
+```typescript
+import { TitilerPgStacApiLambdaProps } from 'cdk-pgstac'
+
+const titilerPgStacApiLambdaProps: TitilerPgStacApiLambdaProps = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#cdk-pgstac.TitilerPgStacApiLambdaProps.property.db">db</a></code> | <code>aws-cdk-lib.aws_rds.IDatabaseInstance</code> | RDS Instance with installed pgSTAC. |
+| <code><a href="#cdk-pgstac.TitilerPgStacApiLambdaProps.property.dbSecret">dbSecret</a></code> | <code>aws-cdk-lib.aws_secretsmanager.ISecret</code> | Secret containing connection information for pgSTAC database. |
+| <code><a href="#cdk-pgstac.TitilerPgStacApiLambdaProps.property.subnetSelection">subnetSelection</a></code> | <code>aws-cdk-lib.aws_ec2.SubnetSelection</code> | Subnet into which the lambda should be deployed. |
+| <code><a href="#cdk-pgstac.TitilerPgStacApiLambdaProps.property.vpc">vpc</a></code> | <code>aws-cdk-lib.aws_ec2.IVpc</code> | VPC into which the lambda should be deployed. |
+| <code><a href="#cdk-pgstac.TitilerPgStacApiLambdaProps.property.apiEnv">apiEnv</a></code> | <code>{[ key: string ]: string}</code> | Customized environment variables to send to titiler-pgstac runtime. |
+| <code><a href="#cdk-pgstac.TitilerPgStacApiLambdaProps.property.buckets">buckets</a></code> | <code>string[]</code> | list of buckets the lambda will be granted access to. |
+
+---
+
+##### `db`<sup>Required</sup> <a name="db" id="cdk-pgstac.TitilerPgStacApiLambdaProps.property.db"></a>
+
+```typescript
+public readonly db: IDatabaseInstance;
+```
+
+- *Type:* aws-cdk-lib.aws_rds.IDatabaseInstance
+
+RDS Instance with installed pgSTAC.
+
+---
+
+##### `dbSecret`<sup>Required</sup> <a name="dbSecret" id="cdk-pgstac.TitilerPgStacApiLambdaProps.property.dbSecret"></a>
+
+```typescript
+public readonly dbSecret: ISecret;
+```
+
+- *Type:* aws-cdk-lib.aws_secretsmanager.ISecret
+
+Secret containing connection information for pgSTAC database.
+
+---
+
+##### `subnetSelection`<sup>Required</sup> <a name="subnetSelection" id="cdk-pgstac.TitilerPgStacApiLambdaProps.property.subnetSelection"></a>
+
+```typescript
+public readonly subnetSelection: SubnetSelection;
+```
+
+- *Type:* aws-cdk-lib.aws_ec2.SubnetSelection
+
+Subnet into which the lambda should be deployed.
+
+---
+
+##### `vpc`<sup>Required</sup> <a name="vpc" id="cdk-pgstac.TitilerPgStacApiLambdaProps.property.vpc"></a>
+
+```typescript
+public readonly vpc: IVpc;
+```
+
+- *Type:* aws-cdk-lib.aws_ec2.IVpc
+
+VPC into which the lambda should be deployed.
+
+---
+
+##### `apiEnv`<sup>Optional</sup> <a name="apiEnv" id="cdk-pgstac.TitilerPgStacApiLambdaProps.property.apiEnv"></a>
+
+```typescript
+public readonly apiEnv: {[ key: string ]: string};
+```
+
+- *Type:* {[ key: string ]: string}
+
+Customized environment variables to send to titiler-pgstac runtime.
+
+---
+
+##### `buckets`<sup>Optional</sup> <a name="buckets" id="cdk-pgstac.TitilerPgStacApiLambdaProps.property.buckets"></a>
+
+```typescript
+public readonly buckets: string[];
+```
+
+- *Type:* string[]
+
+list of buckets the lambda will be granted access to.
 
 ---
 
