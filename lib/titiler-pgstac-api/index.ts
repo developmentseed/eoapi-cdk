@@ -15,6 +15,7 @@ import {
   
   export class TitilerPgstacApiLambda extends Construct {
     readonly url: string;
+    public titilerPgstacLambdaFunction: lambda.Function;
   
     constructor(scope: Construct, id: string, props: TitilerPgStacApiLambdaProps) {
       super(scope, id);
@@ -36,7 +37,7 @@ import {
       }
     
       
-      const handler = new lambda.Function(this, "lambda", {
+      this.titilerPgstacLambdaFunction = new lambda.Function(this, "lambda", {
         handler: "handler.handler",
         runtime: lambda.Runtime.PYTHON_3_8,
         code: lambda.Code.fromDockerBuild(__dirname, {
@@ -55,18 +56,18 @@ import {
       // grant access to buckets using addToRolePolicy
       if (props.buckets) {
         props.buckets.forEach(bucket => {
-          handler.addToRolePolicy(new iam.PolicyStatement({
+          this.titilerPgstacLambdaFunction.addToRolePolicy(new iam.PolicyStatement({
             actions: ["s3:GetObject"],
             resources: [`arn:aws:s3:::${bucket}/*`],
           }));
         });
       }
       
-      props.dbSecret.grantRead(handler);
-      handler.connections.allowTo(props.db, ec2.Port.tcp(5432), "allow connections from titiler");
+      props.dbSecret.grantRead(this.titilerPgstacLambdaFunction);
+      this.titilerPgstacLambdaFunction.connections.allowTo(props.db, ec2.Port.tcp(5432), "allow connections from titiler");
   
       const stacApi = new HttpApi(this, `${Stack.of(this).stackName}-titiler-pgstac-api`, {
-        defaultIntegration: new HttpLambdaIntegration("integration", handler),
+        defaultIntegration: new HttpLambdaIntegration("integration", this.titilerPgstacLambdaFunction),
       });
   
       this.url = stacApi.url!;
