@@ -1,3 +1,10 @@
+# [4.2.0](https://github.com/developmentseed/cdk-pgstac/compare/v4.1.0...v4.2.0) (2023-06-09)
+
+
+### Features
+
+* **titiler-pgstac-api:** add titiler-pgstac endpoint ([#42](https://github.com/developmentseed/cdk-pgstac/issues/42)) ([a02acef](https://github.com/developmentseed/cdk-pgstac/commit/a02acef3ed78049dd55c242a5b04bfc627c53661))
+
 # [4.1.0](https://github.com/developmentseed/cdk-pgstac/compare/v4.0.0...v4.1.0) (2023-05-30)
 
 
