@@ -61,7 +61,7 @@ def send(
         response = httpx.put(responseUrl, data=json_responseBody, headers=headers)
         print("Status code: " + response.reason)
     except Exception as e:
-        print("send(..) failed executing requests.put(..): " + str(e))
+        print("send(..) failed executing httpx.put(..): " + str(e))
 
 
 def get_secret(secret_name):
