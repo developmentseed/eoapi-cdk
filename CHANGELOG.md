@@ -1,3 +1,10 @@
+## [4.2.1](https://github.com/developmentseed/cdk-pgstac/compare/v4.2.0...v4.2.1) (2023-06-12)
+
+
+### Bug Fixes
+
+* **bootstrapper:** bootstrapper should use httpx ([#45](https://github.com/developmentseed/cdk-pgstac/issues/45)) ([36bb361](https://github.com/developmentseed/cdk-pgstac/commit/36bb361cf65caa1ae9a633eb8e39066106f02258))
+
 # [4.2.0](https://github.com/developmentseed/cdk-pgstac/compare/v4.1.0...v4.2.0) (2023-06-09)
 
 
