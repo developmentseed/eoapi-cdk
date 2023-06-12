@@ -6,7 +6,7 @@ import json
 
 import boto3
 import psycopg
-import requests
+import httpx
 from psycopg import sql
 from psycopg.conninfo import make_conninfo
 from pypgstac.db import PgstacDB
@@ -58,10 +58,10 @@ def send(
     headers = {"content-type": "", "content-length": str(len(json_responseBody))}
 
     try:
-        response = requests.put(responseUrl, data=json_responseBody, headers=headers)
+        response = httpx.put(responseUrl, data=json_responseBody, headers=headers)
         print("Status code: " + response.reason)
     except Exception as e:
-        print("send(..) failed executing requests.put(..): " + str(e))
+        print("send(..) failed executing httpx.put(..): " + str(e))
 
 
 def get_secret(secret_name):

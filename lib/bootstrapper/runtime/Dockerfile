@@ -5,7 +5,7 @@ RUN echo "Using PGSTAC Version ${PGSTAC_VERSION}"
 
 WORKDIR /tmp
 
-RUN pip install requests psycopg[binary,pool] pypgstac==${PGSTAC_VERSION} -t /asset
+RUN pip install httpx psycopg[binary,pool] pypgstac==${PGSTAC_VERSION} -t /asset
 
 COPY runtime/handler.py /asset/handler.py
 
