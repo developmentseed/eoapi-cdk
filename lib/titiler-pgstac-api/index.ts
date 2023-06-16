@@ -39,7 +39,7 @@ import {
       
       this.titilerPgstacLambdaFunction = new lambda.Function(this, "lambda", {
         handler: "handler.handler",
-        runtime: lambda.Runtime.PYTHON_3_8,
+        runtime: lambda.Runtime.PYTHON_3_10,
         code: lambda.Code.fromDockerBuild(__dirname, {
           file: "runtime/Dockerfile",
           buildArgs: { PYTHON_VERSION: '3.10' },

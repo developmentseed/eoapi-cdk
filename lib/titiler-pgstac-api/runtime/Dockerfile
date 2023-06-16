@@ -15,6 +15,6 @@ RUN find /asset -type f -name '*.py' -print0 | xargs -0 rm -f
 RUN find /asset -type d -name 'tests' -print0 | xargs -0 rm -rf
 RUN rm -rdf /asset/numpy/doc/ /asset/boto3* /asset/botocore* /asset/bin /asset/geos_license /asset/Misc
 
-COPY runtime/src/*.py /asset
+COPY runtime/src/*.py /asset/
 
 CMD ["echo", "hello world"]
