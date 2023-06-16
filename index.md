@@ -1419,6 +1419,7 @@ const pgStacDatabaseProps: PgStacDatabaseProps = { ... }
 | <code><a href="#cdk-pgstac.PgStacDatabaseProps.property.monitoringInterval">monitoringInterval</a></code> | <code>aws-cdk-lib.Duration</code> | The interval, in seconds, between points when Amazon RDS collects enhanced monitoring metrics for the DB instance. |
 | <code><a href="#cdk-pgstac.PgStacDatabaseProps.property.monitoringRole">monitoringRole</a></code> | <code>aws-cdk-lib.aws_iam.IRole</code> | Role that will be used to manage DB instance monitoring. |
 | <code><a href="#cdk-pgstac.PgStacDatabaseProps.property.multiAz">multiAz</a></code> | <code>boolean</code> | Specifies if the database instance is a multiple Availability Zone deployment. |
+| <code><a href="#cdk-pgstac.PgStacDatabaseProps.property.networkType">networkType</a></code> | <code>aws-cdk-lib.aws_rds.NetworkType</code> | The network type of the DB instance. |
 | <code><a href="#cdk-pgstac.PgStacDatabaseProps.property.optionGroup">optionGroup</a></code> | <code>aws-cdk-lib.aws_rds.IOptionGroup</code> | The option group to associate with the instance. |
 | <code><a href="#cdk-pgstac.PgStacDatabaseProps.property.parameterGroup">parameterGroup</a></code> | <code>aws-cdk-lib.aws_rds.IParameterGroup</code> | The DB parameter group to associate with the instance. |
 | <code><a href="#cdk-pgstac.PgStacDatabaseProps.property.performanceInsightEncryptionKey">performanceInsightEncryptionKey</a></code> | <code>aws-cdk-lib.aws_kms.IKey</code> | The AWS KMS key for encryption of Performance Insights data. |
@@ -1434,6 +1435,7 @@ const pgStacDatabaseProps: PgStacDatabaseProps = { ... }
 | <code><a href="#cdk-pgstac.PgStacDatabaseProps.property.s3ImportBuckets">s3ImportBuckets</a></code> | <code>aws-cdk-lib.aws_s3.IBucket[]</code> | S3 buckets that you want to load data from. |
 | <code><a href="#cdk-pgstac.PgStacDatabaseProps.property.s3ImportRole">s3ImportRole</a></code> | <code>aws-cdk-lib.aws_iam.IRole</code> | Role that will be associated with this DB instance to enable S3 import. |
 | <code><a href="#cdk-pgstac.PgStacDatabaseProps.property.securityGroups">securityGroups</a></code> | <code>aws-cdk-lib.aws_ec2.ISecurityGroup[]</code> | The security groups to assign to the DB instance. |
+| <code><a href="#cdk-pgstac.PgStacDatabaseProps.property.storageThroughput">storageThroughput</a></code> | <code>number</code> | The storage throughput, specified in mebibytes per second (MiBps). |
 | <code><a href="#cdk-pgstac.PgStacDatabaseProps.property.storageType">storageType</a></code> | <code>aws-cdk-lib.aws_rds.StorageType</code> | The storage type. |
 | <code><a href="#cdk-pgstac.PgStacDatabaseProps.property.subnetGroup">subnetGroup</a></code> | <code>aws-cdk-lib.aws_rds.ISubnetGroup</code> | Existing subnet group for the instance. |
 | <code><a href="#cdk-pgstac.PgStacDatabaseProps.property.vpcSubnets">vpcSubnets</a></code> | <code>aws-cdk-lib.aws_ec2.SubnetSelection</code> | The type of subnets to add to the created DB subnet group. |
@@ -1613,7 +1615,7 @@ public readonly domainRole: IRole;
 ```
 
 - *Type:* aws-cdk-lib.aws_iam.IRole
-- *Default:* The role will be created for you if {@link DatabaseInstanceNewProps#domain} is specified
+- *Default:* The role will be created for you if `DatabaseInstanceNewProps#domain` is specified
 
 The IAM role to be used when making API calls to the Directory Service.
 
@@ -1671,7 +1673,7 @@ public readonly iops: number;
 ```
 
 - *Type:* number
-- *Default:* no provisioned iops
+- *Default:* no provisioned iops if storage type is not specified. For GP3: 3,000 IOPS if allocated storage is less than 400 GiB for MariaDB, MySQL, and PostgreSQL, less than 200 GiB for Oracle and less than 20 GiB for SQL Server. 12,000 IOPS otherwise (except for SQL Server where the default is always 3,000 IOPS).
 
 The number of I/O operations per second (IOPS) that the database provisions.
 
@@ -1733,6 +1735,19 @@ Specifies if the database instance is a multiple Availability Zone deployment.
 
 ---
 
+##### `networkType`<sup>Optional</sup> <a name="networkType" id="cdk-pgstac.PgStacDatabaseProps.property.networkType"></a>
+
+```typescript
+public readonly networkType: NetworkType;
+```
+
+- *Type:* aws-cdk-lib.aws_rds.NetworkType
+- *Default:* IPV4
+
+The network type of the DB instance.
+
+---
+
 ##### `optionGroup`<sup>Optional</sup> <a name="optionGroup" id="cdk-pgstac.PgStacDatabaseProps.property.optionGroup"></a>
 
 ```typescript
@@ -1779,7 +1794,7 @@ public readonly performanceInsightRetention: PerformanceInsightRetention;
 ```
 
 - *Type:* aws-cdk-lib.aws_rds.PerformanceInsightRetention
-- *Default:* 7
+- *Default:* 7 this is the free tier
 
 The amount of time, in days, to retain Performance Insights data.
 
@@ -1962,6 +1977,23 @@ public readonly securityGroups: ISecurityGroup[];
 - *Default:* a new security group is created
 
 The security groups to assign to the DB instance.
+
+---
+
+##### `storageThroughput`<sup>Optional</sup> <a name="storageThroughput" id="cdk-pgstac.PgStacDatabaseProps.property.storageThroughput"></a>
+
+```typescript
+public readonly storageThroughput: number;
+```
+
+- *Type:* number
+- *Default:* 125 MiBps if allocated storage is less than 400 GiB for MariaDB, MySQL, and PostgreSQL, less than 200 GiB for Oracle and less than 20 GiB for SQL Server. 500 MiBps otherwise (except for SQL Server where the default is always 125 MiBps).
+
+The storage throughput, specified in mebibytes per second (MiBps).
+
+Only applicable for GP3.
+
+> [https://docs.aws.amazon.com//AmazonRDS/latest/UserGuide/CHAP_Storage.html#gp3-storage](https://docs.aws.amazon.com//AmazonRDS/latest/UserGuide/CHAP_Storage.html#gp3-storage)
 
 ---
 
