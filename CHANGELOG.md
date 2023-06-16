@@ -1,3 +1,10 @@
+## [4.2.2](https://github.com/developmentseed/cdk-pgstac/compare/v4.2.1...v4.2.2) (2023-06-16)
+
+
+### Bug Fixes
+
+* **titiler-pgstac-api:** fix destination path in titiler pgstac Dockerfile COPY command ([#46](https://github.com/developmentseed/cdk-pgstac/issues/46)) ([302bd22](https://github.com/developmentseed/cdk-pgstac/commit/302bd22fd3ff5af7335bb9285be798fb550cf19b))
+
 ## [4.2.1](https://github.com/developmentseed/cdk-pgstac/compare/v4.2.0...v4.2.1) (2023-06-12)
 
 
