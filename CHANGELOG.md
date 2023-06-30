@@ -1,3 +1,10 @@
+## [4.2.3](https://github.com/developmentseed/cdk-pgstac/compare/v4.2.2...v4.2.3) (2023-06-30)
+
+
+### Bug Fixes
+
+* **ingestor-api:** add stack name to ingestor-api apigateway export name ([#48](https://github.com/developmentseed/cdk-pgstac/issues/48)) ([2fdd1e8](https://github.com/developmentseed/cdk-pgstac/commit/2fdd1e8fe4b3b7e82657bcf95bf628eecdb9aa22))
+
 ## [4.2.2](https://github.com/developmentseed/cdk-pgstac/compare/v4.2.1...v4.2.2) (2023-06-16)
 
 
