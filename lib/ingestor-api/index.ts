@@ -201,7 +201,7 @@ export class StacIngestor extends Construct {
 
         cloudWatchRole: true,
         deployOptions: { stageName: props.stage },
-        endpointExportName: `ingestor-api-${props.stage}`,
+        endpointExportName: `${Stack.of(this)}-ingestor-api`,
 
         endpointConfiguration: props.endpointConfiguration,
         policy: props.policy,
