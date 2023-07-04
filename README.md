@@ -5,7 +5,7 @@ eoapi-cdk is a package of [AWS CDK constructs](https://docs.aws.amazon.com/presc
 For more background on the included services see [The Earth Observation API](https://eoapi.dev/)
 
 ## Included constructs
-Detailed API docs for the constructs can be found [here](developmentseed.org/cdk-pgstac).
+Detailed API docs for the constructs can be found [here](https://developmentseed.org/cdk-pgstac/).
 
 ### Bastion Host
 A bastion host is a secure gatewaty that provides access to resources in a private subnet.  In this case the eoAPI's pgSTAC instance.
