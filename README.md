@@ -12,19 +12,27 @@ A bastion host is a secure gatewaty that provides access to resources in a priva
 
 ![Alt text](/diagrams/bastion_diagram.png)
 
-For more background on bastion hosts in AWS see [this article](https://dev.to/aws-builders/bastion-host-in-aws-vpc-2i63)
+For more background on bastion hosts in AWS see [this article](https://dev.to/aws-builders/bastion-host-in-aws-vpc-2i63).
 
-And for configuration instructions for this construct see [the docs](https://developmentseed.org/cdk-pgstac/#bastionhost-)
+And for configuration instructions for this construct see [the docs](https://developmentseed.org/cdk-pgstac/#bastionhost-).
+
+### pgSTAC Database
+An [RDS](https://aws.amazon.com/rds/) instance with [pgSTAC](https://github.com/stac-utils/pgstac) installed and the Postgres parameters optimized for the selected instance type.
 
 ### STAC Ingestor
-
 An API for large scale STAC data ingestion and validation into a pgSTAC instance. 
 
-![Alt text](/diagrams/ingestor_diagram.png)
+![ingestor](/diagrams/ingestor_diagram.png)
 
 Authentication for the STAC Ingestor API can be configured with JWTs authenticated by JWKS.  To learn more about securing FastAPI applications with this approach see [Securing FastAPI with JWKS (AWS Cognito, Auth0)](https://alukach.com/posts/fastapi-rs256-jwt/).
 
 A sample Cognito-based authentication system is available at [aws-asdi-auth](https://github.com/developmentseed/aws-asdi-auth).
+
+### STAC API
+A STAC API implementation using [stac-fastapi](https://github.com/stac-utils/stac-fastapi) with a [pgSTAC backend](https://github.com/stac-utils/stac-fastapi-pgstac). Packaged as a complete runtime for deployment with API Gateway and Lambda. 
+
+### pgSTAC Titiler API
+A complete dynamic tiling API using [https://github.com/stac-utils/titiler-pgstac] to create dynamic mosaics of assets based on [STAC Search queries](https://github.com/radiantearth/stac-api-spec/tree/master/item-search).  Packaged as a complete runtime for deployment with API Gateway and Lambda and fully integrated with the pgSTAC Database construct. 
 
 ## Published Packages
 
