@@ -1,14 +1,14 @@
-# pgSTAC CDK construct
+# eoAPI CDK Construct
 
-eoapi-cdk is a package of [AWS CDK constructs](https://docs.aws.amazon.com/prescriptive-guidance/latest/best-practices-cdk-typescript-iac/constructs-best-practices.html) designed to encapsulate eoAPI runtime code and best practices as simple reusable components.   
+eoapi-cdk is a package of [AWS CDK constructs](https://docs.aws.amazon.com/prescriptive-guidance/latest/best-practices-cdk-typescript-iac/constructs-best-practices.html) designed to encapsulate eoAPI runtime code and best practices as simple reusable components.
 
 For more background on the included services see [The Earth Observation API](https://eoapi.dev/)
 
 ## Included constructs
 Detailed API docs for the constructs can be found [here](https://developmentseed.org/cdk-pgstac/).
 
-### Bastion Host
-A bastion host is a secure gatewaty that provides access to resources in a private subnet.  In this case the eoAPI's pgSTAC instance.
+### [Bastion Host](https://developmentseed.org/cdk-pgstac/#bastionhost-)
+A bastion host is a secure gateway that provides access to resources in a private subnet.  In this case it provides the ability to make administrative connections to eoAPI's pgSTAC instance.
 
 ![Alt text](/diagrams/bastion_diagram.png)
 
@@ -16,11 +16,11 @@ For more background on bastion hosts in AWS see [this article](https://dev.to/aw
 
 And for configuration instructions for this construct see [the docs](https://developmentseed.org/cdk-pgstac/#bastionhost-).
 
-### pgSTAC Database
+### [pgSTAC Database](https://developmentseed.org/cdk-pgstac/#pgstacdatabase-)
 An [RDS](https://aws.amazon.com/rds/) instance with [pgSTAC](https://github.com/stac-utils/pgstac) installed and the Postgres parameters optimized for the selected instance type.
 
-### STAC Ingestor
-An API for large scale STAC data ingestion and validation into a pgSTAC instance. 
+### [STAC Ingestor](https://developmentseed.org/cdk-pgstac/#stacingestor-)
+An API for large scale STAC data ingestion and validation into a pgSTAC instance.
 
 ![ingestor](/diagrams/ingestor_diagram.png)
 
@@ -28,11 +28,11 @@ Authentication for the STAC Ingestor API can be configured with JWTs authenticat
 
 A sample Cognito-based authentication system is available at [aws-asdi-auth](https://github.com/developmentseed/aws-asdi-auth).
 
-### STAC API
-A STAC API implementation using [stac-fastapi](https://github.com/stac-utils/stac-fastapi) with a [pgSTAC backend](https://github.com/stac-utils/stac-fastapi-pgstac). Packaged as a complete runtime for deployment with API Gateway and Lambda. 
+### [STAC API](https://developmentseed.org/cdk-pgstac/#pgstacapilambda-)
+A STAC API implementation using [stac-fastapi](https://github.com/stac-utils/stac-fastapi) with a [pgSTAC backend](https://github.com/stac-utils/stac-fastapi-pgstac). Packaged as a complete runtime for deployment with API Gateway and Lambda.
 
-### pgSTAC Titiler API
-A complete dynamic tiling API using [https://github.com/stac-utils/titiler-pgstac] to create dynamic mosaics of assets based on [STAC Search queries](https://github.com/radiantearth/stac-api-spec/tree/master/item-search).  Packaged as a complete runtime for deployment with API Gateway and Lambda and fully integrated with the pgSTAC Database construct. 
+### [pgSTAC Titiler API](https://developmentseed.org/cdk-pgstac/#titilerpgstacapilambda-)
+A complete dynamic tiling API using [https://github.com/stac-utils/titiler-pgstac] to create dynamic mosaics of assets based on [STAC Search queries](https://github.com/radiantearth/stac-api-spec/tree/master/item-search).  Packaged as a complete runtime for deployment with API Gateway and Lambda and fully integrated with the pgSTAC Database construct.
 
 ## Published Packages
 
