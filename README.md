@@ -33,7 +33,8 @@ A sample Cognito-based authentication system is available at [aws-asdi-auth](htt
 A STAC API implementation using [stac-fastapi](https://github.com/stac-utils/stac-fastapi) with a [pgSTAC backend](https://github.com/stac-utils/stac-fastapi-pgstac). Packaged as a complete runtime for deployment with API Gateway and Lambda.
 
 ### [pgSTAC Titiler API](https://developmentseed.org/cdk-pgstac/#titilerpgstacapilambda-)
-A complete dynamic tiling API using [https://github.com/stac-utils/titiler-pgstac] to create dynamic mosaics of assets based on [STAC Search queries](https://github.com/radiantearth/stac-api-spec/tree/master/item-search).  Packaged as a complete runtime for deployment with API Gateway and Lambda and fully integrated with the pgSTAC Database construct.
+A complete dynamic tiling API using [titiler-pgstac](https://github.com/stac-utils/titiler-pgstac) to create dynamic mosaics of assets based on [STAC Search queries](https://github.com/radiantearth/stac-api-spec/tree/master/item-search).  Packaged as a complete runtime for deployment with API Gateway and Lambda and fully integrated with the pgSTAC Database construct.
+
 
 ## Published Packages
 
