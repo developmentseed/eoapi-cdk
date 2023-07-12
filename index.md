@@ -2,7 +2,7 @@
 
 ## Constructs <a name="Constructs" id="Constructs"></a>
 
-### BastionHost <a name="BastionHost" id="cdk-pgstac.BastionHost"></a>
+### BastionHost <a name="BastionHost" id="eoapi-cdk.BastionHost"></a>
 
 The database is located in an isolated subnet, meaning that it is not accessible from the public internet.
 
@@ -82,37 +82,37 @@ If you've redeployed a bastion host that you've previously connected to, you may
 
 ```
 
-#### Initializers <a name="Initializers" id="cdk-pgstac.BastionHost.Initializer"></a>
+#### Initializers <a name="Initializers" id="eoapi-cdk.BastionHost.Initializer"></a>
 
 ```typescript
-import { BastionHost } from 'cdk-pgstac'
+import { BastionHost } from 'eoapi-cdk'
 
 new BastionHost(scope: Construct, id: string, props: BastionHostProps)
 ```
 
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
-| <code><a href="#cdk-pgstac.BastionHost.Initializer.parameter.scope">scope</a></code> | <code>constructs.Construct</code> | *No description.* |
-| <code><a href="#cdk-pgstac.BastionHost.Initializer.parameter.id">id</a></code> | <code>string</code> | *No description.* |
-| <code><a href="#cdk-pgstac.BastionHost.Initializer.parameter.props">props</a></code> | <code><a href="#cdk-pgstac.BastionHostProps">BastionHostProps</a></code> | *No description.* |
+| <code><a href="#eoapi-cdk.BastionHost.Initializer.parameter.scope">scope</a></code> | <code>constructs.Construct</code> | *No description.* |
+| <code><a href="#eoapi-cdk.BastionHost.Initializer.parameter.id">id</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#eoapi-cdk.BastionHost.Initializer.parameter.props">props</a></code> | <code><a href="#eoapi-cdk.BastionHostProps">BastionHostProps</a></code> | *No description.* |
 
 ---
 
-##### `scope`<sup>Required</sup> <a name="scope" id="cdk-pgstac.BastionHost.Initializer.parameter.scope"></a>
+##### `scope`<sup>Required</sup> <a name="scope" id="eoapi-cdk.BastionHost.Initializer.parameter.scope"></a>
 
 - *Type:* constructs.Construct
 
 ---
 
-##### `id`<sup>Required</sup> <a name="id" id="cdk-pgstac.BastionHost.Initializer.parameter.id"></a>
+##### `id`<sup>Required</sup> <a name="id" id="eoapi-cdk.BastionHost.Initializer.parameter.id"></a>
 
 - *Type:* string
 
 ---
 
-##### `props`<sup>Required</sup> <a name="props" id="cdk-pgstac.BastionHost.Initializer.parameter.props"></a>
+##### `props`<sup>Required</sup> <a name="props" id="eoapi-cdk.BastionHost.Initializer.parameter.props"></a>
 
-- *Type:* <a href="#cdk-pgstac.BastionHostProps">BastionHostProps</a>
+- *Type:* <a href="#eoapi-cdk.BastionHostProps">BastionHostProps</a>
 
 ---
 
@@ -120,11 +120,11 @@ new BastionHost(scope: Construct, id: string, props: BastionHostProps)
 
 | **Name** | **Description** |
 | --- | --- |
-| <code><a href="#cdk-pgstac.BastionHost.toString">toString</a></code> | Returns a string representation of this construct. |
+| <code><a href="#eoapi-cdk.BastionHost.toString">toString</a></code> | Returns a string representation of this construct. |
 
 ---
 
-##### `toString` <a name="toString" id="cdk-pgstac.BastionHost.toString"></a>
+##### `toString` <a name="toString" id="eoapi-cdk.BastionHost.toString"></a>
 
 ```typescript
 public toString(): string
@@ -136,14 +136,14 @@ Returns a string representation of this construct.
 
 | **Name** | **Description** |
 | --- | --- |
-| <code><a href="#cdk-pgstac.BastionHost.isConstruct">isConstruct</a></code> | Checks if `x` is a construct. |
+| <code><a href="#eoapi-cdk.BastionHost.isConstruct">isConstruct</a></code> | Checks if `x` is a construct. |
 
 ---
 
-##### `isConstruct` <a name="isConstruct" id="cdk-pgstac.BastionHost.isConstruct"></a>
+##### `isConstruct` <a name="isConstruct" id="eoapi-cdk.BastionHost.isConstruct"></a>
 
 ```typescript
-import { BastionHost } from 'cdk-pgstac'
+import { BastionHost } from 'eoapi-cdk'
 
 BastionHost.isConstruct(x: any)
 ```
@@ -164,7 +164,7 @@ library can be accidentally installed, and `instanceof` will behave
 unpredictably. It is safest to avoid using `instanceof`, and using
 this type-testing method instead.
 
-###### `x`<sup>Required</sup> <a name="x" id="cdk-pgstac.BastionHost.isConstruct.parameter.x"></a>
+###### `x`<sup>Required</sup> <a name="x" id="eoapi-cdk.BastionHost.isConstruct.parameter.x"></a>
 
 - *Type:* any
 
@@ -176,12 +176,12 @@ Any object.
 
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
-| <code><a href="#cdk-pgstac.BastionHost.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
-| <code><a href="#cdk-pgstac.BastionHost.property.instance">instance</a></code> | <code>aws-cdk-lib.aws_ec2.Instance</code> | *No description.* |
+| <code><a href="#eoapi-cdk.BastionHost.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
+| <code><a href="#eoapi-cdk.BastionHost.property.instance">instance</a></code> | <code>aws-cdk-lib.aws_ec2.Instance</code> | *No description.* |
 
 ---
 
-##### `node`<sup>Required</sup> <a name="node" id="cdk-pgstac.BastionHost.property.node"></a>
+##### `node`<sup>Required</sup> <a name="node" id="eoapi-cdk.BastionHost.property.node"></a>
 
 ```typescript
 public readonly node: Node;
@@ -193,7 +193,7 @@ The tree node.
 
 ---
 
-##### `instance`<sup>Required</sup> <a name="instance" id="cdk-pgstac.BastionHost.property.instance"></a>
+##### `instance`<sup>Required</sup> <a name="instance" id="eoapi-cdk.BastionHost.property.instance"></a>
 
 ```typescript
 public readonly instance: Instance;
@@ -204,41 +204,41 @@ public readonly instance: Instance;
 ---
 
 
-### BootstrapPgStac <a name="BootstrapPgStac" id="cdk-pgstac.BootstrapPgStac"></a>
+### BootstrapPgStac <a name="BootstrapPgStac" id="eoapi-cdk.BootstrapPgStac"></a>
 
 Bootstraps a database instance, installing pgSTAC onto the database.
 
-#### Initializers <a name="Initializers" id="cdk-pgstac.BootstrapPgStac.Initializer"></a>
+#### Initializers <a name="Initializers" id="eoapi-cdk.BootstrapPgStac.Initializer"></a>
 
 ```typescript
-import { BootstrapPgStac } from 'cdk-pgstac'
+import { BootstrapPgStac } from 'eoapi-cdk'
 
 new BootstrapPgStac(scope: Construct, id: string, props: BootstrapPgStacProps)
 ```
 
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
-| <code><a href="#cdk-pgstac.BootstrapPgStac.Initializer.parameter.scope">scope</a></code> | <code>constructs.Construct</code> | *No description.* |
-| <code><a href="#cdk-pgstac.BootstrapPgStac.Initializer.parameter.id">id</a></code> | <code>string</code> | *No description.* |
-| <code><a href="#cdk-pgstac.BootstrapPgStac.Initializer.parameter.props">props</a></code> | <code><a href="#cdk-pgstac.BootstrapPgStacProps">BootstrapPgStacProps</a></code> | *No description.* |
+| <code><a href="#eoapi-cdk.BootstrapPgStac.Initializer.parameter.scope">scope</a></code> | <code>constructs.Construct</code> | *No description.* |
+| <code><a href="#eoapi-cdk.BootstrapPgStac.Initializer.parameter.id">id</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#eoapi-cdk.BootstrapPgStac.Initializer.parameter.props">props</a></code> | <code><a href="#eoapi-cdk.BootstrapPgStacProps">BootstrapPgStacProps</a></code> | *No description.* |
 
 ---
 
-##### `scope`<sup>Required</sup> <a name="scope" id="cdk-pgstac.BootstrapPgStac.Initializer.parameter.scope"></a>
+##### `scope`<sup>Required</sup> <a name="scope" id="eoapi-cdk.BootstrapPgStac.Initializer.parameter.scope"></a>
 
 - *Type:* constructs.Construct
 
 ---
 
-##### `id`<sup>Required</sup> <a name="id" id="cdk-pgstac.BootstrapPgStac.Initializer.parameter.id"></a>
+##### `id`<sup>Required</sup> <a name="id" id="eoapi-cdk.BootstrapPgStac.Initializer.parameter.id"></a>
 
 - *Type:* string
 
 ---
 
-##### `props`<sup>Required</sup> <a name="props" id="cdk-pgstac.BootstrapPgStac.Initializer.parameter.props"></a>
+##### `props`<sup>Required</sup> <a name="props" id="eoapi-cdk.BootstrapPgStac.Initializer.parameter.props"></a>
 
-- *Type:* <a href="#cdk-pgstac.BootstrapPgStacProps">BootstrapPgStacProps</a>
+- *Type:* <a href="#eoapi-cdk.BootstrapPgStacProps">BootstrapPgStacProps</a>
 
 ---
 
@@ -246,11 +246,11 @@ new BootstrapPgStac(scope: Construct, id: string, props: BootstrapPgStacProps)
 
 | **Name** | **Description** |
 | --- | --- |
-| <code><a href="#cdk-pgstac.BootstrapPgStac.toString">toString</a></code> | Returns a string representation of this construct. |
+| <code><a href="#eoapi-cdk.BootstrapPgStac.toString">toString</a></code> | Returns a string representation of this construct. |
 
 ---
 
-##### `toString` <a name="toString" id="cdk-pgstac.BootstrapPgStac.toString"></a>
+##### `toString` <a name="toString" id="eoapi-cdk.BootstrapPgStac.toString"></a>
 
 ```typescript
 public toString(): string
@@ -262,14 +262,14 @@ Returns a string representation of this construct.
 
 | **Name** | **Description** |
 | --- | --- |
-| <code><a href="#cdk-pgstac.BootstrapPgStac.isConstruct">isConstruct</a></code> | Checks if `x` is a construct. |
+| <code><a href="#eoapi-cdk.BootstrapPgStac.isConstruct">isConstruct</a></code> | Checks if `x` is a construct. |
 
 ---
 
-##### `isConstruct` <a name="isConstruct" id="cdk-pgstac.BootstrapPgStac.isConstruct"></a>
+##### `isConstruct` <a name="isConstruct" id="eoapi-cdk.BootstrapPgStac.isConstruct"></a>
 
 ```typescript
-import { BootstrapPgStac } from 'cdk-pgstac'
+import { BootstrapPgStac } from 'eoapi-cdk'
 
 BootstrapPgStac.isConstruct(x: any)
 ```
@@ -290,7 +290,7 @@ library can be accidentally installed, and `instanceof` will behave
 unpredictably. It is safest to avoid using `instanceof`, and using
 this type-testing method instead.
 
-###### `x`<sup>Required</sup> <a name="x" id="cdk-pgstac.BootstrapPgStac.isConstruct.parameter.x"></a>
+###### `x`<sup>Required</sup> <a name="x" id="eoapi-cdk.BootstrapPgStac.isConstruct.parameter.x"></a>
 
 - *Type:* any
 
@@ -302,12 +302,12 @@ Any object.
 
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
-| <code><a href="#cdk-pgstac.BootstrapPgStac.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
-| <code><a href="#cdk-pgstac.BootstrapPgStac.property.secret">secret</a></code> | <code>aws-cdk-lib.aws_secretsmanager.ISecret</code> | *No description.* |
+| <code><a href="#eoapi-cdk.BootstrapPgStac.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
+| <code><a href="#eoapi-cdk.BootstrapPgStac.property.secret">secret</a></code> | <code>aws-cdk-lib.aws_secretsmanager.ISecret</code> | *No description.* |
 
 ---
 
-##### `node`<sup>Required</sup> <a name="node" id="cdk-pgstac.BootstrapPgStac.property.node"></a>
+##### `node`<sup>Required</sup> <a name="node" id="eoapi-cdk.BootstrapPgStac.property.node"></a>
 
 ```typescript
 public readonly node: Node;
@@ -319,7 +319,7 @@ The tree node.
 
 ---
 
-##### `secret`<sup>Required</sup> <a name="secret" id="cdk-pgstac.BootstrapPgStac.property.secret"></a>
+##### `secret`<sup>Required</sup> <a name="secret" id="eoapi-cdk.BootstrapPgStac.property.secret"></a>
 
 ```typescript
 public readonly secret: ISecret;
@@ -330,39 +330,39 @@ public readonly secret: ISecret;
 ---
 
 
-### PgStacApiLambda <a name="PgStacApiLambda" id="cdk-pgstac.PgStacApiLambda"></a>
+### PgStacApiLambda <a name="PgStacApiLambda" id="eoapi-cdk.PgStacApiLambda"></a>
 
-#### Initializers <a name="Initializers" id="cdk-pgstac.PgStacApiLambda.Initializer"></a>
+#### Initializers <a name="Initializers" id="eoapi-cdk.PgStacApiLambda.Initializer"></a>
 
 ```typescript
-import { PgStacApiLambda } from 'cdk-pgstac'
+import { PgStacApiLambda } from 'eoapi-cdk'
 
 new PgStacApiLambda(scope: Construct, id: string, props: PgStacApiLambdaProps)
 ```
 
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
-| <code><a href="#cdk-pgstac.PgStacApiLambda.Initializer.parameter.scope">scope</a></code> | <code>constructs.Construct</code> | *No description.* |
-| <code><a href="#cdk-pgstac.PgStacApiLambda.Initializer.parameter.id">id</a></code> | <code>string</code> | *No description.* |
-| <code><a href="#cdk-pgstac.PgStacApiLambda.Initializer.parameter.props">props</a></code> | <code><a href="#cdk-pgstac.PgStacApiLambdaProps">PgStacApiLambdaProps</a></code> | *No description.* |
+| <code><a href="#eoapi-cdk.PgStacApiLambda.Initializer.parameter.scope">scope</a></code> | <code>constructs.Construct</code> | *No description.* |
+| <code><a href="#eoapi-cdk.PgStacApiLambda.Initializer.parameter.id">id</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#eoapi-cdk.PgStacApiLambda.Initializer.parameter.props">props</a></code> | <code><a href="#eoapi-cdk.PgStacApiLambdaProps">PgStacApiLambdaProps</a></code> | *No description.* |
 
 ---
 
-##### `scope`<sup>Required</sup> <a name="scope" id="cdk-pgstac.PgStacApiLambda.Initializer.parameter.scope"></a>
+##### `scope`<sup>Required</sup> <a name="scope" id="eoapi-cdk.PgStacApiLambda.Initializer.parameter.scope"></a>
 
 - *Type:* constructs.Construct
 
 ---
 
-##### `id`<sup>Required</sup> <a name="id" id="cdk-pgstac.PgStacApiLambda.Initializer.parameter.id"></a>
+##### `id`<sup>Required</sup> <a name="id" id="eoapi-cdk.PgStacApiLambda.Initializer.parameter.id"></a>
 
 - *Type:* string
 
 ---
 
-##### `props`<sup>Required</sup> <a name="props" id="cdk-pgstac.PgStacApiLambda.Initializer.parameter.props"></a>
+##### `props`<sup>Required</sup> <a name="props" id="eoapi-cdk.PgStacApiLambda.Initializer.parameter.props"></a>
 
-- *Type:* <a href="#cdk-pgstac.PgStacApiLambdaProps">PgStacApiLambdaProps</a>
+- *Type:* <a href="#eoapi-cdk.PgStacApiLambdaProps">PgStacApiLambdaProps</a>
 
 ---
 
@@ -370,11 +370,11 @@ new PgStacApiLambda(scope: Construct, id: string, props: PgStacApiLambdaProps)
 
 | **Name** | **Description** |
 | --- | --- |
-| <code><a href="#cdk-pgstac.PgStacApiLambda.toString">toString</a></code> | Returns a string representation of this construct. |
+| <code><a href="#eoapi-cdk.PgStacApiLambda.toString">toString</a></code> | Returns a string representation of this construct. |
 
 ---
 
-##### `toString` <a name="toString" id="cdk-pgstac.PgStacApiLambda.toString"></a>
+##### `toString` <a name="toString" id="eoapi-cdk.PgStacApiLambda.toString"></a>
 
 ```typescript
 public toString(): string
@@ -386,14 +386,14 @@ Returns a string representation of this construct.
 
 | **Name** | **Description** |
 | --- | --- |
-| <code><a href="#cdk-pgstac.PgStacApiLambda.isConstruct">isConstruct</a></code> | Checks if `x` is a construct. |
+| <code><a href="#eoapi-cdk.PgStacApiLambda.isConstruct">isConstruct</a></code> | Checks if `x` is a construct. |
 
 ---
 
-##### `isConstruct` <a name="isConstruct" id="cdk-pgstac.PgStacApiLambda.isConstruct"></a>
+##### `isConstruct` <a name="isConstruct" id="eoapi-cdk.PgStacApiLambda.isConstruct"></a>
 
 ```typescript
-import { PgStacApiLambda } from 'cdk-pgstac'
+import { PgStacApiLambda } from 'eoapi-cdk'
 
 PgStacApiLambda.isConstruct(x: any)
 ```
@@ -414,7 +414,7 @@ library can be accidentally installed, and `instanceof` will behave
 unpredictably. It is safest to avoid using `instanceof`, and using
 this type-testing method instead.
 
-###### `x`<sup>Required</sup> <a name="x" id="cdk-pgstac.PgStacApiLambda.isConstruct.parameter.x"></a>
+###### `x`<sup>Required</sup> <a name="x" id="eoapi-cdk.PgStacApiLambda.isConstruct.parameter.x"></a>
 
 - *Type:* any
 
@@ -426,13 +426,13 @@ Any object.
 
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
-| <code><a href="#cdk-pgstac.PgStacApiLambda.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
-| <code><a href="#cdk-pgstac.PgStacApiLambda.property.url">url</a></code> | <code>string</code> | *No description.* |
-| <code><a href="#cdk-pgstac.PgStacApiLambda.property.stacApiLambdaFunction">stacApiLambdaFunction</a></code> | <code>@aws-cdk/aws-lambda-python-alpha.PythonFunction</code> | *No description.* |
+| <code><a href="#eoapi-cdk.PgStacApiLambda.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
+| <code><a href="#eoapi-cdk.PgStacApiLambda.property.url">url</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#eoapi-cdk.PgStacApiLambda.property.stacApiLambdaFunction">stacApiLambdaFunction</a></code> | <code>@aws-cdk/aws-lambda-python-alpha.PythonFunction</code> | *No description.* |
 
 ---
 
-##### `node`<sup>Required</sup> <a name="node" id="cdk-pgstac.PgStacApiLambda.property.node"></a>
+##### `node`<sup>Required</sup> <a name="node" id="eoapi-cdk.PgStacApiLambda.property.node"></a>
 
 ```typescript
 public readonly node: Node;
@@ -444,7 +444,7 @@ The tree node.
 
 ---
 
-##### `url`<sup>Required</sup> <a name="url" id="cdk-pgstac.PgStacApiLambda.property.url"></a>
+##### `url`<sup>Required</sup> <a name="url" id="eoapi-cdk.PgStacApiLambda.property.url"></a>
 
 ```typescript
 public readonly url: string;
@@ -454,7 +454,7 @@ public readonly url: string;
 
 ---
 
-##### `stacApiLambdaFunction`<sup>Required</sup> <a name="stacApiLambdaFunction" id="cdk-pgstac.PgStacApiLambda.property.stacApiLambdaFunction"></a>
+##### `stacApiLambdaFunction`<sup>Required</sup> <a name="stacApiLambdaFunction" id="eoapi-cdk.PgStacApiLambda.property.stacApiLambdaFunction"></a>
 
 ```typescript
 public readonly stacApiLambdaFunction: PythonFunction;
@@ -465,7 +465,7 @@ public readonly stacApiLambdaFunction: PythonFunction;
 ---
 
 
-### PgStacDatabase <a name="PgStacDatabase" id="cdk-pgstac.PgStacDatabase"></a>
+### PgStacDatabase <a name="PgStacDatabase" id="eoapi-cdk.PgStacDatabase"></a>
 
 An RDS instance with pgSTAC installed.
 
@@ -473,37 +473,37 @@ This is a wrapper around the
 `rds.DatabaseInstance` higher-level construct making use
 of the BootstrapPgStac construct.
 
-#### Initializers <a name="Initializers" id="cdk-pgstac.PgStacDatabase.Initializer"></a>
+#### Initializers <a name="Initializers" id="eoapi-cdk.PgStacDatabase.Initializer"></a>
 
 ```typescript
-import { PgStacDatabase } from 'cdk-pgstac'
+import { PgStacDatabase } from 'eoapi-cdk'
 
 new PgStacDatabase(scope: Construct, id: string, props: PgStacDatabaseProps)
 ```
 
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
-| <code><a href="#cdk-pgstac.PgStacDatabase.Initializer.parameter.scope">scope</a></code> | <code>constructs.Construct</code> | *No description.* |
-| <code><a href="#cdk-pgstac.PgStacDatabase.Initializer.parameter.id">id</a></code> | <code>string</code> | *No description.* |
-| <code><a href="#cdk-pgstac.PgStacDatabase.Initializer.parameter.props">props</a></code> | <code><a href="#cdk-pgstac.PgStacDatabaseProps">PgStacDatabaseProps</a></code> | *No description.* |
+| <code><a href="#eoapi-cdk.PgStacDatabase.Initializer.parameter.scope">scope</a></code> | <code>constructs.Construct</code> | *No description.* |
+| <code><a href="#eoapi-cdk.PgStacDatabase.Initializer.parameter.id">id</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#eoapi-cdk.PgStacDatabase.Initializer.parameter.props">props</a></code> | <code><a href="#eoapi-cdk.PgStacDatabaseProps">PgStacDatabaseProps</a></code> | *No description.* |
 
 ---
 
-##### `scope`<sup>Required</sup> <a name="scope" id="cdk-pgstac.PgStacDatabase.Initializer.parameter.scope"></a>
+##### `scope`<sup>Required</sup> <a name="scope" id="eoapi-cdk.PgStacDatabase.Initializer.parameter.scope"></a>
 
 - *Type:* constructs.Construct
 
 ---
 
-##### `id`<sup>Required</sup> <a name="id" id="cdk-pgstac.PgStacDatabase.Initializer.parameter.id"></a>
+##### `id`<sup>Required</sup> <a name="id" id="eoapi-cdk.PgStacDatabase.Initializer.parameter.id"></a>
 
 - *Type:* string
 
 ---
 
-##### `props`<sup>Required</sup> <a name="props" id="cdk-pgstac.PgStacDatabase.Initializer.parameter.props"></a>
+##### `props`<sup>Required</sup> <a name="props" id="eoapi-cdk.PgStacDatabase.Initializer.parameter.props"></a>
 
-- *Type:* <a href="#cdk-pgstac.PgStacDatabaseProps">PgStacDatabaseProps</a>
+- *Type:* <a href="#eoapi-cdk.PgStacDatabaseProps">PgStacDatabaseProps</a>
 
 ---
 
@@ -511,12 +511,12 @@ new PgStacDatabase(scope: Construct, id: string, props: PgStacDatabaseProps)
 
 | **Name** | **Description** |
 | --- | --- |
-| <code><a href="#cdk-pgstac.PgStacDatabase.toString">toString</a></code> | Returns a string representation of this construct. |
-| <code><a href="#cdk-pgstac.PgStacDatabase.getParameters">getParameters</a></code> | *No description.* |
+| <code><a href="#eoapi-cdk.PgStacDatabase.toString">toString</a></code> | Returns a string representation of this construct. |
+| <code><a href="#eoapi-cdk.PgStacDatabase.getParameters">getParameters</a></code> | *No description.* |
 
 ---
 
-##### `toString` <a name="toString" id="cdk-pgstac.PgStacDatabase.toString"></a>
+##### `toString` <a name="toString" id="eoapi-cdk.PgStacDatabase.toString"></a>
 
 ```typescript
 public toString(): string
@@ -524,19 +524,19 @@ public toString(): string
 
 Returns a string representation of this construct.
 
-##### `getParameters` <a name="getParameters" id="cdk-pgstac.PgStacDatabase.getParameters"></a>
+##### `getParameters` <a name="getParameters" id="eoapi-cdk.PgStacDatabase.getParameters"></a>
 
 ```typescript
 public getParameters(instanceType: string, parameters?: {[ key: string ]: string}): DatabaseParameters
 ```
 
-###### `instanceType`<sup>Required</sup> <a name="instanceType" id="cdk-pgstac.PgStacDatabase.getParameters.parameter.instanceType"></a>
+###### `instanceType`<sup>Required</sup> <a name="instanceType" id="eoapi-cdk.PgStacDatabase.getParameters.parameter.instanceType"></a>
 
 - *Type:* string
 
 ---
 
-###### `parameters`<sup>Optional</sup> <a name="parameters" id="cdk-pgstac.PgStacDatabase.getParameters.parameter.parameters"></a>
+###### `parameters`<sup>Optional</sup> <a name="parameters" id="eoapi-cdk.PgStacDatabase.getParameters.parameter.parameters"></a>
 
 - *Type:* {[ key: string ]: string}
 
@@ -546,14 +546,14 @@ public getParameters(instanceType: string, parameters?: {[ key: string ]: string
 
 | **Name** | **Description** |
 | --- | --- |
-| <code><a href="#cdk-pgstac.PgStacDatabase.isConstruct">isConstruct</a></code> | Checks if `x` is a construct. |
+| <code><a href="#eoapi-cdk.PgStacDatabase.isConstruct">isConstruct</a></code> | Checks if `x` is a construct. |
 
 ---
 
-##### `isConstruct` <a name="isConstruct" id="cdk-pgstac.PgStacDatabase.isConstruct"></a>
+##### `isConstruct` <a name="isConstruct" id="eoapi-cdk.PgStacDatabase.isConstruct"></a>
 
 ```typescript
-import { PgStacDatabase } from 'cdk-pgstac'
+import { PgStacDatabase } from 'eoapi-cdk'
 
 PgStacDatabase.isConstruct(x: any)
 ```
@@ -574,7 +574,7 @@ library can be accidentally installed, and `instanceof` will behave
 unpredictably. It is safest to avoid using `instanceof`, and using
 this type-testing method instead.
 
-###### `x`<sup>Required</sup> <a name="x" id="cdk-pgstac.PgStacDatabase.isConstruct.parameter.x"></a>
+###### `x`<sup>Required</sup> <a name="x" id="eoapi-cdk.PgStacDatabase.isConstruct.parameter.x"></a>
 
 - *Type:* any
 
@@ -586,13 +586,13 @@ Any object.
 
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
-| <code><a href="#cdk-pgstac.PgStacDatabase.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
-| <code><a href="#cdk-pgstac.PgStacDatabase.property.db">db</a></code> | <code>aws-cdk-lib.aws_rds.DatabaseInstance</code> | *No description.* |
-| <code><a href="#cdk-pgstac.PgStacDatabase.property.pgstacSecret">pgstacSecret</a></code> | <code>aws-cdk-lib.aws_secretsmanager.ISecret</code> | *No description.* |
+| <code><a href="#eoapi-cdk.PgStacDatabase.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
+| <code><a href="#eoapi-cdk.PgStacDatabase.property.db">db</a></code> | <code>aws-cdk-lib.aws_rds.DatabaseInstance</code> | *No description.* |
+| <code><a href="#eoapi-cdk.PgStacDatabase.property.pgstacSecret">pgstacSecret</a></code> | <code>aws-cdk-lib.aws_secretsmanager.ISecret</code> | *No description.* |
 
 ---
 
-##### `node`<sup>Required</sup> <a name="node" id="cdk-pgstac.PgStacDatabase.property.node"></a>
+##### `node`<sup>Required</sup> <a name="node" id="eoapi-cdk.PgStacDatabase.property.node"></a>
 
 ```typescript
 public readonly node: Node;
@@ -604,7 +604,7 @@ The tree node.
 
 ---
 
-##### `db`<sup>Required</sup> <a name="db" id="cdk-pgstac.PgStacDatabase.property.db"></a>
+##### `db`<sup>Required</sup> <a name="db" id="eoapi-cdk.PgStacDatabase.property.db"></a>
 
 ```typescript
 public readonly db: DatabaseInstance;
@@ -614,7 +614,7 @@ public readonly db: DatabaseInstance;
 
 ---
 
-##### `pgstacSecret`<sup>Required</sup> <a name="pgstacSecret" id="cdk-pgstac.PgStacDatabase.property.pgstacSecret"></a>
+##### `pgstacSecret`<sup>Required</sup> <a name="pgstacSecret" id="eoapi-cdk.PgStacDatabase.property.pgstacSecret"></a>
 
 ```typescript
 public readonly pgstacSecret: ISecret;
@@ -625,39 +625,39 @@ public readonly pgstacSecret: ISecret;
 ---
 
 
-### StacIngestor <a name="StacIngestor" id="cdk-pgstac.StacIngestor"></a>
+### StacIngestor <a name="StacIngestor" id="eoapi-cdk.StacIngestor"></a>
 
-#### Initializers <a name="Initializers" id="cdk-pgstac.StacIngestor.Initializer"></a>
+#### Initializers <a name="Initializers" id="eoapi-cdk.StacIngestor.Initializer"></a>
 
 ```typescript
-import { StacIngestor } from 'cdk-pgstac'
+import { StacIngestor } from 'eoapi-cdk'
 
 new StacIngestor(scope: Construct, id: string, props: StacIngestorProps)
 ```
 
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
-| <code><a href="#cdk-pgstac.StacIngestor.Initializer.parameter.scope">scope</a></code> | <code>constructs.Construct</code> | *No description.* |
-| <code><a href="#cdk-pgstac.StacIngestor.Initializer.parameter.id">id</a></code> | <code>string</code> | *No description.* |
-| <code><a href="#cdk-pgstac.StacIngestor.Initializer.parameter.props">props</a></code> | <code><a href="#cdk-pgstac.StacIngestorProps">StacIngestorProps</a></code> | *No description.* |
+| <code><a href="#eoapi-cdk.StacIngestor.Initializer.parameter.scope">scope</a></code> | <code>constructs.Construct</code> | *No description.* |
+| <code><a href="#eoapi-cdk.StacIngestor.Initializer.parameter.id">id</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#eoapi-cdk.StacIngestor.Initializer.parameter.props">props</a></code> | <code><a href="#eoapi-cdk.StacIngestorProps">StacIngestorProps</a></code> | *No description.* |
 
 ---
 
-##### `scope`<sup>Required</sup> <a name="scope" id="cdk-pgstac.StacIngestor.Initializer.parameter.scope"></a>
+##### `scope`<sup>Required</sup> <a name="scope" id="eoapi-cdk.StacIngestor.Initializer.parameter.scope"></a>
 
 - *Type:* constructs.Construct
 
 ---
 
-##### `id`<sup>Required</sup> <a name="id" id="cdk-pgstac.StacIngestor.Initializer.parameter.id"></a>
+##### `id`<sup>Required</sup> <a name="id" id="eoapi-cdk.StacIngestor.Initializer.parameter.id"></a>
 
 - *Type:* string
 
 ---
 
-##### `props`<sup>Required</sup> <a name="props" id="cdk-pgstac.StacIngestor.Initializer.parameter.props"></a>
+##### `props`<sup>Required</sup> <a name="props" id="eoapi-cdk.StacIngestor.Initializer.parameter.props"></a>
 
-- *Type:* <a href="#cdk-pgstac.StacIngestorProps">StacIngestorProps</a>
+- *Type:* <a href="#eoapi-cdk.StacIngestorProps">StacIngestorProps</a>
 
 ---
 
@@ -665,11 +665,11 @@ new StacIngestor(scope: Construct, id: string, props: StacIngestorProps)
 
 | **Name** | **Description** |
 | --- | --- |
-| <code><a href="#cdk-pgstac.StacIngestor.toString">toString</a></code> | Returns a string representation of this construct. |
+| <code><a href="#eoapi-cdk.StacIngestor.toString">toString</a></code> | Returns a string representation of this construct. |
 
 ---
 
-##### `toString` <a name="toString" id="cdk-pgstac.StacIngestor.toString"></a>
+##### `toString` <a name="toString" id="eoapi-cdk.StacIngestor.toString"></a>
 
 ```typescript
 public toString(): string
@@ -681,14 +681,14 @@ Returns a string representation of this construct.
 
 | **Name** | **Description** |
 | --- | --- |
-| <code><a href="#cdk-pgstac.StacIngestor.isConstruct">isConstruct</a></code> | Checks if `x` is a construct. |
+| <code><a href="#eoapi-cdk.StacIngestor.isConstruct">isConstruct</a></code> | Checks if `x` is a construct. |
 
 ---
 
-##### `isConstruct` <a name="isConstruct" id="cdk-pgstac.StacIngestor.isConstruct"></a>
+##### `isConstruct` <a name="isConstruct" id="eoapi-cdk.StacIngestor.isConstruct"></a>
 
 ```typescript
-import { StacIngestor } from 'cdk-pgstac'
+import { StacIngestor } from 'eoapi-cdk'
 
 StacIngestor.isConstruct(x: any)
 ```
@@ -709,7 +709,7 @@ library can be accidentally installed, and `instanceof` will behave
 unpredictably. It is safest to avoid using `instanceof`, and using
 this type-testing method instead.
 
-###### `x`<sup>Required</sup> <a name="x" id="cdk-pgstac.StacIngestor.isConstruct.parameter.x"></a>
+###### `x`<sup>Required</sup> <a name="x" id="eoapi-cdk.StacIngestor.isConstruct.parameter.x"></a>
 
 - *Type:* any
 
@@ -721,13 +721,13 @@ Any object.
 
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
-| <code><a href="#cdk-pgstac.StacIngestor.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
-| <code><a href="#cdk-pgstac.StacIngestor.property.handlerRole">handlerRole</a></code> | <code>aws-cdk-lib.aws_iam.Role</code> | *No description.* |
-| <code><a href="#cdk-pgstac.StacIngestor.property.table">table</a></code> | <code>aws-cdk-lib.aws_dynamodb.Table</code> | *No description.* |
+| <code><a href="#eoapi-cdk.StacIngestor.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
+| <code><a href="#eoapi-cdk.StacIngestor.property.handlerRole">handlerRole</a></code> | <code>aws-cdk-lib.aws_iam.Role</code> | *No description.* |
+| <code><a href="#eoapi-cdk.StacIngestor.property.table">table</a></code> | <code>aws-cdk-lib.aws_dynamodb.Table</code> | *No description.* |
 
 ---
 
-##### `node`<sup>Required</sup> <a name="node" id="cdk-pgstac.StacIngestor.property.node"></a>
+##### `node`<sup>Required</sup> <a name="node" id="eoapi-cdk.StacIngestor.property.node"></a>
 
 ```typescript
 public readonly node: Node;
@@ -739,7 +739,7 @@ The tree node.
 
 ---
 
-##### `handlerRole`<sup>Required</sup> <a name="handlerRole" id="cdk-pgstac.StacIngestor.property.handlerRole"></a>
+##### `handlerRole`<sup>Required</sup> <a name="handlerRole" id="eoapi-cdk.StacIngestor.property.handlerRole"></a>
 
 ```typescript
 public readonly handlerRole: Role;
@@ -749,7 +749,7 @@ public readonly handlerRole: Role;
 
 ---
 
-##### `table`<sup>Required</sup> <a name="table" id="cdk-pgstac.StacIngestor.property.table"></a>
+##### `table`<sup>Required</sup> <a name="table" id="eoapi-cdk.StacIngestor.property.table"></a>
 
 ```typescript
 public readonly table: Table;
@@ -760,39 +760,39 @@ public readonly table: Table;
 ---
 
 
-### TitilerPgstacApiLambda <a name="TitilerPgstacApiLambda" id="cdk-pgstac.TitilerPgstacApiLambda"></a>
+### TitilerPgstacApiLambda <a name="TitilerPgstacApiLambda" id="eoapi-cdk.TitilerPgstacApiLambda"></a>
 
-#### Initializers <a name="Initializers" id="cdk-pgstac.TitilerPgstacApiLambda.Initializer"></a>
+#### Initializers <a name="Initializers" id="eoapi-cdk.TitilerPgstacApiLambda.Initializer"></a>
 
 ```typescript
-import { TitilerPgstacApiLambda } from 'cdk-pgstac'
+import { TitilerPgstacApiLambda } from 'eoapi-cdk'
 
 new TitilerPgstacApiLambda(scope: Construct, id: string, props: TitilerPgStacApiLambdaProps)
 ```
 
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
-| <code><a href="#cdk-pgstac.TitilerPgstacApiLambda.Initializer.parameter.scope">scope</a></code> | <code>constructs.Construct</code> | *No description.* |
-| <code><a href="#cdk-pgstac.TitilerPgstacApiLambda.Initializer.parameter.id">id</a></code> | <code>string</code> | *No description.* |
-| <code><a href="#cdk-pgstac.TitilerPgstacApiLambda.Initializer.parameter.props">props</a></code> | <code><a href="#cdk-pgstac.TitilerPgStacApiLambdaProps">TitilerPgStacApiLambdaProps</a></code> | *No description.* |
+| <code><a href="#eoapi-cdk.TitilerPgstacApiLambda.Initializer.parameter.scope">scope</a></code> | <code>constructs.Construct</code> | *No description.* |
+| <code><a href="#eoapi-cdk.TitilerPgstacApiLambda.Initializer.parameter.id">id</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#eoapi-cdk.TitilerPgstacApiLambda.Initializer.parameter.props">props</a></code> | <code><a href="#eoapi-cdk.TitilerPgStacApiLambdaProps">TitilerPgStacApiLambdaProps</a></code> | *No description.* |
 
 ---
 
-##### `scope`<sup>Required</sup> <a name="scope" id="cdk-pgstac.TitilerPgstacApiLambda.Initializer.parameter.scope"></a>
+##### `scope`<sup>Required</sup> <a name="scope" id="eoapi-cdk.TitilerPgstacApiLambda.Initializer.parameter.scope"></a>
 
 - *Type:* constructs.Construct
 
 ---
 
-##### `id`<sup>Required</sup> <a name="id" id="cdk-pgstac.TitilerPgstacApiLambda.Initializer.parameter.id"></a>
+##### `id`<sup>Required</sup> <a name="id" id="eoapi-cdk.TitilerPgstacApiLambda.Initializer.parameter.id"></a>
 
 - *Type:* string
 
 ---
 
-##### `props`<sup>Required</sup> <a name="props" id="cdk-pgstac.TitilerPgstacApiLambda.Initializer.parameter.props"></a>
+##### `props`<sup>Required</sup> <a name="props" id="eoapi-cdk.TitilerPgstacApiLambda.Initializer.parameter.props"></a>
 
-- *Type:* <a href="#cdk-pgstac.TitilerPgStacApiLambdaProps">TitilerPgStacApiLambdaProps</a>
+- *Type:* <a href="#eoapi-cdk.TitilerPgStacApiLambdaProps">TitilerPgStacApiLambdaProps</a>
 
 ---
 
@@ -800,11 +800,11 @@ new TitilerPgstacApiLambda(scope: Construct, id: string, props: TitilerPgStacApi
 
 | **Name** | **Description** |
 | --- | --- |
-| <code><a href="#cdk-pgstac.TitilerPgstacApiLambda.toString">toString</a></code> | Returns a string representation of this construct. |
+| <code><a href="#eoapi-cdk.TitilerPgstacApiLambda.toString">toString</a></code> | Returns a string representation of this construct. |
 
 ---
 
-##### `toString` <a name="toString" id="cdk-pgstac.TitilerPgstacApiLambda.toString"></a>
+##### `toString` <a name="toString" id="eoapi-cdk.TitilerPgstacApiLambda.toString"></a>
 
 ```typescript
 public toString(): string
@@ -816,14 +816,14 @@ Returns a string representation of this construct.
 
 | **Name** | **Description** |
 | --- | --- |
-| <code><a href="#cdk-pgstac.TitilerPgstacApiLambda.isConstruct">isConstruct</a></code> | Checks if `x` is a construct. |
+| <code><a href="#eoapi-cdk.TitilerPgstacApiLambda.isConstruct">isConstruct</a></code> | Checks if `x` is a construct. |
 
 ---
 
-##### `isConstruct` <a name="isConstruct" id="cdk-pgstac.TitilerPgstacApiLambda.isConstruct"></a>
+##### `isConstruct` <a name="isConstruct" id="eoapi-cdk.TitilerPgstacApiLambda.isConstruct"></a>
 
 ```typescript
-import { TitilerPgstacApiLambda } from 'cdk-pgstac'
+import { TitilerPgstacApiLambda } from 'eoapi-cdk'
 
 TitilerPgstacApiLambda.isConstruct(x: any)
 ```
@@ -844,7 +844,7 @@ library can be accidentally installed, and `instanceof` will behave
 unpredictably. It is safest to avoid using `instanceof`, and using
 this type-testing method instead.
 
-###### `x`<sup>Required</sup> <a name="x" id="cdk-pgstac.TitilerPgstacApiLambda.isConstruct.parameter.x"></a>
+###### `x`<sup>Required</sup> <a name="x" id="eoapi-cdk.TitilerPgstacApiLambda.isConstruct.parameter.x"></a>
 
 - *Type:* any
 
@@ -856,13 +856,13 @@ Any object.
 
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
-| <code><a href="#cdk-pgstac.TitilerPgstacApiLambda.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
-| <code><a href="#cdk-pgstac.TitilerPgstacApiLambda.property.url">url</a></code> | <code>string</code> | *No description.* |
-| <code><a href="#cdk-pgstac.TitilerPgstacApiLambda.property.titilerPgstacLambdaFunction">titilerPgstacLambdaFunction</a></code> | <code>aws-cdk-lib.aws_lambda.Function</code> | *No description.* |
+| <code><a href="#eoapi-cdk.TitilerPgstacApiLambda.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
+| <code><a href="#eoapi-cdk.TitilerPgstacApiLambda.property.url">url</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#eoapi-cdk.TitilerPgstacApiLambda.property.titilerPgstacLambdaFunction">titilerPgstacLambdaFunction</a></code> | <code>aws-cdk-lib.aws_lambda.Function</code> | *No description.* |
 
 ---
 
-##### `node`<sup>Required</sup> <a name="node" id="cdk-pgstac.TitilerPgstacApiLambda.property.node"></a>
+##### `node`<sup>Required</sup> <a name="node" id="eoapi-cdk.TitilerPgstacApiLambda.property.node"></a>
 
 ```typescript
 public readonly node: Node;
@@ -874,7 +874,7 @@ The tree node.
 
 ---
 
-##### `url`<sup>Required</sup> <a name="url" id="cdk-pgstac.TitilerPgstacApiLambda.property.url"></a>
+##### `url`<sup>Required</sup> <a name="url" id="eoapi-cdk.TitilerPgstacApiLambda.property.url"></a>
 
 ```typescript
 public readonly url: string;
@@ -884,7 +884,7 @@ public readonly url: string;
 
 ---
 
-##### `titilerPgstacLambdaFunction`<sup>Required</sup> <a name="titilerPgstacLambdaFunction" id="cdk-pgstac.TitilerPgstacApiLambda.property.titilerPgstacLambdaFunction"></a>
+##### `titilerPgstacLambdaFunction`<sup>Required</sup> <a name="titilerPgstacLambdaFunction" id="eoapi-cdk.TitilerPgstacApiLambda.property.titilerPgstacLambdaFunction"></a>
 
 ```typescript
 public readonly titilerPgstacLambdaFunction: Function;
@@ -897,12 +897,12 @@ public readonly titilerPgstacLambdaFunction: Function;
 
 ## Structs <a name="Structs" id="Structs"></a>
 
-### ApiEntrypoint <a name="ApiEntrypoint" id="cdk-pgstac.ApiEntrypoint"></a>
+### ApiEntrypoint <a name="ApiEntrypoint" id="eoapi-cdk.ApiEntrypoint"></a>
 
-#### Initializer <a name="Initializer" id="cdk-pgstac.ApiEntrypoint.Initializer"></a>
+#### Initializer <a name="Initializer" id="eoapi-cdk.ApiEntrypoint.Initializer"></a>
 
 ```typescript
-import { ApiEntrypoint } from 'cdk-pgstac'
+import { ApiEntrypoint } from 'eoapi-cdk'
 
 const apiEntrypoint: ApiEntrypoint = { ... }
 ```
@@ -911,13 +911,13 @@ const apiEntrypoint: ApiEntrypoint = { ... }
 
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
-| <code><a href="#cdk-pgstac.ApiEntrypoint.property.entry">entry</a></code> | <code>string</code> | Path to the source of the function or the location for dependencies. |
-| <code><a href="#cdk-pgstac.ApiEntrypoint.property.handler">handler</a></code> | <code>string</code> | The name of the exported handler in the index file. |
-| <code><a href="#cdk-pgstac.ApiEntrypoint.property.index">index</a></code> | <code>string</code> | The path (relative to entry) to the index file containing the exported handler. |
+| <code><a href="#eoapi-cdk.ApiEntrypoint.property.entry">entry</a></code> | <code>string</code> | Path to the source of the function or the location for dependencies. |
+| <code><a href="#eoapi-cdk.ApiEntrypoint.property.handler">handler</a></code> | <code>string</code> | The name of the exported handler in the index file. |
+| <code><a href="#eoapi-cdk.ApiEntrypoint.property.index">index</a></code> | <code>string</code> | The path (relative to entry) to the index file containing the exported handler. |
 
 ---
 
-##### `entry`<sup>Required</sup> <a name="entry" id="cdk-pgstac.ApiEntrypoint.property.entry"></a>
+##### `entry`<sup>Required</sup> <a name="entry" id="eoapi-cdk.ApiEntrypoint.property.entry"></a>
 
 ```typescript
 public readonly entry: string;
@@ -929,7 +929,7 @@ Path to the source of the function or the location for dependencies.
 
 ---
 
-##### `handler`<sup>Optional</sup> <a name="handler" id="cdk-pgstac.ApiEntrypoint.property.handler"></a>
+##### `handler`<sup>Optional</sup> <a name="handler" id="eoapi-cdk.ApiEntrypoint.property.handler"></a>
 
 ```typescript
 public readonly handler: string;
@@ -941,7 +941,7 @@ The name of the exported handler in the index file.
 
 ---
 
-##### `index`<sup>Optional</sup> <a name="index" id="cdk-pgstac.ApiEntrypoint.property.index"></a>
+##### `index`<sup>Optional</sup> <a name="index" id="eoapi-cdk.ApiEntrypoint.property.index"></a>
 
 ```typescript
 public readonly index: string;
@@ -953,12 +953,12 @@ The path (relative to entry) to the index file containing the exported handler.
 
 ---
 
-### BastionHostProps <a name="BastionHostProps" id="cdk-pgstac.BastionHostProps"></a>
+### BastionHostProps <a name="BastionHostProps" id="eoapi-cdk.BastionHostProps"></a>
 
-#### Initializer <a name="Initializer" id="cdk-pgstac.BastionHostProps.Initializer"></a>
+#### Initializer <a name="Initializer" id="eoapi-cdk.BastionHostProps.Initializer"></a>
 
 ```typescript
-import { BastionHostProps } from 'cdk-pgstac'
+import { BastionHostProps } from 'eoapi-cdk'
 
 const bastionHostProps: BastionHostProps = { ... }
 ```
@@ -967,16 +967,16 @@ const bastionHostProps: BastionHostProps = { ... }
 
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
-| <code><a href="#cdk-pgstac.BastionHostProps.property.db">db</a></code> | <code>aws-cdk-lib.aws_rds.IDatabaseInstance</code> | *No description.* |
-| <code><a href="#cdk-pgstac.BastionHostProps.property.ipv4Allowlist">ipv4Allowlist</a></code> | <code>string[]</code> | *No description.* |
-| <code><a href="#cdk-pgstac.BastionHostProps.property.userData">userData</a></code> | <code>aws-cdk-lib.aws_ec2.UserData</code> | *No description.* |
-| <code><a href="#cdk-pgstac.BastionHostProps.property.vpc">vpc</a></code> | <code>aws-cdk-lib.aws_ec2.IVpc</code> | *No description.* |
-| <code><a href="#cdk-pgstac.BastionHostProps.property.createElasticIp">createElasticIp</a></code> | <code>boolean</code> | Whether or not an elastic IP should be created for the bastion host. |
-| <code><a href="#cdk-pgstac.BastionHostProps.property.sshPort">sshPort</a></code> | <code>number</code> | *No description.* |
+| <code><a href="#eoapi-cdk.BastionHostProps.property.db">db</a></code> | <code>aws-cdk-lib.aws_rds.IDatabaseInstance</code> | *No description.* |
+| <code><a href="#eoapi-cdk.BastionHostProps.property.ipv4Allowlist">ipv4Allowlist</a></code> | <code>string[]</code> | *No description.* |
+| <code><a href="#eoapi-cdk.BastionHostProps.property.userData">userData</a></code> | <code>aws-cdk-lib.aws_ec2.UserData</code> | *No description.* |
+| <code><a href="#eoapi-cdk.BastionHostProps.property.vpc">vpc</a></code> | <code>aws-cdk-lib.aws_ec2.IVpc</code> | *No description.* |
+| <code><a href="#eoapi-cdk.BastionHostProps.property.createElasticIp">createElasticIp</a></code> | <code>boolean</code> | Whether or not an elastic IP should be created for the bastion host. |
+| <code><a href="#eoapi-cdk.BastionHostProps.property.sshPort">sshPort</a></code> | <code>number</code> | *No description.* |
 
 ---
 
-##### `db`<sup>Required</sup> <a name="db" id="cdk-pgstac.BastionHostProps.property.db"></a>
+##### `db`<sup>Required</sup> <a name="db" id="eoapi-cdk.BastionHostProps.property.db"></a>
 
 ```typescript
 public readonly db: IDatabaseInstance;
@@ -986,7 +986,7 @@ public readonly db: IDatabaseInstance;
 
 ---
 
-##### `ipv4Allowlist`<sup>Required</sup> <a name="ipv4Allowlist" id="cdk-pgstac.BastionHostProps.property.ipv4Allowlist"></a>
+##### `ipv4Allowlist`<sup>Required</sup> <a name="ipv4Allowlist" id="eoapi-cdk.BastionHostProps.property.ipv4Allowlist"></a>
 
 ```typescript
 public readonly ipv4Allowlist: string[];
@@ -996,7 +996,7 @@ public readonly ipv4Allowlist: string[];
 
 ---
 
-##### `userData`<sup>Required</sup> <a name="userData" id="cdk-pgstac.BastionHostProps.property.userData"></a>
+##### `userData`<sup>Required</sup> <a name="userData" id="eoapi-cdk.BastionHostProps.property.userData"></a>
 
 ```typescript
 public readonly userData: UserData;
@@ -1006,7 +1006,7 @@ public readonly userData: UserData;
 
 ---
 
-##### `vpc`<sup>Required</sup> <a name="vpc" id="cdk-pgstac.BastionHostProps.property.vpc"></a>
+##### `vpc`<sup>Required</sup> <a name="vpc" id="eoapi-cdk.BastionHostProps.property.vpc"></a>
 
 ```typescript
 public readonly vpc: IVpc;
@@ -1016,7 +1016,7 @@ public readonly vpc: IVpc;
 
 ---
 
-##### `createElasticIp`<sup>Optional</sup> <a name="createElasticIp" id="cdk-pgstac.BastionHostProps.property.createElasticIp"></a>
+##### `createElasticIp`<sup>Optional</sup> <a name="createElasticIp" id="eoapi-cdk.BastionHostProps.property.createElasticIp"></a>
 
 ```typescript
 public readonly createElasticIp: boolean;
@@ -1029,7 +1029,7 @@ Whether or not an elastic IP should be created for the bastion host.
 
 ---
 
-##### `sshPort`<sup>Optional</sup> <a name="sshPort" id="cdk-pgstac.BastionHostProps.property.sshPort"></a>
+##### `sshPort`<sup>Optional</sup> <a name="sshPort" id="eoapi-cdk.BastionHostProps.property.sshPort"></a>
 
 ```typescript
 public readonly sshPort: number;
@@ -1039,12 +1039,12 @@ public readonly sshPort: number;
 
 ---
 
-### BootstrapPgStacProps <a name="BootstrapPgStacProps" id="cdk-pgstac.BootstrapPgStacProps"></a>
+### BootstrapPgStacProps <a name="BootstrapPgStacProps" id="eoapi-cdk.BootstrapPgStacProps"></a>
 
-#### Initializer <a name="Initializer" id="cdk-pgstac.BootstrapPgStacProps.Initializer"></a>
+#### Initializer <a name="Initializer" id="eoapi-cdk.BootstrapPgStacProps.Initializer"></a>
 
 ```typescript
-import { BootstrapPgStacProps } from 'cdk-pgstac'
+import { BootstrapPgStacProps } from 'eoapi-cdk'
 
 const bootstrapPgStacProps: BootstrapPgStacProps = { ... }
 ```
@@ -1053,17 +1053,17 @@ const bootstrapPgStacProps: BootstrapPgStacProps = { ... }
 
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
-| <code><a href="#cdk-pgstac.BootstrapPgStacProps.property.database">database</a></code> | <code>aws-cdk-lib.aws_rds.IDatabaseInstance \| aws-cdk-lib.aws_rds.DatabaseInstance</code> | Database onto which pgSTAC should be installed. |
-| <code><a href="#cdk-pgstac.BootstrapPgStacProps.property.dbSecret">dbSecret</a></code> | <code>aws-cdk-lib.aws_secretsmanager.ISecret</code> | Secret containing valid connection details for the database instance. |
-| <code><a href="#cdk-pgstac.BootstrapPgStacProps.property.pgstacDbName">pgstacDbName</a></code> | <code>string</code> | Name of database that is to be created and onto which pgSTAC will be installed. |
-| <code><a href="#cdk-pgstac.BootstrapPgStacProps.property.pgstacUsername">pgstacUsername</a></code> | <code>string</code> | Name of user that will be generated for connecting to the pgSTAC database. |
-| <code><a href="#cdk-pgstac.BootstrapPgStacProps.property.pgstacVersion">pgstacVersion</a></code> | <code>string</code> | pgSTAC version to be installed. |
-| <code><a href="#cdk-pgstac.BootstrapPgStacProps.property.secretsPrefix">secretsPrefix</a></code> | <code>string</code> | Prefix to assign to the generated `secrets_manager.Secret`. |
-| <code><a href="#cdk-pgstac.BootstrapPgStacProps.property.vpc">vpc</a></code> | <code>aws-cdk-lib.aws_ec2.IVpc</code> | VPC in which the database resides. |
+| <code><a href="#eoapi-cdk.BootstrapPgStacProps.property.database">database</a></code> | <code>aws-cdk-lib.aws_rds.IDatabaseInstance \| aws-cdk-lib.aws_rds.DatabaseInstance</code> | Database onto which pgSTAC should be installed. |
+| <code><a href="#eoapi-cdk.BootstrapPgStacProps.property.dbSecret">dbSecret</a></code> | <code>aws-cdk-lib.aws_secretsmanager.ISecret</code> | Secret containing valid connection details for the database instance. |
+| <code><a href="#eoapi-cdk.BootstrapPgStacProps.property.pgstacDbName">pgstacDbName</a></code> | <code>string</code> | Name of database that is to be created and onto which pgSTAC will be installed. |
+| <code><a href="#eoapi-cdk.BootstrapPgStacProps.property.pgstacUsername">pgstacUsername</a></code> | <code>string</code> | Name of user that will be generated for connecting to the pgSTAC database. |
+| <code><a href="#eoapi-cdk.BootstrapPgStacProps.property.pgstacVersion">pgstacVersion</a></code> | <code>string</code> | pgSTAC version to be installed. |
+| <code><a href="#eoapi-cdk.BootstrapPgStacProps.property.secretsPrefix">secretsPrefix</a></code> | <code>string</code> | Prefix to assign to the generated `secrets_manager.Secret`. |
+| <code><a href="#eoapi-cdk.BootstrapPgStacProps.property.vpc">vpc</a></code> | <code>aws-cdk-lib.aws_ec2.IVpc</code> | VPC in which the database resides. |
 
 ---
 
-##### `database`<sup>Required</sup> <a name="database" id="cdk-pgstac.BootstrapPgStacProps.property.database"></a>
+##### `database`<sup>Required</sup> <a name="database" id="eoapi-cdk.BootstrapPgStacProps.property.database"></a>
 
 ```typescript
 public readonly database: IDatabaseInstance | DatabaseInstance;
@@ -1075,7 +1075,7 @@ Database onto which pgSTAC should be installed.
 
 ---
 
-##### `dbSecret`<sup>Required</sup> <a name="dbSecret" id="cdk-pgstac.BootstrapPgStacProps.property.dbSecret"></a>
+##### `dbSecret`<sup>Required</sup> <a name="dbSecret" id="eoapi-cdk.BootstrapPgStacProps.property.dbSecret"></a>
 
 ```typescript
 public readonly dbSecret: ISecret;
@@ -1093,7 +1093,7 @@ connect to a database with the name of `"postgres"`.
 
 ---
 
-##### `pgstacDbName`<sup>Optional</sup> <a name="pgstacDbName" id="cdk-pgstac.BootstrapPgStacProps.property.pgstacDbName"></a>
+##### `pgstacDbName`<sup>Optional</sup> <a name="pgstacDbName" id="eoapi-cdk.BootstrapPgStacProps.property.pgstacDbName"></a>
 
 ```typescript
 public readonly pgstacDbName: string;
@@ -1106,7 +1106,7 @@ Name of database that is to be created and onto which pgSTAC will be installed.
 
 ---
 
-##### `pgstacUsername`<sup>Optional</sup> <a name="pgstacUsername" id="cdk-pgstac.BootstrapPgStacProps.property.pgstacUsername"></a>
+##### `pgstacUsername`<sup>Optional</sup> <a name="pgstacUsername" id="eoapi-cdk.BootstrapPgStacProps.property.pgstacUsername"></a>
 
 ```typescript
 public readonly pgstacUsername: string;
@@ -1119,7 +1119,7 @@ Name of user that will be generated for connecting to the pgSTAC database.
 
 ---
 
-##### `pgstacVersion`<sup>Optional</sup> <a name="pgstacVersion" id="cdk-pgstac.BootstrapPgStacProps.property.pgstacVersion"></a>
+##### `pgstacVersion`<sup>Optional</sup> <a name="pgstacVersion" id="eoapi-cdk.BootstrapPgStacProps.property.pgstacVersion"></a>
 
 ```typescript
 public readonly pgstacVersion: string;
@@ -1132,7 +1132,7 @@ pgSTAC version to be installed.
 
 ---
 
-##### `secretsPrefix`<sup>Optional</sup> <a name="secretsPrefix" id="cdk-pgstac.BootstrapPgStacProps.property.secretsPrefix"></a>
+##### `secretsPrefix`<sup>Optional</sup> <a name="secretsPrefix" id="eoapi-cdk.BootstrapPgStacProps.property.secretsPrefix"></a>
 
 ```typescript
 public readonly secretsPrefix: string;
@@ -1145,7 +1145,7 @@ Prefix to assign to the generated `secrets_manager.Secret`.
 
 ---
 
-##### `vpc`<sup>Optional</sup> <a name="vpc" id="cdk-pgstac.BootstrapPgStacProps.property.vpc"></a>
+##### `vpc`<sup>Optional</sup> <a name="vpc" id="eoapi-cdk.BootstrapPgStacProps.property.vpc"></a>
 
 ```typescript
 public readonly vpc: IVpc;
@@ -1162,12 +1162,12 @@ rather than a database instance.)
 
 ---
 
-### DatabaseParameters <a name="DatabaseParameters" id="cdk-pgstac.DatabaseParameters"></a>
+### DatabaseParameters <a name="DatabaseParameters" id="eoapi-cdk.DatabaseParameters"></a>
 
-#### Initializer <a name="Initializer" id="cdk-pgstac.DatabaseParameters.Initializer"></a>
+#### Initializer <a name="Initializer" id="eoapi-cdk.DatabaseParameters.Initializer"></a>
 
 ```typescript
-import { DatabaseParameters } from 'cdk-pgstac'
+import { DatabaseParameters } from 'eoapi-cdk'
 
 const databaseParameters: DatabaseParameters = { ... }
 ```
@@ -1176,19 +1176,19 @@ const databaseParameters: DatabaseParameters = { ... }
 
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
-| <code><a href="#cdk-pgstac.DatabaseParameters.property.effectiveCacheSize">effectiveCacheSize</a></code> | <code>string</code> | *No description.* |
-| <code><a href="#cdk-pgstac.DatabaseParameters.property.maintenanceWorkMem">maintenanceWorkMem</a></code> | <code>string</code> | *No description.* |
-| <code><a href="#cdk-pgstac.DatabaseParameters.property.maxConnections">maxConnections</a></code> | <code>string</code> | *No description.* |
-| <code><a href="#cdk-pgstac.DatabaseParameters.property.maxLocksPerTransaction">maxLocksPerTransaction</a></code> | <code>string</code> | *No description.* |
-| <code><a href="#cdk-pgstac.DatabaseParameters.property.randomPageCost">randomPageCost</a></code> | <code>string</code> | *No description.* |
-| <code><a href="#cdk-pgstac.DatabaseParameters.property.seqPageCost">seqPageCost</a></code> | <code>string</code> | *No description.* |
-| <code><a href="#cdk-pgstac.DatabaseParameters.property.sharedBuffers">sharedBuffers</a></code> | <code>string</code> | Note: This value is measured in 8KB blocks. |
-| <code><a href="#cdk-pgstac.DatabaseParameters.property.tempBuffers">tempBuffers</a></code> | <code>string</code> | *No description.* |
-| <code><a href="#cdk-pgstac.DatabaseParameters.property.workMem">workMem</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#eoapi-cdk.DatabaseParameters.property.effectiveCacheSize">effectiveCacheSize</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#eoapi-cdk.DatabaseParameters.property.maintenanceWorkMem">maintenanceWorkMem</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#eoapi-cdk.DatabaseParameters.property.maxConnections">maxConnections</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#eoapi-cdk.DatabaseParameters.property.maxLocksPerTransaction">maxLocksPerTransaction</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#eoapi-cdk.DatabaseParameters.property.randomPageCost">randomPageCost</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#eoapi-cdk.DatabaseParameters.property.seqPageCost">seqPageCost</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#eoapi-cdk.DatabaseParameters.property.sharedBuffers">sharedBuffers</a></code> | <code>string</code> | Note: This value is measured in 8KB blocks. |
+| <code><a href="#eoapi-cdk.DatabaseParameters.property.tempBuffers">tempBuffers</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#eoapi-cdk.DatabaseParameters.property.workMem">workMem</a></code> | <code>string</code> | *No description.* |
 
 ---
 
-##### `effectiveCacheSize`<sup>Required</sup> <a name="effectiveCacheSize" id="cdk-pgstac.DatabaseParameters.property.effectiveCacheSize"></a>
+##### `effectiveCacheSize`<sup>Required</sup> <a name="effectiveCacheSize" id="eoapi-cdk.DatabaseParameters.property.effectiveCacheSize"></a>
 
 ```typescript
 public readonly effectiveCacheSize: string;
@@ -1199,7 +1199,7 @@ public readonly effectiveCacheSize: string;
 
 ---
 
-##### `maintenanceWorkMem`<sup>Required</sup> <a name="maintenanceWorkMem" id="cdk-pgstac.DatabaseParameters.property.maintenanceWorkMem"></a>
+##### `maintenanceWorkMem`<sup>Required</sup> <a name="maintenanceWorkMem" id="eoapi-cdk.DatabaseParameters.property.maintenanceWorkMem"></a>
 
 ```typescript
 public readonly maintenanceWorkMem: string;
@@ -1210,7 +1210,7 @@ public readonly maintenanceWorkMem: string;
 
 ---
 
-##### `maxConnections`<sup>Required</sup> <a name="maxConnections" id="cdk-pgstac.DatabaseParameters.property.maxConnections"></a>
+##### `maxConnections`<sup>Required</sup> <a name="maxConnections" id="eoapi-cdk.DatabaseParameters.property.maxConnections"></a>
 
 ```typescript
 public readonly maxConnections: string;
@@ -1221,7 +1221,7 @@ public readonly maxConnections: string;
 
 ---
 
-##### `maxLocksPerTransaction`<sup>Required</sup> <a name="maxLocksPerTransaction" id="cdk-pgstac.DatabaseParameters.property.maxLocksPerTransaction"></a>
+##### `maxLocksPerTransaction`<sup>Required</sup> <a name="maxLocksPerTransaction" id="eoapi-cdk.DatabaseParameters.property.maxLocksPerTransaction"></a>
 
 ```typescript
 public readonly maxLocksPerTransaction: string;
@@ -1232,7 +1232,7 @@ public readonly maxLocksPerTransaction: string;
 
 ---
 
-##### `randomPageCost`<sup>Required</sup> <a name="randomPageCost" id="cdk-pgstac.DatabaseParameters.property.randomPageCost"></a>
+##### `randomPageCost`<sup>Required</sup> <a name="randomPageCost" id="eoapi-cdk.DatabaseParameters.property.randomPageCost"></a>
 
 ```typescript
 public readonly randomPageCost: string;
@@ -1243,7 +1243,7 @@ public readonly randomPageCost: string;
 
 ---
 
-##### `seqPageCost`<sup>Required</sup> <a name="seqPageCost" id="cdk-pgstac.DatabaseParameters.property.seqPageCost"></a>
+##### `seqPageCost`<sup>Required</sup> <a name="seqPageCost" id="eoapi-cdk.DatabaseParameters.property.seqPageCost"></a>
 
 ```typescript
 public readonly seqPageCost: string;
@@ -1254,7 +1254,7 @@ public readonly seqPageCost: string;
 
 ---
 
-##### `sharedBuffers`<sup>Required</sup> <a name="sharedBuffers" id="cdk-pgstac.DatabaseParameters.property.sharedBuffers"></a>
+##### `sharedBuffers`<sup>Required</sup> <a name="sharedBuffers" id="eoapi-cdk.DatabaseParameters.property.sharedBuffers"></a>
 
 ```typescript
 public readonly sharedBuffers: string;
@@ -1267,7 +1267,7 @@ Note: This value is measured in 8KB blocks.
 
 ---
 
-##### `tempBuffers`<sup>Required</sup> <a name="tempBuffers" id="cdk-pgstac.DatabaseParameters.property.tempBuffers"></a>
+##### `tempBuffers`<sup>Required</sup> <a name="tempBuffers" id="eoapi-cdk.DatabaseParameters.property.tempBuffers"></a>
 
 ```typescript
 public readonly tempBuffers: string;
@@ -1278,7 +1278,7 @@ public readonly tempBuffers: string;
 
 ---
 
-##### `workMem`<sup>Required</sup> <a name="workMem" id="cdk-pgstac.DatabaseParameters.property.workMem"></a>
+##### `workMem`<sup>Required</sup> <a name="workMem" id="eoapi-cdk.DatabaseParameters.property.workMem"></a>
 
 ```typescript
 public readonly workMem: string;
@@ -1289,12 +1289,12 @@ public readonly workMem: string;
 
 ---
 
-### PgStacApiLambdaProps <a name="PgStacApiLambdaProps" id="cdk-pgstac.PgStacApiLambdaProps"></a>
+### PgStacApiLambdaProps <a name="PgStacApiLambdaProps" id="eoapi-cdk.PgStacApiLambdaProps"></a>
 
-#### Initializer <a name="Initializer" id="cdk-pgstac.PgStacApiLambdaProps.Initializer"></a>
+#### Initializer <a name="Initializer" id="eoapi-cdk.PgStacApiLambdaProps.Initializer"></a>
 
 ```typescript
-import { PgStacApiLambdaProps } from 'cdk-pgstac'
+import { PgStacApiLambdaProps } from 'eoapi-cdk'
 
 const pgStacApiLambdaProps: PgStacApiLambdaProps = { ... }
 ```
@@ -1303,16 +1303,16 @@ const pgStacApiLambdaProps: PgStacApiLambdaProps = { ... }
 
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
-| <code><a href="#cdk-pgstac.PgStacApiLambdaProps.property.db">db</a></code> | <code>aws-cdk-lib.aws_rds.IDatabaseInstance</code> | RDS Instance with installed pgSTAC. |
-| <code><a href="#cdk-pgstac.PgStacApiLambdaProps.property.dbSecret">dbSecret</a></code> | <code>aws-cdk-lib.aws_secretsmanager.ISecret</code> | Secret containing connection information for pgSTAC database. |
-| <code><a href="#cdk-pgstac.PgStacApiLambdaProps.property.subnetSelection">subnetSelection</a></code> | <code>aws-cdk-lib.aws_ec2.SubnetSelection</code> | Subnet into which the lambda should be deployed. |
-| <code><a href="#cdk-pgstac.PgStacApiLambdaProps.property.vpc">vpc</a></code> | <code>aws-cdk-lib.aws_ec2.IVpc</code> | VPC into which the lambda should be deployed. |
-| <code><a href="#cdk-pgstac.PgStacApiLambdaProps.property.apiCode">apiCode</a></code> | <code><a href="#cdk-pgstac.ApiEntrypoint">ApiEntrypoint</a></code> | Custom code to run for fastapi-pgstac. |
-| <code><a href="#cdk-pgstac.PgStacApiLambdaProps.property.apiEnv">apiEnv</a></code> | <code>{[ key: string ]: string}</code> | Customized environment variables to send to fastapi-pgstac runtime. |
+| <code><a href="#eoapi-cdk.PgStacApiLambdaProps.property.db">db</a></code> | <code>aws-cdk-lib.aws_rds.IDatabaseInstance</code> | RDS Instance with installed pgSTAC. |
+| <code><a href="#eoapi-cdk.PgStacApiLambdaProps.property.dbSecret">dbSecret</a></code> | <code>aws-cdk-lib.aws_secretsmanager.ISecret</code> | Secret containing connection information for pgSTAC database. |
+| <code><a href="#eoapi-cdk.PgStacApiLambdaProps.property.subnetSelection">subnetSelection</a></code> | <code>aws-cdk-lib.aws_ec2.SubnetSelection</code> | Subnet into which the lambda should be deployed. |
+| <code><a href="#eoapi-cdk.PgStacApiLambdaProps.property.vpc">vpc</a></code> | <code>aws-cdk-lib.aws_ec2.IVpc</code> | VPC into which the lambda should be deployed. |
+| <code><a href="#eoapi-cdk.PgStacApiLambdaProps.property.apiCode">apiCode</a></code> | <code><a href="#eoapi-cdk.ApiEntrypoint">ApiEntrypoint</a></code> | Custom code to run for fastapi-pgstac. |
+| <code><a href="#eoapi-cdk.PgStacApiLambdaProps.property.apiEnv">apiEnv</a></code> | <code>{[ key: string ]: string}</code> | Customized environment variables to send to fastapi-pgstac runtime. |
 
 ---
 
-##### `db`<sup>Required</sup> <a name="db" id="cdk-pgstac.PgStacApiLambdaProps.property.db"></a>
+##### `db`<sup>Required</sup> <a name="db" id="eoapi-cdk.PgStacApiLambdaProps.property.db"></a>
 
 ```typescript
 public readonly db: IDatabaseInstance;
@@ -1324,7 +1324,7 @@ RDS Instance with installed pgSTAC.
 
 ---
 
-##### `dbSecret`<sup>Required</sup> <a name="dbSecret" id="cdk-pgstac.PgStacApiLambdaProps.property.dbSecret"></a>
+##### `dbSecret`<sup>Required</sup> <a name="dbSecret" id="eoapi-cdk.PgStacApiLambdaProps.property.dbSecret"></a>
 
 ```typescript
 public readonly dbSecret: ISecret;
@@ -1336,7 +1336,7 @@ Secret containing connection information for pgSTAC database.
 
 ---
 
-##### `subnetSelection`<sup>Required</sup> <a name="subnetSelection" id="cdk-pgstac.PgStacApiLambdaProps.property.subnetSelection"></a>
+##### `subnetSelection`<sup>Required</sup> <a name="subnetSelection" id="eoapi-cdk.PgStacApiLambdaProps.property.subnetSelection"></a>
 
 ```typescript
 public readonly subnetSelection: SubnetSelection;
@@ -1348,7 +1348,7 @@ Subnet into which the lambda should be deployed.
 
 ---
 
-##### `vpc`<sup>Required</sup> <a name="vpc" id="cdk-pgstac.PgStacApiLambdaProps.property.vpc"></a>
+##### `vpc`<sup>Required</sup> <a name="vpc" id="eoapi-cdk.PgStacApiLambdaProps.property.vpc"></a>
 
 ```typescript
 public readonly vpc: IVpc;
@@ -1360,20 +1360,20 @@ VPC into which the lambda should be deployed.
 
 ---
 
-##### `apiCode`<sup>Optional</sup> <a name="apiCode" id="cdk-pgstac.PgStacApiLambdaProps.property.apiCode"></a>
+##### `apiCode`<sup>Optional</sup> <a name="apiCode" id="eoapi-cdk.PgStacApiLambdaProps.property.apiCode"></a>
 
 ```typescript
 public readonly apiCode: ApiEntrypoint;
 ```
 
-- *Type:* <a href="#cdk-pgstac.ApiEntrypoint">ApiEntrypoint</a>
+- *Type:* <a href="#eoapi-cdk.ApiEntrypoint">ApiEntrypoint</a>
 - *Default:* simplified version of fastapi-pgstac
 
 Custom code to run for fastapi-pgstac.
 
 ---
 
-##### `apiEnv`<sup>Optional</sup> <a name="apiEnv" id="cdk-pgstac.PgStacApiLambdaProps.property.apiEnv"></a>
+##### `apiEnv`<sup>Optional</sup> <a name="apiEnv" id="eoapi-cdk.PgStacApiLambdaProps.property.apiEnv"></a>
 
 ```typescript
 public readonly apiEnv: {[ key: string ]: string};
@@ -1385,12 +1385,12 @@ Customized environment variables to send to fastapi-pgstac runtime.
 
 ---
 
-### PgStacDatabaseProps <a name="PgStacDatabaseProps" id="cdk-pgstac.PgStacDatabaseProps"></a>
+### PgStacDatabaseProps <a name="PgStacDatabaseProps" id="eoapi-cdk.PgStacDatabaseProps"></a>
 
-#### Initializer <a name="Initializer" id="cdk-pgstac.PgStacDatabaseProps.Initializer"></a>
+#### Initializer <a name="Initializer" id="eoapi-cdk.PgStacDatabaseProps.Initializer"></a>
 
 ```typescript
-import { PgStacDatabaseProps } from 'cdk-pgstac'
+import { PgStacDatabaseProps } from 'eoapi-cdk'
 
 const pgStacDatabaseProps: PgStacDatabaseProps = { ... }
 ```
@@ -1399,66 +1399,66 @@ const pgStacDatabaseProps: PgStacDatabaseProps = { ... }
 
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
-| <code><a href="#cdk-pgstac.PgStacDatabaseProps.property.vpc">vpc</a></code> | <code>aws-cdk-lib.aws_ec2.IVpc</code> | The VPC network where the DB subnet group should be created. |
-| <code><a href="#cdk-pgstac.PgStacDatabaseProps.property.autoMinorVersionUpgrade">autoMinorVersionUpgrade</a></code> | <code>boolean</code> | Indicates that minor engine upgrades are applied automatically to the DB instance during the maintenance window. |
-| <code><a href="#cdk-pgstac.PgStacDatabaseProps.property.availabilityZone">availabilityZone</a></code> | <code>string</code> | The name of the Availability Zone where the DB instance will be located. |
-| <code><a href="#cdk-pgstac.PgStacDatabaseProps.property.backupRetention">backupRetention</a></code> | <code>aws-cdk-lib.Duration</code> | The number of days during which automatic DB snapshots are retained. |
-| <code><a href="#cdk-pgstac.PgStacDatabaseProps.property.cloudwatchLogsExports">cloudwatchLogsExports</a></code> | <code>string[]</code> | The list of log types that need to be enabled for exporting to CloudWatch Logs. |
-| <code><a href="#cdk-pgstac.PgStacDatabaseProps.property.cloudwatchLogsRetention">cloudwatchLogsRetention</a></code> | <code>aws-cdk-lib.aws_logs.RetentionDays</code> | The number of days log events are kept in CloudWatch Logs. |
-| <code><a href="#cdk-pgstac.PgStacDatabaseProps.property.cloudwatchLogsRetentionRole">cloudwatchLogsRetentionRole</a></code> | <code>aws-cdk-lib.aws_iam.IRole</code> | The IAM role for the Lambda function associated with the custom resource that sets the retention policy. |
-| <code><a href="#cdk-pgstac.PgStacDatabaseProps.property.copyTagsToSnapshot">copyTagsToSnapshot</a></code> | <code>boolean</code> | Indicates whether to copy all of the user-defined tags from the DB instance to snapshots of the DB instance. |
-| <code><a href="#cdk-pgstac.PgStacDatabaseProps.property.deleteAutomatedBackups">deleteAutomatedBackups</a></code> | <code>boolean</code> | Indicates whether automated backups should be deleted or retained when you delete a DB instance. |
-| <code><a href="#cdk-pgstac.PgStacDatabaseProps.property.deletionProtection">deletionProtection</a></code> | <code>boolean</code> | Indicates whether the DB instance should have deletion protection enabled. |
-| <code><a href="#cdk-pgstac.PgStacDatabaseProps.property.domain">domain</a></code> | <code>string</code> | The Active Directory directory ID to create the DB instance in. |
-| <code><a href="#cdk-pgstac.PgStacDatabaseProps.property.domainRole">domainRole</a></code> | <code>aws-cdk-lib.aws_iam.IRole</code> | The IAM role to be used when making API calls to the Directory Service. |
-| <code><a href="#cdk-pgstac.PgStacDatabaseProps.property.enablePerformanceInsights">enablePerformanceInsights</a></code> | <code>boolean</code> | Whether to enable Performance Insights for the DB instance. |
-| <code><a href="#cdk-pgstac.PgStacDatabaseProps.property.iamAuthentication">iamAuthentication</a></code> | <code>boolean</code> | Whether to enable mapping of AWS Identity and Access Management (IAM) accounts to database accounts. |
-| <code><a href="#cdk-pgstac.PgStacDatabaseProps.property.instanceIdentifier">instanceIdentifier</a></code> | <code>string</code> | A name for the DB instance. |
-| <code><a href="#cdk-pgstac.PgStacDatabaseProps.property.iops">iops</a></code> | <code>number</code> | The number of I/O operations per second (IOPS) that the database provisions. |
-| <code><a href="#cdk-pgstac.PgStacDatabaseProps.property.maxAllocatedStorage">maxAllocatedStorage</a></code> | <code>number</code> | Upper limit to which RDS can scale the storage in GiB(Gibibyte). |
-| <code><a href="#cdk-pgstac.PgStacDatabaseProps.property.monitoringInterval">monitoringInterval</a></code> | <code>aws-cdk-lib.Duration</code> | The interval, in seconds, between points when Amazon RDS collects enhanced monitoring metrics for the DB instance. |
-| <code><a href="#cdk-pgstac.PgStacDatabaseProps.property.monitoringRole">monitoringRole</a></code> | <code>aws-cdk-lib.aws_iam.IRole</code> | Role that will be used to manage DB instance monitoring. |
-| <code><a href="#cdk-pgstac.PgStacDatabaseProps.property.multiAz">multiAz</a></code> | <code>boolean</code> | Specifies if the database instance is a multiple Availability Zone deployment. |
-| <code><a href="#cdk-pgstac.PgStacDatabaseProps.property.networkType">networkType</a></code> | <code>aws-cdk-lib.aws_rds.NetworkType</code> | The network type of the DB instance. |
-| <code><a href="#cdk-pgstac.PgStacDatabaseProps.property.optionGroup">optionGroup</a></code> | <code>aws-cdk-lib.aws_rds.IOptionGroup</code> | The option group to associate with the instance. |
-| <code><a href="#cdk-pgstac.PgStacDatabaseProps.property.parameterGroup">parameterGroup</a></code> | <code>aws-cdk-lib.aws_rds.IParameterGroup</code> | The DB parameter group to associate with the instance. |
-| <code><a href="#cdk-pgstac.PgStacDatabaseProps.property.performanceInsightEncryptionKey">performanceInsightEncryptionKey</a></code> | <code>aws-cdk-lib.aws_kms.IKey</code> | The AWS KMS key for encryption of Performance Insights data. |
-| <code><a href="#cdk-pgstac.PgStacDatabaseProps.property.performanceInsightRetention">performanceInsightRetention</a></code> | <code>aws-cdk-lib.aws_rds.PerformanceInsightRetention</code> | The amount of time, in days, to retain Performance Insights data. |
-| <code><a href="#cdk-pgstac.PgStacDatabaseProps.property.port">port</a></code> | <code>number</code> | The port for the instance. |
-| <code><a href="#cdk-pgstac.PgStacDatabaseProps.property.preferredBackupWindow">preferredBackupWindow</a></code> | <code>string</code> | The daily time range during which automated backups are performed. |
-| <code><a href="#cdk-pgstac.PgStacDatabaseProps.property.preferredMaintenanceWindow">preferredMaintenanceWindow</a></code> | <code>string</code> | The weekly time range (in UTC) during which system maintenance can occur. |
-| <code><a href="#cdk-pgstac.PgStacDatabaseProps.property.processorFeatures">processorFeatures</a></code> | <code>aws-cdk-lib.aws_rds.ProcessorFeatures</code> | The number of CPU cores and the number of threads per core. |
-| <code><a href="#cdk-pgstac.PgStacDatabaseProps.property.publiclyAccessible">publiclyAccessible</a></code> | <code>boolean</code> | Indicates whether the DB instance is an internet-facing instance. |
-| <code><a href="#cdk-pgstac.PgStacDatabaseProps.property.removalPolicy">removalPolicy</a></code> | <code>aws-cdk-lib.RemovalPolicy</code> | The CloudFormation policy to apply when the instance is removed from the stack or replaced during an update. |
-| <code><a href="#cdk-pgstac.PgStacDatabaseProps.property.s3ExportBuckets">s3ExportBuckets</a></code> | <code>aws-cdk-lib.aws_s3.IBucket[]</code> | S3 buckets that you want to load data into. |
-| <code><a href="#cdk-pgstac.PgStacDatabaseProps.property.s3ExportRole">s3ExportRole</a></code> | <code>aws-cdk-lib.aws_iam.IRole</code> | Role that will be associated with this DB instance to enable S3 export. |
-| <code><a href="#cdk-pgstac.PgStacDatabaseProps.property.s3ImportBuckets">s3ImportBuckets</a></code> | <code>aws-cdk-lib.aws_s3.IBucket[]</code> | S3 buckets that you want to load data from. |
-| <code><a href="#cdk-pgstac.PgStacDatabaseProps.property.s3ImportRole">s3ImportRole</a></code> | <code>aws-cdk-lib.aws_iam.IRole</code> | Role that will be associated with this DB instance to enable S3 import. |
-| <code><a href="#cdk-pgstac.PgStacDatabaseProps.property.securityGroups">securityGroups</a></code> | <code>aws-cdk-lib.aws_ec2.ISecurityGroup[]</code> | The security groups to assign to the DB instance. |
-| <code><a href="#cdk-pgstac.PgStacDatabaseProps.property.storageThroughput">storageThroughput</a></code> | <code>number</code> | The storage throughput, specified in mebibytes per second (MiBps). |
-| <code><a href="#cdk-pgstac.PgStacDatabaseProps.property.storageType">storageType</a></code> | <code>aws-cdk-lib.aws_rds.StorageType</code> | The storage type. |
-| <code><a href="#cdk-pgstac.PgStacDatabaseProps.property.subnetGroup">subnetGroup</a></code> | <code>aws-cdk-lib.aws_rds.ISubnetGroup</code> | Existing subnet group for the instance. |
-| <code><a href="#cdk-pgstac.PgStacDatabaseProps.property.vpcSubnets">vpcSubnets</a></code> | <code>aws-cdk-lib.aws_ec2.SubnetSelection</code> | The type of subnets to add to the created DB subnet group. |
-| <code><a href="#cdk-pgstac.PgStacDatabaseProps.property.engine">engine</a></code> | <code>aws-cdk-lib.aws_rds.IInstanceEngine</code> | The database engine. |
-| <code><a href="#cdk-pgstac.PgStacDatabaseProps.property.allocatedStorage">allocatedStorage</a></code> | <code>number</code> | The allocated storage size, specified in gibibytes (GiB). |
-| <code><a href="#cdk-pgstac.PgStacDatabaseProps.property.allowMajorVersionUpgrade">allowMajorVersionUpgrade</a></code> | <code>boolean</code> | Whether to allow major version upgrades. |
-| <code><a href="#cdk-pgstac.PgStacDatabaseProps.property.databaseName">databaseName</a></code> | <code>string</code> | The name of the database. |
-| <code><a href="#cdk-pgstac.PgStacDatabaseProps.property.instanceType">instanceType</a></code> | <code>aws-cdk-lib.aws_ec2.InstanceType</code> | The name of the compute and memory capacity for the instance. |
-| <code><a href="#cdk-pgstac.PgStacDatabaseProps.property.licenseModel">licenseModel</a></code> | <code>aws-cdk-lib.aws_rds.LicenseModel</code> | The license model. |
-| <code><a href="#cdk-pgstac.PgStacDatabaseProps.property.parameters">parameters</a></code> | <code>{[ key: string ]: string}</code> | The parameters in the DBParameterGroup to create automatically. |
-| <code><a href="#cdk-pgstac.PgStacDatabaseProps.property.timezone">timezone</a></code> | <code>string</code> | The time zone of the instance. |
-| <code><a href="#cdk-pgstac.PgStacDatabaseProps.property.characterSetName">characterSetName</a></code> | <code>string</code> | For supported engines, specifies the character set to associate with the DB instance. |
-| <code><a href="#cdk-pgstac.PgStacDatabaseProps.property.credentials">credentials</a></code> | <code>aws-cdk-lib.aws_rds.Credentials</code> | Credentials for the administrative user. |
-| <code><a href="#cdk-pgstac.PgStacDatabaseProps.property.storageEncrypted">storageEncrypted</a></code> | <code>boolean</code> | Indicates whether the DB instance is encrypted. |
-| <code><a href="#cdk-pgstac.PgStacDatabaseProps.property.storageEncryptionKey">storageEncryptionKey</a></code> | <code>aws-cdk-lib.aws_kms.IKey</code> | The KMS key that's used to encrypt the DB instance. |
-| <code><a href="#cdk-pgstac.PgStacDatabaseProps.property.pgstacDbName">pgstacDbName</a></code> | <code>string</code> | *No description.* |
-| <code><a href="#cdk-pgstac.PgStacDatabaseProps.property.pgstacUsername">pgstacUsername</a></code> | <code>string</code> | *No description.* |
-| <code><a href="#cdk-pgstac.PgStacDatabaseProps.property.pgstacVersion">pgstacVersion</a></code> | <code>string</code> | *No description.* |
-| <code><a href="#cdk-pgstac.PgStacDatabaseProps.property.secretsPrefix">secretsPrefix</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.vpc">vpc</a></code> | <code>aws-cdk-lib.aws_ec2.IVpc</code> | The VPC network where the DB subnet group should be created. |
+| <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.autoMinorVersionUpgrade">autoMinorVersionUpgrade</a></code> | <code>boolean</code> | Indicates that minor engine upgrades are applied automatically to the DB instance during the maintenance window. |
+| <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.availabilityZone">availabilityZone</a></code> | <code>string</code> | The name of the Availability Zone where the DB instance will be located. |
+| <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.backupRetention">backupRetention</a></code> | <code>aws-cdk-lib.Duration</code> | The number of days during which automatic DB snapshots are retained. |
+| <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.cloudwatchLogsExports">cloudwatchLogsExports</a></code> | <code>string[]</code> | The list of log types that need to be enabled for exporting to CloudWatch Logs. |
+| <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.cloudwatchLogsRetention">cloudwatchLogsRetention</a></code> | <code>aws-cdk-lib.aws_logs.RetentionDays</code> | The number of days log events are kept in CloudWatch Logs. |
+| <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.cloudwatchLogsRetentionRole">cloudwatchLogsRetentionRole</a></code> | <code>aws-cdk-lib.aws_iam.IRole</code> | The IAM role for the Lambda function associated with the custom resource that sets the retention policy. |
+| <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.copyTagsToSnapshot">copyTagsToSnapshot</a></code> | <code>boolean</code> | Indicates whether to copy all of the user-defined tags from the DB instance to snapshots of the DB instance. |
+| <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.deleteAutomatedBackups">deleteAutomatedBackups</a></code> | <code>boolean</code> | Indicates whether automated backups should be deleted or retained when you delete a DB instance. |
+| <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.deletionProtection">deletionProtection</a></code> | <code>boolean</code> | Indicates whether the DB instance should have deletion protection enabled. |
+| <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.domain">domain</a></code> | <code>string</code> | The Active Directory directory ID to create the DB instance in. |
+| <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.domainRole">domainRole</a></code> | <code>aws-cdk-lib.aws_iam.IRole</code> | The IAM role to be used when making API calls to the Directory Service. |
+| <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.enablePerformanceInsights">enablePerformanceInsights</a></code> | <code>boolean</code> | Whether to enable Performance Insights for the DB instance. |
+| <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.iamAuthentication">iamAuthentication</a></code> | <code>boolean</code> | Whether to enable mapping of AWS Identity and Access Management (IAM) accounts to database accounts. |
+| <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.instanceIdentifier">instanceIdentifier</a></code> | <code>string</code> | A name for the DB instance. |
+| <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.iops">iops</a></code> | <code>number</code> | The number of I/O operations per second (IOPS) that the database provisions. |
+| <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.maxAllocatedStorage">maxAllocatedStorage</a></code> | <code>number</code> | Upper limit to which RDS can scale the storage in GiB(Gibibyte). |
+| <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.monitoringInterval">monitoringInterval</a></code> | <code>aws-cdk-lib.Duration</code> | The interval, in seconds, between points when Amazon RDS collects enhanced monitoring metrics for the DB instance. |
+| <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.monitoringRole">monitoringRole</a></code> | <code>aws-cdk-lib.aws_iam.IRole</code> | Role that will be used to manage DB instance monitoring. |
+| <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.multiAz">multiAz</a></code> | <code>boolean</code> | Specifies if the database instance is a multiple Availability Zone deployment. |
+| <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.networkType">networkType</a></code> | <code>aws-cdk-lib.aws_rds.NetworkType</code> | The network type of the DB instance. |
+| <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.optionGroup">optionGroup</a></code> | <code>aws-cdk-lib.aws_rds.IOptionGroup</code> | The option group to associate with the instance. |
+| <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.parameterGroup">parameterGroup</a></code> | <code>aws-cdk-lib.aws_rds.IParameterGroup</code> | The DB parameter group to associate with the instance. |
+| <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.performanceInsightEncryptionKey">performanceInsightEncryptionKey</a></code> | <code>aws-cdk-lib.aws_kms.IKey</code> | The AWS KMS key for encryption of Performance Insights data. |
+| <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.performanceInsightRetention">performanceInsightRetention</a></code> | <code>aws-cdk-lib.aws_rds.PerformanceInsightRetention</code> | The amount of time, in days, to retain Performance Insights data. |
+| <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.port">port</a></code> | <code>number</code> | The port for the instance. |
+| <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.preferredBackupWindow">preferredBackupWindow</a></code> | <code>string</code> | The daily time range during which automated backups are performed. |
+| <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.preferredMaintenanceWindow">preferredMaintenanceWindow</a></code> | <code>string</code> | The weekly time range (in UTC) during which system maintenance can occur. |
+| <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.processorFeatures">processorFeatures</a></code> | <code>aws-cdk-lib.aws_rds.ProcessorFeatures</code> | The number of CPU cores and the number of threads per core. |
+| <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.publiclyAccessible">publiclyAccessible</a></code> | <code>boolean</code> | Indicates whether the DB instance is an internet-facing instance. |
+| <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.removalPolicy">removalPolicy</a></code> | <code>aws-cdk-lib.RemovalPolicy</code> | The CloudFormation policy to apply when the instance is removed from the stack or replaced during an update. |
+| <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.s3ExportBuckets">s3ExportBuckets</a></code> | <code>aws-cdk-lib.aws_s3.IBucket[]</code> | S3 buckets that you want to load data into. |
+| <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.s3ExportRole">s3ExportRole</a></code> | <code>aws-cdk-lib.aws_iam.IRole</code> | Role that will be associated with this DB instance to enable S3 export. |
+| <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.s3ImportBuckets">s3ImportBuckets</a></code> | <code>aws-cdk-lib.aws_s3.IBucket[]</code> | S3 buckets that you want to load data from. |
+| <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.s3ImportRole">s3ImportRole</a></code> | <code>aws-cdk-lib.aws_iam.IRole</code> | Role that will be associated with this DB instance to enable S3 import. |
+| <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.securityGroups">securityGroups</a></code> | <code>aws-cdk-lib.aws_ec2.ISecurityGroup[]</code> | The security groups to assign to the DB instance. |
+| <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.storageThroughput">storageThroughput</a></code> | <code>number</code> | The storage throughput, specified in mebibytes per second (MiBps). |
+| <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.storageType">storageType</a></code> | <code>aws-cdk-lib.aws_rds.StorageType</code> | The storage type. |
+| <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.subnetGroup">subnetGroup</a></code> | <code>aws-cdk-lib.aws_rds.ISubnetGroup</code> | Existing subnet group for the instance. |
+| <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.vpcSubnets">vpcSubnets</a></code> | <code>aws-cdk-lib.aws_ec2.SubnetSelection</code> | The type of subnets to add to the created DB subnet group. |
+| <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.engine">engine</a></code> | <code>aws-cdk-lib.aws_rds.IInstanceEngine</code> | The database engine. |
+| <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.allocatedStorage">allocatedStorage</a></code> | <code>number</code> | The allocated storage size, specified in gibibytes (GiB). |
+| <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.allowMajorVersionUpgrade">allowMajorVersionUpgrade</a></code> | <code>boolean</code> | Whether to allow major version upgrades. |
+| <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.databaseName">databaseName</a></code> | <code>string</code> | The name of the database. |
+| <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.instanceType">instanceType</a></code> | <code>aws-cdk-lib.aws_ec2.InstanceType</code> | The name of the compute and memory capacity for the instance. |
+| <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.licenseModel">licenseModel</a></code> | <code>aws-cdk-lib.aws_rds.LicenseModel</code> | The license model. |
+| <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.parameters">parameters</a></code> | <code>{[ key: string ]: string}</code> | The parameters in the DBParameterGroup to create automatically. |
+| <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.timezone">timezone</a></code> | <code>string</code> | The time zone of the instance. |
+| <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.characterSetName">characterSetName</a></code> | <code>string</code> | For supported engines, specifies the character set to associate with the DB instance. |
+| <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.credentials">credentials</a></code> | <code>aws-cdk-lib.aws_rds.Credentials</code> | Credentials for the administrative user. |
+| <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.storageEncrypted">storageEncrypted</a></code> | <code>boolean</code> | Indicates whether the DB instance is encrypted. |
+| <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.storageEncryptionKey">storageEncryptionKey</a></code> | <code>aws-cdk-lib.aws_kms.IKey</code> | The KMS key that's used to encrypt the DB instance. |
+| <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.pgstacDbName">pgstacDbName</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.pgstacUsername">pgstacUsername</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.pgstacVersion">pgstacVersion</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.secretsPrefix">secretsPrefix</a></code> | <code>string</code> | *No description.* |
 
 ---
 
-##### `vpc`<sup>Required</sup> <a name="vpc" id="cdk-pgstac.PgStacDatabaseProps.property.vpc"></a>
+##### `vpc`<sup>Required</sup> <a name="vpc" id="eoapi-cdk.PgStacDatabaseProps.property.vpc"></a>
 
 ```typescript
 public readonly vpc: IVpc;
@@ -1470,7 +1470,7 @@ The VPC network where the DB subnet group should be created.
 
 ---
 
-##### `autoMinorVersionUpgrade`<sup>Optional</sup> <a name="autoMinorVersionUpgrade" id="cdk-pgstac.PgStacDatabaseProps.property.autoMinorVersionUpgrade"></a>
+##### `autoMinorVersionUpgrade`<sup>Optional</sup> <a name="autoMinorVersionUpgrade" id="eoapi-cdk.PgStacDatabaseProps.property.autoMinorVersionUpgrade"></a>
 
 ```typescript
 public readonly autoMinorVersionUpgrade: boolean;
@@ -1483,7 +1483,7 @@ Indicates that minor engine upgrades are applied automatically to the DB instanc
 
 ---
 
-##### `availabilityZone`<sup>Optional</sup> <a name="availabilityZone" id="cdk-pgstac.PgStacDatabaseProps.property.availabilityZone"></a>
+##### `availabilityZone`<sup>Optional</sup> <a name="availabilityZone" id="eoapi-cdk.PgStacDatabaseProps.property.availabilityZone"></a>
 
 ```typescript
 public readonly availabilityZone: string;
@@ -1496,7 +1496,7 @@ The name of the Availability Zone where the DB instance will be located.
 
 ---
 
-##### `backupRetention`<sup>Optional</sup> <a name="backupRetention" id="cdk-pgstac.PgStacDatabaseProps.property.backupRetention"></a>
+##### `backupRetention`<sup>Optional</sup> <a name="backupRetention" id="eoapi-cdk.PgStacDatabaseProps.property.backupRetention"></a>
 
 ```typescript
 public readonly backupRetention: Duration;
@@ -1513,7 +1513,7 @@ database instance by setting the backup retention to a value other than zero.
 
 ---
 
-##### `cloudwatchLogsExports`<sup>Optional</sup> <a name="cloudwatchLogsExports" id="cdk-pgstac.PgStacDatabaseProps.property.cloudwatchLogsExports"></a>
+##### `cloudwatchLogsExports`<sup>Optional</sup> <a name="cloudwatchLogsExports" id="eoapi-cdk.PgStacDatabaseProps.property.cloudwatchLogsExports"></a>
 
 ```typescript
 public readonly cloudwatchLogsExports: string[];
@@ -1526,7 +1526,7 @@ The list of log types that need to be enabled for exporting to CloudWatch Logs.
 
 ---
 
-##### `cloudwatchLogsRetention`<sup>Optional</sup> <a name="cloudwatchLogsRetention" id="cdk-pgstac.PgStacDatabaseProps.property.cloudwatchLogsRetention"></a>
+##### `cloudwatchLogsRetention`<sup>Optional</sup> <a name="cloudwatchLogsRetention" id="eoapi-cdk.PgStacDatabaseProps.property.cloudwatchLogsRetention"></a>
 
 ```typescript
 public readonly cloudwatchLogsRetention: RetentionDays;
@@ -1543,7 +1543,7 @@ remove the retention policy, set the value to `Infinity`.
 
 ---
 
-##### `cloudwatchLogsRetentionRole`<sup>Optional</sup> <a name="cloudwatchLogsRetentionRole" id="cdk-pgstac.PgStacDatabaseProps.property.cloudwatchLogsRetentionRole"></a>
+##### `cloudwatchLogsRetentionRole`<sup>Optional</sup> <a name="cloudwatchLogsRetentionRole" id="eoapi-cdk.PgStacDatabaseProps.property.cloudwatchLogsRetentionRole"></a>
 
 ```typescript
 public readonly cloudwatchLogsRetentionRole: IRole;
@@ -1556,7 +1556,7 @@ The IAM role for the Lambda function associated with the custom resource that se
 
 ---
 
-##### `copyTagsToSnapshot`<sup>Optional</sup> <a name="copyTagsToSnapshot" id="cdk-pgstac.PgStacDatabaseProps.property.copyTagsToSnapshot"></a>
+##### `copyTagsToSnapshot`<sup>Optional</sup> <a name="copyTagsToSnapshot" id="eoapi-cdk.PgStacDatabaseProps.property.copyTagsToSnapshot"></a>
 
 ```typescript
 public readonly copyTagsToSnapshot: boolean;
@@ -1569,7 +1569,7 @@ Indicates whether to copy all of the user-defined tags from the DB instance to s
 
 ---
 
-##### `deleteAutomatedBackups`<sup>Optional</sup> <a name="deleteAutomatedBackups" id="cdk-pgstac.PgStacDatabaseProps.property.deleteAutomatedBackups"></a>
+##### `deleteAutomatedBackups`<sup>Optional</sup> <a name="deleteAutomatedBackups" id="eoapi-cdk.PgStacDatabaseProps.property.deleteAutomatedBackups"></a>
 
 ```typescript
 public readonly deleteAutomatedBackups: boolean;
@@ -1582,7 +1582,7 @@ Indicates whether automated backups should be deleted or retained when you delet
 
 ---
 
-##### `deletionProtection`<sup>Optional</sup> <a name="deletionProtection" id="cdk-pgstac.PgStacDatabaseProps.property.deletionProtection"></a>
+##### `deletionProtection`<sup>Optional</sup> <a name="deletionProtection" id="eoapi-cdk.PgStacDatabaseProps.property.deletionProtection"></a>
 
 ```typescript
 public readonly deletionProtection: boolean;
@@ -1595,7 +1595,7 @@ Indicates whether the DB instance should have deletion protection enabled.
 
 ---
 
-##### `domain`<sup>Optional</sup> <a name="domain" id="cdk-pgstac.PgStacDatabaseProps.property.domain"></a>
+##### `domain`<sup>Optional</sup> <a name="domain" id="eoapi-cdk.PgStacDatabaseProps.property.domain"></a>
 
 ```typescript
 public readonly domain: string;
@@ -1608,7 +1608,7 @@ The Active Directory directory ID to create the DB instance in.
 
 ---
 
-##### `domainRole`<sup>Optional</sup> <a name="domainRole" id="cdk-pgstac.PgStacDatabaseProps.property.domainRole"></a>
+##### `domainRole`<sup>Optional</sup> <a name="domainRole" id="eoapi-cdk.PgStacDatabaseProps.property.domainRole"></a>
 
 ```typescript
 public readonly domainRole: IRole;
@@ -1624,7 +1624,7 @@ AmazonRDSDirectoryServiceAccess or equivalent.
 
 ---
 
-##### `enablePerformanceInsights`<sup>Optional</sup> <a name="enablePerformanceInsights" id="cdk-pgstac.PgStacDatabaseProps.property.enablePerformanceInsights"></a>
+##### `enablePerformanceInsights`<sup>Optional</sup> <a name="enablePerformanceInsights" id="eoapi-cdk.PgStacDatabaseProps.property.enablePerformanceInsights"></a>
 
 ```typescript
 public readonly enablePerformanceInsights: boolean;
@@ -1637,7 +1637,7 @@ Whether to enable Performance Insights for the DB instance.
 
 ---
 
-##### `iamAuthentication`<sup>Optional</sup> <a name="iamAuthentication" id="cdk-pgstac.PgStacDatabaseProps.property.iamAuthentication"></a>
+##### `iamAuthentication`<sup>Optional</sup> <a name="iamAuthentication" id="eoapi-cdk.PgStacDatabaseProps.property.iamAuthentication"></a>
 
 ```typescript
 public readonly iamAuthentication: boolean;
@@ -1650,7 +1650,7 @@ Whether to enable mapping of AWS Identity and Access Management (IAM) accounts t
 
 ---
 
-##### `instanceIdentifier`<sup>Optional</sup> <a name="instanceIdentifier" id="cdk-pgstac.PgStacDatabaseProps.property.instanceIdentifier"></a>
+##### `instanceIdentifier`<sup>Optional</sup> <a name="instanceIdentifier" id="eoapi-cdk.PgStacDatabaseProps.property.instanceIdentifier"></a>
 
 ```typescript
 public readonly instanceIdentifier: string;
@@ -1666,7 +1666,7 @@ converts it to lowercase.
 
 ---
 
-##### `iops`<sup>Optional</sup> <a name="iops" id="cdk-pgstac.PgStacDatabaseProps.property.iops"></a>
+##### `iops`<sup>Optional</sup> <a name="iops" id="eoapi-cdk.PgStacDatabaseProps.property.iops"></a>
 
 ```typescript
 public readonly iops: number;
@@ -1681,7 +1681,7 @@ The value must be equal to or greater than 1000.
 
 ---
 
-##### `maxAllocatedStorage`<sup>Optional</sup> <a name="maxAllocatedStorage" id="cdk-pgstac.PgStacDatabaseProps.property.maxAllocatedStorage"></a>
+##### `maxAllocatedStorage`<sup>Optional</sup> <a name="maxAllocatedStorage" id="eoapi-cdk.PgStacDatabaseProps.property.maxAllocatedStorage"></a>
 
 ```typescript
 public readonly maxAllocatedStorage: number;
@@ -1696,7 +1696,7 @@ Upper limit to which RDS can scale the storage in GiB(Gibibyte).
 
 ---
 
-##### `monitoringInterval`<sup>Optional</sup> <a name="monitoringInterval" id="cdk-pgstac.PgStacDatabaseProps.property.monitoringInterval"></a>
+##### `monitoringInterval`<sup>Optional</sup> <a name="monitoringInterval" id="eoapi-cdk.PgStacDatabaseProps.property.monitoringInterval"></a>
 
 ```typescript
 public readonly monitoringInterval: Duration;
@@ -1709,7 +1709,7 @@ The interval, in seconds, between points when Amazon RDS collects enhanced monit
 
 ---
 
-##### `monitoringRole`<sup>Optional</sup> <a name="monitoringRole" id="cdk-pgstac.PgStacDatabaseProps.property.monitoringRole"></a>
+##### `monitoringRole`<sup>Optional</sup> <a name="monitoringRole" id="eoapi-cdk.PgStacDatabaseProps.property.monitoringRole"></a>
 
 ```typescript
 public readonly monitoringRole: IRole;
@@ -1722,7 +1722,7 @@ Role that will be used to manage DB instance monitoring.
 
 ---
 
-##### `multiAz`<sup>Optional</sup> <a name="multiAz" id="cdk-pgstac.PgStacDatabaseProps.property.multiAz"></a>
+##### `multiAz`<sup>Optional</sup> <a name="multiAz" id="eoapi-cdk.PgStacDatabaseProps.property.multiAz"></a>
 
 ```typescript
 public readonly multiAz: boolean;
@@ -1735,7 +1735,7 @@ Specifies if the database instance is a multiple Availability Zone deployment.
 
 ---
 
-##### `networkType`<sup>Optional</sup> <a name="networkType" id="cdk-pgstac.PgStacDatabaseProps.property.networkType"></a>
+##### `networkType`<sup>Optional</sup> <a name="networkType" id="eoapi-cdk.PgStacDatabaseProps.property.networkType"></a>
 
 ```typescript
 public readonly networkType: NetworkType;
@@ -1748,7 +1748,7 @@ The network type of the DB instance.
 
 ---
 
-##### `optionGroup`<sup>Optional</sup> <a name="optionGroup" id="cdk-pgstac.PgStacDatabaseProps.property.optionGroup"></a>
+##### `optionGroup`<sup>Optional</sup> <a name="optionGroup" id="eoapi-cdk.PgStacDatabaseProps.property.optionGroup"></a>
 
 ```typescript
 public readonly optionGroup: IOptionGroup;
@@ -1761,7 +1761,7 @@ The option group to associate with the instance.
 
 ---
 
-##### `parameterGroup`<sup>Optional</sup> <a name="parameterGroup" id="cdk-pgstac.PgStacDatabaseProps.property.parameterGroup"></a>
+##### `parameterGroup`<sup>Optional</sup> <a name="parameterGroup" id="eoapi-cdk.PgStacDatabaseProps.property.parameterGroup"></a>
 
 ```typescript
 public readonly parameterGroup: IParameterGroup;
@@ -1774,7 +1774,7 @@ The DB parameter group to associate with the instance.
 
 ---
 
-##### `performanceInsightEncryptionKey`<sup>Optional</sup> <a name="performanceInsightEncryptionKey" id="cdk-pgstac.PgStacDatabaseProps.property.performanceInsightEncryptionKey"></a>
+##### `performanceInsightEncryptionKey`<sup>Optional</sup> <a name="performanceInsightEncryptionKey" id="eoapi-cdk.PgStacDatabaseProps.property.performanceInsightEncryptionKey"></a>
 
 ```typescript
 public readonly performanceInsightEncryptionKey: IKey;
@@ -1787,7 +1787,7 @@ The AWS KMS key for encryption of Performance Insights data.
 
 ---
 
-##### `performanceInsightRetention`<sup>Optional</sup> <a name="performanceInsightRetention" id="cdk-pgstac.PgStacDatabaseProps.property.performanceInsightRetention"></a>
+##### `performanceInsightRetention`<sup>Optional</sup> <a name="performanceInsightRetention" id="eoapi-cdk.PgStacDatabaseProps.property.performanceInsightRetention"></a>
 
 ```typescript
 public readonly performanceInsightRetention: PerformanceInsightRetention;
@@ -1800,7 +1800,7 @@ The amount of time, in days, to retain Performance Insights data.
 
 ---
 
-##### `port`<sup>Optional</sup> <a name="port" id="cdk-pgstac.PgStacDatabaseProps.property.port"></a>
+##### `port`<sup>Optional</sup> <a name="port" id="eoapi-cdk.PgStacDatabaseProps.property.port"></a>
 
 ```typescript
 public readonly port: number;
@@ -1813,7 +1813,7 @@ The port for the instance.
 
 ---
 
-##### `preferredBackupWindow`<sup>Optional</sup> <a name="preferredBackupWindow" id="cdk-pgstac.PgStacDatabaseProps.property.preferredBackupWindow"></a>
+##### `preferredBackupWindow`<sup>Optional</sup> <a name="preferredBackupWindow" id="eoapi-cdk.PgStacDatabaseProps.property.preferredBackupWindow"></a>
 
 ```typescript
 public readonly preferredBackupWindow: string;
@@ -1832,7 +1832,7 @@ Constraints:
 
 ---
 
-##### `preferredMaintenanceWindow`<sup>Optional</sup> <a name="preferredMaintenanceWindow" id="cdk-pgstac.PgStacDatabaseProps.property.preferredMaintenanceWindow"></a>
+##### `preferredMaintenanceWindow`<sup>Optional</sup> <a name="preferredMaintenanceWindow" id="eoapi-cdk.PgStacDatabaseProps.property.preferredMaintenanceWindow"></a>
 
 ```typescript
 public readonly preferredMaintenanceWindow: string;
@@ -1848,7 +1848,7 @@ Constraint: Minimum 30-minute window
 
 ---
 
-##### `processorFeatures`<sup>Optional</sup> <a name="processorFeatures" id="cdk-pgstac.PgStacDatabaseProps.property.processorFeatures"></a>
+##### `processorFeatures`<sup>Optional</sup> <a name="processorFeatures" id="eoapi-cdk.PgStacDatabaseProps.property.processorFeatures"></a>
 
 ```typescript
 public readonly processorFeatures: ProcessorFeatures;
@@ -1861,7 +1861,7 @@ The number of CPU cores and the number of threads per core.
 
 ---
 
-##### `publiclyAccessible`<sup>Optional</sup> <a name="publiclyAccessible" id="cdk-pgstac.PgStacDatabaseProps.property.publiclyAccessible"></a>
+##### `publiclyAccessible`<sup>Optional</sup> <a name="publiclyAccessible" id="eoapi-cdk.PgStacDatabaseProps.property.publiclyAccessible"></a>
 
 ```typescript
 public readonly publiclyAccessible: boolean;
@@ -1874,7 +1874,7 @@ Indicates whether the DB instance is an internet-facing instance.
 
 ---
 
-##### `removalPolicy`<sup>Optional</sup> <a name="removalPolicy" id="cdk-pgstac.PgStacDatabaseProps.property.removalPolicy"></a>
+##### `removalPolicy`<sup>Optional</sup> <a name="removalPolicy" id="eoapi-cdk.PgStacDatabaseProps.property.removalPolicy"></a>
 
 ```typescript
 public readonly removalPolicy: RemovalPolicy;
@@ -1887,7 +1887,7 @@ The CloudFormation policy to apply when the instance is removed from the stack o
 
 ---
 
-##### `s3ExportBuckets`<sup>Optional</sup> <a name="s3ExportBuckets" id="cdk-pgstac.PgStacDatabaseProps.property.s3ExportBuckets"></a>
+##### `s3ExportBuckets`<sup>Optional</sup> <a name="s3ExportBuckets" id="eoapi-cdk.PgStacDatabaseProps.property.s3ExportBuckets"></a>
 
 ```typescript
 public readonly s3ExportBuckets: IBucket[];
@@ -1906,7 +1906,7 @@ For Microsoft SQL Server:
 
 ---
 
-##### `s3ExportRole`<sup>Optional</sup> <a name="s3ExportRole" id="cdk-pgstac.PgStacDatabaseProps.property.s3ExportRole"></a>
+##### `s3ExportRole`<sup>Optional</sup> <a name="s3ExportRole" id="eoapi-cdk.PgStacDatabaseProps.property.s3ExportRole"></a>
 
 ```typescript
 public readonly s3ExportRole: IRole;
@@ -1925,7 +1925,7 @@ For Microsoft SQL Server:
 
 ---
 
-##### `s3ImportBuckets`<sup>Optional</sup> <a name="s3ImportBuckets" id="cdk-pgstac.PgStacDatabaseProps.property.s3ImportBuckets"></a>
+##### `s3ImportBuckets`<sup>Optional</sup> <a name="s3ImportBuckets" id="eoapi-cdk.PgStacDatabaseProps.property.s3ImportBuckets"></a>
 
 ```typescript
 public readonly s3ImportBuckets: IBucket[];
@@ -1946,7 +1946,7 @@ For Microsoft SQL Server:
 
 ---
 
-##### `s3ImportRole`<sup>Optional</sup> <a name="s3ImportRole" id="cdk-pgstac.PgStacDatabaseProps.property.s3ImportRole"></a>
+##### `s3ImportRole`<sup>Optional</sup> <a name="s3ImportRole" id="eoapi-cdk.PgStacDatabaseProps.property.s3ImportRole"></a>
 
 ```typescript
 public readonly s3ImportRole: IRole;
@@ -1967,7 +1967,7 @@ For Microsoft SQL Server:
 
 ---
 
-##### `securityGroups`<sup>Optional</sup> <a name="securityGroups" id="cdk-pgstac.PgStacDatabaseProps.property.securityGroups"></a>
+##### `securityGroups`<sup>Optional</sup> <a name="securityGroups" id="eoapi-cdk.PgStacDatabaseProps.property.securityGroups"></a>
 
 ```typescript
 public readonly securityGroups: ISecurityGroup[];
@@ -1980,7 +1980,7 @@ The security groups to assign to the DB instance.
 
 ---
 
-##### `storageThroughput`<sup>Optional</sup> <a name="storageThroughput" id="cdk-pgstac.PgStacDatabaseProps.property.storageThroughput"></a>
+##### `storageThroughput`<sup>Optional</sup> <a name="storageThroughput" id="eoapi-cdk.PgStacDatabaseProps.property.storageThroughput"></a>
 
 ```typescript
 public readonly storageThroughput: number;
@@ -1997,7 +1997,7 @@ Only applicable for GP3.
 
 ---
 
-##### `storageType`<sup>Optional</sup> <a name="storageType" id="cdk-pgstac.PgStacDatabaseProps.property.storageType"></a>
+##### `storageType`<sup>Optional</sup> <a name="storageType" id="eoapi-cdk.PgStacDatabaseProps.property.storageType"></a>
 
 ```typescript
 public readonly storageType: StorageType;
@@ -2014,7 +2014,7 @@ Storage types supported are gp2, io1, standard.
 
 ---
 
-##### `subnetGroup`<sup>Optional</sup> <a name="subnetGroup" id="cdk-pgstac.PgStacDatabaseProps.property.subnetGroup"></a>
+##### `subnetGroup`<sup>Optional</sup> <a name="subnetGroup" id="eoapi-cdk.PgStacDatabaseProps.property.subnetGroup"></a>
 
 ```typescript
 public readonly subnetGroup: ISubnetGroup;
@@ -2027,7 +2027,7 @@ Existing subnet group for the instance.
 
 ---
 
-##### `vpcSubnets`<sup>Optional</sup> <a name="vpcSubnets" id="cdk-pgstac.PgStacDatabaseProps.property.vpcSubnets"></a>
+##### `vpcSubnets`<sup>Optional</sup> <a name="vpcSubnets" id="eoapi-cdk.PgStacDatabaseProps.property.vpcSubnets"></a>
 
 ```typescript
 public readonly vpcSubnets: SubnetSelection;
@@ -2040,7 +2040,7 @@ The type of subnets to add to the created DB subnet group.
 
 ---
 
-##### `engine`<sup>Required</sup> <a name="engine" id="cdk-pgstac.PgStacDatabaseProps.property.engine"></a>
+##### `engine`<sup>Required</sup> <a name="engine" id="eoapi-cdk.PgStacDatabaseProps.property.engine"></a>
 
 ```typescript
 public readonly engine: IInstanceEngine;
@@ -2052,7 +2052,7 @@ The database engine.
 
 ---
 
-##### `allocatedStorage`<sup>Optional</sup> <a name="allocatedStorage" id="cdk-pgstac.PgStacDatabaseProps.property.allocatedStorage"></a>
+##### `allocatedStorage`<sup>Optional</sup> <a name="allocatedStorage" id="eoapi-cdk.PgStacDatabaseProps.property.allocatedStorage"></a>
 
 ```typescript
 public readonly allocatedStorage: number;
@@ -2065,7 +2065,7 @@ The allocated storage size, specified in gibibytes (GiB).
 
 ---
 
-##### `allowMajorVersionUpgrade`<sup>Optional</sup> <a name="allowMajorVersionUpgrade" id="cdk-pgstac.PgStacDatabaseProps.property.allowMajorVersionUpgrade"></a>
+##### `allowMajorVersionUpgrade`<sup>Optional</sup> <a name="allowMajorVersionUpgrade" id="eoapi-cdk.PgStacDatabaseProps.property.allowMajorVersionUpgrade"></a>
 
 ```typescript
 public readonly allowMajorVersionUpgrade: boolean;
@@ -2078,7 +2078,7 @@ Whether to allow major version upgrades.
 
 ---
 
-##### `databaseName`<sup>Optional</sup> <a name="databaseName" id="cdk-pgstac.PgStacDatabaseProps.property.databaseName"></a>
+##### `databaseName`<sup>Optional</sup> <a name="databaseName" id="eoapi-cdk.PgStacDatabaseProps.property.databaseName"></a>
 
 ```typescript
 public readonly databaseName: string;
@@ -2091,7 +2091,7 @@ The name of the database.
 
 ---
 
-##### `instanceType`<sup>Optional</sup> <a name="instanceType" id="cdk-pgstac.PgStacDatabaseProps.property.instanceType"></a>
+##### `instanceType`<sup>Optional</sup> <a name="instanceType" id="eoapi-cdk.PgStacDatabaseProps.property.instanceType"></a>
 
 ```typescript
 public readonly instanceType: InstanceType;
@@ -2104,7 +2104,7 @@ The name of the compute and memory capacity for the instance.
 
 ---
 
-##### `licenseModel`<sup>Optional</sup> <a name="licenseModel" id="cdk-pgstac.PgStacDatabaseProps.property.licenseModel"></a>
+##### `licenseModel`<sup>Optional</sup> <a name="licenseModel" id="eoapi-cdk.PgStacDatabaseProps.property.licenseModel"></a>
 
 ```typescript
 public readonly licenseModel: LicenseModel;
@@ -2117,7 +2117,7 @@ The license model.
 
 ---
 
-##### `parameters`<sup>Optional</sup> <a name="parameters" id="cdk-pgstac.PgStacDatabaseProps.property.parameters"></a>
+##### `parameters`<sup>Optional</sup> <a name="parameters" id="eoapi-cdk.PgStacDatabaseProps.property.parameters"></a>
 
 ```typescript
 public readonly parameters: {[ key: string ]: string};
@@ -2133,7 +2133,7 @@ You need to use a versioned engine to auto-generate a DBParameterGroup.
 
 ---
 
-##### `timezone`<sup>Optional</sup> <a name="timezone" id="cdk-pgstac.PgStacDatabaseProps.property.timezone"></a>
+##### `timezone`<sup>Optional</sup> <a name="timezone" id="eoapi-cdk.PgStacDatabaseProps.property.timezone"></a>
 
 ```typescript
 public readonly timezone: string;
@@ -2148,7 +2148,7 @@ This is currently supported only by Microsoft Sql Server.
 
 ---
 
-##### `characterSetName`<sup>Optional</sup> <a name="characterSetName" id="cdk-pgstac.PgStacDatabaseProps.property.characterSetName"></a>
+##### `characterSetName`<sup>Optional</sup> <a name="characterSetName" id="eoapi-cdk.PgStacDatabaseProps.property.characterSetName"></a>
 
 ```typescript
 public readonly characterSetName: string;
@@ -2161,7 +2161,7 @@ For supported engines, specifies the character set to associate with the DB inst
 
 ---
 
-##### `credentials`<sup>Optional</sup> <a name="credentials" id="cdk-pgstac.PgStacDatabaseProps.property.credentials"></a>
+##### `credentials`<sup>Optional</sup> <a name="credentials" id="eoapi-cdk.PgStacDatabaseProps.property.credentials"></a>
 
 ```typescript
 public readonly credentials: Credentials;
@@ -2174,7 +2174,7 @@ Credentials for the administrative user.
 
 ---
 
-##### `storageEncrypted`<sup>Optional</sup> <a name="storageEncrypted" id="cdk-pgstac.PgStacDatabaseProps.property.storageEncrypted"></a>
+##### `storageEncrypted`<sup>Optional</sup> <a name="storageEncrypted" id="eoapi-cdk.PgStacDatabaseProps.property.storageEncrypted"></a>
 
 ```typescript
 public readonly storageEncrypted: boolean;
@@ -2187,7 +2187,7 @@ Indicates whether the DB instance is encrypted.
 
 ---
 
-##### `storageEncryptionKey`<sup>Optional</sup> <a name="storageEncryptionKey" id="cdk-pgstac.PgStacDatabaseProps.property.storageEncryptionKey"></a>
+##### `storageEncryptionKey`<sup>Optional</sup> <a name="storageEncryptionKey" id="eoapi-cdk.PgStacDatabaseProps.property.storageEncryptionKey"></a>
 
 ```typescript
 public readonly storageEncryptionKey: IKey;
@@ -2200,7 +2200,7 @@ The KMS key that's used to encrypt the DB instance.
 
 ---
 
-##### `pgstacDbName`<sup>Optional</sup> <a name="pgstacDbName" id="cdk-pgstac.PgStacDatabaseProps.property.pgstacDbName"></a>
+##### `pgstacDbName`<sup>Optional</sup> <a name="pgstacDbName" id="eoapi-cdk.PgStacDatabaseProps.property.pgstacDbName"></a>
 
 ```typescript
 public readonly pgstacDbName: string;
@@ -2210,7 +2210,7 @@ public readonly pgstacDbName: string;
 
 ---
 
-##### `pgstacUsername`<sup>Optional</sup> <a name="pgstacUsername" id="cdk-pgstac.PgStacDatabaseProps.property.pgstacUsername"></a>
+##### `pgstacUsername`<sup>Optional</sup> <a name="pgstacUsername" id="eoapi-cdk.PgStacDatabaseProps.property.pgstacUsername"></a>
 
 ```typescript
 public readonly pgstacUsername: string;
@@ -2220,7 +2220,7 @@ public readonly pgstacUsername: string;
 
 ---
 
-##### `pgstacVersion`<sup>Optional</sup> <a name="pgstacVersion" id="cdk-pgstac.PgStacDatabaseProps.property.pgstacVersion"></a>
+##### `pgstacVersion`<sup>Optional</sup> <a name="pgstacVersion" id="eoapi-cdk.PgStacDatabaseProps.property.pgstacVersion"></a>
 
 ```typescript
 public readonly pgstacVersion: string;
@@ -2230,7 +2230,7 @@ public readonly pgstacVersion: string;
 
 ---
 
-##### `secretsPrefix`<sup>Optional</sup> <a name="secretsPrefix" id="cdk-pgstac.PgStacDatabaseProps.property.secretsPrefix"></a>
+##### `secretsPrefix`<sup>Optional</sup> <a name="secretsPrefix" id="eoapi-cdk.PgStacDatabaseProps.property.secretsPrefix"></a>
 
 ```typescript
 public readonly secretsPrefix: string;
@@ -2240,12 +2240,12 @@ public readonly secretsPrefix: string;
 
 ---
 
-### StacIngestorProps <a name="StacIngestorProps" id="cdk-pgstac.StacIngestorProps"></a>
+### StacIngestorProps <a name="StacIngestorProps" id="eoapi-cdk.StacIngestorProps"></a>
 
-#### Initializer <a name="Initializer" id="cdk-pgstac.StacIngestorProps.Initializer"></a>
+#### Initializer <a name="Initializer" id="eoapi-cdk.StacIngestorProps.Initializer"></a>
 
 ```typescript
-import { StacIngestorProps } from 'cdk-pgstac'
+import { StacIngestorProps } from 'eoapi-cdk'
 
 const stacIngestorProps: StacIngestorProps = { ... }
 ```
@@ -2254,20 +2254,20 @@ const stacIngestorProps: StacIngestorProps = { ... }
 
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
-| <code><a href="#cdk-pgstac.StacIngestorProps.property.dataAccessRole">dataAccessRole</a></code> | <code>aws-cdk-lib.aws_iam.IRole</code> | ARN of AWS Role used to validate access to S3 data. |
-| <code><a href="#cdk-pgstac.StacIngestorProps.property.stacDbSecret">stacDbSecret</a></code> | <code>aws-cdk-lib.aws_secretsmanager.ISecret</code> | Secret containing pgSTAC DB connection information. |
-| <code><a href="#cdk-pgstac.StacIngestorProps.property.stacDbSecurityGroup">stacDbSecurityGroup</a></code> | <code>aws-cdk-lib.aws_ec2.ISecurityGroup</code> | Security Group used by pgSTAC DB. |
-| <code><a href="#cdk-pgstac.StacIngestorProps.property.stacUrl">stacUrl</a></code> | <code>string</code> | URL of STAC API. |
-| <code><a href="#cdk-pgstac.StacIngestorProps.property.stage">stage</a></code> | <code>string</code> | Stage of deployment (e.g. `dev`, `prod`). |
-| <code><a href="#cdk-pgstac.StacIngestorProps.property.subnetSelection">subnetSelection</a></code> | <code>aws-cdk-lib.aws_ec2.SubnetSelection</code> | Boolean indicating whether or not pgSTAC DB is in a public subnet. |
-| <code><a href="#cdk-pgstac.StacIngestorProps.property.vpc">vpc</a></code> | <code>aws-cdk-lib.aws_ec2.IVpc</code> | VPC running pgSTAC DB. |
-| <code><a href="#cdk-pgstac.StacIngestorProps.property.apiEndpointConfiguration">apiEndpointConfiguration</a></code> | <code>aws-cdk-lib.aws_apigateway.EndpointConfiguration</code> | API Endpoint Configuration, useful for creating private APIs. |
-| <code><a href="#cdk-pgstac.StacIngestorProps.property.apiEnv">apiEnv</a></code> | <code>{[ key: string ]: string}</code> | Environment variables to be sent to Lambda. |
-| <code><a href="#cdk-pgstac.StacIngestorProps.property.apiPolicy">apiPolicy</a></code> | <code>aws-cdk-lib.aws_iam.PolicyDocument</code> | API Policy Document, useful for creating private APIs. |
+| <code><a href="#eoapi-cdk.StacIngestorProps.property.dataAccessRole">dataAccessRole</a></code> | <code>aws-cdk-lib.aws_iam.IRole</code> | ARN of AWS Role used to validate access to S3 data. |
+| <code><a href="#eoapi-cdk.StacIngestorProps.property.stacDbSecret">stacDbSecret</a></code> | <code>aws-cdk-lib.aws_secretsmanager.ISecret</code> | Secret containing pgSTAC DB connection information. |
+| <code><a href="#eoapi-cdk.StacIngestorProps.property.stacDbSecurityGroup">stacDbSecurityGroup</a></code> | <code>aws-cdk-lib.aws_ec2.ISecurityGroup</code> | Security Group used by pgSTAC DB. |
+| <code><a href="#eoapi-cdk.StacIngestorProps.property.stacUrl">stacUrl</a></code> | <code>string</code> | URL of STAC API. |
+| <code><a href="#eoapi-cdk.StacIngestorProps.property.stage">stage</a></code> | <code>string</code> | Stage of deployment (e.g. `dev`, `prod`). |
+| <code><a href="#eoapi-cdk.StacIngestorProps.property.subnetSelection">subnetSelection</a></code> | <code>aws-cdk-lib.aws_ec2.SubnetSelection</code> | Boolean indicating whether or not pgSTAC DB is in a public subnet. |
+| <code><a href="#eoapi-cdk.StacIngestorProps.property.vpc">vpc</a></code> | <code>aws-cdk-lib.aws_ec2.IVpc</code> | VPC running pgSTAC DB. |
+| <code><a href="#eoapi-cdk.StacIngestorProps.property.apiEndpointConfiguration">apiEndpointConfiguration</a></code> | <code>aws-cdk-lib.aws_apigateway.EndpointConfiguration</code> | API Endpoint Configuration, useful for creating private APIs. |
+| <code><a href="#eoapi-cdk.StacIngestorProps.property.apiEnv">apiEnv</a></code> | <code>{[ key: string ]: string}</code> | Environment variables to be sent to Lambda. |
+| <code><a href="#eoapi-cdk.StacIngestorProps.property.apiPolicy">apiPolicy</a></code> | <code>aws-cdk-lib.aws_iam.PolicyDocument</code> | API Policy Document, useful for creating private APIs. |
 
 ---
 
-##### `dataAccessRole`<sup>Required</sup> <a name="dataAccessRole" id="cdk-pgstac.StacIngestorProps.property.dataAccessRole"></a>
+##### `dataAccessRole`<sup>Required</sup> <a name="dataAccessRole" id="eoapi-cdk.StacIngestorProps.property.dataAccessRole"></a>
 
 ```typescript
 public readonly dataAccessRole: IRole;
@@ -2279,7 +2279,7 @@ ARN of AWS Role used to validate access to S3 data.
 
 ---
 
-##### `stacDbSecret`<sup>Required</sup> <a name="stacDbSecret" id="cdk-pgstac.StacIngestorProps.property.stacDbSecret"></a>
+##### `stacDbSecret`<sup>Required</sup> <a name="stacDbSecret" id="eoapi-cdk.StacIngestorProps.property.stacDbSecret"></a>
 
 ```typescript
 public readonly stacDbSecret: ISecret;
@@ -2291,7 +2291,7 @@ Secret containing pgSTAC DB connection information.
 
 ---
 
-##### `stacDbSecurityGroup`<sup>Required</sup> <a name="stacDbSecurityGroup" id="cdk-pgstac.StacIngestorProps.property.stacDbSecurityGroup"></a>
+##### `stacDbSecurityGroup`<sup>Required</sup> <a name="stacDbSecurityGroup" id="eoapi-cdk.StacIngestorProps.property.stacDbSecurityGroup"></a>
 
 ```typescript
 public readonly stacDbSecurityGroup: ISecurityGroup;
@@ -2303,7 +2303,7 @@ Security Group used by pgSTAC DB.
 
 ---
 
-##### `stacUrl`<sup>Required</sup> <a name="stacUrl" id="cdk-pgstac.StacIngestorProps.property.stacUrl"></a>
+##### `stacUrl`<sup>Required</sup> <a name="stacUrl" id="eoapi-cdk.StacIngestorProps.property.stacUrl"></a>
 
 ```typescript
 public readonly stacUrl: string;
@@ -2315,7 +2315,7 @@ URL of STAC API.
 
 ---
 
-##### `stage`<sup>Required</sup> <a name="stage" id="cdk-pgstac.StacIngestorProps.property.stage"></a>
+##### `stage`<sup>Required</sup> <a name="stage" id="eoapi-cdk.StacIngestorProps.property.stage"></a>
 
 ```typescript
 public readonly stage: string;
@@ -2327,7 +2327,7 @@ Stage of deployment (e.g. `dev`, `prod`).
 
 ---
 
-##### `subnetSelection`<sup>Required</sup> <a name="subnetSelection" id="cdk-pgstac.StacIngestorProps.property.subnetSelection"></a>
+##### `subnetSelection`<sup>Required</sup> <a name="subnetSelection" id="eoapi-cdk.StacIngestorProps.property.subnetSelection"></a>
 
 ```typescript
 public readonly subnetSelection: SubnetSelection;
@@ -2339,7 +2339,7 @@ Boolean indicating whether or not pgSTAC DB is in a public subnet.
 
 ---
 
-##### `vpc`<sup>Required</sup> <a name="vpc" id="cdk-pgstac.StacIngestorProps.property.vpc"></a>
+##### `vpc`<sup>Required</sup> <a name="vpc" id="eoapi-cdk.StacIngestorProps.property.vpc"></a>
 
 ```typescript
 public readonly vpc: IVpc;
@@ -2351,7 +2351,7 @@ VPC running pgSTAC DB.
 
 ---
 
-##### `apiEndpointConfiguration`<sup>Optional</sup> <a name="apiEndpointConfiguration" id="cdk-pgstac.StacIngestorProps.property.apiEndpointConfiguration"></a>
+##### `apiEndpointConfiguration`<sup>Optional</sup> <a name="apiEndpointConfiguration" id="eoapi-cdk.StacIngestorProps.property.apiEndpointConfiguration"></a>
 
 ```typescript
 public readonly apiEndpointConfiguration: EndpointConfiguration;
@@ -2363,7 +2363,7 @@ API Endpoint Configuration, useful for creating private APIs.
 
 ---
 
-##### `apiEnv`<sup>Optional</sup> <a name="apiEnv" id="cdk-pgstac.StacIngestorProps.property.apiEnv"></a>
+##### `apiEnv`<sup>Optional</sup> <a name="apiEnv" id="eoapi-cdk.StacIngestorProps.property.apiEnv"></a>
 
 ```typescript
 public readonly apiEnv: {[ key: string ]: string};
@@ -2375,7 +2375,7 @@ Environment variables to be sent to Lambda.
 
 ---
 
-##### `apiPolicy`<sup>Optional</sup> <a name="apiPolicy" id="cdk-pgstac.StacIngestorProps.property.apiPolicy"></a>
+##### `apiPolicy`<sup>Optional</sup> <a name="apiPolicy" id="eoapi-cdk.StacIngestorProps.property.apiPolicy"></a>
 
 ```typescript
 public readonly apiPolicy: PolicyDocument;
@@ -2387,12 +2387,12 @@ API Policy Document, useful for creating private APIs.
 
 ---
 
-### TitilerPgStacApiLambdaProps <a name="TitilerPgStacApiLambdaProps" id="cdk-pgstac.TitilerPgStacApiLambdaProps"></a>
+### TitilerPgStacApiLambdaProps <a name="TitilerPgStacApiLambdaProps" id="eoapi-cdk.TitilerPgStacApiLambdaProps"></a>
 
-#### Initializer <a name="Initializer" id="cdk-pgstac.TitilerPgStacApiLambdaProps.Initializer"></a>
+#### Initializer <a name="Initializer" id="eoapi-cdk.TitilerPgStacApiLambdaProps.Initializer"></a>
 
 ```typescript
-import { TitilerPgStacApiLambdaProps } from 'cdk-pgstac'
+import { TitilerPgStacApiLambdaProps } from 'eoapi-cdk'
 
 const titilerPgStacApiLambdaProps: TitilerPgStacApiLambdaProps = { ... }
 ```
@@ -2401,16 +2401,16 @@ const titilerPgStacApiLambdaProps: TitilerPgStacApiLambdaProps = { ... }
 
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
-| <code><a href="#cdk-pgstac.TitilerPgStacApiLambdaProps.property.db">db</a></code> | <code>aws-cdk-lib.aws_rds.IDatabaseInstance</code> | RDS Instance with installed pgSTAC. |
-| <code><a href="#cdk-pgstac.TitilerPgStacApiLambdaProps.property.dbSecret">dbSecret</a></code> | <code>aws-cdk-lib.aws_secretsmanager.ISecret</code> | Secret containing connection information for pgSTAC database. |
-| <code><a href="#cdk-pgstac.TitilerPgStacApiLambdaProps.property.subnetSelection">subnetSelection</a></code> | <code>aws-cdk-lib.aws_ec2.SubnetSelection</code> | Subnet into which the lambda should be deployed. |
-| <code><a href="#cdk-pgstac.TitilerPgStacApiLambdaProps.property.vpc">vpc</a></code> | <code>aws-cdk-lib.aws_ec2.IVpc</code> | VPC into which the lambda should be deployed. |
-| <code><a href="#cdk-pgstac.TitilerPgStacApiLambdaProps.property.apiEnv">apiEnv</a></code> | <code>{[ key: string ]: string}</code> | Customized environment variables to send to titiler-pgstac runtime. |
-| <code><a href="#cdk-pgstac.TitilerPgStacApiLambdaProps.property.buckets">buckets</a></code> | <code>string[]</code> | list of buckets the lambda will be granted access to. |
+| <code><a href="#eoapi-cdk.TitilerPgStacApiLambdaProps.property.db">db</a></code> | <code>aws-cdk-lib.aws_rds.IDatabaseInstance</code> | RDS Instance with installed pgSTAC. |
+| <code><a href="#eoapi-cdk.TitilerPgStacApiLambdaProps.property.dbSecret">dbSecret</a></code> | <code>aws-cdk-lib.aws_secretsmanager.ISecret</code> | Secret containing connection information for pgSTAC database. |
+| <code><a href="#eoapi-cdk.TitilerPgStacApiLambdaProps.property.subnetSelection">subnetSelection</a></code> | <code>aws-cdk-lib.aws_ec2.SubnetSelection</code> | Subnet into which the lambda should be deployed. |
+| <code><a href="#eoapi-cdk.TitilerPgStacApiLambdaProps.property.vpc">vpc</a></code> | <code>aws-cdk-lib.aws_ec2.IVpc</code> | VPC into which the lambda should be deployed. |
+| <code><a href="#eoapi-cdk.TitilerPgStacApiLambdaProps.property.apiEnv">apiEnv</a></code> | <code>{[ key: string ]: string}</code> | Customized environment variables to send to titiler-pgstac runtime. |
+| <code><a href="#eoapi-cdk.TitilerPgStacApiLambdaProps.property.buckets">buckets</a></code> | <code>string[]</code> | list of buckets the lambda will be granted access to. |
 
 ---
 
-##### `db`<sup>Required</sup> <a name="db" id="cdk-pgstac.TitilerPgStacApiLambdaProps.property.db"></a>
+##### `db`<sup>Required</sup> <a name="db" id="eoapi-cdk.TitilerPgStacApiLambdaProps.property.db"></a>
 
 ```typescript
 public readonly db: IDatabaseInstance;
@@ -2422,7 +2422,7 @@ RDS Instance with installed pgSTAC.
 
 ---
 
-##### `dbSecret`<sup>Required</sup> <a name="dbSecret" id="cdk-pgstac.TitilerPgStacApiLambdaProps.property.dbSecret"></a>
+##### `dbSecret`<sup>Required</sup> <a name="dbSecret" id="eoapi-cdk.TitilerPgStacApiLambdaProps.property.dbSecret"></a>
 
 ```typescript
 public readonly dbSecret: ISecret;
@@ -2434,7 +2434,7 @@ Secret containing connection information for pgSTAC database.
 
 ---
 
-##### `subnetSelection`<sup>Required</sup> <a name="subnetSelection" id="cdk-pgstac.TitilerPgStacApiLambdaProps.property.subnetSelection"></a>
+##### `subnetSelection`<sup>Required</sup> <a name="subnetSelection" id="eoapi-cdk.TitilerPgStacApiLambdaProps.property.subnetSelection"></a>
 
 ```typescript
 public readonly subnetSelection: SubnetSelection;
@@ -2446,7 +2446,7 @@ Subnet into which the lambda should be deployed.
 
 ---
 
-##### `vpc`<sup>Required</sup> <a name="vpc" id="cdk-pgstac.TitilerPgStacApiLambdaProps.property.vpc"></a>
+##### `vpc`<sup>Required</sup> <a name="vpc" id="eoapi-cdk.TitilerPgStacApiLambdaProps.property.vpc"></a>
 
 ```typescript
 public readonly vpc: IVpc;
@@ -2458,7 +2458,7 @@ VPC into which the lambda should be deployed.
 
 ---
 
-##### `apiEnv`<sup>Optional</sup> <a name="apiEnv" id="cdk-pgstac.TitilerPgStacApiLambdaProps.property.apiEnv"></a>
+##### `apiEnv`<sup>Optional</sup> <a name="apiEnv" id="eoapi-cdk.TitilerPgStacApiLambdaProps.property.apiEnv"></a>
 
 ```typescript
 public readonly apiEnv: {[ key: string ]: string};
@@ -2470,7 +2470,7 @@ Customized environment variables to send to titiler-pgstac runtime.
 
 ---
 
-##### `buckets`<sup>Optional</sup> <a name="buckets" id="cdk-pgstac.TitilerPgStacApiLambdaProps.property.buckets"></a>
+##### `buckets`<sup>Optional</sup> <a name="buckets" id="eoapi-cdk.TitilerPgStacApiLambdaProps.property.buckets"></a>
 
 ```typescript
 public readonly buckets: string[];
