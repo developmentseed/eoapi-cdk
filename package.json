@@ -22,7 +22,7 @@
     "email": "anthony@developmentseed.org"
   },
   "repository": {
-    "url": "https://github.com/developmentseed/eoapi-cdk.git"
+    "url": "https://github.com/developmentseed/cdk-pgstac.git"
   },
   "license": "ISC",
   "stability": "experimental",
