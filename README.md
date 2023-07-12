@@ -1,4 +1,4 @@
-# eoAPI CDK Construct
+# eoAPI CDK Constructs
 
 eoapi-cdk is a package of [AWS CDK constructs](https://docs.aws.amazon.com/prescriptive-guidance/latest/best-practices-cdk-typescript-iac/constructs-best-practices.html) designed to encapsulate eoAPI services and best practices as simple reusable components.
 
