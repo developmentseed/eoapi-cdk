@@ -1,3 +1,15 @@
+# [5.0.0](https://github.com/developmentseed/eoapi-cdk/compare/v4.2.3...v5.0.0) (2023-07-12)
+
+
+### Features
+
+* rename repository to eoapi-cdk ([#59](https://github.com/developmentseed/eoapi-cdk/issues/59)) ([1ed2bb3](https://github.com/developmentseed/eoapi-cdk/commit/1ed2bb3d00328327ada96ce9daaadd940b534285))
+
+
+### BREAKING CHANGES
+
+* rename repository to eoapi-cdk
+
 ## [4.2.3](https://github.com/developmentseed/cdk-pgstac/compare/v4.2.2...v4.2.3) (2023-06-30)
 
 
