@@ -6,8 +6,6 @@ import asyncio
 import os
 from mangum import Mangum
 from utils import get_secret_dict
-from titiler.pgstac.main import app
-from titiler.pgstac.db import connect_to_db
 
 pgstac_secret_arn = os.environ["PGSTAC_SECRET_ARN"]
 
@@ -21,6 +19,11 @@ os.environ.update(
         "postgres_port": str(secret["port"]),
     }
 )
+
+from titiler.pgstac.main import app
+from titiler.pgstac.db import connect_to_db
+
+
 
 
 @app.on_event("startup")
