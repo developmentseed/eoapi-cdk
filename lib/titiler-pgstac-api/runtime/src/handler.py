@@ -20,10 +20,8 @@ os.environ.update(
     }
 )
 
-from titiler.pgstac.main import app
-from titiler.pgstac.db import connect_to_db
-
-
+from titiler.pgstac.main import app  # noqa: E402
+from titiler.pgstac.db import connect_to_db  # noqa: E402
 
 
 @app.on_event("startup")

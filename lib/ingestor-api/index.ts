@@ -62,6 +62,7 @@ export class StacIngestor extends Construct {
       stage: props.stage,
       endpointConfiguration: props.apiEndpointConfiguration,
       policy: props.apiPolicy,
+      ingestorDomainNameOptions: props.ingestorDomainNameOptions,
     });
 
     this.buildIngestor({
@@ -193,6 +194,7 @@ export class StacIngestor extends Construct {
     endpointConfiguration?: apigateway.EndpointConfiguration;
     ingestorDomainNameOptions?: apigateway.DomainNameOptions;
   }): apigateway.LambdaRestApi {
+
     return new apigateway.LambdaRestApi(
       this,
       `${Stack.of(this).stackName}-ingestor-api`,
