@@ -1309,6 +1309,7 @@ const pgStacApiLambdaProps: PgStacApiLambdaProps = { ... }
 | <code><a href="#eoapi-cdk.PgStacApiLambdaProps.property.vpc">vpc</a></code> | <code>aws-cdk-lib.aws_ec2.IVpc</code> | VPC into which the lambda should be deployed. |
 | <code><a href="#eoapi-cdk.PgStacApiLambdaProps.property.apiCode">apiCode</a></code> | <code><a href="#eoapi-cdk.ApiEntrypoint">ApiEntrypoint</a></code> | Custom code to run for fastapi-pgstac. |
 | <code><a href="#eoapi-cdk.PgStacApiLambdaProps.property.apiEnv">apiEnv</a></code> | <code>{[ key: string ]: string}</code> | Customized environment variables to send to fastapi-pgstac runtime. |
+| <code><a href="#eoapi-cdk.PgStacApiLambdaProps.property.stacApiDomainName">stacApiDomainName</a></code> | <code>@aws-cdk/aws-apigatewayv2-alpha.IDomainName</code> | Custom Domain Name Options for STAC API,. |
 
 ---
 
@@ -1382,6 +1383,18 @@ public readonly apiEnv: {[ key: string ]: string};
 - *Type:* {[ key: string ]: string}
 
 Customized environment variables to send to fastapi-pgstac runtime.
+
+---
+
+##### `stacApiDomainName`<sup>Optional</sup> <a name="stacApiDomainName" id="eoapi-cdk.PgStacApiLambdaProps.property.stacApiDomainName"></a>
+
+```typescript
+public readonly stacApiDomainName: IDomainName;
+```
+
+- *Type:* @aws-cdk/aws-apigatewayv2-alpha.IDomainName
+
+Custom Domain Name Options for STAC API,.
 
 ---
 
@@ -2264,6 +2277,7 @@ const stacIngestorProps: StacIngestorProps = { ... }
 | <code><a href="#eoapi-cdk.StacIngestorProps.property.apiEndpointConfiguration">apiEndpointConfiguration</a></code> | <code>aws-cdk-lib.aws_apigateway.EndpointConfiguration</code> | API Endpoint Configuration, useful for creating private APIs. |
 | <code><a href="#eoapi-cdk.StacIngestorProps.property.apiEnv">apiEnv</a></code> | <code>{[ key: string ]: string}</code> | Environment variables to be sent to Lambda. |
 | <code><a href="#eoapi-cdk.StacIngestorProps.property.apiPolicy">apiPolicy</a></code> | <code>aws-cdk-lib.aws_iam.PolicyDocument</code> | API Policy Document, useful for creating private APIs. |
+| <code><a href="#eoapi-cdk.StacIngestorProps.property.ingestorDomainNameOptions">ingestorDomainNameOptions</a></code> | <code>aws-cdk-lib.aws_apigateway.DomainNameOptions</code> | Custom Domain Name Options for Ingestor API. |
 
 ---
 
@@ -2387,6 +2401,18 @@ API Policy Document, useful for creating private APIs.
 
 ---
 
+##### `ingestorDomainNameOptions`<sup>Optional</sup> <a name="ingestorDomainNameOptions" id="eoapi-cdk.StacIngestorProps.property.ingestorDomainNameOptions"></a>
+
+```typescript
+public readonly ingestorDomainNameOptions: DomainNameOptions;
+```
+
+- *Type:* aws-cdk-lib.aws_apigateway.DomainNameOptions
+
+Custom Domain Name Options for Ingestor API.
+
+---
+
 ### TitilerPgStacApiLambdaProps <a name="TitilerPgStacApiLambdaProps" id="eoapi-cdk.TitilerPgStacApiLambdaProps"></a>
 
 #### Initializer <a name="Initializer" id="eoapi-cdk.TitilerPgStacApiLambdaProps.Initializer"></a>
@@ -2407,6 +2433,7 @@ const titilerPgStacApiLambdaProps: TitilerPgStacApiLambdaProps = { ... }
 | <code><a href="#eoapi-cdk.TitilerPgStacApiLambdaProps.property.vpc">vpc</a></code> | <code>aws-cdk-lib.aws_ec2.IVpc</code> | VPC into which the lambda should be deployed. |
 | <code><a href="#eoapi-cdk.TitilerPgStacApiLambdaProps.property.apiEnv">apiEnv</a></code> | <code>{[ key: string ]: string}</code> | Customized environment variables to send to titiler-pgstac runtime. |
 | <code><a href="#eoapi-cdk.TitilerPgStacApiLambdaProps.property.buckets">buckets</a></code> | <code>string[]</code> | list of buckets the lambda will be granted access to. |
+| <code><a href="#eoapi-cdk.TitilerPgStacApiLambdaProps.property.titilerPgstacApiDomainName">titilerPgstacApiDomainName</a></code> | <code>@aws-cdk/aws-apigatewayv2-alpha.IDomainName</code> | Custom Domain Name Options for Titiler Pgstac API,. |
 
 ---
 
@@ -2479,6 +2506,18 @@ public readonly buckets: string[];
 - *Type:* string[]
 
 list of buckets the lambda will be granted access to.
+
+---
+
+##### `titilerPgstacApiDomainName`<sup>Optional</sup> <a name="titilerPgstacApiDomainName" id="eoapi-cdk.TitilerPgStacApiLambdaProps.property.titilerPgstacApiDomainName"></a>
+
+```typescript
+public readonly titilerPgstacApiDomainName: IDomainName;
+```
+
+- *Type:* @aws-cdk/aws-apigatewayv2-alpha.IDomainName
+
+Custom Domain Name Options for Titiler Pgstac API,.
 
 ---
 
