@@ -9,7 +9,7 @@ import {
     Duration,
     aws_logs,
   } from "aws-cdk-lib";
-  import { HttpApi } from "@aws-cdk/aws-apigatewayv2-alpha";
+  import { IDomainName, HttpApi } from "@aws-cdk/aws-apigatewayv2-alpha";
   import { HttpLambdaIntegration } from "@aws-cdk/aws-apigatewayv2-integrations-alpha";
   import { Construct } from "constructs";
   
@@ -67,6 +67,9 @@ import {
       this.titilerPgstacLambdaFunction.connections.allowTo(props.db, ec2.Port.tcp(5432), "allow connections from titiler");
   
       const stacApi = new HttpApi(this, `${Stack.of(this).stackName}-titiler-pgstac-api`, {
+        defaultDomainMapping: props.titilerPgstacApiDomainName ? { 
+          domainName: props.titilerPgstacApiDomainName 
+        } : undefined,
         defaultIntegration: new HttpLambdaIntegration("integration", this.titilerPgstacLambdaFunction),
       });
   
@@ -111,4 +114,8 @@ import {
      */
     readonly buckets?: string[];
 
+    /**
+     * Custom Domain Name Options for Titiler Pgstac API,
+     */
+    readonly titilerPgstacApiDomainName?: IDomainName;
   }
