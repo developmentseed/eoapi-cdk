@@ -1,3 +1,10 @@
+# [5.1.0](https://github.com/developmentseed/eoapi-cdk/compare/v5.0.0...v5.1.0) (2023-08-21)
+
+
+### Features
+
+* custom domain names for apis ([#63](https://github.com/developmentseed/eoapi-cdk/issues/63)) ([c9eeb00](https://github.com/developmentseed/eoapi-cdk/commit/c9eeb00c2d66bf923f3029743e1c9746f7752c5e)), closes [#61](https://github.com/developmentseed/eoapi-cdk/issues/61)
+
 # [5.0.0](https://github.com/developmentseed/eoapi-cdk/compare/v4.2.3...v5.0.0) (2023-07-12)
 
 
