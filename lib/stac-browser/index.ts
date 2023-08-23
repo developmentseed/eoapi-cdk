@@ -3,7 +3,8 @@ import { RemovalPolicy, CfnOutput } from "aws-cdk-lib";
 import { PolicyStatement, ServicePrincipal, Effect } from "aws-cdk-lib/aws-iam";
 
 import { Construct } from "constructs";
-
+import { execSync } from "child_process";
+import * as fs from 'fs';
 
 export class StacBrowser extends Construct {
 
@@ -12,6 +13,8 @@ export class StacBrowser extends Construct {
 
     constructor(scope: Construct, id: string, props: StacBrowserProps) {
         super(scope, id);
+
+        const buildPath = this.buildApp(props.stacCatalogUrl, props.githubRepoTag);
 
         this.bucket = new s3.Bucket(this, 'Bucket', {
             accessControl: s3.BucketAccessControl.PRIVATE,
@@ -34,7 +37,7 @@ export class StacBrowser extends Construct {
 
         this.bucketDeployment = new s3_deployment.BucketDeployment(this, 'BucketDeployment', {
             destinationBucket: this.bucket,
-            sources: [s3_deployment.Source.asset(props.stacBrowserDistPath)]
+            sources: [s3_deployment.Source.asset(buildPath)]
           });
 
         new CfnOutput(this, "bucket-name", {
@@ -43,14 +46,53 @@ export class StacBrowser extends Construct {
         });
 
     }
+
+    private buildApp(stacCatalogUrl: string, githubRepoTag: string): string {
+            
+        // Define where to clone and build
+        const cloneDirectory = './stac-browser';
+        const githubRepoUrl = 'https://github.com/radiantearth/stac-browser.git';
+
+        // if `cloneDirectory` exists, delete it
+        if (fs.existsSync(cloneDirectory)) {
+            console.log(`${cloneDirectory} already exists, deleting...`)
+            execSync(`rm -rf ${cloneDirectory}`);
+        }
+
+        // Clone the repo
+        console.log(`Cloning ${githubRepoUrl} into ${cloneDirectory}`)
+        execSync(`git clone ${githubRepoUrl} ${cloneDirectory}`);
+
+        // Check out the desired version
+        console.log(`Checking out version ${githubRepoTag}`)
+        execSync(`git checkout tags/${githubRepoTag}`, { cwd: cloneDirectory });
+
+        // Install the dependencies and build the application
+        console.log(`Installing dependencies`)
+        execSync('npm install', { cwd: cloneDirectory });
+
+        // Build the app with catalogUrl
+        console.log(`Building app with catalogUrl=${stacCatalogUrl} into ${cloneDirectory}`)
+        execSync(`npm run build -- --catalogUrl=${stacCatalogUrl}`, { cwd: cloneDirectory });
+
+        return './stac-browser/dist'
+
+    }
+
+
 }
 
 export interface StacBrowserProps {
 
     /**
-     * Location of the directory in the local filesystem that contains the STAC browser compiled code.
+     * STAC catalog URL
      */    
-    readonly stacBrowserDistPath: string;
+    readonly stacCatalogUrl: string;
+
+    /**
+     * Tag of the radiant earth stac-browser repo to use to build the app.
+     */
+    readonly githubRepoTag: string;
 
 
     /**
