@@ -17,6 +17,9 @@ A STAC API implementation using [stac-fastapi](https://github.com/stac-utils/sta
 ### [pgSTAC Titiler API](https://developmentseed.org/eoapi-cdk/#titilerpgstacapilambda-)
 A complete dynamic tiling API using [titiler-pgstac](https://github.com/stac-utils/titiler-pgstac) to create dynamic mosaics of assets based on [STAC Search queries](https://github.com/radiantearth/stac-api-spec/tree/master/item-search).  Packaged as a complete runtime for deployment with API Gateway and Lambda and fully integrated with the pgSTAC Database construct.
 
+### [OGC Features/Tiles API](https://developmentseed.org/eoapi-cdk/#titilerpgstacapilambda-)
+A complete OGC Features/Tiles API using [tipg](https://github.com/developmentseed/tipg). Packaged as a complete runtime for deployment with API Gateway and Lambda. By default the API will be connected to the Database's `public` schema.
+
 ### [STAC Ingestor](https://developmentseed.org/eoapi-cdk/#stacingestor-)
 An API for large scale STAC data ingestion and validation into a pgSTAC instance.
 
