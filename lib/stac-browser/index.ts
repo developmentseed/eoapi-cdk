@@ -6,35 +6,46 @@ import { Construct } from "constructs";
 import { execSync } from "child_process";
 import * as fs from 'fs';
 
+const DEFAULT_CLONE_DIRECTORY = './stac-browser';
+
 export class StacBrowser extends Construct {
 
-    public bucket: s3.Bucket;
+    public bucket: s3.IBucket;
     public bucketDeployment: s3_deployment.BucketDeployment;
 
     constructor(scope: Construct, id: string, props: StacBrowserProps) {
         super(scope, id);
 
-        const buildPath = this.buildApp(props.stacCatalogUrl, props.githubRepoTag);
+        const buildPath = this.buildApp(props.stacCatalogUrl, props.githubRepoTag, props.cloneDirectory || DEFAULT_CLONE_DIRECTORY);
 
-        this.bucket = new s3.Bucket(this, 'Bucket', {
-            accessControl: s3.BucketAccessControl.PRIVATE,
-            removalPolicy: RemovalPolicy.DESTROY,
+        // import a bucket from props.bucketArn if defined, otherwise create a new bucket
+        if (props.bucketArn) {
+            this.bucket = s3.Bucket.fromBucketArn(this, 'Bucket', props.bucketArn);
+        } else {
+            this.bucket = new s3.Bucket(this, 'Bucket', {
+                accessControl: s3.BucketAccessControl.PRIVATE,
+                removalPolicy: RemovalPolicy.DESTROY,
+                websiteIndexDocument: props.websiteIndexDocument
             })
-
-        this.bucket.addToResourcePolicy(new PolicyStatement({
-                    sid: 'AllowCloudFrontServicePrincipal',
-                    effect: Effect.ALLOW, 
-                    actions: ['s3:GetObject'],
-                    principals: [new ServicePrincipal('cloudfront.amazonaws.com')],
-                    resources: [this.bucket.arnForObjects('*')],
-                    conditions: {
-                        'StringEquals': {
-                            'aws:SourceArn': props.cloudFrontDistributionArn
-                        }
-                    }
-                }));
+        }
         
-
+        // if props.cloudFrontDistributionArn is defined and props.bucketArn is not defined, add a bucket policy to allow read access from the cloudfront distribution
+        if (props.cloudFrontDistributionArn && !props.bucketArn) {
+            this.bucket.addToResourcePolicy(new PolicyStatement({
+                        sid: 'AllowCloudFrontServicePrincipal',
+                        effect: Effect.ALLOW, 
+                        actions: ['s3:GetObject'],
+                        principals: [new ServicePrincipal('cloudfront.amazonaws.com')],
+                        resources: [this.bucket.arnForObjects('*')],
+                        conditions: {
+                            'StringEquals': {
+                                'aws:SourceArn': props.cloudFrontDistributionArn
+                            }
+                        }
+                    }));
+        }
+        
+        // add the compiled code to the bucket as a bucket deployment
         this.bucketDeployment = new s3_deployment.BucketDeployment(this, 'BucketDeployment', {
             destinationBucket: this.bucket,
             sources: [s3_deployment.Source.asset(buildPath)]
@@ -47,25 +58,35 @@ export class StacBrowser extends Construct {
 
     }
 
-    private buildApp(stacCatalogUrl: string, githubRepoTag: string): string {
+    private buildApp(stacCatalogUrl: string, githubRepoTag: string, cloneDirectory: string): string {
             
         // Define where to clone and build
-        const cloneDirectory = './stac-browser';
         const githubRepoUrl = 'https://github.com/radiantearth/stac-browser.git';
 
-        // if `cloneDirectory` exists, delete it
-        if (fs.existsSync(cloneDirectory)) {
-            console.log(`${cloneDirectory} already exists, deleting...`)
-            execSync(`rm -rf ${cloneDirectory}`);
+
+        // Maybe the repo already exists in cloneDirectory. Try checking out the desired version and if it fails, delete and reclone. 
+        try {
+            console.log(`Checking if a valid cloned repo exists with version ${githubRepoTag}...`)
+            execSync(`git checkout tags/${githubRepoTag}`, { cwd: cloneDirectory });
         }
+        catch (error) {
 
-        // Clone the repo
-        console.log(`Cloning ${githubRepoUrl} into ${cloneDirectory}`)
-        execSync(`git clone ${githubRepoUrl} ${cloneDirectory}`);
+            // if directory exists, raise an error
+            if (fs.existsSync(cloneDirectory)) {
+                throw new Error(`Directory ${cloneDirectory} already exists and is not a valid clone of ${githubRepoUrl}. Please delete this directory or specify a different cloneDirectory.`);
+            }
 
-        // Check out the desired version
-        console.log(`Checking out version ${githubRepoTag}`)
-        execSync(`git checkout tags/${githubRepoTag}`, { cwd: cloneDirectory });
+            // else, we clone and check out the version.
+
+            // Clone the repo
+            console.log(`Cloning ${githubRepoUrl} into ${cloneDirectory}...`)
+            execSync(`git clone ${githubRepoUrl} ${cloneDirectory}`);
+
+            // Check out the desired version
+            console.log(`Checking out version ${githubRepoTag}...`)
+            execSync(`git checkout tags/${githubRepoTag}`, { cwd: cloneDirectory });
+
+        }
 
         // Install the dependencies and build the application
         console.log(`Installing dependencies`)
@@ -85,6 +106,15 @@ export class StacBrowser extends Construct {
 export interface StacBrowserProps {
 
     /**
+     * Bucket ARN. If specified, the identity used to deploy the stack must have the appropriate permissions to create a deployment for this bucket. 
+     * In addition, if specified, `cloudFrontDistributionArn` is ignored since the policy of an imported resource can't be modified.
+     * 
+     * @default - No bucket ARN. A new bucket will be created.
+     */
+
+    readonly bucketArn?: string;
+
+    /**
      * STAC catalog URL
      */    
     readonly stacCatalogUrl: string;
@@ -97,7 +127,8 @@ export interface StacBrowserProps {
 
     /**
      * The ARN of the cloudfront distribution that will be added to the bucket policy with read access.
-     *
+     * If `bucketArn` is specified, this parameter is ignored since the policy of an imported bucket can't be modified.
+     * 
      * @default - No cloudfront distribution ARN. The bucket policy will not be modified.
      */    
     readonly cloudFrontDistributionArn?: string;
@@ -109,5 +140,12 @@ export interface StacBrowserProps {
      * @default - No index document.
      */
     readonly websiteIndexDocument?: string;
+
+    /**
+     * Location in the filesystem where to compile the browser code. 
+     * 
+     * @default - DEFAULT_CLONE_DIRECTORY
+     */
+    readonly cloneDirectory?: string;
 
 }
