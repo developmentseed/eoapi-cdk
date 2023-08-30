@@ -62,6 +62,7 @@ export class StacIngestor extends Construct {
       stage: props.stage,
       endpointConfiguration: props.apiEndpointConfiguration,
       policy: props.apiPolicy,
+      ingestorDomainNameOptions: props.ingestorDomainNameOptions,
     });
 
     this.buildIngestor({
@@ -191,7 +192,9 @@ export class StacIngestor extends Construct {
     stage: string;
     policy?: iam.PolicyDocument;
     endpointConfiguration?: apigateway.EndpointConfiguration;
+    ingestorDomainNameOptions?: apigateway.DomainNameOptions;
   }): apigateway.LambdaRestApi {
+
     return new apigateway.LambdaRestApi(
       this,
       `${Stack.of(this).stackName}-ingestor-api`,
@@ -205,6 +208,11 @@ export class StacIngestor extends Construct {
 
         endpointConfiguration: props.endpointConfiguration,
         policy: props.policy,
+
+        domainName:  props.ingestorDomainNameOptions ? {
+          domainName: props.ingestorDomainNameOptions.domainName,
+          certificate: props.ingestorDomainNameOptions.certificate,
+        } : undefined,
       }
     );
   }
@@ -277,4 +285,9 @@ export interface StacIngestorProps {
    * API Policy Document, useful for creating private APIs.
    */
   readonly apiPolicy?: iam.PolicyDocument;
+
+  /**
+   * Custom Domain Name Options for Ingestor API
+   */
+   readonly ingestorDomainNameOptions?: apigateway.DomainNameOptions;
 }

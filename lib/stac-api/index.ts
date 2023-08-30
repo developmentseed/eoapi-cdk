@@ -10,7 +10,7 @@ import {
   PythonFunction,
   PythonFunctionProps,
 } from "@aws-cdk/aws-lambda-python-alpha";
-import { HttpApi } from "@aws-cdk/aws-apigatewayv2-alpha";
+import { IDomainName, HttpApi } from "@aws-cdk/aws-apigatewayv2-alpha";
 import { HttpLambdaIntegration } from "@aws-cdk/aws-apigatewayv2-integrations-alpha";
 import { Construct } from "constructs";
 
@@ -58,6 +58,9 @@ export class PgStacApiLambda extends Construct {
     this.stacApiLambdaFunction.connections.allowTo(props.db, ec2.Port.tcp(5432));
 
     const stacApi = new HttpApi(this, `${Stack.of(this).stackName}-stac-api`, {
+      defaultDomainMapping: props.stacApiDomainName ? { 
+        domainName: props.stacApiDomainName
+      } : undefined,
       defaultIntegration: new HttpLambdaIntegration("integration", this.stacApiLambdaFunction),
     });
 
@@ -102,6 +105,11 @@ export interface PgStacApiLambdaProps {
    * Customized environment variables to send to fastapi-pgstac runtime.
    */
   readonly apiEnv?: Record<string, string>;
+
+  /**
+   * Custom Domain Name Options for STAC API,
+   */
+   readonly stacApiDomainName?: IDomainName;
 }
 
 export interface ApiEntrypoint {
