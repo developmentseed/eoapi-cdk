@@ -760,6 +760,141 @@ public readonly table: Table;
 ---
 
 
+### TiPgApiLambda <a name="TiPgApiLambda" id="eoapi-cdk.TiPgApiLambda"></a>
+
+#### Initializers <a name="Initializers" id="eoapi-cdk.TiPgApiLambda.Initializer"></a>
+
+```typescript
+import { TiPgApiLambda } from 'eoapi-cdk'
+
+new TiPgApiLambda(scope: Construct, id: string, props: TiPgApiLambdaProps)
+```
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#eoapi-cdk.TiPgApiLambda.Initializer.parameter.scope">scope</a></code> | <code>constructs.Construct</code> | *No description.* |
+| <code><a href="#eoapi-cdk.TiPgApiLambda.Initializer.parameter.id">id</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#eoapi-cdk.TiPgApiLambda.Initializer.parameter.props">props</a></code> | <code><a href="#eoapi-cdk.TiPgApiLambdaProps">TiPgApiLambdaProps</a></code> | *No description.* |
+
+---
+
+##### `scope`<sup>Required</sup> <a name="scope" id="eoapi-cdk.TiPgApiLambda.Initializer.parameter.scope"></a>
+
+- *Type:* constructs.Construct
+
+---
+
+##### `id`<sup>Required</sup> <a name="id" id="eoapi-cdk.TiPgApiLambda.Initializer.parameter.id"></a>
+
+- *Type:* string
+
+---
+
+##### `props`<sup>Required</sup> <a name="props" id="eoapi-cdk.TiPgApiLambda.Initializer.parameter.props"></a>
+
+- *Type:* <a href="#eoapi-cdk.TiPgApiLambdaProps">TiPgApiLambdaProps</a>
+
+---
+
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#eoapi-cdk.TiPgApiLambda.toString">toString</a></code> | Returns a string representation of this construct. |
+
+---
+
+##### `toString` <a name="toString" id="eoapi-cdk.TiPgApiLambda.toString"></a>
+
+```typescript
+public toString(): string
+```
+
+Returns a string representation of this construct.
+
+#### Static Functions <a name="Static Functions" id="Static Functions"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#eoapi-cdk.TiPgApiLambda.isConstruct">isConstruct</a></code> | Checks if `x` is a construct. |
+
+---
+
+##### `isConstruct` <a name="isConstruct" id="eoapi-cdk.TiPgApiLambda.isConstruct"></a>
+
+```typescript
+import { TiPgApiLambda } from 'eoapi-cdk'
+
+TiPgApiLambda.isConstruct(x: any)
+```
+
+Checks if `x` is a construct.
+
+Use this method instead of `instanceof` to properly detect `Construct`
+instances, even when the construct library is symlinked.
+
+Explanation: in JavaScript, multiple copies of the `constructs` library on
+disk are seen as independent, completely different libraries. As a
+consequence, the class `Construct` in each copy of the `constructs` library
+is seen as a different class, and an instance of one class will not test as
+`instanceof` the other class. `npm install` will not create installations
+like this, but users may manually symlink construct libraries together or
+use a monorepo tool: in those cases, multiple copies of the `constructs`
+library can be accidentally installed, and `instanceof` will behave
+unpredictably. It is safest to avoid using `instanceof`, and using
+this type-testing method instead.
+
+###### `x`<sup>Required</sup> <a name="x" id="eoapi-cdk.TiPgApiLambda.isConstruct.parameter.x"></a>
+
+- *Type:* any
+
+Any object.
+
+---
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#eoapi-cdk.TiPgApiLambda.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
+| <code><a href="#eoapi-cdk.TiPgApiLambda.property.url">url</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#eoapi-cdk.TiPgApiLambda.property.tiPgLambdaFunction">tiPgLambdaFunction</a></code> | <code>@aws-cdk/aws-lambda-python-alpha.PythonFunction</code> | *No description.* |
+
+---
+
+##### `node`<sup>Required</sup> <a name="node" id="eoapi-cdk.TiPgApiLambda.property.node"></a>
+
+```typescript
+public readonly node: Node;
+```
+
+- *Type:* constructs.Node
+
+The tree node.
+
+---
+
+##### `url`<sup>Required</sup> <a name="url" id="eoapi-cdk.TiPgApiLambda.property.url"></a>
+
+```typescript
+public readonly url: string;
+```
+
+- *Type:* string
+
+---
+
+##### `tiPgLambdaFunction`<sup>Required</sup> <a name="tiPgLambdaFunction" id="eoapi-cdk.TiPgApiLambda.property.tiPgLambdaFunction"></a>
+
+```typescript
+public readonly tiPgLambdaFunction: PythonFunction;
+```
+
+- *Type:* @aws-cdk/aws-lambda-python-alpha.PythonFunction
+
+---
+
+
 ### TitilerPgstacApiLambda <a name="TitilerPgstacApiLambda" id="eoapi-cdk.TitilerPgstacApiLambda"></a>
 
 #### Initializers <a name="Initializers" id="eoapi-cdk.TitilerPgstacApiLambda.Initializer"></a>
@@ -2410,6 +2545,175 @@ public readonly ingestorDomainNameOptions: DomainNameOptions;
 - *Type:* aws-cdk-lib.aws_apigateway.DomainNameOptions
 
 Custom Domain Name Options for Ingestor API.
+
+---
+
+### TiPgApiEntrypoint <a name="TiPgApiEntrypoint" id="eoapi-cdk.TiPgApiEntrypoint"></a>
+
+#### Initializer <a name="Initializer" id="eoapi-cdk.TiPgApiEntrypoint.Initializer"></a>
+
+```typescript
+import { TiPgApiEntrypoint } from 'eoapi-cdk'
+
+const tiPgApiEntrypoint: TiPgApiEntrypoint = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#eoapi-cdk.TiPgApiEntrypoint.property.entry">entry</a></code> | <code>string</code> | Path to the source of the function or the location for dependencies. |
+| <code><a href="#eoapi-cdk.TiPgApiEntrypoint.property.handler">handler</a></code> | <code>string</code> | The name of the exported handler in the index file. |
+| <code><a href="#eoapi-cdk.TiPgApiEntrypoint.property.index">index</a></code> | <code>string</code> | The path (relative to entry) to the index file containing the exported handler. |
+
+---
+
+##### `entry`<sup>Required</sup> <a name="entry" id="eoapi-cdk.TiPgApiEntrypoint.property.entry"></a>
+
+```typescript
+public readonly entry: string;
+```
+
+- *Type:* string
+
+Path to the source of the function or the location for dependencies.
+
+---
+
+##### `handler`<sup>Optional</sup> <a name="handler" id="eoapi-cdk.TiPgApiEntrypoint.property.handler"></a>
+
+```typescript
+public readonly handler: string;
+```
+
+- *Type:* string
+
+The name of the exported handler in the index file.
+
+---
+
+##### `index`<sup>Optional</sup> <a name="index" id="eoapi-cdk.TiPgApiEntrypoint.property.index"></a>
+
+```typescript
+public readonly index: string;
+```
+
+- *Type:* string
+
+The path (relative to entry) to the index file containing the exported handler.
+
+---
+
+### TiPgApiLambdaProps <a name="TiPgApiLambdaProps" id="eoapi-cdk.TiPgApiLambdaProps"></a>
+
+#### Initializer <a name="Initializer" id="eoapi-cdk.TiPgApiLambdaProps.Initializer"></a>
+
+```typescript
+import { TiPgApiLambdaProps } from 'eoapi-cdk'
+
+const tiPgApiLambdaProps: TiPgApiLambdaProps = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#eoapi-cdk.TiPgApiLambdaProps.property.db">db</a></code> | <code>aws-cdk-lib.aws_rds.IDatabaseInstance</code> | RDS Instance with installed pgSTAC. |
+| <code><a href="#eoapi-cdk.TiPgApiLambdaProps.property.dbSecret">dbSecret</a></code> | <code>aws-cdk-lib.aws_secretsmanager.ISecret</code> | Secret containing connection information for pgSTAC database. |
+| <code><a href="#eoapi-cdk.TiPgApiLambdaProps.property.subnetSelection">subnetSelection</a></code> | <code>aws-cdk-lib.aws_ec2.SubnetSelection</code> | Subnet into which the lambda should be deployed. |
+| <code><a href="#eoapi-cdk.TiPgApiLambdaProps.property.vpc">vpc</a></code> | <code>aws-cdk-lib.aws_ec2.IVpc</code> | VPC into which the lambda should be deployed. |
+| <code><a href="#eoapi-cdk.TiPgApiLambdaProps.property.apiCode">apiCode</a></code> | <code><a href="#eoapi-cdk.TiPgApiEntrypoint">TiPgApiEntrypoint</a></code> | Custom code to run for fastapi-pgstac. |
+| <code><a href="#eoapi-cdk.TiPgApiLambdaProps.property.apiEnv">apiEnv</a></code> | <code>{[ key: string ]: string}</code> | Customized environment variables to send to titiler-pgstac runtime. |
+| <code><a href="#eoapi-cdk.TiPgApiLambdaProps.property.tipgApiDomainName">tipgApiDomainName</a></code> | <code>@aws-cdk/aws-apigatewayv2-alpha.IDomainName</code> | Custom Domain Name for tipg API. |
+
+---
+
+##### `db`<sup>Required</sup> <a name="db" id="eoapi-cdk.TiPgApiLambdaProps.property.db"></a>
+
+```typescript
+public readonly db: IDatabaseInstance;
+```
+
+- *Type:* aws-cdk-lib.aws_rds.IDatabaseInstance
+
+RDS Instance with installed pgSTAC.
+
+---
+
+##### `dbSecret`<sup>Required</sup> <a name="dbSecret" id="eoapi-cdk.TiPgApiLambdaProps.property.dbSecret"></a>
+
+```typescript
+public readonly dbSecret: ISecret;
+```
+
+- *Type:* aws-cdk-lib.aws_secretsmanager.ISecret
+
+Secret containing connection information for pgSTAC database.
+
+---
+
+##### `subnetSelection`<sup>Required</sup> <a name="subnetSelection" id="eoapi-cdk.TiPgApiLambdaProps.property.subnetSelection"></a>
+
+```typescript
+public readonly subnetSelection: SubnetSelection;
+```
+
+- *Type:* aws-cdk-lib.aws_ec2.SubnetSelection
+
+Subnet into which the lambda should be deployed.
+
+---
+
+##### `vpc`<sup>Required</sup> <a name="vpc" id="eoapi-cdk.TiPgApiLambdaProps.property.vpc"></a>
+
+```typescript
+public readonly vpc: IVpc;
+```
+
+- *Type:* aws-cdk-lib.aws_ec2.IVpc
+
+VPC into which the lambda should be deployed.
+
+---
+
+##### `apiCode`<sup>Optional</sup> <a name="apiCode" id="eoapi-cdk.TiPgApiLambdaProps.property.apiCode"></a>
+
+```typescript
+public readonly apiCode: TiPgApiEntrypoint;
+```
+
+- *Type:* <a href="#eoapi-cdk.TiPgApiEntrypoint">TiPgApiEntrypoint</a>
+- *Default:* simplified version of fastapi-pgstac
+
+Custom code to run for fastapi-pgstac.
+
+---
+
+##### `apiEnv`<sup>Optional</sup> <a name="apiEnv" id="eoapi-cdk.TiPgApiLambdaProps.property.apiEnv"></a>
+
+```typescript
+public readonly apiEnv: {[ key: string ]: string};
+```
+
+- *Type:* {[ key: string ]: string}
+
+Customized environment variables to send to titiler-pgstac runtime.
+
+---
+
+##### `tipgApiDomainName`<sup>Optional</sup> <a name="tipgApiDomainName" id="eoapi-cdk.TiPgApiLambdaProps.property.tipgApiDomainName"></a>
+
+```typescript
+public readonly tipgApiDomainName: IDomainName;
+```
+
+- *Type:* @aws-cdk/aws-apigatewayv2-alpha.IDomainName
+- *Default:* undefined
+
+Custom Domain Name for tipg API.
+
+If defined, will create the 
+domain name and integrate it with the tipg API.
 
 ---
 
