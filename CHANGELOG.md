@@ -1,3 +1,10 @@
+# [5.2.0](https://github.com/developmentseed/eoapi-cdk/compare/v5.1.0...v5.2.0) (2023-08-30)
+
+
+### Features
+
+* tipg-api ([#62](https://github.com/developmentseed/eoapi-cdk/issues/62)) ([24faa85](https://github.com/developmentseed/eoapi-cdk/commit/24faa85fc4f1ccb6406768b9f43a4cb095dac0cf))
+
 # [5.1.0](https://github.com/developmentseed/eoapi-cdk/compare/v5.0.0...v5.1.0) (2023-08-21)
 
 
