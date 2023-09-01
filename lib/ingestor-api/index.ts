@@ -55,6 +55,7 @@ export class StacIngestor extends Construct {
       dbVpc: props.vpc,
       dbSecurityGroup: props.stacDbSecurityGroup,
       subnetSelection: props.subnetSelection,
+      apiCode: props.apiCode,
     });
 
     this.buildApiEndpoint({
@@ -72,6 +73,7 @@ export class StacIngestor extends Construct {
       dbVpc: props.vpc,
       dbSecurityGroup: props.stacDbSecurityGroup,
       subnetSelection: props.subnetSelection,
+      ingestorCode: props.ingestorCode,
     });
 
     this.registerSsmParameter({
@@ -108,7 +110,7 @@ export class StacIngestor extends Construct {
     dbVpc: ec2.IVpc;
     dbSecurityGroup: ec2.ISecurityGroup;
     subnetSelection: ec2.SubnetSelection
-    apiCode: ApiCode;
+    apiCode?: ApiCode;
   }): PythonFunction {
     
     const apiCode = props.apiCode || {
@@ -151,7 +153,7 @@ export class StacIngestor extends Construct {
     dbVpc: ec2.IVpc;
     dbSecurityGroup: ec2.ISecurityGroup;
     subnetSelection: ec2.SubnetSelection;
-    ingestorCode: IngestorCode;
+    ingestorCode?: IngestorCode;
   }): PythonFunction {
 
 
