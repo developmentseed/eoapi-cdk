@@ -1,3 +1,10 @@
+# [5.3.0](https://github.com/developmentseed/eoapi-cdk/compare/v5.2.0...v5.3.0) (2023-09-01)
+
+
+### Features
+
+* add STAC browser option ([#64](https://github.com/developmentseed/eoapi-cdk/issues/64)) ([36499d2](https://github.com/developmentseed/eoapi-cdk/commit/36499d21be710edde5bc9d625acff17edf7a81d6))
+
 # [5.2.0](https://github.com/developmentseed/eoapi-cdk/compare/v5.1.0...v5.2.0) (2023-08-30)
 
 
