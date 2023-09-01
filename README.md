@@ -20,6 +20,9 @@ A complete dynamic tiling API using [titiler-pgstac](https://github.com/stac-uti
 ### [STAC browser](https://developmentseed.org/eoapi-cdk/#stacbrowser-)
 A CDK construct to host a static [Radiant Earth STAC browser](https://github.com/radiantearth/stac-browser) on S3.
 
+### [OGC Features/Tiles API](https://developmentseed.org/eoapi-cdk/#titilerpgstacapilambda-)
+A complete OGC Features/Tiles API using [tipg](https://github.com/developmentseed/tipg). Packaged as a complete runtime for deployment with API Gateway and Lambda. By default the API will be connected to the Database's `public` schema.
+
 ### [STAC Ingestor](https://developmentseed.org/eoapi-cdk/#stacingestor-)
 An API for large scale STAC data ingestion and validation into a pgSTAC instance.
 
