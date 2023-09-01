@@ -625,6 +625,141 @@ public readonly pgstacSecret: ISecret;
 ---
 
 
+### StacBrowser <a name="StacBrowser" id="eoapi-cdk.StacBrowser"></a>
+
+#### Initializers <a name="Initializers" id="eoapi-cdk.StacBrowser.Initializer"></a>
+
+```typescript
+import { StacBrowser } from 'eoapi-cdk'
+
+new StacBrowser(scope: Construct, id: string, props: StacBrowserProps)
+```
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#eoapi-cdk.StacBrowser.Initializer.parameter.scope">scope</a></code> | <code>constructs.Construct</code> | *No description.* |
+| <code><a href="#eoapi-cdk.StacBrowser.Initializer.parameter.id">id</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#eoapi-cdk.StacBrowser.Initializer.parameter.props">props</a></code> | <code><a href="#eoapi-cdk.StacBrowserProps">StacBrowserProps</a></code> | *No description.* |
+
+---
+
+##### `scope`<sup>Required</sup> <a name="scope" id="eoapi-cdk.StacBrowser.Initializer.parameter.scope"></a>
+
+- *Type:* constructs.Construct
+
+---
+
+##### `id`<sup>Required</sup> <a name="id" id="eoapi-cdk.StacBrowser.Initializer.parameter.id"></a>
+
+- *Type:* string
+
+---
+
+##### `props`<sup>Required</sup> <a name="props" id="eoapi-cdk.StacBrowser.Initializer.parameter.props"></a>
+
+- *Type:* <a href="#eoapi-cdk.StacBrowserProps">StacBrowserProps</a>
+
+---
+
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#eoapi-cdk.StacBrowser.toString">toString</a></code> | Returns a string representation of this construct. |
+
+---
+
+##### `toString` <a name="toString" id="eoapi-cdk.StacBrowser.toString"></a>
+
+```typescript
+public toString(): string
+```
+
+Returns a string representation of this construct.
+
+#### Static Functions <a name="Static Functions" id="Static Functions"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#eoapi-cdk.StacBrowser.isConstruct">isConstruct</a></code> | Checks if `x` is a construct. |
+
+---
+
+##### `isConstruct` <a name="isConstruct" id="eoapi-cdk.StacBrowser.isConstruct"></a>
+
+```typescript
+import { StacBrowser } from 'eoapi-cdk'
+
+StacBrowser.isConstruct(x: any)
+```
+
+Checks if `x` is a construct.
+
+Use this method instead of `instanceof` to properly detect `Construct`
+instances, even when the construct library is symlinked.
+
+Explanation: in JavaScript, multiple copies of the `constructs` library on
+disk are seen as independent, completely different libraries. As a
+consequence, the class `Construct` in each copy of the `constructs` library
+is seen as a different class, and an instance of one class will not test as
+`instanceof` the other class. `npm install` will not create installations
+like this, but users may manually symlink construct libraries together or
+use a monorepo tool: in those cases, multiple copies of the `constructs`
+library can be accidentally installed, and `instanceof` will behave
+unpredictably. It is safest to avoid using `instanceof`, and using
+this type-testing method instead.
+
+###### `x`<sup>Required</sup> <a name="x" id="eoapi-cdk.StacBrowser.isConstruct.parameter.x"></a>
+
+- *Type:* any
+
+Any object.
+
+---
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#eoapi-cdk.StacBrowser.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
+| <code><a href="#eoapi-cdk.StacBrowser.property.bucket">bucket</a></code> | <code>aws-cdk-lib.aws_s3.IBucket</code> | *No description.* |
+| <code><a href="#eoapi-cdk.StacBrowser.property.bucketDeployment">bucketDeployment</a></code> | <code>aws-cdk-lib.aws_s3_deployment.BucketDeployment</code> | *No description.* |
+
+---
+
+##### `node`<sup>Required</sup> <a name="node" id="eoapi-cdk.StacBrowser.property.node"></a>
+
+```typescript
+public readonly node: Node;
+```
+
+- *Type:* constructs.Node
+
+The tree node.
+
+---
+
+##### `bucket`<sup>Required</sup> <a name="bucket" id="eoapi-cdk.StacBrowser.property.bucket"></a>
+
+```typescript
+public readonly bucket: IBucket;
+```
+
+- *Type:* aws-cdk-lib.aws_s3.IBucket
+
+---
+
+##### `bucketDeployment`<sup>Required</sup> <a name="bucketDeployment" id="eoapi-cdk.StacBrowser.property.bucketDeployment"></a>
+
+```typescript
+public readonly bucketDeployment: BucketDeployment;
+```
+
+- *Type:* aws-cdk-lib.aws_s3_deployment.BucketDeployment
+
+---
+
+
 ### StacIngestor <a name="StacIngestor" id="eoapi-cdk.StacIngestor"></a>
 
 #### Initializers <a name="Initializers" id="eoapi-cdk.StacIngestor.Initializer"></a>
@@ -2385,6 +2520,110 @@ public readonly secretsPrefix: string;
 ```
 
 - *Type:* string
+
+---
+
+### StacBrowserProps <a name="StacBrowserProps" id="eoapi-cdk.StacBrowserProps"></a>
+
+#### Initializer <a name="Initializer" id="eoapi-cdk.StacBrowserProps.Initializer"></a>
+
+```typescript
+import { StacBrowserProps } from 'eoapi-cdk'
+
+const stacBrowserProps: StacBrowserProps = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#eoapi-cdk.StacBrowserProps.property.githubRepoTag">githubRepoTag</a></code> | <code>string</code> | Tag of the radiant earth stac-browser repo to use to build the app. |
+| <code><a href="#eoapi-cdk.StacBrowserProps.property.stacCatalogUrl">stacCatalogUrl</a></code> | <code>string</code> | STAC catalog URL. |
+| <code><a href="#eoapi-cdk.StacBrowserProps.property.bucketArn">bucketArn</a></code> | <code>string</code> | Bucket ARN. |
+| <code><a href="#eoapi-cdk.StacBrowserProps.property.cloneDirectory">cloneDirectory</a></code> | <code>string</code> | Location in the filesystem where to compile the browser code. |
+| <code><a href="#eoapi-cdk.StacBrowserProps.property.cloudFrontDistributionArn">cloudFrontDistributionArn</a></code> | <code>string</code> | The ARN of the cloudfront distribution that will be added to the bucket policy with read access. |
+| <code><a href="#eoapi-cdk.StacBrowserProps.property.websiteIndexDocument">websiteIndexDocument</a></code> | <code>string</code> | The name of the index document (e.g. "index.html") for the website. Enables static website hosting for this bucket. |
+
+---
+
+##### `githubRepoTag`<sup>Required</sup> <a name="githubRepoTag" id="eoapi-cdk.StacBrowserProps.property.githubRepoTag"></a>
+
+```typescript
+public readonly githubRepoTag: string;
+```
+
+- *Type:* string
+
+Tag of the radiant earth stac-browser repo to use to build the app.
+
+---
+
+##### `stacCatalogUrl`<sup>Required</sup> <a name="stacCatalogUrl" id="eoapi-cdk.StacBrowserProps.property.stacCatalogUrl"></a>
+
+```typescript
+public readonly stacCatalogUrl: string;
+```
+
+- *Type:* string
+
+STAC catalog URL.
+
+---
+
+##### `bucketArn`<sup>Optional</sup> <a name="bucketArn" id="eoapi-cdk.StacBrowserProps.property.bucketArn"></a>
+
+```typescript
+public readonly bucketArn: string;
+```
+
+- *Type:* string
+- *Default:* No bucket ARN. A new bucket will be created.
+
+Bucket ARN.
+
+If specified, the identity used to deploy the stack must have the appropriate permissions to create a deployment for this bucket. 
+In addition, if specified, `cloudFrontDistributionArn` is ignored since the policy of an imported resource can't be modified.
+
+---
+
+##### `cloneDirectory`<sup>Optional</sup> <a name="cloneDirectory" id="eoapi-cdk.StacBrowserProps.property.cloneDirectory"></a>
+
+```typescript
+public readonly cloneDirectory: string;
+```
+
+- *Type:* string
+- *Default:* DEFAULT_CLONE_DIRECTORY
+
+Location in the filesystem where to compile the browser code.
+
+---
+
+##### `cloudFrontDistributionArn`<sup>Optional</sup> <a name="cloudFrontDistributionArn" id="eoapi-cdk.StacBrowserProps.property.cloudFrontDistributionArn"></a>
+
+```typescript
+public readonly cloudFrontDistributionArn: string;
+```
+
+- *Type:* string
+- *Default:* No cloudfront distribution ARN. The bucket policy will not be modified.
+
+The ARN of the cloudfront distribution that will be added to the bucket policy with read access.
+
+If `bucketArn` is specified, this parameter is ignored since the policy of an imported bucket can't be modified.
+
+---
+
+##### `websiteIndexDocument`<sup>Optional</sup> <a name="websiteIndexDocument" id="eoapi-cdk.StacBrowserProps.property.websiteIndexDocument"></a>
+
+```typescript
+public readonly websiteIndexDocument: string;
+```
+
+- *Type:* string
+- *Default:* No index document.
+
+The name of the index document (e.g. "index.html") for the website. Enables static website hosting for this bucket.
 
 ---
 
