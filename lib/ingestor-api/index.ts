@@ -11,7 +11,7 @@ import {
   RemovalPolicy,
   Stack,
 } from "aws-cdk-lib";
-import { PythonFunction } from "@aws-cdk/aws-lambda-python-alpha";
+import { PythonFunction, PythonFunctionProps } from "@aws-cdk/aws-lambda-python-alpha";
 import { Construct } from "constructs";
 
 export class StacIngestor extends Construct {
@@ -108,11 +108,17 @@ export class StacIngestor extends Construct {
     dbVpc: ec2.IVpc;
     dbSecurityGroup: ec2.ISecurityGroup;
     subnetSelection: ec2.SubnetSelection
+    apiCode: ApiCode;
   }): PythonFunction {
     
-    const handler = new PythonFunction(this, "api-handler", {
+    const apiCode = props.apiCode || {
       entry: `${__dirname}/runtime`,
       index: "src/handler.py",
+      handler: "handler",
+    };
+
+    const handler = new PythonFunction(this, "api-handler", {
+      ...apiCode,
       runtime: lambda.Runtime.PYTHON_3_9,
       timeout: Duration.seconds(30),
       environment: { DB_SECRET_ARN: props.dbSecret.secretArn, ...props.env },
@@ -145,10 +151,19 @@ export class StacIngestor extends Construct {
     dbVpc: ec2.IVpc;
     dbSecurityGroup: ec2.ISecurityGroup;
     subnetSelection: ec2.SubnetSelection;
+    ingestorCode: IngestorCode;
   }): PythonFunction {
-    const handler = new PythonFunction(this, "stac-ingestor", {
+
+
+
+    const ingestorCode = props.ingestorCode || {
       entry: `${__dirname}/runtime`,
       index: "src/ingestor.py",
+      handler: "handler",
+    };
+
+    const handler = new PythonFunction(this, "stac-ingestor", {
+      ...ingestorCode,
       runtime: lambda.Runtime.PYTHON_3_9,
       timeout: Duration.seconds(180),
       environment: { DB_SECRET_ARN: props.dbSecret.secretArn, ...props.env },
@@ -290,4 +305,56 @@ export interface StacIngestorProps {
    * Custom Domain Name Options for Ingestor API
    */
    readonly ingestorDomainNameOptions?: apigateway.DomainNameOptions;
+
+  /**
+   * Custom code for the ingestor api.
+   *
+   * @default - default in the runtime folder. 
+   */
+   readonly apiCode?: ApiCode;
+
+   /**
+   * Custom code for the ingestor.
+   *
+   * @default - default in the runtime folder. 
+   */
+   readonly ingestorCode?: IngestorCode;
+}
+
+export interface ApiCode {
+
+  /**
+   * Path to the source of the function or the location for dependencies, for the api lambda. 
+   */
+  readonly entry: PythonFunctionProps["entry"];
+
+  /**
+   * Path to the index file containing the exported handler, relative to `api_lambda_entry`. 
+   */
+  readonly index: PythonFunctionProps["index"];
+
+  /**
+   * The name of the exported handler in the `api_lambda_index` file. 
+   */
+  readonly handler: PythonFunctionProps["handler"];
+
+}
+
+export interface IngestorCode {
+
+  /**
+   * Path to the source of the function or the location for dependencies, for the ingestor lambda. 
+   */
+  readonly entry: PythonFunctionProps["entry"];
+
+  /**
+   * Path to the index file containing the exported handler, relative to `ingestor_lambda_entry`. 
+   */
+  readonly index: PythonFunctionProps["index"];
+
+  /**
+   * The name of the exported handler in the `ingestor_lambda_index` file.
+   */
+  readonly handler: PythonFunctionProps["handler"];
+
 }

@@ -40,7 +40,7 @@ import {
       this.titilerPgstacLambdaFunction = new lambda.Function(this, "lambda", {
         handler: "handler.handler",
         runtime: lambda.Runtime.PYTHON_3_10,
-        code: lambda.Code.fromDockerBuild(__dirname, {
+        code: props.titilerApiAsset ?? lambda.Code.fromDockerBuild(__dirname, {
           file: "runtime/Dockerfile",
           buildArgs: { PYTHON_VERSION: '3.10' },
         }),
@@ -48,7 +48,7 @@ import {
         vpc: props.vpc,
         vpcSubnets: props.subnetSelection,
         allowPublicSubnet: true,
-        memorySize: 3008,
+        memorySize: props.titilerLambdaMemorySize ?? 3008,
         logRetention: aws_logs.RetentionDays.ONE_WEEK,
         environment: titilerPgstacEnv,
       });
@@ -118,4 +118,20 @@ import {
      * Custom Domain Name Options for Titiler Pgstac API,
      */
     readonly titilerPgstacApiDomainName?: IDomainName;
+
+    /**
+     * asset created by a docker build with the titiler pgstac application,
+     * can be produced with lambda.Code.fromDockerBuild. 
+     * 
+     * If undefined, the default application contained in the runtime folder will be used.
+     * 
+     * @default - undefined
+     */
+    readonly titilerApiAsset?: lambda.AssetCode;
+
+
+    /**
+     * amount of memory to allocate to the lambda function.
+     */
+    readonly titilerLambdaMemorySize?: number;
   }
