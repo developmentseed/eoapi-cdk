@@ -6,7 +6,6 @@ import {
     aws_lambda as lambda,
     aws_secretsmanager as secretsmanager,
     CfnOutput,
-    Duration,
     aws_logs,
   } from "aws-cdk-lib";
   import {PythonFunction, PythonFunctionProps} from "@aws-cdk/aws-lambda-python-alpha";
