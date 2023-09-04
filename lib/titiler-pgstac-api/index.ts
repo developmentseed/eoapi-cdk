@@ -6,6 +6,7 @@ import {
     aws_lambda as lambda,
     aws_secretsmanager as secretsmanager,
     CfnOutput,
+    Duration,
     aws_logs,
   } from "aws-cdk-lib";
   import {PythonFunction, PythonFunctionProps} from "@aws-cdk/aws-lambda-python-alpha";
@@ -58,25 +59,10 @@ import {
         vpcSubnets: props.subnetSelection,
         allowPublicSubnet: true,
         memorySize: props.titilerLambdaMemorySize ?? defaultMemorySize,
-        logRetention: aws_logs.RetentionDays.ONE_WEEK
+        logRetention: aws_logs.RetentionDays.ONE_WEEK,
+        timeout: Duration.seconds(30)
       })
       
-      // this.titilerPgstacLambdaFunction = new lambda.Function(this, "lambda", {
-      //   handler: "handler.handler",
-      //   runtime: lambda.Runtime.PYTHON_3_10,
-      //   code: props.titilerApiAsset ?? lambda.Code.fromDockerBuild(__dirname, {
-      //     file: "runtime/Dockerfile",
-      //     buildArgs: { PYTHON_VERSION: '3.10' },
-      //   }),
-      //   timeout: Duration.seconds(30),
-      //   vpc: props.vpc,
-      //   vpcSubnets: props.subnetSelection,
-      //   allowPublicSubnet: true,
-      //   memorySize: props.titilerLambdaMemorySize ?? 3008,
-      //   logRetention: aws_logs.RetentionDays.ONE_WEEK,
-      //   environment: titilerPgstacEnv,
-      // });
-
       // grant access to buckets using addToRolePolicy
       if (props.buckets) {
         props.buckets.forEach(bucket => {
