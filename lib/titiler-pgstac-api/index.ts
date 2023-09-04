@@ -9,49 +9,74 @@ import {
     Duration,
     aws_logs,
   } from "aws-cdk-lib";
+  import {PythonFunction, PythonFunctionProps} from "@aws-cdk/aws-lambda-python-alpha";
   import { IDomainName, HttpApi } from "@aws-cdk/aws-apigatewayv2-alpha";
   import { HttpLambdaIntegration } from "@aws-cdk/aws-apigatewayv2-integrations-alpha";
   import { Construct } from "constructs";
   
+
+  // default settings that can be overridden by the user-provided environment. 
+  let defaultTitilerPgstacEnv :{ [key: string]: any } = {
+    "CPL_VSIL_CURL_ALLOWED_EXTENSIONS": ".tif,.TIF,.tiff",
+    "GDAL_CACHEMAX": "200", 
+    "GDAL_DISABLE_READDIR_ON_OPEN": "EMPTY_DIR",
+    "GDAL_INGESTED_BYTES_AT_OPEN": "32768",
+    "GDAL_HTTP_MERGE_CONSECUTIVE_RANGES": "YES",
+    "GDAL_HTTP_MULTIPLEX": "YES",
+    "GDAL_HTTP_VERSION": "2",
+    "PYTHONWARNINGS": "ignore",
+    "VSI_CACHE": "TRUE",
+    "VSI_CACHE_SIZE": "5000000", 
+    "DB_MIN_CONN_SIZE": "1",
+    "DB_MAX_CONN_SIZE": "1"
+  }
+
+  const defaultMemorySize = 3008;
+
   export class TitilerPgstacApiLambda extends Construct {
     readonly url: string;
     public titilerPgstacLambdaFunction: lambda.Function;
   
     constructor(scope: Construct, id: string, props: TitilerPgStacApiLambdaProps) {
       super(scope, id);
-  
-      const titilerPgstacEnv = {
-          "CPL_VSIL_CURL_ALLOWED_EXTENSIONS": ".tif,.TIF,.tiff",
-          "GDAL_CACHEMAX": "200", 
-          "GDAL_DISABLE_READDIR_ON_OPEN": "EMPTY_DIR",
-          "GDAL_INGESTED_BYTES_AT_OPEN": "32768",
-          "GDAL_HTTP_MERGE_CONSECUTIVE_RANGES": "YES",
-          "GDAL_HTTP_MULTIPLEX": "YES",
-          "GDAL_HTTP_VERSION": "2",
-          "PYTHONWARNINGS": "ignore",
-          "VSI_CACHE": "TRUE",
-          "VSI_CACHE_SIZE": "5000000", 
-          "DB_MIN_CONN_SIZE": "1",
-          "DB_MAX_CONN_SIZE": "1",
-          "PGSTAC_SECRET_ARN": props.dbSecret.secretArn,
-      }
-    
-      
-      this.titilerPgstacLambdaFunction = new lambda.Function(this, "lambda", {
-        handler: "handler.handler",
+
+
+      // if user provided environment variables, merge them with the defaults.
+      const apiEnv = props.apiEnv ? { ...defaultTitilerPgstacEnv, ...props.apiEnv, "PGSTAC_SECRET_ARN": props.dbSecret.secretArn } : defaultTitilerPgstacEnv;
+
+      const apiCode = props.apiCode || {
+        entry: `${__dirname}/runtime`,
+        index: "src/handler.py",
+        handler: "handler",
+      };
+
+      this.titilerPgstacLambdaFunction = new PythonFunction(this, "titiler-pgstac-api", {
+        ...apiCode,
         runtime: lambda.Runtime.PYTHON_3_10,
-        code: props.titilerApiAsset ?? lambda.Code.fromDockerBuild(__dirname, {
-          file: "runtime/Dockerfile",
-          buildArgs: { PYTHON_VERSION: '3.10' },
-        }),
-        timeout: Duration.seconds(30),
+        architecture: lambda.Architecture.X86_64,
+        environment: apiEnv,
         vpc: props.vpc,
         vpcSubnets: props.subnetSelection,
         allowPublicSubnet: true,
-        memorySize: props.titilerLambdaMemorySize ?? 3008,
-        logRetention: aws_logs.RetentionDays.ONE_WEEK,
-        environment: titilerPgstacEnv,
-      });
+        memorySize: props.titilerLambdaMemorySize ?? defaultMemorySize,
+        logRetention: aws_logs.RetentionDays.ONE_WEEK
+      })
+      
+      // this.titilerPgstacLambdaFunction = new lambda.Function(this, "lambda", {
+      //   handler: "handler.handler",
+      //   runtime: lambda.Runtime.PYTHON_3_10,
+      //   code: props.titilerApiAsset ?? lambda.Code.fromDockerBuild(__dirname, {
+      //     file: "runtime/Dockerfile",
+      //     buildArgs: { PYTHON_VERSION: '3.10' },
+      //   }),
+      //   timeout: Duration.seconds(30),
+      //   vpc: props.vpc,
+      //   vpcSubnets: props.subnetSelection,
+      //   allowPublicSubnet: true,
+      //   memorySize: props.titilerLambdaMemorySize ?? 3008,
+      //   logRetention: aws_logs.RetentionDays.ONE_WEEK,
+      //   environment: titilerPgstacEnv,
+      // });
 
       // grant access to buckets using addToRolePolicy
       if (props.buckets) {
@@ -105,8 +130,9 @@ import {
     readonly dbSecret: secretsmanager.ISecret;
 
     /**
-     * Customized environment variables to send to titiler-pgstac runtime.
-     */
+     * Customized environment variables to send to titiler-pgstac runtime. These will be merged with `defaultTitilerPgstacEnv`.
+     * The database secret arn is automatically added to the environment variables at deployment. 
+    /*/
     readonly apiEnv?: Record<string, string>;
 
     /**
@@ -120,18 +146,31 @@ import {
     readonly titilerPgstacApiDomainName?: IDomainName;
 
     /**
-     * asset created by a docker build with the titiler pgstac application,
-     * can be produced with lambda.Code.fromDockerBuild. 
-     * 
-     * If undefined, the default application contained in the runtime folder will be used.
-     * 
-     * @default - undefined
+     * Custom code to run for titiler-pgstac.
+     *
+     * @default - the app code in the `runtime` folder. 
      */
-    readonly titilerApiAsset?: lambda.AssetCode;
-
-
+    readonly apiCode?: TitilerPgstacEntrypoint;
     /**
+
      * amount of memory to allocate to the lambda function.
      */
     readonly titilerLambdaMemorySize?: number;
+  }
+
+
+
+  export interface TitilerPgstacEntrypoint {
+    /**
+     * Path to the source of the function or the location for dependencies.
+     */
+    readonly entry: PythonFunctionProps["entry"];
+    /**
+     * The path (relative to entry) to the index file containing the exported handler.
+     */
+    readonly index: PythonFunctionProps["index"];
+    /**
+     * The name of the exported handler in the index file.
+     */
+    readonly handler: PythonFunctionProps["handler"];
   }
