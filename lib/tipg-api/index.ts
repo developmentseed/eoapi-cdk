@@ -87,9 +87,9 @@ import {
     readonly dbSecret: secretsmanager.ISecret;
 
     /**
-     * Custom code to run for fastapi-pgstac.
+     * Custom code to run for the application.
      *
-     * @default - simplified version of fastapi-pgstac
+     * @default - simplified version of tipg.
      */
     readonly apiCode?: TiPgApiEntrypoint;
 

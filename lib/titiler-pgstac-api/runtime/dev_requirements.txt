@@ -1,1 +1,2 @@
 uvicorn
+boto3>=1.26.139
