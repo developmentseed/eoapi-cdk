@@ -1,3 +1,10 @@
+# [5.4.0](https://github.com/developmentseed/eoapi-cdk/compare/v5.3.0...v5.4.0) (2023-09-05)
+
+
+### Features
+
+* custom runtimes option for titiler and ingestor ([#66](https://github.com/developmentseed/eoapi-cdk/issues/66)) ([3aaedae](https://github.com/developmentseed/eoapi-cdk/commit/3aaedaef86da558eac163348771a545b789ed8b9))
+
 # [5.3.0](https://github.com/developmentseed/eoapi-cdk/compare/v5.2.0...v5.3.0) (2023-09-01)
 
 
