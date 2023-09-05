@@ -1167,6 +1167,62 @@ public readonly titilerPgstacLambdaFunction: Function;
 
 ## Structs <a name="Structs" id="Structs"></a>
 
+### ApiCode <a name="ApiCode" id="eoapi-cdk.ApiCode"></a>
+
+#### Initializer <a name="Initializer" id="eoapi-cdk.ApiCode.Initializer"></a>
+
+```typescript
+import { ApiCode } from 'eoapi-cdk'
+
+const apiCode: ApiCode = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#eoapi-cdk.ApiCode.property.entry">entry</a></code> | <code>string</code> | Path to the source of the function or the location for dependencies, for the api lambda. |
+| <code><a href="#eoapi-cdk.ApiCode.property.handler">handler</a></code> | <code>string</code> | The name of the exported handler in the `api_lambda_index` file. |
+| <code><a href="#eoapi-cdk.ApiCode.property.index">index</a></code> | <code>string</code> | Path to the index file containing the exported handler, relative to `api_lambda_entry`. |
+
+---
+
+##### `entry`<sup>Required</sup> <a name="entry" id="eoapi-cdk.ApiCode.property.entry"></a>
+
+```typescript
+public readonly entry: string;
+```
+
+- *Type:* string
+
+Path to the source of the function or the location for dependencies, for the api lambda.
+
+---
+
+##### `handler`<sup>Optional</sup> <a name="handler" id="eoapi-cdk.ApiCode.property.handler"></a>
+
+```typescript
+public readonly handler: string;
+```
+
+- *Type:* string
+
+The name of the exported handler in the `api_lambda_index` file.
+
+---
+
+##### `index`<sup>Optional</sup> <a name="index" id="eoapi-cdk.ApiCode.property.index"></a>
+
+```typescript
+public readonly index: string;
+```
+
+- *Type:* string
+
+Path to the index file containing the exported handler, relative to `api_lambda_entry`.
+
+---
+
 ### ApiEntrypoint <a name="ApiEntrypoint" id="eoapi-cdk.ApiEntrypoint"></a>
 
 #### Initializer <a name="Initializer" id="eoapi-cdk.ApiEntrypoint.Initializer"></a>
@@ -1556,6 +1612,62 @@ public readonly workMem: string;
 
 - *Type:* string
 - *Default:* shared buffers divided by max connections
+
+---
+
+### IngestorCode <a name="IngestorCode" id="eoapi-cdk.IngestorCode"></a>
+
+#### Initializer <a name="Initializer" id="eoapi-cdk.IngestorCode.Initializer"></a>
+
+```typescript
+import { IngestorCode } from 'eoapi-cdk'
+
+const ingestorCode: IngestorCode = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#eoapi-cdk.IngestorCode.property.entry">entry</a></code> | <code>string</code> | Path to the source of the function or the location for dependencies, for the ingestor lambda. |
+| <code><a href="#eoapi-cdk.IngestorCode.property.handler">handler</a></code> | <code>string</code> | The name of the exported handler in the `ingestor_lambda_index` file. |
+| <code><a href="#eoapi-cdk.IngestorCode.property.index">index</a></code> | <code>string</code> | Path to the index file containing the exported handler, relative to `ingestor_lambda_entry`. |
+
+---
+
+##### `entry`<sup>Required</sup> <a name="entry" id="eoapi-cdk.IngestorCode.property.entry"></a>
+
+```typescript
+public readonly entry: string;
+```
+
+- *Type:* string
+
+Path to the source of the function or the location for dependencies, for the ingestor lambda.
+
+---
+
+##### `handler`<sup>Optional</sup> <a name="handler" id="eoapi-cdk.IngestorCode.property.handler"></a>
+
+```typescript
+public readonly handler: string;
+```
+
+- *Type:* string
+
+The name of the exported handler in the `ingestor_lambda_index` file.
+
+---
+
+##### `index`<sup>Optional</sup> <a name="index" id="eoapi-cdk.IngestorCode.property.index"></a>
+
+```typescript
+public readonly index: string;
+```
+
+- *Type:* string
+
+Path to the index file containing the exported handler, relative to `ingestor_lambda_entry`.
 
 ---
 
@@ -2648,9 +2760,11 @@ const stacIngestorProps: StacIngestorProps = { ... }
 | <code><a href="#eoapi-cdk.StacIngestorProps.property.stage">stage</a></code> | <code>string</code> | Stage of deployment (e.g. `dev`, `prod`). |
 | <code><a href="#eoapi-cdk.StacIngestorProps.property.subnetSelection">subnetSelection</a></code> | <code>aws-cdk-lib.aws_ec2.SubnetSelection</code> | Boolean indicating whether or not pgSTAC DB is in a public subnet. |
 | <code><a href="#eoapi-cdk.StacIngestorProps.property.vpc">vpc</a></code> | <code>aws-cdk-lib.aws_ec2.IVpc</code> | VPC running pgSTAC DB. |
+| <code><a href="#eoapi-cdk.StacIngestorProps.property.apiCode">apiCode</a></code> | <code><a href="#eoapi-cdk.ApiCode">ApiCode</a></code> | Custom code for the ingestor api. |
 | <code><a href="#eoapi-cdk.StacIngestorProps.property.apiEndpointConfiguration">apiEndpointConfiguration</a></code> | <code>aws-cdk-lib.aws_apigateway.EndpointConfiguration</code> | API Endpoint Configuration, useful for creating private APIs. |
 | <code><a href="#eoapi-cdk.StacIngestorProps.property.apiEnv">apiEnv</a></code> | <code>{[ key: string ]: string}</code> | Environment variables to be sent to Lambda. |
 | <code><a href="#eoapi-cdk.StacIngestorProps.property.apiPolicy">apiPolicy</a></code> | <code>aws-cdk-lib.aws_iam.PolicyDocument</code> | API Policy Document, useful for creating private APIs. |
+| <code><a href="#eoapi-cdk.StacIngestorProps.property.ingestorCode">ingestorCode</a></code> | <code><a href="#eoapi-cdk.IngestorCode">IngestorCode</a></code> | Custom code for the ingestor. |
 | <code><a href="#eoapi-cdk.StacIngestorProps.property.ingestorDomainNameOptions">ingestorDomainNameOptions</a></code> | <code>aws-cdk-lib.aws_apigateway.DomainNameOptions</code> | Custom Domain Name Options for Ingestor API. |
 
 ---
@@ -2739,6 +2853,19 @@ VPC running pgSTAC DB.
 
 ---
 
+##### `apiCode`<sup>Optional</sup> <a name="apiCode" id="eoapi-cdk.StacIngestorProps.property.apiCode"></a>
+
+```typescript
+public readonly apiCode: ApiCode;
+```
+
+- *Type:* <a href="#eoapi-cdk.ApiCode">ApiCode</a>
+- *Default:* default in the runtime folder.
+
+Custom code for the ingestor api.
+
+---
+
 ##### `apiEndpointConfiguration`<sup>Optional</sup> <a name="apiEndpointConfiguration" id="eoapi-cdk.StacIngestorProps.property.apiEndpointConfiguration"></a>
 
 ```typescript
@@ -2772,6 +2899,19 @@ public readonly apiPolicy: PolicyDocument;
 - *Type:* aws-cdk-lib.aws_iam.PolicyDocument
 
 API Policy Document, useful for creating private APIs.
+
+---
+
+##### `ingestorCode`<sup>Optional</sup> <a name="ingestorCode" id="eoapi-cdk.StacIngestorProps.property.ingestorCode"></a>
+
+```typescript
+public readonly ingestorCode: IngestorCode;
+```
+
+- *Type:* <a href="#eoapi-cdk.IngestorCode">IngestorCode</a>
+- *Default:* default in the runtime folder.
+
+Custom code for the ingestor.
 
 ---
 
@@ -2861,7 +3001,7 @@ const tiPgApiLambdaProps: TiPgApiLambdaProps = { ... }
 | <code><a href="#eoapi-cdk.TiPgApiLambdaProps.property.dbSecret">dbSecret</a></code> | <code>aws-cdk-lib.aws_secretsmanager.ISecret</code> | Secret containing connection information for pgSTAC database. |
 | <code><a href="#eoapi-cdk.TiPgApiLambdaProps.property.subnetSelection">subnetSelection</a></code> | <code>aws-cdk-lib.aws_ec2.SubnetSelection</code> | Subnet into which the lambda should be deployed. |
 | <code><a href="#eoapi-cdk.TiPgApiLambdaProps.property.vpc">vpc</a></code> | <code>aws-cdk-lib.aws_ec2.IVpc</code> | VPC into which the lambda should be deployed. |
-| <code><a href="#eoapi-cdk.TiPgApiLambdaProps.property.apiCode">apiCode</a></code> | <code><a href="#eoapi-cdk.TiPgApiEntrypoint">TiPgApiEntrypoint</a></code> | Custom code to run for fastapi-pgstac. |
+| <code><a href="#eoapi-cdk.TiPgApiLambdaProps.property.apiCode">apiCode</a></code> | <code><a href="#eoapi-cdk.TiPgApiEntrypoint">TiPgApiEntrypoint</a></code> | Custom code to run for the application. |
 | <code><a href="#eoapi-cdk.TiPgApiLambdaProps.property.apiEnv">apiEnv</a></code> | <code>{[ key: string ]: string}</code> | Customized environment variables to send to titiler-pgstac runtime. |
 | <code><a href="#eoapi-cdk.TiPgApiLambdaProps.property.tipgApiDomainName">tipgApiDomainName</a></code> | <code>@aws-cdk/aws-apigatewayv2-alpha.IDomainName</code> | Custom Domain Name for tipg API. |
 
@@ -2922,9 +3062,9 @@ public readonly apiCode: TiPgApiEntrypoint;
 ```
 
 - *Type:* <a href="#eoapi-cdk.TiPgApiEntrypoint">TiPgApiEntrypoint</a>
-- *Default:* simplified version of fastapi-pgstac
+- *Default:* simplified version of tipg.
 
-Custom code to run for fastapi-pgstac.
+Custom code to run for the application.
 
 ---
 
@@ -2976,6 +3116,7 @@ const titilerPgStacApiLambdaProps: TitilerPgStacApiLambdaProps = { ... }
 | <code><a href="#eoapi-cdk.TitilerPgStacApiLambdaProps.property.vpc">vpc</a></code> | <code>aws-cdk-lib.aws_ec2.IVpc</code> | VPC into which the lambda should be deployed. |
 | <code><a href="#eoapi-cdk.TitilerPgStacApiLambdaProps.property.apiEnv">apiEnv</a></code> | <code>{[ key: string ]: string}</code> | Customized environment variables to send to titiler-pgstac runtime. |
 | <code><a href="#eoapi-cdk.TitilerPgStacApiLambdaProps.property.buckets">buckets</a></code> | <code>string[]</code> | list of buckets the lambda will be granted access to. |
+| <code><a href="#eoapi-cdk.TitilerPgStacApiLambdaProps.property.pythonLambdaOptions">pythonLambdaOptions</a></code> | <code><a href="#eoapi-cdk.TitilerPgstacPythonLambdaOptions">TitilerPgstacPythonLambdaOptions</a></code> | Optional settings for the titiler-pgstac python lambda function. |
 | <code><a href="#eoapi-cdk.TitilerPgStacApiLambdaProps.property.titilerPgstacApiDomainName">titilerPgstacApiDomainName</a></code> | <code>@aws-cdk/aws-apigatewayv2-alpha.IDomainName</code> | Custom Domain Name Options for Titiler Pgstac API,. |
 
 ---
@@ -3038,6 +3179,10 @@ public readonly apiEnv: {[ key: string ]: string};
 
 Customized environment variables to send to titiler-pgstac runtime.
 
+These will be merged with `defaultTitilerPgstacEnv`.
+The database secret arn is automatically added to the environment variables at deployment. 
+/
+
 ---
 
 ##### `buckets`<sup>Optional</sup> <a name="buckets" id="eoapi-cdk.TitilerPgStacApiLambdaProps.property.buckets"></a>
@@ -3052,6 +3197,19 @@ list of buckets the lambda will be granted access to.
 
 ---
 
+##### `pythonLambdaOptions`<sup>Optional</sup> <a name="pythonLambdaOptions" id="eoapi-cdk.TitilerPgStacApiLambdaProps.property.pythonLambdaOptions"></a>
+
+```typescript
+public readonly pythonLambdaOptions: TitilerPgstacPythonLambdaOptions;
+```
+
+- *Type:* <a href="#eoapi-cdk.TitilerPgstacPythonLambdaOptions">TitilerPgstacPythonLambdaOptions</a>
+- *Default:* defined in the construct.
+
+Optional settings for the titiler-pgstac python lambda function.
+
+---
+
 ##### `titilerPgstacApiDomainName`<sup>Optional</sup> <a name="titilerPgstacApiDomainName" id="eoapi-cdk.TitilerPgStacApiLambdaProps.property.titilerPgstacApiDomainName"></a>
 
 ```typescript
@@ -3059,8 +3217,123 @@ public readonly titilerPgstacApiDomainName: IDomainName;
 ```
 
 - *Type:* @aws-cdk/aws-apigatewayv2-alpha.IDomainName
+- *Default:* undefined.
 
 Custom Domain Name Options for Titiler Pgstac API,.
+
+---
+
+### TitilerPgstacPythonLambdaOptions <a name="TitilerPgstacPythonLambdaOptions" id="eoapi-cdk.TitilerPgstacPythonLambdaOptions"></a>
+
+#### Initializer <a name="Initializer" id="eoapi-cdk.TitilerPgstacPythonLambdaOptions.Initializer"></a>
+
+```typescript
+import { TitilerPgstacPythonLambdaOptions } from 'eoapi-cdk'
+
+const titilerPgstacPythonLambdaOptions: TitilerPgstacPythonLambdaOptions = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#eoapi-cdk.TitilerPgstacPythonLambdaOptions.property.architecture">architecture</a></code> | <code>aws-cdk-lib.aws_lambda.Architecture</code> | The system architectures compatible with this lambda function. |
+| <code><a href="#eoapi-cdk.TitilerPgstacPythonLambdaOptions.property.entry">entry</a></code> | <code>string</code> | Path to the source of the function or the location for dependencies. |
+| <code><a href="#eoapi-cdk.TitilerPgstacPythonLambdaOptions.property.handler">handler</a></code> | <code>string</code> | The name of the exported handler in the index file. |
+| <code><a href="#eoapi-cdk.TitilerPgstacPythonLambdaOptions.property.index">index</a></code> | <code>string</code> | The path (relative to entry) to the index file containing the exported handler. |
+| <code><a href="#eoapi-cdk.TitilerPgstacPythonLambdaOptions.property.memorySize">memorySize</a></code> | <code>number</code> | The amount of memory, in MB, that is allocated to your Lambda function. |
+| <code><a href="#eoapi-cdk.TitilerPgstacPythonLambdaOptions.property.runtime">runtime</a></code> | <code>aws-cdk-lib.aws_lambda.Runtime</code> | The runtime environment. |
+| <code><a href="#eoapi-cdk.TitilerPgstacPythonLambdaOptions.property.bundling">bundling</a></code> | <code>aws-cdk-lib.BundlingOptions</code> | Bundling options to use for this function. |
+
+---
+
+##### `architecture`<sup>Required</sup> <a name="architecture" id="eoapi-cdk.TitilerPgstacPythonLambdaOptions.property.architecture"></a>
+
+```typescript
+public readonly architecture: Architecture;
+```
+
+- *Type:* aws-cdk-lib.aws_lambda.Architecture
+
+The system architectures compatible with this lambda function.
+
+---
+
+##### `entry`<sup>Required</sup> <a name="entry" id="eoapi-cdk.TitilerPgstacPythonLambdaOptions.property.entry"></a>
+
+```typescript
+public readonly entry: string;
+```
+
+- *Type:* string
+
+Path to the source of the function or the location for dependencies.
+
+---
+
+##### `handler`<sup>Required</sup> <a name="handler" id="eoapi-cdk.TitilerPgstacPythonLambdaOptions.property.handler"></a>
+
+```typescript
+public readonly handler: string;
+```
+
+- *Type:* string
+
+The name of the exported handler in the index file.
+
+---
+
+##### `index`<sup>Required</sup> <a name="index" id="eoapi-cdk.TitilerPgstacPythonLambdaOptions.property.index"></a>
+
+```typescript
+public readonly index: string;
+```
+
+- *Type:* string
+
+The path (relative to entry) to the index file containing the exported handler.
+
+---
+
+##### `memorySize`<sup>Required</sup> <a name="memorySize" id="eoapi-cdk.TitilerPgstacPythonLambdaOptions.property.memorySize"></a>
+
+```typescript
+public readonly memorySize: number;
+```
+
+- *Type:* number
+
+The amount of memory, in MB, that is allocated to your Lambda function.
+
+---
+
+##### `runtime`<sup>Required</sup> <a name="runtime" id="eoapi-cdk.TitilerPgstacPythonLambdaOptions.property.runtime"></a>
+
+```typescript
+public readonly runtime: Runtime;
+```
+
+- *Type:* aws-cdk-lib.aws_lambda.Runtime
+
+The runtime environment.
+
+Only runtimes of the Python family are
+supported.
+
+---
+
+##### `bundling`<sup>Optional</sup> <a name="bundling" id="eoapi-cdk.TitilerPgstacPythonLambdaOptions.property.bundling"></a>
+
+```typescript
+public readonly bundling: BundlingOptions;
+```
+
+- *Type:* aws-cdk-lib.BundlingOptions
+
+Bundling options to use for this function.
+
+Use this to specify custom bundling options like
+the bundling Docker image, asset hash type, custom hash, architecture, etc.
 
 ---
 
