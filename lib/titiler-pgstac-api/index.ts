@@ -8,8 +8,10 @@ import {
     CfnOutput,
     Duration,
     aws_logs,
+    BundlingOptions
   } from "aws-cdk-lib";
-  import {PythonFunction, PythonFunctionProps} from "@aws-cdk/aws-lambda-python-alpha";
+  import { Runtime } from 'aws-cdk-lib/aws-lambda';
+  import {PythonFunction} from "@aws-cdk/aws-lambda-python-alpha";
   import { IDomainName, HttpApi } from "@aws-cdk/aws-apigatewayv2-alpha";
   import { HttpLambdaIntegration } from "@aws-cdk/aws-apigatewayv2-integrations-alpha";
   import { Construct } from "constructs";
@@ -31,8 +33,6 @@ import {
     "DB_MAX_CONN_SIZE": "1"
   }
 
-  const defaultMemorySize = 3008;
-
   export class TitilerPgstacApiLambda extends Construct {
     readonly url: string;
     public titilerPgstacLambdaFunction: lambda.Function;
@@ -44,21 +44,21 @@ import {
       // if user provided environment variables, merge them with the defaults.
       const apiEnv = props.apiEnv ? { ...defaultTitilerPgstacEnv, ...props.apiEnv, "PGSTAC_SECRET_ARN": props.dbSecret.secretArn } : defaultTitilerPgstacEnv;
 
-      const apiCode = props.apiCode || {
+      const pythonLambdaOptions: TitilerPgstacPythonLambdaOptions = props.pythonLambdaOptions ?? {
+        runtime: lambda.Runtime.PYTHON_3_10,
         entry: `${__dirname}/runtime`,
         index: "src/handler.py",
         handler: "handler",
-      };
+        memorySize: 3008,
+        architecture: lambda.Architecture.X86_64
+      }
 
       this.titilerPgstacLambdaFunction = new PythonFunction(this, "titiler-pgstac-api", {
-        ...apiCode,
-        runtime: lambda.Runtime.PYTHON_3_10,
-        architecture: lambda.Architecture.X86_64,
+        ...pythonLambdaOptions,
         environment: apiEnv,
         vpc: props.vpc,
         vpcSubnets: props.subnetSelection,
         allowPublicSubnet: true,
-        memorySize: props.titilerLambdaMemorySize ?? defaultMemorySize,
         logRetention: aws_logs.RetentionDays.ONE_WEEK,
         timeout: Duration.seconds(30)
       })
@@ -127,35 +127,57 @@ import {
 
     /**
      * Custom Domain Name Options for Titiler Pgstac API,
+     * 
+     * @default - undefined. 
      */
     readonly titilerPgstacApiDomainName?: IDomainName;
 
     /**
-     * Custom code to run for titiler-pgstac.
+     * Optional settings for the titiler-pgstac python lambda function.
      *
-     * @default - the app code in the `runtime` folder. 
+     * @default - defined in the construct.
      */
-    readonly apiCode?: TitilerPgstacEntrypoint;
-    /**
+    readonly pythonLambdaOptions?: TitilerPgstacPythonLambdaOptions;
 
-     * amount of memory to allocate to the lambda function.
-     */
-    readonly titilerLambdaMemorySize?: number;
   }
 
 
+  export interface TitilerPgstacPythonLambdaOptions {
 
-  export interface TitilerPgstacEntrypoint {
     /**
      * Path to the source of the function or the location for dependencies.
      */
-    readonly entry: PythonFunctionProps["entry"];
+    readonly entry: string;
+    /**
+     * The runtime environment. Only runtimes of the Python family are
+     * supported.
+     */
+    readonly runtime: Runtime;
+
     /**
      * The path (relative to entry) to the index file containing the exported handler.
+     *
      */
-    readonly index: PythonFunctionProps["index"];
+    readonly index: string;
     /**
      * The name of the exported handler in the index file.
      */
-    readonly handler: PythonFunctionProps["handler"];
+    readonly handler: string;
+
+    /**
+     * Bundling options to use for this function. Use this to specify custom bundling options like
+     * the bundling Docker image, asset hash type, custom hash, architecture, etc.
+     */
+    readonly bundling?: BundlingOptions;
+
+    /**
+     * The amount of memory, in MB, that is allocated to your Lambda function.
+     */
+    readonly memorySize: number;
+
+    /**
+     * The system architectures compatible with this lambda function.
+     */
+    readonly architecture: lambda.Architecture;
+
   }
