@@ -15,12 +15,12 @@ import {
   import { IDomainName, HttpApi } from "@aws-cdk/aws-apigatewayv2-alpha";
   import { HttpLambdaIntegration } from "@aws-cdk/aws-apigatewayv2-integrations-alpha";
   import { Construct } from "constructs";
-  
 
-  // default settings that can be overridden by the user-provided environment. 
+
+  // default settings that can be overridden by the user-provided environment.
   let defaultTitilerPgstacEnv :{ [key: string]: any } = {
     "CPL_VSIL_CURL_ALLOWED_EXTENSIONS": ".tif,.TIF,.tiff",
-    "GDAL_CACHEMAX": "200", 
+    "GDAL_CACHEMAX": "200",
     "GDAL_DISABLE_READDIR_ON_OPEN": "EMPTY_DIR",
     "GDAL_INGESTED_BYTES_AT_OPEN": "32768",
     "GDAL_HTTP_MERGE_CONSECUTIVE_RANGES": "YES",
@@ -28,7 +28,7 @@ import {
     "GDAL_HTTP_VERSION": "2",
     "PYTHONWARNINGS": "ignore",
     "VSI_CACHE": "TRUE",
-    "VSI_CACHE_SIZE": "5000000", 
+    "VSI_CACHE_SIZE": "5000000",
     "DB_MIN_CONN_SIZE": "1",
     "DB_MAX_CONN_SIZE": "1"
   }
@@ -36,7 +36,7 @@ import {
   export class TitilerPgstacApiLambda extends Construct {
     readonly url: string;
     public titilerPgstacLambdaFunction: lambda.Function;
-  
+
     constructor(scope: Construct, id: string, props: TitilerPgStacApiLambdaProps) {
       super(scope, id);
 
@@ -45,7 +45,7 @@ import {
       const apiEnv = props.apiEnv ? { ...defaultTitilerPgstacEnv, ...props.apiEnv, "PGSTAC_SECRET_ARN": props.dbSecret.secretArn } : defaultTitilerPgstacEnv;
 
       const pythonLambdaOptions: TitilerPgstacPythonLambdaOptions = props.pythonLambdaOptions ?? {
-        runtime: lambda.Runtime.PYTHON_3_10,
+        runtime: lambda.Runtime.PYTHON_3_11,
         entry: `${__dirname}/runtime`,
         index: "src/handler.py",
         handler: "handler",
@@ -62,7 +62,7 @@ import {
         logRetention: aws_logs.RetentionDays.ONE_WEEK,
         timeout: Duration.seconds(30)
       })
-      
+
       // grant access to buckets using addToRolePolicy
       if (props.buckets) {
         props.buckets.forEach(bucket => {
@@ -72,43 +72,43 @@ import {
           }));
         });
       }
-      
+
       props.dbSecret.grantRead(this.titilerPgstacLambdaFunction);
       this.titilerPgstacLambdaFunction.connections.allowTo(props.db, ec2.Port.tcp(5432), "allow connections from titiler");
-  
+
       const stacApi = new HttpApi(this, `${Stack.of(this).stackName}-titiler-pgstac-api`, {
-        defaultDomainMapping: props.titilerPgstacApiDomainName ? { 
-          domainName: props.titilerPgstacApiDomainName 
+        defaultDomainMapping: props.titilerPgstacApiDomainName ? {
+          domainName: props.titilerPgstacApiDomainName
         } : undefined,
         defaultIntegration: new HttpLambdaIntegration("integration", this.titilerPgstacLambdaFunction),
       });
-  
+
       this.url = stacApi.url!;
-  
+
       new CfnOutput(this, "titiler-pgstac-api-output", {
         exportName: `${Stack.of(this).stackName}-titiler-pgstac-url`,
         value: this.url,
       });
     }
   }
-  
+
   export interface TitilerPgStacApiLambdaProps {
 
     /**
      * VPC into which the lambda should be deployed.
      */
     readonly vpc: ec2.IVpc;
-  
+
     /**
      * RDS Instance with installed pgSTAC.
      */
     readonly db: rds.IDatabaseInstance;
-  
+
     /**
      * Subnet into which the lambda should be deployed.
      */
     readonly subnetSelection: ec2.SubnetSelection;
-  
+
     /**
      * Secret containing connection information for pgSTAC database.
      */
@@ -116,19 +116,19 @@ import {
 
     /**
      * Customized environment variables to send to titiler-pgstac runtime. These will be merged with `defaultTitilerPgstacEnv`.
-     * The database secret arn is automatically added to the environment variables at deployment. 
+     * The database secret arn is automatically added to the environment variables at deployment.
     /*/
     readonly apiEnv?: Record<string, string>;
 
     /**
-     * list of buckets the lambda will be granted access to. 
+     * list of buckets the lambda will be granted access to.
      */
     readonly buckets?: string[];
 
     /**
      * Custom Domain Name Options for Titiler Pgstac API,
-     * 
-     * @default - undefined. 
+     *
+     * @default - undefined.
      */
     readonly titilerPgstacApiDomainName?: IDomainName;
 

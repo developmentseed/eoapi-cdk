@@ -45,7 +45,7 @@ export class StacIngestor extends Construct {
         ),
       ],
     });
-    
+
     const handler = this.buildApiLambda({
       table: this.table,
       env,
@@ -112,7 +112,7 @@ export class StacIngestor extends Construct {
     subnetSelection: ec2.SubnetSelection
     apiCode?: ApiCode;
   }): PythonFunction {
-    
+
     const apiCode = props.apiCode || {
       entry: `${__dirname}/runtime`,
       index: "src/handler.py",
@@ -121,7 +121,7 @@ export class StacIngestor extends Construct {
 
     const handler = new PythonFunction(this, "api-handler", {
       ...apiCode,
-      runtime: lambda.Runtime.PYTHON_3_9,
+      runtime: lambda.Runtime.PYTHON_3_11,
       timeout: Duration.seconds(30),
       environment: { DB_SECRET_ARN: props.dbSecret.secretArn, ...props.env },
       vpc: props.dbVpc,
@@ -166,7 +166,7 @@ export class StacIngestor extends Construct {
 
     const handler = new PythonFunction(this, "stac-ingestor", {
       ...ingestorCode,
-      runtime: lambda.Runtime.PYTHON_3_9,
+      runtime: lambda.Runtime.PYTHON_3_11,
       timeout: Duration.seconds(180),
       environment: { DB_SECRET_ARN: props.dbSecret.secretArn, ...props.env },
       vpc: props.dbVpc,
@@ -311,14 +311,14 @@ export interface StacIngestorProps {
   /**
    * Custom code for the ingestor api.
    *
-   * @default - default in the runtime folder. 
+   * @default - default in the runtime folder.
    */
    readonly apiCode?: ApiCode;
 
    /**
    * Custom code for the ingestor.
    *
-   * @default - default in the runtime folder. 
+   * @default - default in the runtime folder.
    */
    readonly ingestorCode?: IngestorCode;
 }
@@ -326,17 +326,17 @@ export interface StacIngestorProps {
 export interface ApiCode {
 
   /**
-   * Path to the source of the function or the location for dependencies, for the api lambda. 
+   * Path to the source of the function or the location for dependencies, for the api lambda.
    */
   readonly entry: PythonFunctionProps["entry"];
 
   /**
-   * Path to the index file containing the exported handler, relative to `api_lambda_entry`. 
+   * Path to the index file containing the exported handler, relative to `api_lambda_entry`.
    */
   readonly index: PythonFunctionProps["index"];
 
   /**
-   * The name of the exported handler in the `api_lambda_index` file. 
+   * The name of the exported handler in the `api_lambda_index` file.
    */
   readonly handler: PythonFunctionProps["handler"];
 
@@ -345,12 +345,12 @@ export interface ApiCode {
 export interface IngestorCode {
 
   /**
-   * Path to the source of the function or the location for dependencies, for the ingestor lambda. 
+   * Path to the source of the function or the location for dependencies, for the ingestor lambda.
    */
   readonly entry: PythonFunctionProps["entry"];
 
   /**
-   * Path to the index file containing the exported handler, relative to `ingestor_lambda_entry`. 
+   * Path to the index file containing the exported handler, relative to `ingestor_lambda_entry`.
    */
   readonly index: PythonFunctionProps["index"];
 

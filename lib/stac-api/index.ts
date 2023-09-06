@@ -40,7 +40,7 @@ export class PgStacApiLambda extends Construct {
        *    package has a hash.)
        *        anyio==3.6.1 --hash=sha256:cb29b9c70620506a9a8f87a309591713446953302d7d995344d0d7c6c0c9a7be
        * */
-      runtime: lambda.Runtime.PYTHON_3_8,
+      runtime: lambda.Runtime.PYTHON_3_11,
       architecture: lambda.Architecture.X86_64,
       environment: {
         PGSTAC_SECRET_ARN: props.dbSecret.secretArn,
@@ -58,7 +58,7 @@ export class PgStacApiLambda extends Construct {
     this.stacApiLambdaFunction.connections.allowTo(props.db, ec2.Port.tcp(5432));
 
     const stacApi = new HttpApi(this, `${Stack.of(this).stackName}-stac-api`, {
-      defaultDomainMapping: props.stacApiDomainName ? { 
+      defaultDomainMapping: props.stacApiDomainName ? {
         domainName: props.stacApiDomainName
       } : undefined,
       defaultIntegration: new HttpLambdaIntegration("integration", this.stacApiLambdaFunction),
