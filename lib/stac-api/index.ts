@@ -5,6 +5,7 @@ import {
   aws_lambda as lambda,
   aws_secretsmanager as secretsmanager,
   CfnOutput,
+  DockerImage,
 } from "aws-cdk-lib";
 import {
   PythonFunction,
@@ -52,6 +53,9 @@ export class PgStacApiLambda extends Construct {
       vpcSubnets: props.subnetSelection,
       allowPublicSubnet: true,
       memorySize: 8192,
+      bundling: {
+        image: DockerImage.fromBuild(__dirname)
+      }
     });
 
     props.dbSecret.grantRead(this.stacApiLambdaFunction);
