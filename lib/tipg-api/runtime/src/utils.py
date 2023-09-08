@@ -1,7 +1,8 @@
 import base64
 import json
-import boto3
 import os
+
+import boto3
 
 
 def load_pgstac_secret(secret_name: str):

@@ -17,7 +17,7 @@ function hasVpc(
   return (instance as aws_rds.DatabaseInstance).vpc !== undefined;
 }
 
-const DEFAULT_PGSTAC_VERSION = "0.6.13";
+const DEFAULT_PGSTAC_VERSION = "0.7.9";
 
 /**
  * Bootstraps a database instance, installing pgSTAC onto the database.
