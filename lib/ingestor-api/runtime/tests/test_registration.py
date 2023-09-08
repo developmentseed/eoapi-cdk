@@ -4,9 +4,8 @@ from datetime import timedelta
 from typing import TYPE_CHECKING, List
 from unittest.mock import call, patch
 
-from fastapi.encoders import jsonable_encoder
 import pytest
-
+from fastapi.encoders import jsonable_encoder
 
 if TYPE_CHECKING:
     from fastapi.testclient import TestClient

@@ -2,9 +2,9 @@ from typing import Sequence
 
 import boto3
 import pydantic
+from fastapi.encoders import jsonable_encoder
 from pypgstac.db import PgstacDB
 from pypgstac.load import Methods
-from fastapi.encoders import jsonable_encoder
 
 from .loader import Loader
 from .schemas import Ingestion
