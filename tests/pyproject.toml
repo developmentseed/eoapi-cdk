@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+
+[project]
+name = "eoapi_tests"
+version = "0.1.0"
+description = "test suite for eoAPI deployments"
+authors = [
+    {name = "Emile Tenezakis", email = "emile@developmentseed.org"}
+]
+license = {file = "LICENSE"}
+
+dependencies = [
+    "pytest==7.4.0",
+    "boto3==1.28.39",
+    "pystac==1.8.3",
+    "pystac[validation]==1.8.3",
+    "requests==2.31.0",
+    "pydantic-settings==2.0.3",
+    "pytest-order==1.1.0"
+]

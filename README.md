@@ -54,3 +54,6 @@ Versioning is automatically handled via [Conventional Commits](https://www.conve
 _Warning_: If you rebase `main`, you must ensure that the commits referenced by tags point to commits that are within the `main` branch. If a commit references a commit that is no longer on the `main` branch, Semantic Release will fail to detect the correct version of the project. [More information](https://github.com/semantic-release/semantic-release/issues/1121#issuecomment-517945233).
 
 
+## Tests
+
+Each new release triggers an integration test against a running deployment that uses the newly releases constructs. See the corresponding [github workflow](https://github.com/developmentseed/eoapi-cdk/blob/main/.github/workflows/deploy.yaml) and the [tests definition](https://github.com/developmentseed/eoapi-cdk/blob/main/tests).

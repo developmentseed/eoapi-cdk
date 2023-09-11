@@ -1,18 +1,17 @@
-name: deploy and integration test
+name: Deploy & Test Deployment
 
 permissions:
   id-token: write  # required for requesting the JWT
   contents: read  # required for actions/checkout
 
 on:
-
-  push:
-    branches:
-      - "feat/add-integration-tests"
+  workflow_run:
+    workflows: [Distribute]
+    types: [completed]
     
-
 jobs:
-  deploy-and-integration-test:
+  on-successful-release:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     env:
       AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION_DEPLOY }}
@@ -62,23 +61,28 @@ jobs:
         echo "titiler_pgstac_api_url=$(aws cloudformation describe-stacks --stack-name eoapi-template-demo-test-pgSTAC-infra --query "Stacks[0].Outputs[?starts_with(OutputKey, 'titilerpgstac')].OutputValue | [0]" --output text)" >> $GITHUB_OUTPUT
         deactivate
 
-    - name: Checkout the repo with the tests
+    - name: Checkout eoapi-cdk repository
       uses: actions/checkout@v3
       with:
-        repository: developmentseed/eoapi-tests
-        ref: initial-PR
-        path: tests
+        repository: developmentseed/eoapi-cdk
+        path: eoapi-cdk
+
+    - name: Install test environment
+      working-directory: eoapi-cdk/tests
+      run: |
+        python -m venv .tests_venv
+        source .tests_venv/bin/activate
+        pip install -r requirements.txt
+        deactivate
 
     - name: Test the stack
-      working-directory: tests
+      working-directory: eoapi-cdk/tests
       env:
         ingestor_url: ${{ steps.deploy_step.outputs.ingestor_url }}
         stac_api_url: ${{ steps.deploy_step.outputs.stac_api_url }}
         titiler_pgstac_api_url: ${{ steps.deploy_step.outputs.titiler_pgstac_api_url }}
       run: |
-        python -m venv .tests_venv
         source .tests_venv/bin/activate
-        pip install -e .
         pytest eoapi_tests
         deactivate
 
