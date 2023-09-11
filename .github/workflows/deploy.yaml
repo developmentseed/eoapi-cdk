@@ -5,11 +5,20 @@ permissions:
   contents: read  # required for actions/checkout
 
 on:
-  workflow_dispatch:
+
+  push:
+    branches:
+      - "feat/add-integration-tests"
+    
 
 jobs:
   deploy-and-integration-test:
     runs-on: ubuntu-latest
+    env:
+      AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION_DEPLOY }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID_DEPLOY }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY_DEPLOY }}
+
 
     steps:
 
@@ -22,59 +31,61 @@ jobs:
     - name: Set up python
       uses: actions/setup-python@v2
       with:
-        python-version: 3.10
         cache: pip
-
-    - name: Install dependencies to deploy the stack
+        
+    - name: Install deployment environment
+      working-directory: eoapi-template
       run: |
-        cd eoapi-template
         python -m venv .deployment_venv
         source .deployment_venv/bin/activate
         pip install -r requirements.txt
         pip install --upgrade eoapi-cdk
         npm install -g aws-cdk
         deactivate
-        cd ..
+
+    - name: Synthesize the stack
+      working-directory: eoapi-template
+      run: |
+        source .deployment_venv/bin/activate
+        cdk synth --debug --all --require-approval never
+        deactivate
+
 
     - name: Deploy the stack
-      env:
-        AWS_DEFAULT_REGION: us-east-1
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      id: deploy_step
+      working-directory: eoapi-template
       run: |
-        cd eoapi-template
         source .deployment_venv/bin/activate
-        cdk deploy --all --require-approval never
-        echo "ingestor_url=$(aws cloudformation describe-stacks --stack-name eoapi-template-demo-test-pgSTAC-infra --query "Stacks[0].Outputs[?contains(OutputKey, 'stacingestor')].OutputValue | [0]" --output text)" >> $GITHUB_OUTPUT
-        echo "stac_api_url=$(aws cloudformation describe-stacks --stack-name eoapi-template-demo-test-pgSTAC-infra --query "Stacks[0].Outputs[?contains(OutputKey, 'stacapi')].OutputValue | [0]" --output text)" >> $GITHUB_OUTPUT
-        echo "titiler_pgstac_api_url=$(aws cloudformation describe-stacks --stack-name eoapi-template-demo-test-pgSTAC-infra --query "Stacks[0].Outputs[?contains(OutputKey, 'titiler')].OutputValue | [0]" --output text)" >> $GITHUB_OUTPUT
+        cdk deploy --ci --all --require-approval never
+        echo "ingestor_url=$(aws cloudformation describe-stacks --stack-name eoapi-template-demo-test-pgSTAC-infra --query "Stacks[0].Outputs[?starts_with(OutputKey, 'stacingestor')].OutputValue | [0]" --output text)" >> $GITHUB_OUTPUT
+        echo "stac_api_url=$(aws cloudformation describe-stacks --stack-name eoapi-template-demo-test-pgSTAC-infra --query "Stacks[0].Outputs[?starts_with(OutputKey, 'pgstacapi')].OutputValue | [0]" --output text)" >> $GITHUB_OUTPUT
+        echo "titiler_pgstac_api_url=$(aws cloudformation describe-stacks --stack-name eoapi-template-demo-test-pgSTAC-infra --query "Stacks[0].Outputs[?starts_with(OutputKey, 'titilerpgstac')].OutputValue | [0]" --output text)" >> $GITHUB_OUTPUT
         deactivate
-        cd ..
 
     - name: Checkout the repo with the tests
       uses: actions/checkout@v3
       with:
         repository: developmentseed/eoapi-tests
+        ref: initial-PR
         path: tests
 
     - name: Test the stack
+      working-directory: tests
       env:
-        ingestor_url: ${{ steps.deploy_the_stack.outputs.ingestor_url }}
-        stac_api_url: ${{ steps.deploy_the_stack.outputs.stac_api_url }}
-        titiler_pgstac_api_url: ${{ steps.deploy_the_stack.outputs.titiler_api_url }}
+        ingestor_url: ${{ steps.deploy_step.outputs.ingestor_url }}
+        stac_api_url: ${{ steps.deploy_step.outputs.stac_api_url }}
+        titiler_pgstac_api_url: ${{ steps.deploy_step.outputs.titiler_pgstac_api_url }}
       run: |
-        cd tests
         python -m venv .tests_venv
         source .tests_venv/bin/activate
-        pip install -e tests
-        pytest eoapi-tests
+        pip install -e .
+        pytest eoapi_tests
         deactivate
-        cd ..
 
-    - name: Tear down the stack
+    - name: Always tear down the stack
+      if: always()
+      working-directory: eoapi-template
       run: |
-        cd eoapi-template
         source .deployment_venv/bin/activate
-        cdk destroy --all --require-approval never
+        cdk destroy --ci --all --force
         deactivate
-        cd ..
