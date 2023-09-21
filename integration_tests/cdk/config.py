@@ -14,15 +14,15 @@ class AppConfig(BaseSettings):
     stage: str = pydantic.Field(description="Stage of deployment", default="test")
     # because of its validator, `tags` should always come after `project_id` and `stage`
     tags: Dict[str, str] | None = pydantic.Field(
-        description="""Tags to apply to resources. If none provided, 
+        description="""Tags to apply to resources. If none provided,
         will default to the defaults defined in `default_tags`.
-        Note that if tags are passed to the CDK CLI via `--tags`, 
+        Note that if tags are passed to the CDK CLI via `--tags`,
         they will override any tags defined here.""",
         default=None,
     )
     auth_provider_jwks_url: str | None = pydantic.Field(
         description="""Auth Provider JSON Web Key Set URL for
-        ingestion authentication. If not provided, 
+        ingestion authentication. If not provided,
         no authentication will be required.""",
         default=None,
     )
@@ -51,8 +51,8 @@ class AppConfig(BaseSettings):
         default=0,
     )
     bastion_host: bool = pydantic.Field(
-        description="""Whether to create a bastion host. It can typically 
-        be used to make administrative connections to the database if 
+        description="""Whether to create a bastion host. It can typically
+        be used to make administrative connections to the database if
         `public_db_subnet` is False""",
         default=False,
     )
@@ -62,7 +62,7 @@ class AppConfig(BaseSettings):
         default=False,
     )
     bastion_host_allow_ip_list: List[str] = pydantic.Field(
-        description="""YAML file containing list of IP addresses to 
+        description="""YAML file containing list of IP addresses to
         allow SSH access to the bastion host. Ignored if `bastion_host`
         equals `False`.""",
         default=[],
@@ -78,18 +78,18 @@ class AppConfig(BaseSettings):
         default=[],
     )
     acm_certificate_arn: str | None = pydantic.Field(
-        description="""ARN of ACM certificate to use for 
+        description="""ARN of ACM certificate to use for
         custom domain names. If provided,
         CDNs are created for all the APIs""",
         default=None,
     )
     stac_api_custom_domain: str | None = pydantic.Field(
-        description="""Custom domain name for the STAC API. 
+        description="""Custom domain name for the STAC API.
         Must provide `acm_certificate_arn`""",
         default=None,
     )
     titiler_pgstac_api_custom_domain: str | None = pydantic.Field(
-        description="""Custom domain name for the titiler pgstac API. 
+        description="""Custom domain name for the titiler pgstac API.
         Must provide `acm_certificate_arn`""",
         default=None,
     )
@@ -99,7 +99,7 @@ class AppConfig(BaseSettings):
         default=None,
     )
     tipg_api_custom_domain: str | None = pydantic.Field(
-        description="""Custom domain name for the tipg API. 
+        description="""Custom domain name for the tipg API.
         Must provide `acm_certificate_arn`""",
         default=None,
     )
@@ -136,7 +136,7 @@ class AppConfig(BaseSettings):
             and self.stac_api_custom_domain is None
         ):
             raise ValueError(
-                """If a STAC browser version is provided, 
+                """If a STAC browser version is provided,
                 a custom domain must be provided for the STAC API"""
             )
         else:
@@ -153,7 +153,7 @@ class AppConfig(BaseSettings):
             ]
         ):
             raise ValueError(
-                """If any custom domain is provided, 
+                """If any custom domain is provided,
                 an ACM certificate ARN must be provided"""
             )
         else:
