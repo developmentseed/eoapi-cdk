@@ -5,11 +5,15 @@ permissions:
   contents: read  # required for actions/checkout
 
 on:
+  # run this workflow when the `Distribute` workflow completes
   workflow_run:
     workflows: [Distribute]
     types: [completed]
+  # ... or manually. 
+  workflow_dispatch:
     
 jobs:
+  # run a job on a successful `Workflow` run. 
   on-successful-release:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
@@ -21,38 +25,40 @@ jobs:
 
     steps:
 
-    - name: Checkout repository with template stack
+    - name: Checkout repository # for runs after `Distribute`, pulling from main will always give the latest eoapi-cdk. 
       uses: actions/checkout@v3
-      with:
-        repository: developmentseed/eoapi-template
-        path: eoapi-template
 
     - name: Set up python
       uses: actions/setup-python@v2
       with:
         cache: pip
-        
+
+    - name: Set up node
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+      
     - name: Install deployment environment
-      working-directory: eoapi-template
+      working-directory: integration_tests/cdk
       run: |
         python -m venv .deployment_venv
         source .deployment_venv/bin/activate
         pip install -r requirements.txt
-        pip install --upgrade eoapi-cdk
-        npm install -g aws-cdk
+        pip install --upgrade eoapi-cdk # make sure to take the latest version of eoapi-cdk since we're integration-testing the newest release. 
+        npm install
         deactivate
 
     - name: Synthesize the stack
-      working-directory: eoapi-template
+      working-directory: integration_tests/cdk
       run: |
         source .deployment_venv/bin/activate
         cdk synth --debug --all --require-approval never
         deactivate
 
-
+    # deploys and grabs URLs from the output for later tests
     - name: Deploy the stack
       id: deploy_step
-      working-directory: eoapi-template
+      working-directory: integration_tests/cdk
       run: |
         source .deployment_venv/bin/activate
         cdk deploy --ci --all --require-approval never
@@ -61,14 +67,8 @@ jobs:
         echo "titiler_pgstac_api_url=$(aws cloudformation describe-stacks --stack-name eoapi-template-demo-test-pgSTAC-infra --query "Stacks[0].Outputs[?starts_with(OutputKey, 'titilerpgstac')].OutputValue | [0]" --output text)" >> $GITHUB_OUTPUT
         deactivate
 
-    - name: Checkout eoapi-cdk repository
-      uses: actions/checkout@v3
-      with:
-        repository: developmentseed/eoapi-cdk
-        path: eoapi-cdk
-
     - name: Install test environment
-      working-directory: eoapi-cdk/tests
+      working-directory: integration_tests/tests
       run: |
         python -m venv .tests_venv
         source .tests_venv/bin/activate
@@ -76,7 +76,7 @@ jobs:
         deactivate
 
     - name: Test the stack
-      working-directory: eoapi-cdk/tests
+      working-directory: integration_tests/tests
       env:
         ingestor_url: ${{ steps.deploy_step.outputs.ingestor_url }}
         stac_api_url: ${{ steps.deploy_step.outputs.stac_api_url }}
@@ -88,7 +88,7 @@ jobs:
 
     - name: Always tear down the stack
       if: always()
-      working-directory: eoapi-template
+      working-directory: integration_tests/cdk
       run: |
         source .deployment_venv/bin/activate
         cdk destroy --ci --all --force
