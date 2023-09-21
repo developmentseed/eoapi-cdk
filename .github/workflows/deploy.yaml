@@ -11,11 +11,15 @@ on:
     types: [completed]
   # ... or manually. 
   workflow_dispatch:
+  
+  # remove later
+  push:
+    branches:
+      - "feat/add-integration-tests"
     
 jobs:
   # run a job on a successful `Workflow` run. 
   on-successful-release:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     env:
       AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION_DEPLOY }}
@@ -52,7 +56,7 @@ jobs:
       working-directory: integration_tests/cdk
       run: |
         source .deployment_venv/bin/activate
-        cdk synth --debug --all --require-approval never
+        npx cdk synth --debug --all --require-approval never
         deactivate
 
     # deploys and grabs URLs from the output for later tests
@@ -61,7 +65,7 @@ jobs:
       working-directory: integration_tests/cdk
       run: |
         source .deployment_venv/bin/activate
-        cdk deploy --ci --all --require-approval never
+        npx cdk deploy --ci --all --require-approval never
         echo "ingestor_url=$(aws cloudformation describe-stacks --stack-name eoapi-template-demo-test-pgSTAC-infra --query "Stacks[0].Outputs[?starts_with(OutputKey, 'stacingestor')].OutputValue | [0]" --output text)" >> $GITHUB_OUTPUT
         echo "stac_api_url=$(aws cloudformation describe-stacks --stack-name eoapi-template-demo-test-pgSTAC-infra --query "Stacks[0].Outputs[?starts_with(OutputKey, 'pgstacapi')].OutputValue | [0]" --output text)" >> $GITHUB_OUTPUT
         echo "titiler_pgstac_api_url=$(aws cloudformation describe-stacks --stack-name eoapi-template-demo-test-pgSTAC-infra --query "Stacks[0].Outputs[?starts_with(OutputKey, 'titilerpgstac')].OutputValue | [0]" --output text)" >> $GITHUB_OUTPUT
@@ -91,5 +95,5 @@ jobs:
       working-directory: integration_tests/cdk
       run: |
         source .deployment_venv/bin/activate
-        cdk destroy --ci --all --force
+        npx cdk destroy --ci --all --force
         deactivate
