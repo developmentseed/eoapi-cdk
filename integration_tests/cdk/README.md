@@ -22,7 +22,15 @@ source .venv/bin/activate
 python -m pip install -r requirements.txt
 ```
 
-Note that `eoapi-cdk` isn't pinned, so that the latest version is always installed. Also install node dependencies with 
+Install the latest `eoapi-cdk` either from PyPI:
+
+```
+pip install eoapi-cdk
+```
+
+Or alternatively, compile and package from the root of this repository to get the python version of the constructs locally.
+
+Also install node dependencies with 
 
 ```
 npm install
