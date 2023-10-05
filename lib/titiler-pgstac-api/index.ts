@@ -7,14 +7,12 @@ import {
     aws_secretsmanager as secretsmanager,
     CfnOutput,
     Duration,
-    aws_logs,
-    BundlingOptions
+    aws_logs
   } from "aws-cdk-lib";
-  import { Runtime } from 'aws-cdk-lib/aws-lambda';
-  import {PythonFunction} from "@aws-cdk/aws-lambda-python-alpha";
   import { IDomainName, HttpApi } from "@aws-cdk/aws-apigatewayv2-alpha";
   import { HttpLambdaIntegration } from "@aws-cdk/aws-apigatewayv2-integrations-alpha";
   import { Construct } from "constructs";
+import { CustomLambdaFunctionOptions } from "../utils";
   
 
   // default settings that can be overridden by the user-provided environment. 
@@ -39,29 +37,24 @@ import {
   
     constructor(scope: Construct, id: string, props: TitilerPgStacApiLambdaProps) {
       super(scope, id);
-
-
-      // if user provided environment variables, merge them with the defaults.
-      const apiEnv = props.apiEnv ? { ...defaultTitilerPgstacEnv, ...props.apiEnv, "PGSTAC_SECRET_ARN": props.dbSecret.secretArn } : defaultTitilerPgstacEnv;
-
-      const pythonLambdaOptions: TitilerPgstacPythonLambdaOptions = props.pythonLambdaOptions ?? {
-        runtime: lambda.Runtime.PYTHON_3_10,
-        entry: `${__dirname}/runtime`,
-        index: "src/handler.py",
-        handler: "handler",
-        memorySize: 3008,
-        architecture: lambda.Architecture.X86_64
-      }
-
-      this.titilerPgstacLambdaFunction = new PythonFunction(this, "titiler-pgstac-api", {
-        ...pythonLambdaOptions,
-        environment: apiEnv,
+      
+      this.titilerPgstacLambdaFunction = new lambda.Function(this, "lambda", {
+        ...props.lambdaFunctionOptions ?? {
+          runtime: lambda.Runtime.PYTHON_3_10, // update Dockerfile if this is changed.
+          handler: "handler.handler",
+          memorySize: 3008,
+          logRetention: aws_logs.RetentionDays.ONE_WEEK,
+          timeout: Duration.seconds(30)
+        },
+        code: props.lambdaAssetCode ?? lambda.Code.fromDockerBuild(__dirname, {
+          file: "runtime/Dockerfile",
+        }),
         vpc: props.vpc,
         vpcSubnets: props.subnetSelection,
         allowPublicSubnet: true,
-        logRetention: aws_logs.RetentionDays.ONE_WEEK,
-        timeout: Duration.seconds(30)
-      })
+        // if user provided environment variables, merge them with the defaults.
+        environment: props.apiEnv ? { ...defaultTitilerPgstacEnv, ...props.apiEnv, "PGSTAC_SECRET_ARN": props.dbSecret.secretArn } : defaultTitilerPgstacEnv,
+      });
       
       // grant access to buckets using addToRolePolicy
       if (props.buckets) {
@@ -133,51 +126,17 @@ import {
     readonly titilerPgstacApiDomainName?: IDomainName;
 
     /**
-     * Optional settings for the titiler-pgstac python lambda function.
+     * Optional settings for the lambda function.
      *
      * @default - defined in the construct.
      */
-    readonly pythonLambdaOptions?: TitilerPgstacPythonLambdaOptions;
+    readonly lambdaFunctionOptions?: CustomLambdaFunctionOptions;
+
+    /**
+     * Optional lambda asset code
+     * @default default runtime defined in this repository
+     */
+    readonly lambdaAssetCode?: lambda.AssetCode;
 
   }
 
-
-  export interface TitilerPgstacPythonLambdaOptions {
-
-    /**
-     * Path to the source of the function or the location for dependencies.
-     */
-    readonly entry: string;
-    /**
-     * The runtime environment. Only runtimes of the Python family are
-     * supported.
-     */
-    readonly runtime: Runtime;
-
-    /**
-     * The path (relative to entry) to the index file containing the exported handler.
-     *
-     */
-    readonly index: string;
-    /**
-     * The name of the exported handler in the index file.
-     */
-    readonly handler: string;
-
-    /**
-     * Bundling options to use for this function. Use this to specify custom bundling options like
-     * the bundling Docker image, asset hash type, custom hash, architecture, etc.
-     */
-    readonly bundling?: BundlingOptions;
-
-    /**
-     * The amount of memory, in MB, that is allocated to your Lambda function.
-     */
-    readonly memorySize: number;
-
-    /**
-     * The system architectures compatible with this lambda function.
-     */
-    readonly architecture: lambda.Architecture;
-
-  }

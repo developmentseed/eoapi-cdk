@@ -50,7 +50,6 @@ export class PgStacDatabase extends Construct {
       database: this.db,
       dbSecret: this.db.secret!,
       pgstacDbName: props.pgstacDbName,
-      pgstacVersion: props.pgstacVersion,
       pgstacUsername: props.pgstacUsername,
       secretsPrefix: props.secretsPrefix,
     });
@@ -100,7 +99,6 @@ export class PgStacDatabase extends Construct {
 
 export interface PgStacDatabaseProps extends rds.DatabaseInstanceProps {
   readonly pgstacDbName?: BootstrapPgStacProps["pgstacDbName"];
-  readonly pgstacVersion?: BootstrapPgStacProps["pgstacVersion"];
   readonly pgstacUsername?: BootstrapPgStacProps["pgstacUsername"];
   readonly secretsPrefix?: BootstrapPgStacProps["secretsPrefix"];
 }

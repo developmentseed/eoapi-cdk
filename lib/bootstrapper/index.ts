@@ -10,14 +10,13 @@ import {
   RemovalPolicy,
 } from "aws-cdk-lib";
 import { Construct } from "constructs";
+import { CustomLambdaFunctionOptions } from "../utils";
 
 function hasVpc(
   instance: aws_rds.DatabaseInstance | aws_rds.IDatabaseInstance
 ): instance is aws_rds.DatabaseInstance {
   return (instance as aws_rds.DatabaseInstance).vpc !== undefined;
 }
-
-const DEFAULT_PGSTAC_VERSION = "0.6.13";
 
 /**
  * Bootstraps a database instance, installing pgSTAC onto the database.
@@ -28,17 +27,18 @@ export class BootstrapPgStac extends Construct {
   constructor(scope: Construct, id: string, props: BootstrapPgStacProps) {
     super(scope, id);
 
-    const { pgstacVersion = DEFAULT_PGSTAC_VERSION } = props;
     const handler = new aws_lambda.Function(this, "lambda", {
-      handler: "handler.handler",
-      runtime: aws_lambda.Runtime.PYTHON_3_8,
-      code: aws_lambda.Code.fromDockerBuild(__dirname, {
+      ...props.lambdaFunctionOptions ?? {
+        runtime: aws_lambda.Runtime.PYTHON_3_8,
+        handler: "handler.handler",
+        memorySize: 128,
+        logRetention: aws_logs.RetentionDays.ONE_WEEK,
+        timeout: Duration.minutes(2)
+      },
+      code: props.lambdaAssetCode ?? aws_lambda.Code.fromDockerBuild(__dirname, {
         file: "runtime/Dockerfile",
-        buildArgs: { PGSTAC_VERSION: pgstacVersion },
       }),
-      timeout: Duration.minutes(2),
       vpc: hasVpc(props.database) ? props.database.vpc : props.vpc,
-      logRetention: aws_logs.RetentionDays.ONE_WEEK,
     });
 
     this.secret = new aws_secretsmanager.Secret(this, "secret", {
@@ -75,9 +75,6 @@ export class BootstrapPgStac extends Construct {
     new CustomResource(this, "bootstrapper", {
       serviceToken: handler.functionArn,
       properties: {
-        // By setting pgstac_version in the properties assures
-        // that Create/Update events will be passed to the service token
-        pgstac_version: pgstacVersion,
         conn_secret_arn: props.dbSecret.secretArn,
         new_user_secret_arn: this.secret.secretArn,
       },
@@ -127,16 +124,22 @@ export interface BootstrapPgStacProps {
   readonly pgstacUsername?: string;
 
   /**
-   * pgSTAC version to be installed.
-   *
-   * @default 0.6.8
-   */
-  readonly pgstacVersion?: string;
-
-  /**
    * Prefix to assign to the generated `secrets_manager.Secret`
    *
    * @default pgstac
    */
   readonly secretsPrefix?: string;
+
+  /**
+   * Optional settings for the lambda function.
+   *
+   * @default - defined in the construct.
+   */
+  readonly lambdaFunctionOptions?: CustomLambdaFunctionOptions;
+
+  /**
+   * Optional lambda asset code
+   * @default default runtime defined in this repository
+   */
+  readonly lambdaAssetCode?: aws_lambda.AssetCode;
 }

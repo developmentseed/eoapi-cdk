@@ -3,46 +3,44 @@ import {
     aws_ec2 as ec2,
     aws_rds as rds,
     aws_lambda as lambda,
+    aws_logs as logs,
     aws_secretsmanager as secretsmanager,
     CfnOutput,
     Duration,
   } from "aws-cdk-lib";
-  import {
-    PythonFunction,
-    PythonFunctionProps,
-  } from "@aws-cdk/aws-lambda-python-alpha";
   import { IDomainName, HttpApi } from "@aws-cdk/aws-apigatewayv2-alpha";
   import { HttpLambdaIntegration } from "@aws-cdk/aws-apigatewayv2-integrations-alpha";
   import { Construct } from "constructs";
+  import { CustomLambdaFunctionOptions } from "../utils";
 
   export class TiPgApiLambda extends Construct {
     readonly url: string;
-    public tiPgLambdaFunction: PythonFunction;
+    public tiPgLambdaFunction: lambda.Function;
 
     constructor(scope: Construct, id: string, props: TiPgApiLambdaProps) {
       super(scope, id);
 
-      const apiCode = props.apiCode || {
-        entry: `${__dirname}/runtime`,
-        index: "src/handler.py",
-        handler: "handler",
-      };
-
-      this.tiPgLambdaFunction = new PythonFunction(this, "tipg-api", {
-        ...apiCode,
-        runtime: lambda.Runtime.PYTHON_3_10,
-        architecture: lambda.Architecture.X86_64,
+      this.tiPgLambdaFunction = new lambda.Function(this, "lambda", {
+        ...props.lambdaFunctionOptions ?? {
+          runtime: lambda.Runtime.PYTHON_3_10,
+          handler: "handler.handler",
+          memorySize: 1024,
+          logRetention: logs.RetentionDays.ONE_WEEK,
+          timeout: Duration.seconds(30)
+        },
+        code: props.lambdaAssetCode ?? lambda.Code.fromDockerBuild(__dirname, {
+          file: "runtime/Dockerfile",
+          buildArgs: { PYTHON_VERSION: '3.10' },
+        }),
+        vpc: props.vpc,
+        vpcSubnets: props.subnetSelection,
+        allowPublicSubnet: true,
         environment: {
           PGSTAC_SECRET_ARN: props.dbSecret.secretArn,
           DB_MIN_CONN_SIZE: "1",
           DB_MAX_CONN_SIZE: "1",
           ...props.apiEnv,
         },
-        vpc: props.vpc,
-        vpcSubnets: props.subnetSelection,
-        allowPublicSubnet: true,
-        memorySize: 1024,
-        timeout: Duration.seconds(30),
       });
 
       props.dbSecret.grantRead(this.tiPgLambdaFunction);
@@ -86,12 +84,6 @@ import {
      */
     readonly dbSecret: secretsmanager.ISecret;
 
-    /**
-     * Custom code to run for the application.
-     *
-     * @default - simplified version of tipg.
-     */
-    readonly apiCode?: TiPgApiEntrypoint;
 
     /**
      * Customized environment variables to send to titiler-pgstac runtime.
@@ -105,19 +97,18 @@ import {
      * @default - undefined
      */
     readonly tipgApiDomainName?: IDomainName;
-  }
 
-  export interface TiPgApiEntrypoint {
+
     /**
-     * Path to the source of the function or the location for dependencies.
+     * Optional settings for the lambda function.
+     *
+     * @default - defined in the construct.
      */
-    readonly entry: PythonFunctionProps["entry"];
+    readonly lambdaFunctionOptions?: CustomLambdaFunctionOptions;
+
     /**
-     * The path (relative to entry) to the index file containing the exported handler.
+     * Optional lambda asset code
+     * @default - default runtime defined in this repository.
      */
-    readonly index: PythonFunctionProps["index"];
-    /**
-     * The name of the exported handler in the index file.
-     */
-    readonly handler: PythonFunctionProps["handler"];
+    readonly lambdaAssetCode?: lambda.AssetCode;
   }

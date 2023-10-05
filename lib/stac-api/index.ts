@@ -5,53 +5,42 @@ import {
   aws_lambda as lambda,
   aws_secretsmanager as secretsmanager,
   CfnOutput,
+  Duration,
+  aws_logs,
 } from "aws-cdk-lib";
-import {
-  PythonFunction,
-  PythonFunctionProps,
-} from "@aws-cdk/aws-lambda-python-alpha";
 import { IDomainName, HttpApi } from "@aws-cdk/aws-apigatewayv2-alpha";
 import { HttpLambdaIntegration } from "@aws-cdk/aws-apigatewayv2-integrations-alpha";
 import { Construct } from "constructs";
+import { CustomLambdaFunctionOptions } from "../utils";
 
 export class PgStacApiLambda extends Construct {
   readonly url: string;
-  public stacApiLambdaFunction: PythonFunction;
+  public stacApiLambdaFunction: lambda.Function;
 
   constructor(scope: Construct, id: string, props: PgStacApiLambdaProps) {
     super(scope, id);
-
-    const apiCode = props.apiCode || {
-      entry: `${__dirname}/runtime`,
-      index: "src/handler.py",
-      handler: "handler",
-    };
-
-    this.stacApiLambdaFunction = new PythonFunction(this, "stac-api", {
-      ...apiCode,
-      /**
-       * NOTE: Unable to use Py3.9, due to issues with hashes:
-       *
-       *    ERROR: Hashes are required in --require-hashes mode, but they are missing
-       *    from some requirements. Here is a list of those requirements along with the
-       *    hashes their downloaded archives actually had. Add lines like these to your
-       *    requirements files to prevent tampering. (If you did not enable
-       *    --require-hashes manually, note that it turns on automatically when any
-       *    package has a hash.)
-       *        anyio==3.6.1 --hash=sha256:cb29b9c70620506a9a8f87a309591713446953302d7d995344d0d7c6c0c9a7be
-       * */
-      runtime: lambda.Runtime.PYTHON_3_8,
-      architecture: lambda.Architecture.X86_64,
+    
+    this.stacApiLambdaFunction = new lambda.Function(this, "lambda", {
+      ...props.lambdaFunctionOptions ?? {
+        runtime: lambda.Runtime.PYTHON_3_8,
+        handler: "handler.handler",
+        memorySize: 8192,
+        logRetention: aws_logs.RetentionDays.ONE_WEEK,
+        timeout: Duration.seconds(30)
+      },
+      code: props.lambdaAssetCode ?? lambda.Code.fromDockerBuild(__dirname, {
+        file: "runtime/Dockerfile",
+        buildArgs: { PYTHON_VERSION: '3.8' },
+      }),
+      vpc: props.vpc,
+      vpcSubnets: props.subnetSelection,
+      allowPublicSubnet: true,
       environment: {
         PGSTAC_SECRET_ARN: props.dbSecret.secretArn,
         DB_MIN_CONN_SIZE: "0",
         DB_MAX_CONN_SIZE: "1",
         ...props.apiEnv,
       },
-      vpc: props.vpc,
-      vpcSubnets: props.subnetSelection,
-      allowPublicSubnet: true,
-      memorySize: 8192,
     });
 
     props.dbSecret.grantRead(this.stacApiLambdaFunction);
@@ -95,13 +84,6 @@ export interface PgStacApiLambdaProps {
   readonly dbSecret: secretsmanager.ISecret;
 
   /**
-   * Custom code to run for fastapi-pgstac.
-   *
-   * @default - simplified version of fastapi-pgstac
-   */
-  readonly apiCode?: ApiEntrypoint;
-
-  /**
    * Customized environment variables to send to fastapi-pgstac runtime.
    */
   readonly apiEnv?: Record<string, string>;
@@ -110,19 +92,18 @@ export interface PgStacApiLambdaProps {
    * Custom Domain Name Options for STAC API,
    */
    readonly stacApiDomainName?: IDomainName;
+
+  /**
+     * Optional settings for the lambda function.
+     *
+     * @default - defined in the construct.
+     */
+  readonly lambdaFunctionOptions?: CustomLambdaFunctionOptions;
+
+  /**
+   * Optional lambda asset code
+   * @default - default runtime defined in this repository.
+   */
+  readonly lambdaAssetCode?: lambda.AssetCode;
 }
 
-export interface ApiEntrypoint {
-  /**
-   * Path to the source of the function or the location for dependencies.
-   */
-  readonly entry: PythonFunctionProps["entry"];
-  /**
-   * The path (relative to entry) to the index file containing the exported handler.
-   */
-  readonly index: PythonFunctionProps["index"];
-  /**
-   * The name of the exported handler in the index file.
-   */
-  readonly handler: PythonFunctionProps["handler"];
-}

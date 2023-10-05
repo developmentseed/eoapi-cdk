@@ -1,11 +1,8 @@
 FROM lambci/lambda:build-python3.8
 
-ARG PGSTAC_VERSION
-RUN echo "Using PGSTAC Version ${PGSTAC_VERSION}"
-
 WORKDIR /tmp
 
-RUN pip install httpx psycopg[binary,pool] pypgstac==${PGSTAC_VERSION} -t /asset
+RUN pip install httpx psycopg[binary,pool] pypgstac==0.6.13 -t /asset
 
 COPY runtime/handler.py /asset/handler.py
 
