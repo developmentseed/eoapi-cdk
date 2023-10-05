@@ -1,3 +1,10 @@
+## [5.4.1](https://github.com/developmentseed/eoapi-cdk/compare/v5.4.0...v5.4.1) (2023-10-05)
+
+
+### Bug Fixes
+
+* synchronize pgstac versions -> 0.7.9 across constructs ([c6bb921](https://github.com/developmentseed/eoapi-cdk/commit/c6bb9213f745f1161d193b120083fac1e7943eb5))
+
 # [5.4.0](https://github.com/developmentseed/eoapi-cdk/compare/v5.3.0...v5.4.0) (2023-09-05)
 
 
