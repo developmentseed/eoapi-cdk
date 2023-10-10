@@ -1,4 +1,5 @@
-FROM --platform=linux/amd64 public.ecr.aws/lambda/python:3.10
+ARG PYTHON_VERSION
+FROM --platform=linux/amd64 public.ecr.aws/lambda/python:${PYTHON_VERSION}
 
 WORKDIR /tmp
 RUN python -m pip install pip -U

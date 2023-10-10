@@ -120,7 +120,7 @@ export class StacIngestor extends Construct {
     const handler = new lambda.Function(this, "api-handler", {
       ...props.lambdaFunctionOptions ?? {
         runtime: lambda.Runtime.PYTHON_3_9,
-        handler: "handler.handler",
+        handler: "src.handler.handler",
         memorySize: 2048,
         logRetention: aws_logs.RetentionDays.ONE_WEEK,
         timeout: Duration.seconds(30)
@@ -166,7 +166,7 @@ export class StacIngestor extends Construct {
     const handler = new lambda.Function(this, "stac-ingestor", {
       ...props.lambdaFunctionOptions ?? {
         runtime: lambda.Runtime.PYTHON_3_9,
-        handler: "handler.handler",
+        handler: "src.ingestor.handler",
         memorySize: 2048,
         logRetention: aws_logs.RetentionDays.ONE_WEEK,
         timeout: Duration.seconds(180)

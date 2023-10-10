@@ -48,6 +48,7 @@ import { CustomLambdaFunctionOptions } from "../utils";
         },
         code: props.lambdaAssetCode ?? lambda.Code.fromDockerBuild(__dirname, {
           file: "runtime/Dockerfile",
+          buildArgs: { PYTHON_VERSION: '3.10' }
         }),
         vpc: props.vpc,
         vpcSubnets: props.subnetSelection,

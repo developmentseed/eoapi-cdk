@@ -22,15 +22,15 @@ export class PgStacApiLambda extends Construct {
     
     this.stacApiLambdaFunction = new lambda.Function(this, "lambda", {
       ...props.lambdaFunctionOptions ?? {
-        runtime: lambda.Runtime.PYTHON_3_8,
-        handler: "handler.handler",
+        runtime: lambda.Runtime.PYTHON_3_10,
+        handler: "src.handler.handler",
         memorySize: 8192,
         logRetention: aws_logs.RetentionDays.ONE_WEEK,
         timeout: Duration.seconds(30)
       },
       code: props.lambdaAssetCode ?? lambda.Code.fromDockerBuild(__dirname, {
         file: "runtime/Dockerfile",
-        buildArgs: { PYTHON_VERSION: '3.8' },
+        buildArgs: { PYTHON_VERSION: '3.10' },
       }),
       vpc: props.vpc,
       vpcSubnets: props.subnetSelection,

@@ -12,6 +12,8 @@ import {
 import { Construct } from "constructs";
 import { CustomLambdaFunctionOptions } from "../utils";
 
+const DEFAULT_PGSTAC_VERSION = "0.6.13";
+
 function hasVpc(
   instance: aws_rds.DatabaseInstance | aws_rds.IDatabaseInstance
 ): instance is aws_rds.DatabaseInstance {
@@ -27,6 +29,15 @@ export class BootstrapPgStac extends Construct {
   constructor(scope: Construct, id: string, props: BootstrapPgStacProps) {
     super(scope, id);
 
+    // if `lambdaAssetCode` is provided, `pgstacVersion` must be provided, otherwise throw an error
+    if (props.lambdaAssetCode && !props.pgstacVersion) {
+      throw new Error(
+        "If `lambdaAssetCode` is provided, `pgstacVersion` must be provided as well."
+      );
+    }
+
+    const pgstacVersion = props.pgstacVersion ?? DEFAULT_PGSTAC_VERSION;
+
     const handler = new aws_lambda.Function(this, "lambda", {
       ...props.lambdaFunctionOptions ?? {
         runtime: aws_lambda.Runtime.PYTHON_3_8,
@@ -37,6 +48,7 @@ export class BootstrapPgStac extends Construct {
       },
       code: props.lambdaAssetCode ?? aws_lambda.Code.fromDockerBuild(__dirname, {
         file: "runtime/Dockerfile",
+        buildArgs: {PGSTAC_VERSION: pgstacVersion, PYTHON_VERSION: "3.8"}
       }),
       vpc: hasVpc(props.database) ? props.database.vpc : props.vpc,
     });
@@ -75,6 +87,7 @@ export class BootstrapPgStac extends Construct {
     new CustomResource(this, "bootstrapper", {
       serviceToken: handler.functionArn,
       properties: {
+        pgstac_version: pgstacVersion,
         conn_secret_arn: props.dbSecret.secretArn,
         new_user_secret_arn: this.secret.secretArn,
       },
@@ -142,4 +155,13 @@ export interface BootstrapPgStacProps {
    * @default default runtime defined in this repository
    */
   readonly lambdaAssetCode?: aws_lambda.AssetCode;
+
+  /**
+   * pgSTAC database version to be installed. If a custom `lambdaAssetCode` 
+   * is provided, must be provided and match the version of pgSTAC installed
+   * in the lambda function.
+   * 
+   * @default 0.6.13
+   */
+  readonly pgstacVersion?: string;
 }
