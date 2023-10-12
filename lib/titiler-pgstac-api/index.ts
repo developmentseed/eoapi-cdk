@@ -12,7 +12,7 @@ import {
   import { IDomainName, HttpApi } from "@aws-cdk/aws-apigatewayv2-alpha";
   import { HttpLambdaIntegration } from "@aws-cdk/aws-apigatewayv2-integrations-alpha";
   import { Construct } from "constructs";
-import { CustomLambdaFunctionOptions } from "../utils";
+import { CustomLambdaFunctionProps } from "../utils";
   
 
   // default settings that can be overridden by the user-provided environment. 
@@ -39,17 +39,19 @@ import { CustomLambdaFunctionOptions } from "../utils";
       super(scope, id);
       
       this.titilerPgstacLambdaFunction = new lambda.Function(this, "lambda", {
-        ...props.lambdaFunctionOptions ?? {
-          runtime: lambda.Runtime.PYTHON_3_10, // update Dockerfile if this is changed.
-          handler: "handler.handler",
-          memorySize: 3008,
-          logRetention: aws_logs.RetentionDays.ONE_WEEK,
-          timeout: Duration.seconds(30)
-        },
-        code: props.lambdaAssetCode ?? lambda.Code.fromDockerBuild(__dirname, {
+        // defaults for configurable properties
+        runtime: lambda.Runtime.PYTHON_3_10,
+        handler: "handler.handler",
+        memorySize: 3008,
+        logRetention: aws_logs.RetentionDays.ONE_WEEK,
+        timeout: Duration.seconds(30),
+        code: lambda.Code.fromDockerBuild(__dirname, {
           file: "runtime/Dockerfile",
           buildArgs: { PYTHON_VERSION: '3.10' }
         }),
+        // overwrites defaults with user-provided configurable properties
+        ...props.lambdaFunctionOptions,
+        // Non configurable properties that are going to be overwritten even if provided by the user
         vpc: props.vpc,
         vpcSubnets: props.subnetSelection,
         allowPublicSubnet: true,
@@ -127,17 +129,11 @@ import { CustomLambdaFunctionOptions } from "../utils";
     readonly titilerPgstacApiDomainName?: IDomainName;
 
     /**
-     * Optional settings for the lambda function.
+     * Optional settings for the lambda function. Can be anything that can be configured on the lambda function, but some will be overwritten by values defined here. 
      *
      * @default - defined in the construct.
      */
-    readonly lambdaFunctionOptions?: CustomLambdaFunctionOptions;
-
-    /**
-     * Optional lambda asset code
-     * @default default runtime defined in this repository
-     */
-    readonly lambdaAssetCode?: lambda.AssetCode;
+    readonly lambdaFunctionOptions?: CustomLambdaFunctionProps;
 
   }
 

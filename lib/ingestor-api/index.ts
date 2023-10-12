@@ -13,7 +13,7 @@ import {
   Stack,
 } from "aws-cdk-lib";
 import { Construct } from "constructs";
-import { CustomLambdaFunctionOptions } from "../utils";
+import { CustomLambdaFunctionProps } from "../utils";
 
 export class StacIngestor extends Construct {
   table: dynamodb.Table;
@@ -56,7 +56,6 @@ export class StacIngestor extends Construct {
       dbVpc: props.vpc,
       dbSecurityGroup: props.stacDbSecurityGroup,
       subnetSelection: props.subnetSelection,
-      lambdaAssetCode: props.apiLambdaAssetCode,
       lambdaFunctionOptions: props.apiLambdaFunctionOptions,
     });
 
@@ -75,7 +74,6 @@ export class StacIngestor extends Construct {
       dbVpc: props.vpc,
       dbSecurityGroup: props.stacDbSecurityGroup,
       subnetSelection: props.subnetSelection,
-      lambdaAssetCode: props.ingestorLambdaAssetCode,
       lambdaFunctionOptions: props.ingestorLambdaFunctionOptions
     });
 
@@ -113,22 +111,23 @@ export class StacIngestor extends Construct {
     dbVpc: ec2.IVpc;
     dbSecurityGroup: ec2.ISecurityGroup;
     subnetSelection: ec2.SubnetSelection
-    lambdaFunctionOptions?: CustomLambdaFunctionOptions;
-    lambdaAssetCode?: lambda.AssetCode;
+    lambdaFunctionOptions?: CustomLambdaFunctionProps;
   }): lambda.Function {
         
     const handler = new lambda.Function(this, "api-handler", {
-      ...props.lambdaFunctionOptions ?? {
-        runtime: lambda.Runtime.PYTHON_3_9,
-        handler: "src.handler.handler",
-        memorySize: 2048,
-        logRetention: aws_logs.RetentionDays.ONE_WEEK,
-        timeout: Duration.seconds(30)
-      },
-      code: props.lambdaAssetCode ?? lambda.Code.fromDockerBuild(__dirname, {
+      // defaults for configurable properties
+      runtime: lambda.Runtime.PYTHON_3_9,
+      handler: "src.handler.handler",
+      memorySize: 2048,
+      logRetention: aws_logs.RetentionDays.ONE_WEEK,
+      timeout: Duration.seconds(30),
+      code:lambda.Code.fromDockerBuild(__dirname, {
         file: "runtime/Dockerfile",
         buildArgs: { PYTHON_VERSION: '3.9' },
       }),
+      // overwrites defaults with user-provided configurable properties
+      ...props.lambdaFunctionOptions,
+      // Non configurable properties that are going to be overwritten even if provided by the user
       vpc: props.dbVpc,
       vpcSubnets: props.subnetSelection,
       allowPublicSubnet: true,
@@ -158,23 +157,25 @@ export class StacIngestor extends Construct {
     dbVpc: ec2.IVpc;
     dbSecurityGroup: ec2.ISecurityGroup;
     subnetSelection: ec2.SubnetSelection;
-    lambdaFunctionOptions?: CustomLambdaFunctionOptions;
-    lambdaAssetCode?: lambda.AssetCode;
+    lambdaFunctionOptions?: CustomLambdaFunctionProps;
   }): lambda.Function {
 
     
-    const handler = new lambda.Function(this, "stac-ingestor", {
-      ...props.lambdaFunctionOptions ?? {
-        runtime: lambda.Runtime.PYTHON_3_9,
-        handler: "src.ingestor.handler",
-        memorySize: 2048,
-        logRetention: aws_logs.RetentionDays.ONE_WEEK,
-        timeout: Duration.seconds(180)
-      },
-      code: props.lambdaAssetCode ?? lambda.Code.fromDockerBuild(__dirname, {
+    const handler = new lambda.Function(this, "stac-ingestor",{
+      // defaults for configurable properties
+      runtime: lambda.Runtime.PYTHON_3_9,
+      handler: "src.ingestor.handler",
+      memorySize: 2048,
+      logRetention: aws_logs.RetentionDays.ONE_WEEK,
+      timeout: Duration.seconds(180),
+      code: lambda.Code.fromDockerBuild(__dirname, {
         file: "runtime/Dockerfile",
         buildArgs: { PYTHON_VERSION: '3.9' },
       }),
+      // overwrites defaults with user-provided configurable properties
+      ...props.lambdaFunctionOptions,
+
+      // Non configurable properties that are going to be overwritten even if provided by the user
       vpc: props.dbVpc,
       vpcSubnets: props.subnetSelection,
       allowPublicSubnet: true,
@@ -316,29 +317,17 @@ export interface StacIngestorProps {
    readonly ingestorDomainNameOptions?: apigateway.DomainNameOptions;
 
   /**
-   * Optional api lambda asset code
-   * @default - default runtime defined in this repository.
-   */
-  readonly apiLambdaAssetCode?: lambda.AssetCode;
-
-  /**
-   * Optional ingestor lambda asset code
-   * @default - default runtime defined in this repository.
-   */
-  readonly ingestorLambdaAssetCode?: lambda.AssetCode;
-
-  /**
-     * Optional settings for the api lambda function.
+     * Optional settings for the lambda function. Can be anything that can be configured on the lambda function, but some will be overwritten by values defined here. 
      *
-     * @default - defined in the construct.
+     * @default - default settings are defined in the construct.
      */
-  readonly apiLambdaFunctionOptions?: CustomLambdaFunctionOptions;
+  readonly apiLambdaFunctionOptions?: CustomLambdaFunctionProps;
 
   /**
-     * Optional settings for the ingestor lambda function.
+     * Optional settings for the lambda function. Can be anything that can be configured on the lambda function, but some will be overwritten by values defined here. 
      *
-     * @default - defined in the construct.
+     * @default - default settings are defined in the construct.
      */
-readonly ingestorLambdaFunctionOptions?: CustomLambdaFunctionOptions;
+readonly ingestorLambdaFunctionOptions?: CustomLambdaFunctionProps;
   
 }
