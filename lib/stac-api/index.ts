@@ -20,6 +20,8 @@ export class PgStacApiLambda extends Construct {
   constructor(scope: Construct, id: string, props: PgStacApiLambdaProps) {
     super(scope, id);
     
+    console.log(props)
+    console.log(props.lambdaFunctionOptions);
     this.stacApiLambdaFunction = new lambda.Function(this, "lambda", {
       // defaults for configurable properties
       runtime: lambda.Runtime.PYTHON_3_10,

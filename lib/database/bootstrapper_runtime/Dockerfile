@@ -9,7 +9,7 @@ WORKDIR /tmp
 
 RUN pip install httpx psycopg[binary,pool] pypgstac==${PGSTAC_VERSION} -t /asset
 
-COPY runtime/handler.py /asset/handler.py
+COPY bootstrapper_runtime/handler.py /asset/handler.py
 
 # https://stackoverflow.com/a/61746719
 # Tip from eoAPI: turns out, asyncio is part of python

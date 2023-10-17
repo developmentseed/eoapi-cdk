@@ -123,3 +123,10 @@ def who_am_i(username=Depends(dependencies.get_username)):
     Return username for the provided request
     """
     return {"username": username}
+
+@app.get("/root_path")
+def return_root_path():
+    """
+    Return root path for the provided request
+    """
+    return {"root_path": config.settings.root_path}
