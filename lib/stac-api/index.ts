@@ -48,8 +48,9 @@ export class PgStacApiLambda extends Construct {
     });
 
     props.dbSecret.grantRead(this.stacApiLambdaFunction);
-    this.stacApiLambdaFunction.connections.allowTo(props.db, ec2.Port.tcp(5432));
-
+    if (props.vpc){
+      this.stacApiLambdaFunction.connections.allowTo(props.db, ec2.Port.tcp(5432));
+    }
     const stacApi = new HttpApi(this, `${Stack.of(this).stackName}-stac-api`, {
       defaultDomainMapping: props.stacApiDomainName ? { 
         domainName: props.stacApiDomainName
@@ -70,7 +71,7 @@ export interface PgStacApiLambdaProps {
   /**
    * VPC into which the lambda should be deployed.
    */
-  readonly vpc: ec2.IVpc;
+  readonly vpc?: ec2.IVpc;
 
   /**
    * RDS Instance with installed pgSTAC.
@@ -80,7 +81,7 @@ export interface PgStacApiLambdaProps {
   /**
    * Subnet into which the lambda should be deployed.
    */
-  readonly subnetSelection: ec2.SubnetSelection;
+  readonly subnetSelection?: ec2.SubnetSelection;
 
   /**
    * Secret containing connection information for pgSTAC database.

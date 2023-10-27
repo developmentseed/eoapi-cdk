@@ -74,6 +74,7 @@ export class PgStacDatabase extends Construct {
       ...props.bootstrapperLambdaFunctionOptions,
       // Non configurable properties that are going to be overwritten even if provided by the user
       vpc: hasVpc(this.db) ? this.db.vpc : props.vpc,
+      allowPublicSubnet: true
     });
 
     this.pgstacSecret = new secretsmanager.Secret(this, "bootstrappersecret", {

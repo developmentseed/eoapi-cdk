@@ -108,9 +108,9 @@ export class StacIngestor extends Construct {
     dataAccessRole: iam.IRole;
     stage: string;
     dbSecret: secretsmanager.ISecret;
-    dbVpc: ec2.IVpc;
+    dbVpc: undefined | ec2.IVpc;
     dbSecurityGroup: ec2.ISecurityGroup;
-    subnetSelection: ec2.SubnetSelection
+    subnetSelection: undefined | ec2.SubnetSelection
     lambdaFunctionOptions?: CustomLambdaFunctionProps;
   }): lambda.Function {
         
@@ -139,11 +139,14 @@ export class StacIngestor extends Construct {
     props.dbSecret.grantRead(handler);
 
     // Allow handler to connect to DB
-    props.dbSecurityGroup.addIngressRule(
-      handler.connections.securityGroups[0],
-      ec2.Port.tcp(5432),
-      "Allow connections from STAC Ingestor"
-    );
+
+    if (props.dbVpc){
+      props.dbSecurityGroup.addIngressRule(
+        handler.connections.securityGroups[0],
+        ec2.Port.tcp(5432),
+        "Allow connections from STAC Ingestor"
+      );
+    }
 
     props.table.grantReadWriteData(handler);
 
@@ -154,9 +157,9 @@ export class StacIngestor extends Construct {
     table: dynamodb.ITable;
     env: Record<string, string>;
     dbSecret: secretsmanager.ISecret;
-    dbVpc: ec2.IVpc;
+    dbVpc: undefined | ec2.IVpc;
     dbSecurityGroup: ec2.ISecurityGroup;
-    subnetSelection: ec2.SubnetSelection;
+    subnetSelection: undefined | ec2.SubnetSelection;
     lambdaFunctionOptions?: CustomLambdaFunctionProps;
   }): lambda.Function {
 
@@ -187,11 +190,13 @@ export class StacIngestor extends Construct {
     props.dbSecret.grantRead(handler);
 
     // Allow handler to connect to DB
-    props.dbSecurityGroup.addIngressRule(
-      handler.connections.securityGroups[0],
-      ec2.Port.tcp(5432),
-      "Allow connections from STAC Ingestor"
-    );
+    if (props.dbVpc){
+      props.dbSecurityGroup.addIngressRule(
+        handler.connections.securityGroups[0],
+        ec2.Port.tcp(5432),
+        "Allow connections from STAC Ingestor"
+      );
+    }
 
     // Allow handler to write results back to DBƒ
     props.table.grantWriteData(handler);
@@ -284,7 +289,7 @@ export interface StacIngestorProps {
   /**
    * VPC running pgSTAC DB
    */
-  readonly vpc: ec2.IVpc;
+  readonly vpc?: ec2.IVpc;
 
   /**
    * Security Group used by pgSTAC DB
@@ -292,9 +297,9 @@ export interface StacIngestorProps {
   readonly stacDbSecurityGroup: ec2.ISecurityGroup;
 
   /**
-   * Boolean indicating whether or not pgSTAC DB is in a public subnet
+   * Subnet into which the lambda should be deployed if using a VPC
    */
-  readonly subnetSelection: ec2.SubnetSelection;
+  readonly subnetSelection?: ec2.SubnetSelection;
 
   /**
    * Environment variables to be sent to Lambda.

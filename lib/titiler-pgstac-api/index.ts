@@ -70,7 +70,10 @@ import { CustomLambdaFunctionProps } from "../utils";
       }
       
       props.dbSecret.grantRead(this.titilerPgstacLambdaFunction);
-      this.titilerPgstacLambdaFunction.connections.allowTo(props.db, ec2.Port.tcp(5432), "allow connections from titiler");
+    
+      if (props.vpc) {
+        this.titilerPgstacLambdaFunction.connections.allowTo(props.db, ec2.Port.tcp(5432), "allow connections from titiler");
+      }
   
       const stacApi = new HttpApi(this, `${Stack.of(this).stackName}-titiler-pgstac-api`, {
         defaultDomainMapping: props.titilerPgstacApiDomainName ? { 
@@ -93,7 +96,7 @@ import { CustomLambdaFunctionProps } from "../utils";
     /**
      * VPC into which the lambda should be deployed.
      */
-    readonly vpc: ec2.IVpc;
+    readonly vpc?: ec2.IVpc;
   
     /**
      * RDS Instance with installed pgSTAC.
@@ -103,7 +106,7 @@ import { CustomLambdaFunctionProps } from "../utils";
     /**
      * Subnet into which the lambda should be deployed.
      */
-    readonly subnetSelection: ec2.SubnetSelection;
+    readonly subnetSelection?: ec2.SubnetSelection;
   
     /**
      * Secret containing connection information for pgSTAC database.
