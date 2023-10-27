@@ -14,7 +14,7 @@ import { Construct } from "constructs";
 import { CustomLambdaFunctionProps } from "../utils";
 
 const instanceSizes: Record<string, number> = require("./instance-memory.json");
-const DEFAULT_PGSTAC_VERSION = "0.6.13";
+const DEFAULT_PGSTAC_VERSION = "0.7.10";
 
 function hasVpc(
   instance: rds.DatabaseInstance | rds.IDatabaseInstance
