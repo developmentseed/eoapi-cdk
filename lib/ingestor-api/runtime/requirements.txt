@@ -1,5 +1,5 @@
 Authlib==1.0.1
-cachetools==5.1.0
+cachetools==5.3.0
 fastapi>=0.75.1
 orjson>=3.6.8
 psycopg[binary,pool]>=3.0.15
