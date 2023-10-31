@@ -59,7 +59,7 @@ def send(
 
     try:
         response = httpx.put(responseUrl, data=json_responseBody, headers=headers)
-        print("Status code: " + response.reason)
+        print("Status code: " + response.status_code)
     except Exception as e:
         print("send(..) failed executing httpx.put(..): " + str(e))
 
