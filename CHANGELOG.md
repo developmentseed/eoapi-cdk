@@ -1,3 +1,15 @@
+# [6.0.0](https://github.com/developmentseed/eoapi-cdk/compare/v5.4.1...v6.0.0) (2023-10-31)
+
+
+### Features
+
+* custom runtimes, optional VPC, python 3.11 ([#74](https://github.com/developmentseed/eoapi-cdk/issues/74)) ([ba6bf09](https://github.com/developmentseed/eoapi-cdk/commit/ba6bf09651caae8537df7ee737dbf6d0bf975f41))
+
+
+### BREAKING CHANGES
+
+* the `bootstrapper` construct was deleted and is no longer available. In addition, we switched from `PythonFunction` to `Function` for all lambdas.
+
 ## [5.4.1](https://github.com/developmentseed/eoapi-cdk/compare/v5.4.0...v5.4.1) (2023-10-05)
 
 
