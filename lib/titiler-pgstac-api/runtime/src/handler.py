@@ -6,7 +6,7 @@ import asyncio
 import os
 
 from mangum import Mangum
-from src.utils import get_secret_dict
+from utils import get_secret_dict
 
 pgstac_secret_arn = os.environ["PGSTAC_SECRET_ARN"]
 

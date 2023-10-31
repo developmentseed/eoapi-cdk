@@ -1,11 +1,11 @@
 Authlib==1.0.1
+cachetools==5.3.0
 fastapi>=0.75.1
-mangum>=0.15.0
 orjson>=3.6.8
 psycopg[binary,pool]>=3.0.15
 pydantic_ssm_settings>=0.2.0
 pydantic>=1.9.0
-pypgstac==0.7.9
+pypgstac==0.7.10
 requests>=2.27.1
 # Waiting for https://github.com/stac-utils/stac-pydantic/pull/116
 stac-pydantic @ git+https://github.com/alukach/stac-pydantic.git@patch-1
