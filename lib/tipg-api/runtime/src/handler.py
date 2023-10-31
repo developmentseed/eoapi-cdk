@@ -5,7 +5,7 @@ Handler for AWS Lambda.
 import asyncio
 import os
 from mangum import Mangum
-from src.utils import load_pgstac_secret
+from utils import load_pgstac_secret
 
 load_pgstac_secret(os.environ["PGSTAC_SECRET_ARN"])  # required for the below imports
 

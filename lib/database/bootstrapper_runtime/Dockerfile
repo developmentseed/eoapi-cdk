@@ -1,13 +1,15 @@
-FROM lambci/lambda:build-python3.8
+ARG PYTHON_VERSION
+FROM --platform=linux/amd64 public.ecr.aws/lambda/python:${PYTHON_VERSION}
 
 ARG PGSTAC_VERSION
-RUN echo "Using PGSTAC Version ${PGSTAC_VERSION}"
+RUN echo "PGSTAC_VERSION: ${PGSTAC_VERSION}"
+RUN echo "PYTHON_VERSION: ${PYTHON_VERSION}"
 
 WORKDIR /tmp
 
 RUN pip install httpx psycopg[binary,pool] pypgstac==${PGSTAC_VERSION} -t /asset
 
-COPY runtime/handler.py /asset/handler.py
+COPY bootstrapper_runtime/handler.py /asset/handler.py
 
 # https://stackoverflow.com/a/61746719
 # Tip from eoAPI: turns out, asyncio is part of python

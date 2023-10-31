@@ -3,51 +3,52 @@ import {
     aws_ec2 as ec2,
     aws_rds as rds,
     aws_lambda as lambda,
+    aws_logs as logs,
     aws_secretsmanager as secretsmanager,
     CfnOutput,
     Duration,
   } from "aws-cdk-lib";
-  import {
-    PythonFunction,
-    PythonFunctionProps,
-  } from "@aws-cdk/aws-lambda-python-alpha";
   import { IDomainName, HttpApi } from "@aws-cdk/aws-apigatewayv2-alpha";
   import { HttpLambdaIntegration } from "@aws-cdk/aws-apigatewayv2-integrations-alpha";
   import { Construct } from "constructs";
+  import { CustomLambdaFunctionProps } from "../utils";
 
   export class TiPgApiLambda extends Construct {
     readonly url: string;
-    public tiPgLambdaFunction: PythonFunction;
+    public tiPgLambdaFunction: lambda.Function;
 
     constructor(scope: Construct, id: string, props: TiPgApiLambdaProps) {
       super(scope, id);
 
-      const apiCode = props.apiCode || {
-        entry: `${__dirname}/runtime`,
-        index: "src/handler.py",
-        handler: "handler",
-      };
-
-      this.tiPgLambdaFunction = new PythonFunction(this, "tipg-api", {
-        ...apiCode,
-        runtime: lambda.Runtime.PYTHON_3_10,
-        architecture: lambda.Architecture.X86_64,
+      this.tiPgLambdaFunction = new lambda.Function(this, "lambda", {
+        // defaults for configurable properties
+        runtime: lambda.Runtime.PYTHON_3_11,
+        handler: "handler.handler",
+        memorySize: 1024,
+        logRetention: logs.RetentionDays.ONE_WEEK,
+        timeout: Duration.seconds(30),
+        code: lambda.Code.fromDockerBuild(__dirname, {
+        file: "runtime/Dockerfile",
+        buildArgs: { PYTHON_VERSION: '3.11' },
+        }),
+        // overwrites defaults with user-provided configurable properties
+        ...props.lambdaFunctionOptions,
+        // Non configurable properties that are going to be overwritten even if provided by the user
+        vpc: props.vpc,
+        vpcSubnets: props.subnetSelection,
+        allowPublicSubnet: true,
         environment: {
           PGSTAC_SECRET_ARN: props.dbSecret.secretArn,
           DB_MIN_CONN_SIZE: "1",
           DB_MAX_CONN_SIZE: "1",
           ...props.apiEnv,
         },
-        vpc: props.vpc,
-        vpcSubnets: props.subnetSelection,
-        allowPublicSubnet: true,
-        memorySize: 1024,
-        timeout: Duration.seconds(30),
       });
 
       props.dbSecret.grantRead(this.tiPgLambdaFunction);
-      this.tiPgLambdaFunction.connections.allowTo(props.db, ec2.Port.tcp(5432), "allow connections from tipg");
-
+      if (props.vpc){
+        this.tiPgLambdaFunction.connections.allowTo(props.db, ec2.Port.tcp(5432), "allow connections from tipg");
+      }
       const tipgApi = new HttpApi(this, `${Stack.of(this).stackName}-tipg-api`, {
         defaultDomainMapping: props.tipgApiDomainName ? { 
           domainName: props.tipgApiDomainName
@@ -69,7 +70,7 @@ import {
     /**
      * VPC into which the lambda should be deployed.
      */
-    readonly vpc: ec2.IVpc;
+    readonly vpc?: ec2.IVpc;
 
     /**
      * RDS Instance with installed pgSTAC.
@@ -79,19 +80,13 @@ import {
     /**
      * Subnet into which the lambda should be deployed.
      */
-    readonly subnetSelection: ec2.SubnetSelection;
+    readonly subnetSelection?: ec2.SubnetSelection;
 
     /**
      * Secret containing connection information for pgSTAC database.
      */
     readonly dbSecret: secretsmanager.ISecret;
 
-    /**
-     * Custom code to run for the application.
-     *
-     * @default - simplified version of tipg.
-     */
-    readonly apiCode?: TiPgApiEntrypoint;
 
     /**
      * Customized environment variables to send to titiler-pgstac runtime.
@@ -105,19 +100,12 @@ import {
      * @default - undefined
      */
     readonly tipgApiDomainName?: IDomainName;
-  }
 
-  export interface TiPgApiEntrypoint {
+
     /**
-     * Path to the source of the function or the location for dependencies.
+     * Optional settings for the lambda function. Can be anything that can be configured on the lambda function, but some will be overwritten by values defined here. 
+     *
+     * @default - defined in the construct.
      */
-    readonly entry: PythonFunctionProps["entry"];
-    /**
-     * The path (relative to entry) to the index file containing the exported handler.
-     */
-    readonly index: PythonFunctionProps["index"];
-    /**
-     * The name of the exported handler in the index file.
-     */
-    readonly handler: PythonFunctionProps["handler"];
+    readonly lambdaFunctionOptions?: CustomLambdaFunctionProps;
   }

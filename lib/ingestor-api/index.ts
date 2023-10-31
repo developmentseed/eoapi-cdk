@@ -4,6 +4,7 @@ import {
   aws_ec2 as ec2,
   aws_iam as iam,
   aws_lambda as lambda,
+  aws_logs,
   aws_lambda_event_sources as events,
   aws_secretsmanager as secretsmanager,
   aws_ssm as ssm,
@@ -11,8 +12,8 @@ import {
   RemovalPolicy,
   Stack,
 } from "aws-cdk-lib";
-import { PythonFunction, PythonFunctionProps } from "@aws-cdk/aws-lambda-python-alpha";
 import { Construct } from "constructs";
+import { CustomLambdaFunctionProps } from "../utils";
 
 export class StacIngestor extends Construct {
   table: dynamodb.Table;
@@ -55,7 +56,7 @@ export class StacIngestor extends Construct {
       dbVpc: props.vpc,
       dbSecurityGroup: props.stacDbSecurityGroup,
       subnetSelection: props.subnetSelection,
-      apiCode: props.apiCode,
+      lambdaFunctionOptions: props.apiLambdaFunctionOptions,
     });
 
     this.buildApiEndpoint({
@@ -73,7 +74,7 @@ export class StacIngestor extends Construct {
       dbVpc: props.vpc,
       dbSecurityGroup: props.stacDbSecurityGroup,
       subnetSelection: props.subnetSelection,
-      ingestorCode: props.ingestorCode,
+      lambdaFunctionOptions: props.ingestorLambdaFunctionOptions
     });
 
     this.registerSsmParameter({
@@ -107,39 +108,45 @@ export class StacIngestor extends Construct {
     dataAccessRole: iam.IRole;
     stage: string;
     dbSecret: secretsmanager.ISecret;
-    dbVpc: ec2.IVpc;
+    dbVpc: undefined | ec2.IVpc;
     dbSecurityGroup: ec2.ISecurityGroup;
-    subnetSelection: ec2.SubnetSelection
-    apiCode?: ApiCode;
-  }): PythonFunction {
-    
-    const apiCode = props.apiCode || {
-      entry: `${__dirname}/runtime`,
-      index: "src/handler.py",
-      handler: "handler",
-    };
-
-    const handler = new PythonFunction(this, "api-handler", {
-      ...apiCode,
-      runtime: lambda.Runtime.PYTHON_3_9,
+    subnetSelection: undefined | ec2.SubnetSelection
+    lambdaFunctionOptions?: CustomLambdaFunctionProps;
+  }): lambda.Function {
+        
+    const handler = new lambda.Function(this, "api-handler", {
+      // defaults for configurable properties
+      runtime: lambda.Runtime.PYTHON_3_11,
+      handler: "src.handler.handler",
+      memorySize: 2048,
+      logRetention: aws_logs.RetentionDays.ONE_WEEK,
       timeout: Duration.seconds(30),
-      environment: { DB_SECRET_ARN: props.dbSecret.secretArn, ...props.env },
+      code:lambda.Code.fromDockerBuild(__dirname, {
+        file: "runtime/Dockerfile",
+        buildArgs: { PYTHON_VERSION: '3.11' },
+      }),
+      // overwrites defaults with user-provided configurable properties
+      ...props.lambdaFunctionOptions,
+      // Non configurable properties that are going to be overwritten even if provided by the user
       vpc: props.dbVpc,
       vpcSubnets: props.subnetSelection,
       allowPublicSubnet: true,
-      role: this.handlerRole,
-      memorySize: 2048,
+      environment: { DB_SECRET_ARN: props.dbSecret.secretArn, ...props.env },
+      role: this.handlerRole
     });
 
     // Allow handler to read DB secret
     props.dbSecret.grantRead(handler);
 
     // Allow handler to connect to DB
-    props.dbSecurityGroup.addIngressRule(
-      handler.connections.securityGroups[0],
-      ec2.Port.tcp(5432),
-      "Allow connections from STAC Ingestor"
-    );
+
+    if (props.dbVpc){
+      props.dbSecurityGroup.addIngressRule(
+        handler.connections.securityGroups[0],
+        ec2.Port.tcp(5432),
+        "Allow connections from STAC Ingestor"
+      );
+    }
 
     props.table.grantReadWriteData(handler);
 
@@ -150,40 +157,46 @@ export class StacIngestor extends Construct {
     table: dynamodb.ITable;
     env: Record<string, string>;
     dbSecret: secretsmanager.ISecret;
-    dbVpc: ec2.IVpc;
+    dbVpc: undefined | ec2.IVpc;
     dbSecurityGroup: ec2.ISecurityGroup;
-    subnetSelection: ec2.SubnetSelection;
-    ingestorCode?: IngestorCode;
-  }): PythonFunction {
+    subnetSelection: undefined | ec2.SubnetSelection;
+    lambdaFunctionOptions?: CustomLambdaFunctionProps;
+  }): lambda.Function {
 
-
-
-    const ingestorCode = props.ingestorCode || {
-      entry: `${__dirname}/runtime`,
-      index: "src/ingestor.py",
-      handler: "handler",
-    };
-
-    const handler = new PythonFunction(this, "stac-ingestor", {
-      ...ingestorCode,
-      runtime: lambda.Runtime.PYTHON_3_9,
+    
+    const handler = new lambda.Function(this, "stac-ingestor",{
+      // defaults for configurable properties
+      runtime: lambda.Runtime.PYTHON_3_11,
+      handler: "src.ingestor.handler",
+      memorySize: 2048,
+      logRetention: aws_logs.RetentionDays.ONE_WEEK,
       timeout: Duration.seconds(180),
-      environment: { DB_SECRET_ARN: props.dbSecret.secretArn, ...props.env },
+      code: lambda.Code.fromDockerBuild(__dirname, {
+        file: "runtime/Dockerfile",
+        buildArgs: { PYTHON_VERSION: '3.11' },
+      }),
+      // overwrites defaults with user-provided configurable properties
+      ...props.lambdaFunctionOptions,
+
+      // Non configurable properties that are going to be overwritten even if provided by the user
       vpc: props.dbVpc,
       vpcSubnets: props.subnetSelection,
       allowPublicSubnet: true,
-      memorySize: 2048,
+      environment: { DB_SECRET_ARN: props.dbSecret.secretArn, ...props.env },
+      role: this.handlerRole
     });
 
     // Allow handler to read DB secret
     props.dbSecret.grantRead(handler);
 
     // Allow handler to connect to DB
-    props.dbSecurityGroup.addIngressRule(
-      handler.connections.securityGroups[0],
-      ec2.Port.tcp(5432),
-      "Allow connections from STAC Ingestor"
-    );
+    if (props.dbVpc){
+      props.dbSecurityGroup.addIngressRule(
+        handler.connections.securityGroups[0],
+        ec2.Port.tcp(5432),
+        "Allow connections from STAC Ingestor"
+      );
+    }
 
     // Allow handler to write results back to DBƒ
     props.table.grantWriteData(handler);
@@ -276,7 +289,7 @@ export interface StacIngestorProps {
   /**
    * VPC running pgSTAC DB
    */
-  readonly vpc: ec2.IVpc;
+  readonly vpc?: ec2.IVpc;
 
   /**
    * Security Group used by pgSTAC DB
@@ -284,9 +297,9 @@ export interface StacIngestorProps {
   readonly stacDbSecurityGroup: ec2.ISecurityGroup;
 
   /**
-   * Boolean indicating whether or not pgSTAC DB is in a public subnet
+   * Subnet into which the lambda should be deployed if using a VPC
    */
-  readonly subnetSelection: ec2.SubnetSelection;
+  readonly subnetSelection?: ec2.SubnetSelection;
 
   /**
    * Environment variables to be sent to Lambda.
@@ -309,54 +322,17 @@ export interface StacIngestorProps {
    readonly ingestorDomainNameOptions?: apigateway.DomainNameOptions;
 
   /**
-   * Custom code for the ingestor api.
-   *
-   * @default - default in the runtime folder. 
-   */
-   readonly apiCode?: ApiCode;
-
-   /**
-   * Custom code for the ingestor.
-   *
-   * @default - default in the runtime folder. 
-   */
-   readonly ingestorCode?: IngestorCode;
-}
-
-export interface ApiCode {
+     * Optional settings for the lambda function. Can be anything that can be configured on the lambda function, but some will be overwritten by values defined here. 
+     *
+     * @default - default settings are defined in the construct.
+     */
+  readonly apiLambdaFunctionOptions?: CustomLambdaFunctionProps;
 
   /**
-   * Path to the source of the function or the location for dependencies, for the api lambda. 
-   */
-  readonly entry: PythonFunctionProps["entry"];
-
-  /**
-   * Path to the index file containing the exported handler, relative to `api_lambda_entry`. 
-   */
-  readonly index: PythonFunctionProps["index"];
-
-  /**
-   * The name of the exported handler in the `api_lambda_index` file. 
-   */
-  readonly handler: PythonFunctionProps["handler"];
-
-}
-
-export interface IngestorCode {
-
-  /**
-   * Path to the source of the function or the location for dependencies, for the ingestor lambda. 
-   */
-  readonly entry: PythonFunctionProps["entry"];
-
-  /**
-   * Path to the index file containing the exported handler, relative to `ingestor_lambda_entry`. 
-   */
-  readonly index: PythonFunctionProps["index"];
-
-  /**
-   * The name of the exported handler in the `ingestor_lambda_index` file.
-   */
-  readonly handler: PythonFunctionProps["handler"];
-
+     * Optional settings for the lambda function. Can be anything that can be configured on the lambda function, but some will be overwritten by values defined here. 
+     *
+     * @default - default settings are defined in the construct.
+     */
+readonly ingestorLambdaFunctionOptions?: CustomLambdaFunctionProps;
+  
 }

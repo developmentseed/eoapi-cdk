@@ -1,3 +1,2 @@
 titiler.pgstac==0.5.1
 psycopg[binary, pool]
-mangum>=0.14,<0.15

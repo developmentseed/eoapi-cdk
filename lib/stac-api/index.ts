@@ -5,58 +5,52 @@ import {
   aws_lambda as lambda,
   aws_secretsmanager as secretsmanager,
   CfnOutput,
+  Duration,
+  aws_logs,
 } from "aws-cdk-lib";
-import {
-  PythonFunction,
-  PythonFunctionProps,
-} from "@aws-cdk/aws-lambda-python-alpha";
 import { IDomainName, HttpApi } from "@aws-cdk/aws-apigatewayv2-alpha";
 import { HttpLambdaIntegration } from "@aws-cdk/aws-apigatewayv2-integrations-alpha";
 import { Construct } from "constructs";
+import { CustomLambdaFunctionProps } from "../utils";
 
 export class PgStacApiLambda extends Construct {
   readonly url: string;
-  public stacApiLambdaFunction: PythonFunction;
+  public stacApiLambdaFunction: lambda.Function;
 
   constructor(scope: Construct, id: string, props: PgStacApiLambdaProps) {
     super(scope, id);
-
-    const apiCode = props.apiCode || {
-      entry: `${__dirname}/runtime`,
-      index: "src/handler.py",
-      handler: "handler",
-    };
-
-    this.stacApiLambdaFunction = new PythonFunction(this, "stac-api", {
-      ...apiCode,
-      /**
-       * NOTE: Unable to use Py3.9, due to issues with hashes:
-       *
-       *    ERROR: Hashes are required in --require-hashes mode, but they are missing
-       *    from some requirements. Here is a list of those requirements along with the
-       *    hashes their downloaded archives actually had. Add lines like these to your
-       *    requirements files to prevent tampering. (If you did not enable
-       *    --require-hashes manually, note that it turns on automatically when any
-       *    package has a hash.)
-       *        anyio==3.6.1 --hash=sha256:cb29b9c70620506a9a8f87a309591713446953302d7d995344d0d7c6c0c9a7be
-       * */
-      runtime: lambda.Runtime.PYTHON_3_8,
-      architecture: lambda.Architecture.X86_64,
+    
+    console.log(props)
+    console.log(props.lambdaFunctionOptions);
+    this.stacApiLambdaFunction = new lambda.Function(this, "lambda", {
+      // defaults for configurable properties
+      runtime: lambda.Runtime.PYTHON_3_11,
+      handler: "src.handler.handler",
+      memorySize: 8192,
+      logRetention: aws_logs.RetentionDays.ONE_WEEK,
+      timeout: Duration.seconds(30),
+      code: lambda.Code.fromDockerBuild(__dirname, {
+        file: "runtime/Dockerfile",
+        buildArgs: { PYTHON_VERSION: '3.11' },
+      }),
+      // overwrites defaults with user-provided configurable properties
+      ...props.lambdaFunctionOptions,
+      // Non configurable properties that are going to be overwritten even if provided by the user
+      vpc: props.vpc,
+      vpcSubnets: props.subnetSelection,
+      allowPublicSubnet: true,
       environment: {
         PGSTAC_SECRET_ARN: props.dbSecret.secretArn,
         DB_MIN_CONN_SIZE: "0",
         DB_MAX_CONN_SIZE: "1",
         ...props.apiEnv,
       },
-      vpc: props.vpc,
-      vpcSubnets: props.subnetSelection,
-      allowPublicSubnet: true,
-      memorySize: 8192,
     });
 
     props.dbSecret.grantRead(this.stacApiLambdaFunction);
-    this.stacApiLambdaFunction.connections.allowTo(props.db, ec2.Port.tcp(5432));
-
+    if (props.vpc){
+      this.stacApiLambdaFunction.connections.allowTo(props.db, ec2.Port.tcp(5432));
+    }
     const stacApi = new HttpApi(this, `${Stack.of(this).stackName}-stac-api`, {
       defaultDomainMapping: props.stacApiDomainName ? { 
         domainName: props.stacApiDomainName
@@ -77,7 +71,7 @@ export interface PgStacApiLambdaProps {
   /**
    * VPC into which the lambda should be deployed.
    */
-  readonly vpc: ec2.IVpc;
+  readonly vpc?: ec2.IVpc;
 
   /**
    * RDS Instance with installed pgSTAC.
@@ -87,19 +81,12 @@ export interface PgStacApiLambdaProps {
   /**
    * Subnet into which the lambda should be deployed.
    */
-  readonly subnetSelection: ec2.SubnetSelection;
+  readonly subnetSelection?: ec2.SubnetSelection;
 
   /**
    * Secret containing connection information for pgSTAC database.
    */
   readonly dbSecret: secretsmanager.ISecret;
-
-  /**
-   * Custom code to run for fastapi-pgstac.
-   *
-   * @default - simplified version of fastapi-pgstac
-   */
-  readonly apiCode?: ApiEntrypoint;
 
   /**
    * Customized environment variables to send to fastapi-pgstac runtime.
@@ -110,19 +97,12 @@ export interface PgStacApiLambdaProps {
    * Custom Domain Name Options for STAC API,
    */
    readonly stacApiDomainName?: IDomainName;
+
+  /**
+     * Optional settings for the lambda function. Can be anything that can be configured on the lambda function, but some will be overwritten by values defined here. 
+     *
+     * @default - defined in the construct.
+     */
+  readonly lambdaFunctionOptions?: CustomLambdaFunctionProps;
 }
 
-export interface ApiEntrypoint {
-  /**
-   * Path to the source of the function or the location for dependencies.
-   */
-  readonly entry: PythonFunctionProps["entry"];
-  /**
-   * The path (relative to entry) to the index file containing the exported handler.
-   */
-  readonly index: PythonFunctionProps["index"];
-  /**
-   * The name of the exported handler in the index file.
-   */
-  readonly handler: PythonFunctionProps["handler"];
-}
