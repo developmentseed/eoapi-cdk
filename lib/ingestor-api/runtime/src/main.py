@@ -124,6 +124,7 @@ def who_am_i(username=Depends(dependencies.get_username)):
     """
     return {"username": username}
 
+
 @app.get("/root_path")
 def return_root_path():
     """
