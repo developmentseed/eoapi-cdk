@@ -61,14 +61,14 @@ export class PgStacDatabase extends Construct {
 
     const handler = new aws_lambda.Function(this, "lambda", {
       // defaults for configurable properties
-      runtime: aws_lambda.Runtime.PYTHON_3_8,
+      runtime: aws_lambda.Runtime.PYTHON_3_11,
       handler: "handler.handler",
       memorySize: 128,
       logRetention: aws_logs.RetentionDays.ONE_WEEK,
       timeout: Duration.minutes(2),
       code: aws_lambda.Code.fromDockerBuild(__dirname, {
         file: "bootstrapper_runtime/Dockerfile",
-        buildArgs: {PGSTAC_VERSION: DEFAULT_PGSTAC_VERSION, PYTHON_VERSION: "3.8"}
+        buildArgs: {PGSTAC_VERSION: DEFAULT_PGSTAC_VERSION, PYTHON_VERSION: "3.11"}
       }),
       // overwrites defaults with user-provided configurable properties
       ...props.bootstrapperLambdaFunctionOptions,

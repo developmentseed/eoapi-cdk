@@ -116,14 +116,14 @@ export class StacIngestor extends Construct {
         
     const handler = new lambda.Function(this, "api-handler", {
       // defaults for configurable properties
-      runtime: lambda.Runtime.PYTHON_3_9,
+      runtime: lambda.Runtime.PYTHON_3_11,
       handler: "src.handler.handler",
       memorySize: 2048,
       logRetention: aws_logs.RetentionDays.ONE_WEEK,
       timeout: Duration.seconds(30),
       code:lambda.Code.fromDockerBuild(__dirname, {
         file: "runtime/Dockerfile",
-        buildArgs: { PYTHON_VERSION: '3.9' },
+        buildArgs: { PYTHON_VERSION: '3.11' },
       }),
       // overwrites defaults with user-provided configurable properties
       ...props.lambdaFunctionOptions,
@@ -166,14 +166,14 @@ export class StacIngestor extends Construct {
     
     const handler = new lambda.Function(this, "stac-ingestor",{
       // defaults for configurable properties
-      runtime: lambda.Runtime.PYTHON_3_9,
+      runtime: lambda.Runtime.PYTHON_3_11,
       handler: "src.ingestor.handler",
       memorySize: 2048,
       logRetention: aws_logs.RetentionDays.ONE_WEEK,
       timeout: Duration.seconds(180),
       code: lambda.Code.fromDockerBuild(__dirname, {
         file: "runtime/Dockerfile",
-        buildArgs: { PYTHON_VERSION: '3.9' },
+        buildArgs: { PYTHON_VERSION: '3.11' },
       }),
       // overwrites defaults with user-provided configurable properties
       ...props.lambdaFunctionOptions,

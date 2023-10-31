@@ -24,14 +24,14 @@ export class PgStacApiLambda extends Construct {
     console.log(props.lambdaFunctionOptions);
     this.stacApiLambdaFunction = new lambda.Function(this, "lambda", {
       // defaults for configurable properties
-      runtime: lambda.Runtime.PYTHON_3_10,
+      runtime: lambda.Runtime.PYTHON_3_11,
       handler: "src.handler.handler",
       memorySize: 8192,
       logRetention: aws_logs.RetentionDays.ONE_WEEK,
       timeout: Duration.seconds(30),
       code: lambda.Code.fromDockerBuild(__dirname, {
         file: "runtime/Dockerfile",
-        buildArgs: { PYTHON_VERSION: '3.10' },
+        buildArgs: { PYTHON_VERSION: '3.11' },
       }),
       // overwrites defaults with user-provided configurable properties
       ...props.lambdaFunctionOptions,
