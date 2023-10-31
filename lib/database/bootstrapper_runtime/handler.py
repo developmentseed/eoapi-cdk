@@ -5,8 +5,8 @@ Source: https://github.com/developmentseed/eoAPI/blob/master/deployment/handlers
 import json
 
 import boto3
-import psycopg
 import httpx
+import psycopg
 from psycopg import sql
 from psycopg.conninfo import make_conninfo
 from pypgstac.db import PgstacDB

@@ -4,6 +4,7 @@ Handler for AWS Lambda.
 
 import asyncio
 import os
+
 from mangum import Mangum
 from utils import get_secret_dict
 
@@ -20,8 +21,8 @@ os.environ.update(
     }
 )
 
-from titiler.pgstac.main import app  # noqa: E402
 from titiler.pgstac.db import connect_to_db  # noqa: E402
+from titiler.pgstac.main import app  # noqa: E402
 
 
 @app.on_event("startup")
