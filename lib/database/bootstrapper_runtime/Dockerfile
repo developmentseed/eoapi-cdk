@@ -1,5 +1,5 @@
 ARG PYTHON_VERSION
-FROM lambci/lambda:build-python${PYTHON_VERSION}
+FROM --platform=linux/amd64 public.ecr.aws/lambda/python:${PYTHON_VERSION}
 
 ARG PGSTAC_VERSION
 RUN echo "PGSTAC_VERSION: ${PGSTAC_VERSION}"
