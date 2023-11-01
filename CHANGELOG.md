@@ -1,3 +1,10 @@
+## [6.0.1](https://github.com/developmentseed/eoapi-cdk/compare/v6.0.0...v6.0.1) (2023-11-01)
+
+
+### Bug Fixes
+
+* **ingestor-api-handler:** fix docs endpoint ([#82](https://github.com/developmentseed/eoapi-cdk/issues/82)) ([d134c77](https://github.com/developmentseed/eoapi-cdk/commit/d134c77f84363b3e4560176ccd810b55b6855f07))
+
 # [6.0.0](https://github.com/developmentseed/eoapi-cdk/compare/v5.4.1...v6.0.0) (2023-10-31)
 
 
