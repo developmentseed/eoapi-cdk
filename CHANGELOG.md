@@ -1,3 +1,10 @@
+## [6.0.2](https://github.com/developmentseed/eoapi-cdk/compare/v6.0.1...v6.0.2) (2023-11-02)
+
+
+### Bug Fixes
+
+* **bootstrapper:** fix httpx response ([#81](https://github.com/developmentseed/eoapi-cdk/issues/81)) ([b879076](https://github.com/developmentseed/eoapi-cdk/commit/b8790766818b0048e2192849a34f462997a08c0e))
+
 ## [6.0.1](https://github.com/developmentseed/eoapi-cdk/compare/v6.0.0...v6.0.1) (2023-11-01)
 
 
