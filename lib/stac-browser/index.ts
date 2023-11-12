@@ -16,7 +16,7 @@ export class StacBrowser extends Construct {
     constructor(scope: Construct, id: string, props: StacBrowserProps) {
         super(scope, id);
 
-        const buildPath = this.buildApp(props.stacCatalogUrl, props.githubRepoTag, props.cloneDirectory || DEFAULT_CLONE_DIRECTORY);
+        const buildPath = this.buildApp(props, props.cloneDirectory || DEFAULT_CLONE_DIRECTORY);
 
         // import a bucket from props.bucketArn if defined, otherwise create a new bucket
         if (props.bucketArn) {
@@ -58,7 +58,7 @@ export class StacBrowser extends Construct {
 
     }
 
-    private buildApp(stacCatalogUrl: string, githubRepoTag: string, cloneDirectory: string): string {
+    private buildApp(props: StacBrowserProps, cloneDirectory: string): string {
             
         // Define where to clone and build
         const githubRepoUrl = 'https://github.com/radiantearth/stac-browser.git';
@@ -66,8 +66,8 @@ export class StacBrowser extends Construct {
 
         // Maybe the repo already exists in cloneDirectory. Try checking out the desired version and if it fails, delete and reclone. 
         try {
-            console.log(`Checking if a valid cloned repo exists with version ${githubRepoTag}...`)
-            execSync(`git checkout tags/${githubRepoTag}`, { cwd: cloneDirectory });
+            console.log(`Checking if a valid cloned repo exists with version ${props.githubRepoTag}...`)
+            execSync(`git checkout tags/${props.githubRepoTag}`, { cwd: cloneDirectory });
         }
         catch (error) {
 
@@ -83,8 +83,8 @@ export class StacBrowser extends Construct {
             execSync(`git clone ${githubRepoUrl} ${cloneDirectory}`);
 
             // Check out the desired version
-            console.log(`Checking out version ${githubRepoTag}...`)
-            execSync(`git checkout tags/${githubRepoTag}`, { cwd: cloneDirectory });
+            console.log(`Checking out version ${props.githubRepoTag}...`)
+            execSync(`git checkout tags/${props.githubRepoTag}`, { cwd: cloneDirectory });
 
         }
 
@@ -92,9 +92,19 @@ export class StacBrowser extends Construct {
         console.log(`Installing dependencies`)
         execSync('npm install', { cwd: cloneDirectory });
 
+        // If a config file is provided, copy it to the stac-browser directory at "config.js", replaces the default config.js.
+        if (props.configFilePath) {
+            // check that the file exists at this location. if not, raise an error and print current working directory.
+            if (!fs.existsSync(props.configFilePath)) {
+                throw new Error(`Config file ${props.configFilePath} does not exist. Current working directory is ${process.cwd()}`);
+            }
+            console.log(`Copying config file ${props.configFilePath} to ${cloneDirectory}/config.js`)
+            fs.copyFileSync(props.configFilePath, `${cloneDirectory}/config.js`);
+        }
+
         // Build the app with catalogUrl
-        console.log(`Building app with catalogUrl=${stacCatalogUrl} into ${cloneDirectory}`)
-        execSync(`npm run build -- --catalogUrl=${stacCatalogUrl}`, { cwd: cloneDirectory });
+        console.log(`Building app with catalogUrl=${props.stacCatalogUrl} into ${cloneDirectory}`)
+        execSync(`npm run build -- --catalogUrl=${props.stacCatalogUrl}`, { cwd: cloneDirectory });
 
         return './stac-browser/dist'
 
@@ -115,9 +125,15 @@ export interface StacBrowserProps {
     readonly bucketArn?: string;
 
     /**
-     * STAC catalog URL
+     * STAC catalog URL. Overrides the catalog URL in the stac-browser configuration.
      */    
     readonly stacCatalogUrl: string;
+
+    /**
+     * Path to config file for the STAC browser. If not provided, default configuration in the STAC browser
+     * repository is used.
+     */
+    readonly configFilePath?: string;
 
     /**
      * Tag of the radiant earth stac-browser repo to use to build the app.
