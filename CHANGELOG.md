@@ -1,3 +1,10 @@
+# [6.1.0](https://github.com/developmentseed/eoapi-cdk/compare/v6.0.2...v6.1.0) (2023-11-12)
+
+
+### Features
+
+* **stac-browser:** configurable config file in stac browser deployment ([#84](https://github.com/developmentseed/eoapi-cdk/issues/84)) ([b86ad1a](https://github.com/developmentseed/eoapi-cdk/commit/b86ad1a8cb1fb92628f6450c1c8b05258d78280b))
+
 ## [6.0.2](https://github.com/developmentseed/eoapi-cdk/compare/v6.0.1...v6.0.2) (2023-11-02)
 
 
