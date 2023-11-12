@@ -2290,6 +2290,7 @@ const stacBrowserProps: StacBrowserProps = { ... }
 | <code><a href="#eoapi-cdk.StacBrowserProps.property.bucketArn">bucketArn</a></code> | <code>string</code> | Bucket ARN. |
 | <code><a href="#eoapi-cdk.StacBrowserProps.property.cloneDirectory">cloneDirectory</a></code> | <code>string</code> | Location in the filesystem where to compile the browser code. |
 | <code><a href="#eoapi-cdk.StacBrowserProps.property.cloudFrontDistributionArn">cloudFrontDistributionArn</a></code> | <code>string</code> | The ARN of the cloudfront distribution that will be added to the bucket policy with read access. |
+| <code><a href="#eoapi-cdk.StacBrowserProps.property.configFilePath">configFilePath</a></code> | <code>string</code> | Path to config file for the STAC browser. |
 | <code><a href="#eoapi-cdk.StacBrowserProps.property.websiteIndexDocument">websiteIndexDocument</a></code> | <code>string</code> | The name of the index document (e.g. "index.html") for the website. Enables static website hosting for this bucket. |
 
 ---
@@ -2315,6 +2316,8 @@ public readonly stacCatalogUrl: string;
 - *Type:* string
 
 STAC catalog URL.
+
+Overrides the catalog URL in the stac-browser configuration.
 
 ---
 
@@ -2359,6 +2362,21 @@ public readonly cloudFrontDistributionArn: string;
 The ARN of the cloudfront distribution that will be added to the bucket policy with read access.
 
 If `bucketArn` is specified, this parameter is ignored since the policy of an imported bucket can't be modified.
+
+---
+
+##### `configFilePath`<sup>Optional</sup> <a name="configFilePath" id="eoapi-cdk.StacBrowserProps.property.configFilePath"></a>
+
+```typescript
+public readonly configFilePath: string;
+```
+
+- *Type:* string
+
+Path to config file for the STAC browser.
+
+If not provided, default configuration in the STAC browser
+repository is used.
 
 ---
 
