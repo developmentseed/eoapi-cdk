@@ -68,7 +68,7 @@ export class PgStacDatabase extends Construct {
       timeout: Duration.minutes(2),
       code: aws_lambda.Code.fromDockerBuild(__dirname, {
         file: "bootstrapper_runtime/Dockerfile",
-        buildArgs: {PGSTAC_VERSION: DEFAULT_PGSTAC_VERSION, PYTHON_VERSION: "3.11"}
+        buildArgs: {PGSTAC_VERSION: props.pgstacVersion || DEFAULT_PGSTAC_VERSION, PYTHON_VERSION: "3.11"}
       }),
       // overwrites defaults with user-provided configurable properties
       ...props.bootstrapperLambdaFunctionOptions,
@@ -120,7 +120,7 @@ export class PgStacDatabase extends Construct {
 
     // if props.lambdaFunctionOptions doesn't have 'code' defined, update pgstac_version (needed for default runtime)
     if (!props.bootstrapperLambdaFunctionOptions?.code) {
-      customResourceProperties["pgstac_version"] = DEFAULT_PGSTAC_VERSION;
+      customResourceProperties["pgstac_version"] = props.pgstacVersion || DEFAULT_PGSTAC_VERSION;
     }
     // this.connections = props.database.connections;
     new CustomResource(this, "bootstrapper", {
@@ -192,6 +192,13 @@ export interface PgStacDatabaseProps extends rds.DatabaseInstanceProps {
    * @default pgstac_user
    */
   readonly pgstacUsername?: string;
+
+  /**
+   * Version of pgstac to install on the database
+   * 
+   * @default 0.7.10
+   */
+  readonly pgstacVersion?: string;
 
   /**
    * Lambda function Custom Resource properties. A custom resource property is going to be created

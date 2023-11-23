@@ -14,6 +14,7 @@ import {
   import { Construct } from "constructs";
 import { CustomLambdaFunctionProps } from "../utils";
   
+  const DEFAULT_TITILER_PGSTAC_VERSION = "0.5.1";
 
   // default settings that can be overridden by the user-provided environment. 
   let defaultTitilerPgstacEnv :{ [key: string]: any } = {
@@ -47,7 +48,7 @@ import { CustomLambdaFunctionProps } from "../utils";
         timeout: Duration.seconds(30),
         code: lambda.Code.fromDockerBuild(__dirname, {
           file: "runtime/Dockerfile",
-          buildArgs: { PYTHON_VERSION: '3.11' }
+          buildArgs: { PYTHON_VERSION: '3.11' , TITILER_PGSTAC_VERSION: props.titilerPgstacVersion || DEFAULT_TITILER_PGSTAC_VERSION }
         }),
         // overwrites defaults with user-provided configurable properties
         ...props.lambdaFunctionOptions,
@@ -112,6 +113,13 @@ import { CustomLambdaFunctionProps } from "../utils";
      * Secret containing connection information for pgSTAC database.
      */
     readonly dbSecret: secretsmanager.ISecret;
+
+    /**
+     * Version of titiler-pgstac to install in the Lambda Docker image 
+     * 
+     * @default 0.5.1
+     */
+    readonly titilerPgstacVersion?: string;
 
     /**
      * Customized environment variables to send to titiler-pgstac runtime. These will be merged with `defaultTitilerPgstacEnv`.

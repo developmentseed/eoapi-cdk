@@ -1,2 +1,1 @@
-titiler.pgstac==0.5.1
 psycopg[binary, pool]

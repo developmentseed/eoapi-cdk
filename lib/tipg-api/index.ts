@@ -13,6 +13,8 @@ import {
   import { Construct } from "constructs";
   import { CustomLambdaFunctionProps } from "../utils";
 
+  const DEFAULT_TIPG_VERSION = "0.3.1";
+
   export class TiPgApiLambda extends Construct {
     readonly url: string;
     public tiPgLambdaFunction: lambda.Function;
@@ -29,7 +31,7 @@ import {
         timeout: Duration.seconds(30),
         code: lambda.Code.fromDockerBuild(__dirname, {
         file: "runtime/Dockerfile",
-        buildArgs: { PYTHON_VERSION: '3.11' },
+          buildArgs: { PYTHON_VERSION: '3.11', TIPG_VERSION: props.tipgVersion || DEFAULT_TIPG_VERSION },
         }),
         // overwrites defaults with user-provided configurable properties
         ...props.lambdaFunctionOptions,
@@ -87,6 +89,12 @@ import {
      */
     readonly dbSecret: secretsmanager.ISecret;
 
+    /**
+     * Version of tipg to install in the Lambda Docker image 
+     * 
+     * @default 0.3.1
+     */
+    readonly tipgVersion?: string;
 
     /**
      * Customized environment variables to send to titiler-pgstac runtime.

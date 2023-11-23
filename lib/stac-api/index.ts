@@ -13,6 +13,8 @@ import { HttpLambdaIntegration } from "@aws-cdk/aws-apigatewayv2-integrations-al
 import { Construct } from "constructs";
 import { CustomLambdaFunctionProps } from "../utils";
 
+const DEFAULT_STAC_FASTAPI_VERSION = "2.4.8";
+
 export class PgStacApiLambda extends Construct {
   readonly url: string;
   public stacApiLambdaFunction: lambda.Function;
@@ -31,7 +33,7 @@ export class PgStacApiLambda extends Construct {
       timeout: Duration.seconds(30),
       code: lambda.Code.fromDockerBuild(__dirname, {
         file: "runtime/Dockerfile",
-        buildArgs: { PYTHON_VERSION: '3.11' },
+        buildArgs: { PYTHON_VERSION: '3.11', STAC_FASTAPI_VERSION: props.stacFastapiVersion || DEFAULT_STAC_FASTAPI_VERSION },
       }),
       // overwrites defaults with user-provided configurable properties
       ...props.lambdaFunctionOptions,
@@ -87,6 +89,13 @@ export interface PgStacApiLambdaProps {
    * Secret containing connection information for pgSTAC database.
    */
   readonly dbSecret: secretsmanager.ISecret;
+
+  /**
+   * Version of stac-fastapi to install in the Lambda Docker image 
+   * 
+   * @default 2.4.8
+   */
+  readonly stacFastapiVersion?: string;
 
   /**
    * Customized environment variables to send to fastapi-pgstac runtime.

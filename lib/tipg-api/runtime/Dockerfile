@@ -4,7 +4,8 @@ FROM --platform=linux/amd64 public.ecr.aws/lambda/python:${PYTHON_VERSION}
 WORKDIR /tmp
 RUN python -m pip install pip -U
 
-RUN python -m pip install tipg==0.3.1 "mangum>=0.14,<0.15" -t /asset --no-binary pydantic
+ARG TIPG_VERSION=0.3.1
+RUN python -m pip install tipg==${TIPG_VERSION} "mangum>=0.14,<0.15" -t /asset --no-binary pydantic
 
 # Reduce package size and remove useless files
 RUN cd /asset && find . -type f -name '*.pyc' | while read f; do n=$(echo $f | sed 's/__pycache__\///' | sed 's/.cpython-[0-9]*//'); cp $f $n; done;
