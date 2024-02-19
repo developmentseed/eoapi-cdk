@@ -12,17 +12,30 @@ on:
         required: false
       DS_RELEASE_BOT_PRIVATE_KEY:
         required: false
-
+      AWS_DEFAULT_REGION_DEPLOY:
+        required: false
+      AWS_ACCESS_KEY_ID_DEPLOY:
+        required: false
+      AWS_SECRET_ACCESS_KEY_DEPLOY:
+        required: false
+      AWS_ACCOUNT_ID:
+        required: false
 jobs:
   build_and_package:
     name: Build and package
     runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION_DEPLOY }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID_DEPLOY }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY_DEPLOY }}
+      AWS_DEFAULT_ACCOUNT: ${{ secrets.AWS_ACCOUNT_ID }}
     steps:
       - uses: actions/checkout@v3
 
       - uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 18
           cache: "npm"
 
       - name: Install Dependencies
@@ -65,8 +78,70 @@ jobs:
           app_id: ${{ secrets.DS_RELEASE_BOT_ID }}
           private_key: ${{ secrets.DS_RELEASE_BOT_PRIVATE_KEY }}
 
-      - name: Maybe Release 🚀
+      - name: Check release
+        id: check_release
         if: ${{ inputs.release }}
+        run: |
+          SHOULD_RELEASE=false
+          npm run semantic-release --dry-run > check_release_output.txt
+          if grep -q "Published release" check_release_output.txt; then
+            echo "SHOULD_RELEASE=true" >> $GITHUB_OUTPUT
+          else
+            echo "SHOULD_RELEASE=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Install deployment environment
+        if: "${{ inputs.release && steps.check_release.outputs.SHOULD_RELEASE }}"
+        id: install_deploy_env
+        run: |
+          # install deployment environment with eoapi-cdk from build
+          python -m venv .deployment_venv
+          source .deployment_venv/bin/activate
+          pip install dist/python/*.gz
+          cd integration_tests/cdk
+          pip install -r requirements.txt
+          npm install   
+          deactivate
+          cd -
+
+
+      - name: Deploy test stack
+        if: "${{ inputs.release && steps.check_release.outputs.SHOULD_RELEASE }}"
+        id: deploy_step
+        run: |
+          source .deployment_venv/bin/activate
+          
+          # synthesize the stack
+          cd integration_tests/cdk
+          npx cdk synth --debug --all --require-approval never
+
+          # deploy the stack and grab URLs for testing
+          npx cdk deploy --ci --all --require-approval never
+          echo "ingestor_url=$(aws cloudformation describe-stacks --stack-name eoapi-cdk-integration-test-pgSTAC-infra --query "Stacks[0].Outputs[?starts_with(OutputKey, 'stacingestor')].OutputValue | [0]" --output text)" >> $GITHUB_OUTPUT
+          echo "stac_api_url=$(aws cloudformation describe-stacks --stack-name eoapi-cdk-integration-test-pgSTAC-infra --query "Stacks[0].Outputs[?starts_with(OutputKey, 'pgstacapi')].OutputValue | [0]" --output text)" >> $GITHUB_OUTPUT
+          echo "titiler_pgstac_api_url=$(aws cloudformation describe-stacks --stack-name eoapi-cdk-integration-test-pgSTAC-infra --query "Stacks[0].Outputs[?starts_with(OutputKey, 'titilerpgstac')].OutputValue | [0]" --output text)" >> $GITHUB_OUTPUT
+          deactivate
+          cd -
+          
+      - name: Tear down any infrastructure
+        if: always()
+        run: |
+          cd integration_tests/cdk
+          # run this only if we find a 'cdk.out' directory, which means there might be things to tear down
+          if [ -d "cdk.out" ]; then
+            cd -
+            source .deployment_venv/bin/activate
+            cd integration_tests/cdk
+            # see https://github.com/aws/aws-cdk/issues/24946
+            rm -f cdk.out/synth.lock
+            npx cdk destroy --ci --all --force
+          fi
+  
+        
+      # run if the previous step set SHOULD_RELEASE to true
+      - name: Maybe Release 🚀
+        # only run if the previous step set SHOULD_RELEASE to true
+        if: "${{ inputs.release && steps.check_release.outputs.SHOULD_RELEASE }}"
         run: |
           npm run semantic-release
         env:

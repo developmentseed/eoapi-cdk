@@ -2,7 +2,7 @@
     "name": "eoapi-template",
     "version": "0.1.0",
     "dependencies": {
-      "aws-cdk": "^2.81.0"
+      "aws-cdk": "^2.99.1"
     }
   }
   

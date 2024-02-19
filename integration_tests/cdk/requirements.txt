@@ -1,6 +1,6 @@
-aws-cdk-lib>=2.75.0
-aws_cdk.aws_cognito_identitypool_alpha>=2.75.0a0
-aws-cdk.aws-apigatewayv2-alpha==2.95.1a0
+aws-cdk-lib>=2.99.1
+aws_cdk.aws_cognito_identitypool_alpha>=2.99.0a0
+aws-cdk.aws-apigatewayv2-alpha>=2.99.0a0
 constructs>=10.0.0,<11.0.0
 pydantic==2.0.2
 pydantic-settings==2.0.1

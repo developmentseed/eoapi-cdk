@@ -58,7 +58,7 @@ def send(
     headers = {"content-type": "", "content-length": str(len(json_responseBody))}
 
     try:
-        response = httpx.put(responseUrl, data=json_responseBody, headers=headers)
+        response = httpx.put(responseUrl, data=json_responseBody, headers=headers, timeout=30)
         print("Status code: " + response.status_code)
     except Exception as e:
         print("send(..) failed executing httpx.put(..): " + str(e))

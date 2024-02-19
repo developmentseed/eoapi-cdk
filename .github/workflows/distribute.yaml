@@ -9,10 +9,6 @@ jobs:
   package:
     uses: ./.github/workflows/build.yaml
 
-  integration-test:
-    uses: ./.github/workflows/integration-test.yaml
-    needs: package
-
   distribute-python:
     runs-on: ubuntu-latest
     needs: package
