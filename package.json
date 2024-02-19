@@ -1,6 +1,6 @@
 {
   "name": "eoapi-cdk",
-  "version": "5.4.0",
+  "version": "6.1.0",
   "description": "A set of constructs deploying pgSTAC with CDK",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -58,7 +58,7 @@
   },
   "bundledDependencies": [
     "module"
-  ],  
+  ],
   "peerDependencies": {
     "aws-cdk-lib": "^2.99.1",
     "constructs": "^10.1.113"

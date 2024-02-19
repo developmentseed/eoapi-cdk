@@ -4,21 +4,20 @@ Handler for AWS Lambda.
 
 import asyncio
 import os
+
 from mangum import Mangum
 from utils import load_pgstac_secret
 
 load_pgstac_secret(os.environ["PGSTAC_SECRET_ARN"])  # required for the below imports
 
-# skipping linting rule that wants all imports at the top
-from tipg.main import app  # noqa: E402
 from tipg.collections import register_collection_catalog  # noqa: E402
 from tipg.database import connect_to_db  # noqa: E402
-from tipg.settings import (  # noqa: E402
-    CustomSQLSettings,  # noqa: E402
-    DatabaseSettings,  # noqa: E402
-    PostgresSettings,  # noqa: E402
-)  # noqa: E402
 
+# skipping linting rule that wants all imports at the top
+from tipg.main import app  # noqa: E402
+from tipg.settings import CustomSQLSettings  # noqa: E402
+from tipg.settings import DatabaseSettings  # noqa: E402
+from tipg.settings import PostgresSettings  # noqa: E402; noqa: E402
 
 postgres_settings = PostgresSettings()
 db_settings = DatabaseSettings()

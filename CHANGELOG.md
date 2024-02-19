@@ -1,3 +1,43 @@
+# [6.1.0](https://github.com/developmentseed/eoapi-cdk/compare/v6.0.2...v6.1.0) (2023-11-12)
+
+
+### Features
+
+* **stac-browser:** configurable config file in stac browser deployment ([#84](https://github.com/developmentseed/eoapi-cdk/issues/84)) ([b86ad1a](https://github.com/developmentseed/eoapi-cdk/commit/b86ad1a8cb1fb92628f6450c1c8b05258d78280b))
+
+## [6.0.2](https://github.com/developmentseed/eoapi-cdk/compare/v6.0.1...v6.0.2) (2023-11-02)
+
+
+### Bug Fixes
+
+* **bootstrapper:** fix httpx response ([#81](https://github.com/developmentseed/eoapi-cdk/issues/81)) ([b879076](https://github.com/developmentseed/eoapi-cdk/commit/b8790766818b0048e2192849a34f462997a08c0e))
+
+## [6.0.1](https://github.com/developmentseed/eoapi-cdk/compare/v6.0.0...v6.0.1) (2023-11-01)
+
+
+### Bug Fixes
+
+* **ingestor-api-handler:** fix docs endpoint ([#82](https://github.com/developmentseed/eoapi-cdk/issues/82)) ([d134c77](https://github.com/developmentseed/eoapi-cdk/commit/d134c77f84363b3e4560176ccd810b55b6855f07))
+
+# [6.0.0](https://github.com/developmentseed/eoapi-cdk/compare/v5.4.1...v6.0.0) (2023-10-31)
+
+
+### Features
+
+* custom runtimes, optional VPC, python 3.11 ([#74](https://github.com/developmentseed/eoapi-cdk/issues/74)) ([ba6bf09](https://github.com/developmentseed/eoapi-cdk/commit/ba6bf09651caae8537df7ee737dbf6d0bf975f41))
+
+
+### BREAKING CHANGES
+
+* the `bootstrapper` construct was deleted and is no longer available. In addition, we switched from `PythonFunction` to `Function` for all lambdas.
+
+## [5.4.1](https://github.com/developmentseed/eoapi-cdk/compare/v5.4.0...v5.4.1) (2023-10-05)
+
+
+### Bug Fixes
+
+* synchronize pgstac versions -> 0.7.9 across constructs ([c6bb921](https://github.com/developmentseed/eoapi-cdk/commit/c6bb9213f745f1161d193b120083fac1e7943eb5))
+
 # [5.4.0](https://github.com/developmentseed/eoapi-cdk/compare/v5.3.0...v5.4.0) (2023-09-05)
 
 
