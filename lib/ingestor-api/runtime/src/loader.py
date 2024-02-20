@@ -1,4 +1,5 @@
 """Utilities to bulk load data into pgstac from json/ndjson."""
+
 import logging
 
 from pypgstac.load import Loader as BaseLoader

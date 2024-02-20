@@ -2,6 +2,7 @@
 Custom resource lambda handler to bootstrap Postgres db.
 Source: https://github.com/developmentseed/eoAPI/blob/master/deployment/handlers/db_handler.py
 """
+
 import json
 
 import boto3
@@ -58,7 +59,12 @@ def send(
     headers = {"content-type": "", "content-length": str(len(json_responseBody))}
 
     try:
-        response = httpx.put(responseUrl, data=json_responseBody, headers=headers, timeout=30)
+        response = httpx.put(
+            responseUrl,
+            data=json_responseBody,
+            headers=headers,
+            timeout=30,
+        )
         print("Status code: " + response.status_code)
     except Exception as e:
         print("send(..) failed executing httpx.put(..): " + str(e))

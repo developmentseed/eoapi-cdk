@@ -40,5 +40,5 @@ class Database:
         }
 
 
-class NotInDb(Exception):
+class NotInDb(Exception):  # noqa
     ...

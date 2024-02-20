@@ -36,17 +36,16 @@ class pgStacInfraStack(Stack):
                 version=aws_rds.PostgresEngineVersion.VER_14
             ),
             vpc_subnets=aws_ec2.SubnetSelection(
-                subnet_type=aws_ec2.SubnetType.PUBLIC 
+                subnet_type=aws_ec2.SubnetType.PUBLIC,
             ),
             allocated_storage=app_config.db_allocated_storage,
             instance_type=aws_ec2.InstanceType(app_config.db_instance_type),
-            bootstrapper_lambda_function_options={    
+            bootstrapper_lambda_function_options={
                 "allow_public_subnet": True,
             }
         )
-        
-        pgstac_db.db.connections.allow_default_port_from_any_ipv4()
 
+        pgstac_db.db.connections.allow_default_port_from_any_ipv4()
 
         PgStacApiLambda(
             self,
@@ -71,6 +70,5 @@ class pgStacInfraStack(Stack):
             buckets=[],
             lambda_function_options={
                 "allow_public_subnet": True,
-            },            
+            },
         )
-        

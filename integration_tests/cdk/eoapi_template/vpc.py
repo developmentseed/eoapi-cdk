@@ -23,17 +23,16 @@ class VpcStack(Stack):
             ]
         )
 
-        
         self.vpc.add_interface_endpoint(
             "SecretsManagerEndpoint",
             service=aws_ec2.InterfaceVpcEndpointAwsService.SECRETS_MANAGER,
         )
-        
+
         self.vpc.add_interface_endpoint(
             "CloudWatchEndpoint",
             service=aws_ec2.InterfaceVpcEndpointAwsService.CLOUDWATCH_LOGS,
         )
-        
+
         self.export_value(
             self.vpc.select_subnets(subnet_type=aws_ec2.SubnetType.PUBLIC)
             .subnets[0]
