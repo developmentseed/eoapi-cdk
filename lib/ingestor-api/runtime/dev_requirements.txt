@@ -1,2 +1,2 @@
 httpx
-moto[dynamodb, ssm]>=4.0.9
+moto[dynamodb, ssm]>=4.0.9,<5.0
