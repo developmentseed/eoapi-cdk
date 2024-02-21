@@ -39,7 +39,7 @@ import { CustomLambdaFunctionProps } from "../utils";
       super(scope, id);
       
       this.titilerPgstacLambdaFunction = new lambda.Function(this, "lambda", {
-        // defaults for configurable properties
+        // defaults
         runtime: lambda.Runtime.PYTHON_3_11,
         handler: "handler.handler",
         memorySize: 3008,
@@ -49,14 +49,13 @@ import { CustomLambdaFunctionProps } from "../utils";
           file: "runtime/Dockerfile",
           buildArgs: { PYTHON_VERSION: '3.11' }
         }),
-        // overwrites defaults with user-provided configurable properties
-        ...props.lambdaFunctionOptions,
-        // Non configurable properties that are going to be overwritten even if provided by the user
         vpc: props.vpc,
         vpcSubnets: props.subnetSelection,
         allowPublicSubnet: true,
         // if user provided environment variables, merge them with the defaults.
         environment: props.apiEnv ? { ...defaultTitilerPgstacEnv, ...props.apiEnv, "PGSTAC_SECRET_ARN": props.dbSecret.secretArn } : defaultTitilerPgstacEnv,
+        // overwrites defaults with user-provided configurable properties
+        ...props.lambdaFunctionOptions,      
       });
       
       // grant access to buckets using addToRolePolicy
@@ -132,7 +131,7 @@ import { CustomLambdaFunctionProps } from "../utils";
     readonly titilerPgstacApiDomainName?: IDomainName;
 
     /**
-     * Optional settings for the lambda function. Can be anything that can be configured on the lambda function, but some will be overwritten by values defined here. 
+     * Can be used to override the default lambda function properties.
      *
      * @default - defined in the construct.
      */

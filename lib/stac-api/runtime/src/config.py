@@ -1,5 +1,6 @@
 """API settings.
 Based on https://github.com/developmentseed/eoAPI/tree/master/src/eoapi/stac"""
+
 import base64
 import json
 from typing import Optional

@@ -54,3 +54,6 @@ Versioning is automatically handled via [Conventional Commits](https://www.conve
 _Warning_: If you rebase `main`, you must ensure that the commits referenced by tags point to commits that are within the `main` branch. If a commit references a commit that is no longer on the `main` branch, Semantic Release will fail to detect the correct version of the project. [More information](https://github.com/semantic-release/semantic-release/issues/1121#issuecomment-517945233).
 
 
+## Tests
+
+Each pull request to `main` is added to a [merge queue](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/configuring-pull-request-merges/managing-a-merge-queue#triggering-merge-group-checks-with-github-actions) so that a "deployment test" workflow can run before the merge actually happens. If the deployment fails, the merge is cancelled. Here is [the definition of this workflow](https://github.com/developmentseed/eoapi-cdk/blob/main/.github/workflows/deploy.yaml) and the [tests definition](https://github.com/developmentseed/eoapi-cdk/blob/main/tests).

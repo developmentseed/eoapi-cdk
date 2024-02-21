@@ -8,3 +8,6 @@ docs
 __pycache__
 .venv
 .tox
+tests/*.egg*
+tests/*venv*
+tests/__pycache__
