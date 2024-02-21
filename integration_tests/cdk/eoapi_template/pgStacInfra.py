@@ -1,7 +1,7 @@
 from aws_cdk import (
     Stack,
     aws_ec2,
-    aws_rds,
+    aws_rds
 )
 from constructs import Construct
 from eoapi_cdk import (
@@ -39,10 +39,7 @@ class pgStacInfraStack(Stack):
                 subnet_type=aws_ec2.SubnetType.PUBLIC,
             ),
             allocated_storage=app_config.db_allocated_storage,
-            instance_type=aws_ec2.InstanceType(app_config.db_instance_type),
-            bootstrapper_lambda_function_options={
-                "allow_public_subnet": True,
-            }
+            instance_type=aws_ec2.InstanceType(app_config.db_instance_type)
         )
 
         pgstac_db.db.connections.allow_default_port_from_any_ipv4()

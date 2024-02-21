@@ -115,7 +115,7 @@ export class StacIngestor extends Construct {
   }): lambda.Function {
         
     const handler = new lambda.Function(this, "api-handler", {
-      // defaults for configurable properties
+      // defaults
       runtime: lambda.Runtime.PYTHON_3_11,
       handler: "src.handler.handler",
       memorySize: 2048,
@@ -125,14 +125,13 @@ export class StacIngestor extends Construct {
         file: "runtime/Dockerfile",
         buildArgs: { PYTHON_VERSION: '3.11' },
       }),
-      // overwrites defaults with user-provided configurable properties
-      ...props.lambdaFunctionOptions,
-      // Non configurable properties that are going to be overwritten even if provided by the user
+      allowPublicSubnet: true,
       vpc: props.dbVpc,
       vpcSubnets: props.subnetSelection,
-      allowPublicSubnet: true,
       environment: { DB_SECRET_ARN: props.dbSecret.secretArn, ...props.env },
-      role: this.handlerRole
+      role: this.handlerRole,
+      // overwrites defaults with user-provided configurable properties
+      ...props.lambdaFunctionOptions,
     });
 
     // Allow handler to read DB secret
@@ -165,7 +164,7 @@ export class StacIngestor extends Construct {
 
     
     const handler = new lambda.Function(this, "stac-ingestor",{
-      // defaults for configurable properties
+      // defaults
       runtime: lambda.Runtime.PYTHON_3_11,
       handler: "src.ingestor.handler",
       memorySize: 2048,
@@ -175,15 +174,13 @@ export class StacIngestor extends Construct {
         file: "runtime/Dockerfile",
         buildArgs: { PYTHON_VERSION: '3.11' },
       }),
-      // overwrites defaults with user-provided configurable properties
-      ...props.lambdaFunctionOptions,
-
-      // Non configurable properties that are going to be overwritten even if provided by the user
       vpc: props.dbVpc,
       vpcSubnets: props.subnetSelection,
       allowPublicSubnet: true,
       environment: { DB_SECRET_ARN: props.dbSecret.secretArn, ...props.env },
-      role: this.handlerRole
+      role: this.handlerRole,
+      // overwrites defaults with user-provided configurable properties
+      ...props.lambdaFunctionOptions,
     });
 
     // Allow handler to read DB secret
@@ -322,14 +319,14 @@ export interface StacIngestorProps {
    readonly ingestorDomainNameOptions?: apigateway.DomainNameOptions;
 
   /**
-     * Optional settings for the lambda function. Can be anything that can be configured on the lambda function, but some will be overwritten by values defined here. 
+     * Can be used to override the default lambda function properties. 
      *
      * @default - default settings are defined in the construct.
      */
   readonly apiLambdaFunctionOptions?: CustomLambdaFunctionProps;
 
   /**
-     * Optional settings for the lambda function. Can be anything that can be configured on the lambda function, but some will be overwritten by values defined here. 
+     * Can be used to override the default lambda function properties. 
      *
      * @default - default settings are defined in the construct.
      */

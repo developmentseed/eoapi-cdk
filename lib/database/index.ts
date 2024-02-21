@@ -60,7 +60,7 @@ export class PgStacDatabase extends Construct {
     });
 
     const handler = new aws_lambda.Function(this, "lambda", {
-      // defaults for configurable properties
+      // defaults
       runtime: aws_lambda.Runtime.PYTHON_3_11,
       handler: "handler.handler",
       memorySize: 128,
@@ -70,11 +70,10 @@ export class PgStacDatabase extends Construct {
         file: "bootstrapper_runtime/Dockerfile",
         buildArgs: {PGSTAC_VERSION: DEFAULT_PGSTAC_VERSION, PYTHON_VERSION: "3.11"}
       }),
-      // overwrites defaults with user-provided configurable properties
-      ...props.bootstrapperLambdaFunctionOptions,
-      // Non configurable properties that are going to be overwritten even if provided by the user
       vpc: hasVpc(this.db) ? this.db.vpc : props.vpc,
       allowPublicSubnet: true,
+      // overwrites defaults with user-provided configurable properties,
+      ...props.bootstrapperLambdaFunctionOptions,
     });
 
     this.pgstacSecret = new secretsmanager.Secret(this, "bootstrappersecret", {
@@ -204,7 +203,7 @@ export interface PgStacDatabaseProps extends rds.DatabaseInstanceProps {
 }
 
   /**
-   * Optional settings for the bootstrapper lambda function. Can be anything that can be configured on the lambda function, but some will be overwritten by values defined here. 
+   * Can be used to override the default lambda function properties.
    *
    * @default - defined in the construct.
    */

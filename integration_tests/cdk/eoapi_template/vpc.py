@@ -32,7 +32,7 @@ class VpcStack(Stack):
             "CloudWatchEndpoint",
             service=aws_ec2.InterfaceVpcEndpointAwsService.CLOUDWATCH_LOGS,
         )
-        
+
         self.vpc.add_gateway_endpoint(
             "S3", service=aws_ec2.GatewayVpcEndpointAwsService.S3
         )
