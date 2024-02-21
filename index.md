@@ -1271,7 +1271,7 @@ const pgStacApiLambdaProps: PgStacApiLambdaProps = { ... }
 | <code><a href="#eoapi-cdk.PgStacApiLambdaProps.property.db">db</a></code> | <code>aws-cdk-lib.aws_rds.IDatabaseInstance</code> | RDS Instance with installed pgSTAC. |
 | <code><a href="#eoapi-cdk.PgStacApiLambdaProps.property.dbSecret">dbSecret</a></code> | <code>aws-cdk-lib.aws_secretsmanager.ISecret</code> | Secret containing connection information for pgSTAC database. |
 | <code><a href="#eoapi-cdk.PgStacApiLambdaProps.property.apiEnv">apiEnv</a></code> | <code>{[ key: string ]: string}</code> | Customized environment variables to send to fastapi-pgstac runtime. |
-| <code><a href="#eoapi-cdk.PgStacApiLambdaProps.property.lambdaFunctionOptions">lambdaFunctionOptions</a></code> | <code>any</code> | Optional settings for the lambda function. |
+| <code><a href="#eoapi-cdk.PgStacApiLambdaProps.property.lambdaFunctionOptions">lambdaFunctionOptions</a></code> | <code>any</code> | Can be used to override the default lambda function properties. |
 | <code><a href="#eoapi-cdk.PgStacApiLambdaProps.property.stacApiDomainName">stacApiDomainName</a></code> | <code>@aws-cdk/aws-apigatewayv2-alpha.IDomainName</code> | Custom Domain Name Options for STAC API,. |
 | <code><a href="#eoapi-cdk.PgStacApiLambdaProps.property.subnetSelection">subnetSelection</a></code> | <code>aws-cdk-lib.aws_ec2.SubnetSelection</code> | Subnet into which the lambda should be deployed. |
 | <code><a href="#eoapi-cdk.PgStacApiLambdaProps.property.vpc">vpc</a></code> | <code>aws-cdk-lib.aws_ec2.IVpc</code> | VPC into which the lambda should be deployed. |
@@ -1323,9 +1323,7 @@ public readonly lambdaFunctionOptions: any;
 - *Type:* any
 - *Default:* defined in the construct.
 
-Optional settings for the lambda function.
-
-Can be anything that can be configured on the lambda function, but some will be overwritten by values defined here.
+Can be used to override the default lambda function properties.
 
 ---
 
@@ -1432,7 +1430,7 @@ const pgStacDatabaseProps: PgStacDatabaseProps = { ... }
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.credentials">credentials</a></code> | <code>aws-cdk-lib.aws_rds.Credentials</code> | Credentials for the administrative user. |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.storageEncrypted">storageEncrypted</a></code> | <code>boolean</code> | Indicates whether the DB instance is encrypted. |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.storageEncryptionKey">storageEncryptionKey</a></code> | <code>aws-cdk-lib.aws_kms.IKey</code> | The KMS key that's used to encrypt the DB instance. |
-| <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.bootstrapperLambdaFunctionOptions">bootstrapperLambdaFunctionOptions</a></code> | <code>any</code> | Optional settings for the bootstrapper lambda function. |
+| <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.bootstrapperLambdaFunctionOptions">bootstrapperLambdaFunctionOptions</a></code> | <code>any</code> | Can be used to override the default lambda function properties. |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.customResourceProperties">customResourceProperties</a></code> | <code>{[ key: string ]: any}</code> | Lambda function Custom Resource properties. |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.pgstacDbName">pgstacDbName</a></code> | <code>string</code> | Name of database that is to be created and onto which pgSTAC will be installed. |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.pgstacUsername">pgstacUsername</a></code> | <code>string</code> | Name of user that will be generated for connecting to the pgSTAC database. |
@@ -2210,9 +2208,7 @@ public readonly bootstrapperLambdaFunctionOptions: any;
 - *Type:* any
 - *Default:* defined in the construct.
 
-Optional settings for the bootstrapper lambda function.
-
-Can be anything that can be configured on the lambda function, but some will be overwritten by values defined here.
+Can be used to override the default lambda function properties.
 
 ---
 
@@ -2414,10 +2410,10 @@ const stacIngestorProps: StacIngestorProps = { ... }
 | <code><a href="#eoapi-cdk.StacIngestorProps.property.stage">stage</a></code> | <code>string</code> | Stage of deployment (e.g. `dev`, `prod`). |
 | <code><a href="#eoapi-cdk.StacIngestorProps.property.apiEndpointConfiguration">apiEndpointConfiguration</a></code> | <code>aws-cdk-lib.aws_apigateway.EndpointConfiguration</code> | API Endpoint Configuration, useful for creating private APIs. |
 | <code><a href="#eoapi-cdk.StacIngestorProps.property.apiEnv">apiEnv</a></code> | <code>{[ key: string ]: string}</code> | Environment variables to be sent to Lambda. |
-| <code><a href="#eoapi-cdk.StacIngestorProps.property.apiLambdaFunctionOptions">apiLambdaFunctionOptions</a></code> | <code>any</code> | Optional settings for the lambda function. |
+| <code><a href="#eoapi-cdk.StacIngestorProps.property.apiLambdaFunctionOptions">apiLambdaFunctionOptions</a></code> | <code>any</code> | Can be used to override the default lambda function properties. |
 | <code><a href="#eoapi-cdk.StacIngestorProps.property.apiPolicy">apiPolicy</a></code> | <code>aws-cdk-lib.aws_iam.PolicyDocument</code> | API Policy Document, useful for creating private APIs. |
 | <code><a href="#eoapi-cdk.StacIngestorProps.property.ingestorDomainNameOptions">ingestorDomainNameOptions</a></code> | <code>aws-cdk-lib.aws_apigateway.DomainNameOptions</code> | Custom Domain Name Options for Ingestor API. |
-| <code><a href="#eoapi-cdk.StacIngestorProps.property.ingestorLambdaFunctionOptions">ingestorLambdaFunctionOptions</a></code> | <code>any</code> | Optional settings for the lambda function. |
+| <code><a href="#eoapi-cdk.StacIngestorProps.property.ingestorLambdaFunctionOptions">ingestorLambdaFunctionOptions</a></code> | <code>any</code> | Can be used to override the default lambda function properties. |
 | <code><a href="#eoapi-cdk.StacIngestorProps.property.subnetSelection">subnetSelection</a></code> | <code>aws-cdk-lib.aws_ec2.SubnetSelection</code> | Subnet into which the lambda should be deployed if using a VPC. |
 | <code><a href="#eoapi-cdk.StacIngestorProps.property.vpc">vpc</a></code> | <code>aws-cdk-lib.aws_ec2.IVpc</code> | VPC running pgSTAC DB. |
 
@@ -2516,9 +2512,7 @@ public readonly apiLambdaFunctionOptions: any;
 - *Type:* any
 - *Default:* default settings are defined in the construct.
 
-Optional settings for the lambda function.
-
-Can be anything that can be configured on the lambda function, but some will be overwritten by values defined here.
+Can be used to override the default lambda function properties.
 
 ---
 
@@ -2555,9 +2549,7 @@ public readonly ingestorLambdaFunctionOptions: any;
 - *Type:* any
 - *Default:* default settings are defined in the construct.
 
-Optional settings for the lambda function.
-
-Can be anything that can be configured on the lambda function, but some will be overwritten by values defined here.
+Can be used to override the default lambda function properties.
 
 ---
 
@@ -2602,7 +2594,7 @@ const tiPgApiLambdaProps: TiPgApiLambdaProps = { ... }
 | <code><a href="#eoapi-cdk.TiPgApiLambdaProps.property.db">db</a></code> | <code>aws-cdk-lib.aws_rds.IDatabaseInstance</code> | RDS Instance with installed pgSTAC. |
 | <code><a href="#eoapi-cdk.TiPgApiLambdaProps.property.dbSecret">dbSecret</a></code> | <code>aws-cdk-lib.aws_secretsmanager.ISecret</code> | Secret containing connection information for pgSTAC database. |
 | <code><a href="#eoapi-cdk.TiPgApiLambdaProps.property.apiEnv">apiEnv</a></code> | <code>{[ key: string ]: string}</code> | Customized environment variables to send to titiler-pgstac runtime. |
-| <code><a href="#eoapi-cdk.TiPgApiLambdaProps.property.lambdaFunctionOptions">lambdaFunctionOptions</a></code> | <code>any</code> | Optional settings for the lambda function. |
+| <code><a href="#eoapi-cdk.TiPgApiLambdaProps.property.lambdaFunctionOptions">lambdaFunctionOptions</a></code> | <code>any</code> | Can be used to override the default lambda function properties. |
 | <code><a href="#eoapi-cdk.TiPgApiLambdaProps.property.subnetSelection">subnetSelection</a></code> | <code>aws-cdk-lib.aws_ec2.SubnetSelection</code> | Subnet into which the lambda should be deployed. |
 | <code><a href="#eoapi-cdk.TiPgApiLambdaProps.property.tipgApiDomainName">tipgApiDomainName</a></code> | <code>@aws-cdk/aws-apigatewayv2-alpha.IDomainName</code> | Custom Domain Name for tipg API. |
 | <code><a href="#eoapi-cdk.TiPgApiLambdaProps.property.vpc">vpc</a></code> | <code>aws-cdk-lib.aws_ec2.IVpc</code> | VPC into which the lambda should be deployed. |
@@ -2654,9 +2646,7 @@ public readonly lambdaFunctionOptions: any;
 - *Type:* any
 - *Default:* defined in the construct.
 
-Optional settings for the lambda function.
-
-Can be anything that can be configured on the lambda function, but some will be overwritten by values defined here.
+Can be used to override the default lambda function properties.
 
 ---
 
@@ -2718,7 +2708,7 @@ const titilerPgStacApiLambdaProps: TitilerPgStacApiLambdaProps = { ... }
 | <code><a href="#eoapi-cdk.TitilerPgStacApiLambdaProps.property.dbSecret">dbSecret</a></code> | <code>aws-cdk-lib.aws_secretsmanager.ISecret</code> | Secret containing connection information for pgSTAC database. |
 | <code><a href="#eoapi-cdk.TitilerPgStacApiLambdaProps.property.apiEnv">apiEnv</a></code> | <code>{[ key: string ]: string}</code> | Customized environment variables to send to titiler-pgstac runtime. |
 | <code><a href="#eoapi-cdk.TitilerPgStacApiLambdaProps.property.buckets">buckets</a></code> | <code>string[]</code> | list of buckets the lambda will be granted access to. |
-| <code><a href="#eoapi-cdk.TitilerPgStacApiLambdaProps.property.lambdaFunctionOptions">lambdaFunctionOptions</a></code> | <code>any</code> | Optional settings for the lambda function. |
+| <code><a href="#eoapi-cdk.TitilerPgStacApiLambdaProps.property.lambdaFunctionOptions">lambdaFunctionOptions</a></code> | <code>any</code> | Can be used to override the default lambda function properties. |
 | <code><a href="#eoapi-cdk.TitilerPgStacApiLambdaProps.property.subnetSelection">subnetSelection</a></code> | <code>aws-cdk-lib.aws_ec2.SubnetSelection</code> | Subnet into which the lambda should be deployed. |
 | <code><a href="#eoapi-cdk.TitilerPgStacApiLambdaProps.property.titilerPgstacApiDomainName">titilerPgstacApiDomainName</a></code> | <code>@aws-cdk/aws-apigatewayv2-alpha.IDomainName</code> | Custom Domain Name Options for Titiler Pgstac API,. |
 | <code><a href="#eoapi-cdk.TitilerPgStacApiLambdaProps.property.vpc">vpc</a></code> | <code>aws-cdk-lib.aws_ec2.IVpc</code> | VPC into which the lambda should be deployed. |
@@ -2786,9 +2776,7 @@ public readonly lambdaFunctionOptions: any;
 - *Type:* any
 - *Default:* defined in the construct.
 
-Optional settings for the lambda function.
-
-Can be anything that can be configured on the lambda function, but some will be overwritten by values defined here.
+Can be used to override the default lambda function properties.
 
 ---
 
