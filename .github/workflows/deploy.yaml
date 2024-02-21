@@ -1,7 +1,6 @@
 name: Test deployment
 
 on:
-  pull_request:
   merge_group:
     branches: [ main ]
     
@@ -66,11 +65,12 @@ jobs:
         run: |
           cd integration_tests/cdk
           # run this only if we find a 'cdk.out' directory, which means there might be things to tear down
-          # see https://github.com/aws/aws-cdk/issues/24946
-          # rm -f cdk.out/synth.lock
           if [ -d "cdk.out" ]; then
             cd -
             source .deployment_venv/bin/activate
             cd integration_tests/cdk
+            # see https://github.com/aws/aws-cdk/issues/24946
+            # this didn't work : rm -f cdk.out/synth.lock
+            # so we just duplicate the cdk output to cdk-destroy.out
             npx cdk destroy --output cdk-destroy.out --ci --all --force
           fi
