@@ -1,8 +1,7 @@
-This is a non-forked version of [eoapi-template](https://github.com/developmentseed/eoapi-template).
 
-# Deployment CDK code for eoapi-cdk integration tests
+# Deployment CDK code for eoapi-cdk deployment tests
 
-This is a wrapper CDK code that provides the `eoapi-cdk` deployment to run integration tests on the latest releases of the `eoapi-cdk` constructs.
+This is a wrapper CDK code that is used to test a deployment of the `eoapi-cdk` constructs before a release happens.
 
 ## Requirements
 
@@ -10,7 +9,6 @@ This is a wrapper CDK code that provides the `eoapi-cdk` deployment to run integ
 - docker
 - node
 - AWS credentials environment variables configured to point to an account. 
-- **Optional** a `config.yaml` file to override the default deployment settings defined in `config.py`.
 
 ## Installation
 

@@ -56,4 +56,4 @@ _Warning_: If you rebase `main`, you must ensure that the commits referenced by 
 
 ## Tests
 
-Each new release triggers an integration test against a running deployment that uses the newly releases constructs. See the corresponding [github workflow](https://github.com/developmentseed/eoapi-cdk/blob/main/.github/workflows/deploy.yaml) and the [tests definition](https://github.com/developmentseed/eoapi-cdk/blob/main/tests).
+Each pull request to `main` is added to a [merge queue](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/configuring-pull-request-merges/managing-a-merge-queue#triggering-merge-group-checks-with-github-actions) so that a "deployment test" workflow can run before the merge actually happens. If the deployment fails, the merge is cancelled. Here is [the definition of this workflow](https://github.com/developmentseed/eoapi-cdk/blob/main/.github/workflows/deploy.yaml) and the [tests definition](https://github.com/developmentseed/eoapi-cdk/blob/main/tests).
