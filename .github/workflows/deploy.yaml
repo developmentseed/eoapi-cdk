@@ -1,7 +1,9 @@
 name: Test deployment
 
 on:
+  pull_request:
   merge_group:
+    branches: [ main ]
     
 jobs:
   build_package_and_deploy:
@@ -54,11 +56,8 @@ jobs:
           cd integration_tests/cdk
           npx cdk synth --debug --all --require-approval never
 
-          # deploy the stack and grab URLs for testing
+          # deploy the stack
           npx cdk deploy --ci --all --require-approval never
-          echo "ingestor_url=$(aws cloudformation describe-stacks --stack-name eoapi-cdk-integration-test-pgSTAC-infra --query "Stacks[0].Outputs[?starts_with(OutputKey, 'stacingestor')].OutputValue | [0]" --output text)" >> $GITHUB_OUTPUT
-          echo "stac_api_url=$(aws cloudformation describe-stacks --stack-name eoapi-cdk-integration-test-pgSTAC-infra --query "Stacks[0].Outputs[?starts_with(OutputKey, 'pgstacapi')].OutputValue | [0]" --output text)" >> $GITHUB_OUTPUT
-          echo "titiler_pgstac_api_url=$(aws cloudformation describe-stacks --stack-name eoapi-cdk-integration-test-pgSTAC-infra --query "Stacks[0].Outputs[?starts_with(OutputKey, 'titilerpgstac')].OutputValue | [0]" --output text)" >> $GITHUB_OUTPUT
           deactivate
           cd -
           
@@ -67,11 +66,11 @@ jobs:
         run: |
           cd integration_tests/cdk
           # run this only if we find a 'cdk.out' directory, which means there might be things to tear down
+          # see https://github.com/aws/aws-cdk/issues/24946
+          # rm -f cdk.out/synth.lock
           if [ -d "cdk.out" ]; then
             cd -
             source .deployment_venv/bin/activate
             cd integration_tests/cdk
-            # see https://github.com/aws/aws-cdk/issues/24946
-            rm -f cdk.out/synth.lock
-            npx cdk destroy --ci --all --force
+            npx cdk destroy --output cdk-destroy.out --ci --all --force
           fi
