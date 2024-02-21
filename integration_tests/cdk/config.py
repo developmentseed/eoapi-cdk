@@ -14,7 +14,7 @@ class AppConfig(BaseSettings):
         description="AWS account ID"
     )
     project_id: str = pydantic.Field(
-        description="Project ID", default="eoapi-cdk-integration"
+        description="Project ID", default="eoapi-cdk"
     )
     stage: str = pydantic.Field(description="Stage of deployment", default="test")
     # because of its validator, `tags` should always come after `project_id` and `stage`
