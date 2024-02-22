@@ -58,17 +58,6 @@ jobs:
           npx cdk deploy --ci --all --require-approval never
           deactivate
           cd -
-
-      - name: Release synth lock
-        if: always()
-        run: |
-          # see https://github.com/aws/aws-cdk/issues/24946
-
-          if [-d "integration_tests/cdk/cdk.out"]; then
-            ls -la integration_tests/cdk/cdk.out
-            rm -f integration_tests/cdk/cdk.out/synth.lock
-          fi
-
           
       - name: Tear down any infrastructure
         if: always()
@@ -79,5 +68,8 @@ jobs:
             cd -
             source .deployment_venv/bin/activate
             cd integration_tests/cdk
-            npx cdk destroy --ci --all --force
+            # see https://github.com/aws/aws-cdk/issues/24946
+            # this didn't work : rm -f cdk.out/synth.lock
+            # so we just duplicate the cdk output to cdk-destroy.out
+            npx cdk destroy --output cdk-destroy.out --ci --all --force
           fi
