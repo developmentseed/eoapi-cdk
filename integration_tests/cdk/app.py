@@ -12,10 +12,6 @@ from eoapi_cdk import (
     TitilerPgstacApiLambda,
     TiPgApiLambda,
 )
-import datetime
-
-# to get (almost) unique stack ids but encoded in letters because cfn doesn't like numbers sometimes
-timestamp_in_letters = ''.join(['abcdefghij'[int(i)] for i in datetime.datetime.utcnow().strftime("%Y%m%d%H%M%S")])
 
 
 class VpcStack(Stack):
@@ -140,13 +136,17 @@ app = App()
 
 app_config = build_app_config()
 
-vpc_stack = VpcStack(scope=app, app_config=app_config, id=f"{app_config.build_service_name('vpc')}-{timestamp_in_letters}")
+vpc_stack_id = f"{app_config.build_service_name('vpc')}".replace('/','')
+
+vpc_stack = VpcStack(scope=app, app_config=app_config, id=vpc_stack_id)
+
+pgstac_infra_stack_id = f"{app_config.build_service_name('pgstac')}".replace('/','')
 
 pgstac_infra_stack = pgStacInfraStack(
     scope=app,
     vpc=vpc_stack.vpc,
     app_config=app_config,
-    id=f"{app_config.build_service_name('pgstac')}-{timestamp_in_letters}"
+    id=pgstac_infra_stack_id
 )
 
 app.synth()
