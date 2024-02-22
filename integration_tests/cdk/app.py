@@ -3,7 +3,8 @@ from aws_cdk import (
     Stack,
     aws_ec2,
     aws_rds,
-    App
+    App,
+    RemovalPolicy
 )
 from constructs import Construct
 from eoapi_cdk import (
@@ -86,7 +87,8 @@ class pgStacInfraStack(Stack):
                 subnet_type=aws_ec2.SubnetType.PUBLIC,
             ),
             allocated_storage=app_config.db_allocated_storage,
-            instance_type=aws_ec2.InstanceType(app_config.db_instance_type)
+            instance_type=aws_ec2.InstanceType(app_config.db_instance_type),
+            removal_policy=RemovalPolicy.DESTROY
         )
 
         pgstac_db.db.connections.allow_default_port_from_any_ipv4()
@@ -136,11 +138,11 @@ app = App()
 
 app_config = build_app_config()
 
-vpc_stack_id = f"{app_config.build_service_name('vpc')}".replace('/','')
+vpc_stack_id = f"vpc{app_config.project_id}"
 
 vpc_stack = VpcStack(scope=app, app_config=app_config, id=vpc_stack_id)
 
-pgstac_infra_stack_id = f"{app_config.build_service_name('pgstac')}".replace('/','')
+pgstac_infra_stack_id = f"pgstac{app_config.project_id}"
 
 pgstac_infra_stack = pgStacInfraStack(
     scope=app,

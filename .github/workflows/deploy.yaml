@@ -44,15 +44,16 @@ jobs:
           deactivate
           cd -
 
-      # we'll use that to name the stack
-      - name: Get branch names
-        id: branch-names
-        uses: tj-actions/branch-names@v8
+      # use short commit SHA to name stacks
+      - uses: benjlevesque/short-sha@v3.0
+        id: short-sha
+        with:
+          length: 6
 
       - name: Deploy test stack
         id: deploy_step
         env:
-          PROJECT_ID: ${{ steps.branch-names.outputs.current_branch }}
+          PROJECT_ID: ${{ steps.short-sha.outputs.sha }}
         run: |
           source .deployment_venv/bin/activate
           
@@ -68,7 +69,7 @@ jobs:
       - name: Tear down any infrastructure
         if: always()
         env:
-          PROJECT_ID: ${{ steps.branch-names.outputs.current_branch }}
+          PROJECT_ID: ${{ steps.short-sha.outputs.sha }}
         run: |
           cd integration_tests/cdk
           # run this only if we find a 'cdk.out' directory, which means there might be things to tear down
