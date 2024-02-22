@@ -2,7 +2,7 @@ name: Deployment
 
 on:
   workflow_dispatch:
-    
+   
 jobs:
   build_package_and_deploy:
     name: Build, package and deploy
