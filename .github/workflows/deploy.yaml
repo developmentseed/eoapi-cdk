@@ -1,8 +1,7 @@
-name: Test deployment
+name: Deployment
 
 on:
-  merge_group:
-    branches: [ main ]
+  workflow_dispatch:
     
 jobs:
   build_package_and_deploy:
