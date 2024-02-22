@@ -1,3 +1,53 @@
+# [7.0.0](https://github.com/developmentseed/eoapi-cdk/compare/v6.1.0...v7.0.0) (2024-02-22)
+
+
+### Features
+
+* add integration tests ([#69](https://github.com/developmentseed/eoapi-cdk/issues/69)) ([17eec16](https://github.com/developmentseed/eoapi-cdk/commit/17eec16b944e4ca489ddcd610aeef2c1c8a5f203))
+
+
+### BREAKING CHANGES
+
+* clients need to provide aws_lambda.AssetCode to configure their apps. Solely the python application and the requirements.txt file is not supported anymore.
+
+* fix a couple bugs found in the first changes
+
+* avoid maintaining custom interfaces for configurable lambda properties. Allow the user to provide anything and let the CDK method raise error and overwrite values defined within our construct. Make this clear in the documentation
+
+* expose bootstrapper props in pgstacdatabase construct constructor
+
+* merge database and boostrapper files to solve casting bug
+
+* bump and harmonize pypgstac to 0.7.10 across apps
+
+* bump cachetools
+
+* some changes to allow for less security
+
+* bump python to 3.11
+
+* change base image for bootstrapper to use python 311
+
+* fix linting issues
+
+* move integration tests to step before release, improve naming of workflows
+
+* lint
+
+* fix moto requirement
+
+* test to fix deployment : try adding s3 endpoint and force allow public subnet
+
+* lint and make lambda functions more configurable
+
+* moving deploy to a separate workflow
+
+* remove useless dependencies in deployment tests, turn on pull request trigger to check the action works
+
+* when tearing down the infrastructure, synthesize the cloud formation assets into another directory to avoid conflicts
+
+* update readmes and revive the artifact download in python distribution
+
 # [6.1.0](https://github.com/developmentseed/eoapi-cdk/compare/v6.0.2...v6.1.0) (2023-11-12)
 
 
