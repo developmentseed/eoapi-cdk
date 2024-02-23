@@ -1575,7 +1575,7 @@ public readonly deleteAutomatedBackups: boolean;
 ```
 
 - *Type:* boolean
-- *Default:* false
+- *Default:* true
 
 Indicates whether automated backups should be deleted or retained when you delete a DB instance.
 
@@ -1630,7 +1630,7 @@ public readonly enablePerformanceInsights: boolean;
 ```
 
 - *Type:* boolean
-- *Default:* false, unless ``performanceInsightRentention`` or ``performanceInsightEncryptionKey`` is set.
+- *Default:* false, unless ``performanceInsightRetention`` or ``performanceInsightEncryptionKey`` is set.
 
 Whether to enable Performance Insights for the DB instance.
 
@@ -1867,9 +1867,13 @@ public readonly publiclyAccessible: boolean;
 ```
 
 - *Type:* boolean
-- *Default:* `true` if `vpcSubnets` is `subnetType: SubnetType.PUBLIC`, `false` otherwise
+- *Default:* `true` if the instance's `vpcSubnets` is `subnetType: SubnetType.PUBLIC`, `false` otherwise
 
 Indicates whether the DB instance is an internet-facing instance.
+
+If not specified,
+the instance's vpcSubnets will be used to determine if the instance is internet-facing
+or not.
 
 ---
 
