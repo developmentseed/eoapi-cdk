@@ -22,6 +22,7 @@
     "email": "anthony@developmentseed.org"
   },
   "repository": {
+    "type": "git",
     "url": "https://github.com/developmentseed/eoapi-cdk.git"
   },
   "license": "ISC",
@@ -41,27 +42,27 @@
     "@semantic-release/changelog": "^6.0.1",
     "@semantic-release/git": "^10.0.1",
     "@types/node": "^18.7.23",
-    "jsii": "^1.68.0",
-    "jsii-docgen": "^7.0.119",
-    "jsii-pacmak": "^1.68.0",
+    "jsii": "5.3.20",
+    "jsii-docgen": "10.3.17",
+    "jsii-pacmak": "1.94.0",
     "nodemon": "^2.0.20",
     "npm-run-all": "^4.1.5",
     "prettier": "^2.7.1",
-    "semantic-release": "^19.0.5"
+    "semantic-release": "^19.0.5",
+    "aws-cdk-lib": "2.130.0",
+    "constructs": "10.3.0",
+    "@aws-cdk/aws-apigatewayv2-alpha": "2.114.1-alpha.0"
   },
   "dependencies": {
-    "@aws-cdk/aws-apigatewayv2-integrations-alpha": "^2.47.0-alpha.0",
-    "@aws-cdk/aws-lambda-python-alpha": "^2.47.0-alpha.0",
-    "aws-cdk-lib": "^2.99.1",
-    "constructs": "^10.1.113",
-    "module": "^1.2.5"
+    "@aws-cdk/aws-apigatewayv2-integrations-alpha": "2.114.1-alpha.0",
+    "@aws-cdk/aws-apigatewayv2-alpha": "2.114.1-alpha.0",
+    "aws-cdk-lib": "2.130.0",
+    "constructs": "10.3.0"
   },
-  "bundledDependencies": [
-    "module"
-  ],
   "peerDependencies": {
-    "aws-cdk-lib": "^2.99.1",
-    "constructs": "^10.1.113"
+    "aws-cdk-lib": "2.130.0",
+    "constructs": "10.3.0",
+    "@aws-cdk/aws-apigatewayv2-alpha": "2.114.1-alpha.0"
   },
   "release": {
     "branches": [
