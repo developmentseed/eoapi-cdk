@@ -1,3 +1,10 @@
+## [7.0.1](https://github.com/developmentseed/eoapi-cdk/compare/v7.0.0...v7.0.1) (2024-02-23)
+
+
+### Bug Fixes
+
+* dependencies ([#97](https://github.com/developmentseed/eoapi-cdk/issues/97)) ([b09b510](https://github.com/developmentseed/eoapi-cdk/commit/b09b51002b1b2d7fd73ec27d763cd3a511fec2dc))
+
 # [7.0.0](https://github.com/developmentseed/eoapi-cdk/compare/v6.1.0...v7.0.0) (2024-02-22)
 
 
