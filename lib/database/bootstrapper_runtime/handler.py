@@ -4,6 +4,7 @@ Source: https://github.com/developmentseed/eoAPI/blob/master/deployment/handlers
 """
 
 import json
+import logging
 
 import boto3
 import httpx
@@ -12,6 +13,8 @@ from psycopg import sql
 from psycopg.conninfo import make_conninfo
 from pypgstac.db import PgstacDB
 from pypgstac.migrate import Migrate
+
+logger = logging.getLogger("eoapi-bootstrap")
 
 
 def send(
@@ -66,8 +69,10 @@ def send(
             timeout=30,
         )
         print("Status code: " + response.status_code)
+        logger.debug(f"OK - Status code: {response.status_code}")
     except Exception as e:
         print("send(..) failed executing httpx.put(..): " + str(e))
+        logger.debug(f"NOK - failed executing PUT requests:  {e}")
 
 
 def get_secret(secret_name):
@@ -140,6 +145,33 @@ def register_extensions(cursor) -> None:
     cursor.execute(sql.SQL("CREATE EXTENSION IF NOT EXISTS postgis;"))
 
 
+###############################################################################
+# PgSTAC Customization
+###############################################################################
+def customization(cursor, params) -> None:
+    """
+    CUSTOMIZED YOUR PGSTAC DATABASE
+
+    ref: https://github.com/stac-utils/pgstac/blob/main/docs/src/pgstac.md
+
+    """
+    if params.get("context", False):
+        # Add CONTEXT=ON
+        pgstac_settings = """
+        INSERT INTO pgstac_settings (name, value)
+        VALUES ('context', 'on')
+        ON CONFLICT ON CONSTRAINT pgstac_settings_pkey DO UPDATE SET value = excluded.value;"""
+        cursor.execute(sql.SQL(pgstac_settings))
+
+    if params.get("mosaic_index", False):
+        # Create index of searches with `mosaic`` type
+        cursor.execute(
+            sql.SQL(
+                "CREATE INDEX IF NOT EXISTS searches_mosaic ON searches ((true)) WHERE metadata->>'type'='mosaic';"
+            )
+        )
+
+
 def handler(event, context):
     """Lambda Handler."""
     print(f"Handling {event}")
@@ -203,12 +235,12 @@ def handler(event, context):
             )
         )
 
-        pgdb = PgstacDB(dsn=stac_db_admin_dsn, debug=True)
-        print(f"Current {pgdb.version=}")
+        with PgstacDB(dsn=stac_db_admin_dsn, debug=True) as pgdb:
+            print(f"Current {pgdb.version=}")
 
-        # As admin, run migrations
-        print("Running migrations...")
-        Migrate(pgdb).run_migration(params["pgstac_version"])
+            # As admin, run migrations
+            print("Running migrations...")
+            Migrate(pgdb).run_migration(params["pgstac_version"])
 
         # Assign appropriate permissions to user (requires pgSTAC migrations to have run)
         with psycopg.connect(admin_db_conninfo, autocommit=True) as conn:
@@ -220,17 +252,27 @@ def handler(event, context):
                     username=user_params["username"],
                 )
 
-        print("Adding mosaic index...")
+        print("Customize PgSTAC database...")
         with psycopg.connect(
             stac_db_admin_dsn,
             autocommit=True,
             options="-c search_path=pgstac,public -c application_name=pgstac",
         ) as conn:
-            conn.execute(
-                sql.SQL(
-                    "CREATE INDEX IF NOT EXISTS searches_mosaic ON searches ((true)) WHERE metadata->>'type'='mosaic';"
-                )
+            with conn.cursor() as cur:
+                customization(cursor=cur, params=params)
+
+        # Make sure the user can access the database
+        stac_db_user_dsn = (
+            "postgresql://{user}:{password}@{host}:{port}/{dbname}".format(
+                dbname=user_params.get("dbname", "postgres"),
+                user=user_params["username"],
+                password=user_params["password"],
+                host=connection_params["host"],
+                port=connection_params["port"],
             )
+        )
+        with PgstacDB(dsn=stac_db_user_dsn, debug=True) as pgdb:
+            print(f"User can access pgstac: {pgdb.version}")
 
     except Exception as e:
         print(f"Unable to bootstrap database with exception={e}")
