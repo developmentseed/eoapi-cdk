@@ -17,8 +17,8 @@ const instanceSizes: Record<string, number> = require("./instance-memory.json");
 const DEFAULT_PGSTAC_VERSION = "0.8.4";
 
 let defaultPgSTACCustomOptions :{ [key: string]: any } = {
-  "context": true,
-  "mosaic_index": true
+  "context": "FALSE",
+  "mosaic_index": "TRUE"
 }
 
 function hasVpc(

@@ -155,7 +155,7 @@ def customization(cursor, params) -> None:
     ref: https://github.com/stac-utils/pgstac/blob/main/docs/src/pgstac.md
 
     """
-    if params.get("context", False):
+    if str(params.get("context", "FALSE")).upper() == "TRUE":
         # Add CONTEXT=ON
         pgstac_settings = """
         INSERT INTO pgstac_settings (name, value)
@@ -163,7 +163,7 @@ def customization(cursor, params) -> None:
         ON CONFLICT ON CONSTRAINT pgstac_settings_pkey DO UPDATE SET value = excluded.value;"""
         cursor.execute(sql.SQL(pgstac_settings))
 
-    if params.get("mosaic_index", False):
+    if str(params.get("mosaic_index", "TRUE")).upper() == "TRUE":
         # Create index of searches with `mosaic`` type
         cursor.execute(
             sql.SQL(
