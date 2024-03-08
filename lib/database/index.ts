@@ -14,7 +14,7 @@ import { Construct } from "constructs";
 import { CustomLambdaFunctionProps } from "../utils";
 
 const instanceSizes: Record<string, number> = require("./instance-memory.json");
-const DEFAULT_PGSTAC_VERSION = "0.8.4";
+const DEFAULT_PGSTAC_VERSION = "0.7.1";
 
 let defaultPgSTACCustomOptions :{ [key: string]: any } = {
   "context": "FALSE",
