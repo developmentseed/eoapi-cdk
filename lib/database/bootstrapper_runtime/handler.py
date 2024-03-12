@@ -39,10 +39,6 @@ def send(
     It isn't available for source code that's stored in Amazon S3 buckets.
     For code in buckets, you must write your own functions to send responses.
     """
-    responseUrl = event["ResponseURL"]
-
-    print(responseUrl)
-
     responseBody = {}
     responseBody["Status"] = responseStatus
     responseBody["Reason"] = (
@@ -56,20 +52,18 @@ def send(
     responseBody["Data"] = responseData
 
     json_responseBody = json.dumps(responseBody)
-
-    print("Response body:\n" + json_responseBody)
-
-    headers = {"content-type": "", "content-length": str(len(json_responseBody))}
+    print("Response body:\n     " + json_responseBody)
 
     try:
         response = httpx.put(
-            responseUrl,
+            event["ResponseURL"],
             data=json_responseBody,
-            headers=headers,
+            headers={"content-type": "", "content-length": str(len(json_responseBody))},
             timeout=30,
         )
-        print("Status code: " + response.status_code)
+        print("Status code: ", response.status_code)
         logger.debug(f"OK - Status code: {response.status_code}")
+
     except Exception as e:
         print("send(..) failed executing httpx.put(..): " + str(e))
         logger.debug(f"NOK - failed executing PUT requests:  {e}")
@@ -89,9 +83,9 @@ def create_db(cursor, db_name: str) -> None:
         sql.SQL("SELECT 1 FROM pg_catalog.pg_database " "WHERE datname = %s"), [db_name]
     )
     if cursor.fetchone():
-        print(f"database {db_name} exists, not creating DB")
+        print(f"    database {db_name} exists, not creating DB")
     else:
-        print(f"database {db_name} not found, creating...")
+        print(f"    database {db_name} not found, creating...")
         cursor.execute(
             sql.SQL("CREATE DATABASE {db_name}").format(db_name=sql.Identifier(db_name))
         )
@@ -198,13 +192,13 @@ def handler(event, context):
         )
         with psycopg.connect(rds_conninfo, autocommit=True) as conn:
             with conn.cursor() as cur:
-                print(f"Creating eoAPI *{eoapi_params['dbname']}* database...")
+                print(f"Creating eoAPI '{eoapi_params['dbname']}' database...")
                 create_db(
                     cursor=cur,
                     db_name=eoapi_params["dbname"],
                 )
 
-                print(f"Creating eoAPI *{eoapi_params['username']}* user...")
+                print(f"Creating eoAPI '{eoapi_params['username']}' user...")
                 create_user(
                     cursor=cur,
                     username=eoapi_params["username"],
@@ -213,7 +207,7 @@ def handler(event, context):
 
         # Install postgis and pgstac on the eoapi database with
         # superuser permissions
-        print(f"Connecting to eoAPI *{eoapi_params['dbname']}* database...")
+        print(f"Connecting to eoAPI '{eoapi_params['dbname']}' database...")
         eoapi_db_admin_conninfo = make_conninfo(
             dbname=eoapi_params["dbname"],
             user=admin_params["username"],
@@ -224,7 +218,7 @@ def handler(event, context):
         with psycopg.connect(eoapi_db_admin_conninfo, autocommit=True) as conn:
             with conn.cursor() as cur:
                 print(
-                    f"Registering Extension in *{eoapi_params['dbname']}* database..."
+                    f"Registering Extension in '{eoapi_params['dbname']}' database..."
                 )
                 register_extensions(cursor=cur)
 
@@ -235,35 +229,25 @@ def handler(event, context):
                 print(f"Running migrations to PgSTAC {params['pgstac_version']}...")
                 Migrate(pgdb).run_migration(params["pgstac_version"])
 
+        with psycopg.connect(
+            eoapi_db_admin_conninfo,
+            autocommit=True,
+            options="-c search_path=pgstac,public -c application_name=pgstac",
+        ) as conn:
+            print("Customize PgSTAC database...")
             # Update permissions to eoAPI user to assume pgstac_* roles
             with conn.cursor() as cur:
-                print(f"Update *{eoapi_params['username']}* permissions...")
+                print(f"Update '{eoapi_params['username']}' permissions...")
                 update_user_permissions(
                     cursor=cur,
                     db_name=eoapi_params["dbname"],
                     username=eoapi_params["username"],
                 )
 
-        stac_db_admin_dsn = (
-            "postgresql://{user}:{password}@{host}:{port}/{dbname}".format(
-                dbname=eoapi_params["dbname"],
-                user=admin_params["username"],
-                password=admin_params["password"],
-                host=admin_params["host"],
-                port=admin_params["port"],
-            )
-        )
-        with psycopg.connect(
-            stac_db_admin_dsn,
-            autocommit=True,
-            options="-c search_path=pgstac,public -c application_name=pgstac",
-        ) as conn:
-            print("Customize PgSTAC database...")
-            with conn.cursor() as cur:
                 customization(cursor=cur, params=params)
 
         # Make sure the user can access the database
-        stac_db_user_dsn = (
+        eoapi_user_dsn = (
             "postgresql://{user}:{password}@{host}:{port}/{dbname}".format(
                 dbname=eoapi_params["dbname"],
                 user=eoapi_params["username"],
@@ -272,8 +256,9 @@ def handler(event, context):
                 port=admin_params["port"],
             )
         )
-        with PgstacDB(dsn=stac_db_user_dsn, debug=True) as pgdb:
-            print(f"User can access pgstac: {pgdb.version}")
+        print("Checking eoAPI user access to the PgSTAC database...")
+        with PgstacDB(dsn=eoapi_user_dsn, debug=True) as pgdb:
+            print(f"    OK - User has access to pgstac db, pgstac schema version: {pgdb.version}")
 
     except Exception as e:
         print(f"Unable to bootstrap database with exception={e}")
