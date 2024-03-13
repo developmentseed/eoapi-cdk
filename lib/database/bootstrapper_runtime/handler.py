@@ -4,6 +4,7 @@ Source: https://github.com/developmentseed/eoAPI/blob/master/deployment/handlers
 """
 
 import json
+import logging
 
 import boto3
 import httpx
@@ -12,6 +13,8 @@ from psycopg import sql
 from psycopg.conninfo import make_conninfo
 from pypgstac.db import PgstacDB
 from pypgstac.migrate import Migrate
+
+logger = logging.getLogger("eoapi-bootstrap")
 
 
 def send(
@@ -36,10 +39,6 @@ def send(
     It isn't available for source code that's stored in Amazon S3 buckets.
     For code in buckets, you must write your own functions to send responses.
     """
-    responseUrl = event["ResponseURL"]
-
-    print(responseUrl)
-
     responseBody = {}
     responseBody["Status"] = responseStatus
     responseBody["Reason"] = (
@@ -53,21 +52,21 @@ def send(
     responseBody["Data"] = responseData
 
     json_responseBody = json.dumps(responseBody)
-
-    print("Response body:\n" + json_responseBody)
-
-    headers = {"content-type": "", "content-length": str(len(json_responseBody))}
+    print("Response body:\n     " + json_responseBody)
 
     try:
         response = httpx.put(
-            responseUrl,
+            event["ResponseURL"],
             data=json_responseBody,
-            headers=headers,
+            headers={"content-type": "", "content-length": str(len(json_responseBody))},
             timeout=30,
         )
-        print("Status code: " + response.status_code)
+        print("Status code: ", response.status_code)
+        logger.debug(f"OK - Status code: {response.status_code}")
+
     except Exception as e:
         print("send(..) failed executing httpx.put(..): " + str(e))
+        logger.debug(f"NOK - failed executing PUT requests:  {e}")
 
 
 def get_secret(secret_name):
@@ -84,9 +83,9 @@ def create_db(cursor, db_name: str) -> None:
         sql.SQL("SELECT 1 FROM pg_catalog.pg_database " "WHERE datname = %s"), [db_name]
     )
     if cursor.fetchone():
-        print(f"database {db_name} exists, not creating DB")
+        print(f"    database {db_name} exists, not creating DB")
     else:
-        print(f"database {db_name} not found, creating...")
+        print(f"    database {db_name} not found, creating...")
         cursor.execute(
             sql.SQL("CREATE DATABASE {db_name}").format(db_name=sql.Identifier(db_name))
         )
@@ -114,8 +113,8 @@ def create_user(cursor, username: str, password: str) -> None:
     )
 
 
-def create_permissions(cursor, db_name: str, username: str) -> None:
-    """Add permissions."""
+def update_user_permissions(cursor, db_name: str, username: str) -> None:
+    """Update eoAPI user permissions."""
     cursor.execute(
         sql.SQL(
             "GRANT CONNECT ON DATABASE {db_name} TO {username};"
@@ -140,6 +139,33 @@ def register_extensions(cursor) -> None:
     cursor.execute(sql.SQL("CREATE EXTENSION IF NOT EXISTS postgis;"))
 
 
+###############################################################################
+# PgSTAC Customization
+###############################################################################
+def customization(cursor, params) -> None:
+    """
+    CUSTOMIZED YOUR PGSTAC DATABASE
+
+    ref: https://github.com/stac-utils/pgstac/blob/main/docs/src/pgstac.md
+
+    """
+    if str(params.get("context", "FALSE")).upper() == "TRUE":
+        # Add CONTEXT=ON
+        pgstac_settings = """
+        INSERT INTO pgstac_settings (name, value)
+        VALUES ('context', 'on')
+        ON CONFLICT ON CONSTRAINT pgstac_settings_pkey DO UPDATE SET value = excluded.value;"""
+        cursor.execute(sql.SQL(pgstac_settings))
+
+    if str(params.get("mosaic_index", "TRUE")).upper() == "TRUE":
+        # Create index of searches with `mosaic`` type
+        cursor.execute(
+            sql.SQL(
+                "CREATE INDEX IF NOT EXISTS searches_mosaic ON searches ((true)) WHERE metadata->>'type'='mosaic';"
+            )
+        )
+
+
 def handler(event, context):
     """Lambda Handler."""
     print(f"Handling {event}")
@@ -149,88 +175,90 @@ def handler(event, context):
 
     try:
         params = event["ResourceProperties"]
-        connection_params = get_secret(params["conn_secret_arn"])
-        user_params = get_secret(params["new_user_secret_arn"])
 
-        print("Connecting to admin DB...")
-        admin_db_conninfo = make_conninfo(
-            dbname=connection_params.get("dbname", "postgres"),
-            user=connection_params["username"],
-            password=connection_params["password"],
-            host=connection_params["host"],
-            port=connection_params["port"],
+        # Admin (AWS RDS) user/password/dbname parameters
+        admin_params = get_secret(params["conn_secret_arn"])
+
+        # Custom eoAPI user/password/dbname parameters
+        eoapi_params = get_secret(params["new_user_secret_arn"])
+
+        print("Connecting to RDS...")
+        rds_conninfo = make_conninfo(
+            dbname=admin_params.get("dbname", "postgres"),
+            user=admin_params["username"],
+            password=admin_params["password"],
+            host=admin_params["host"],
+            port=admin_params["port"],
         )
-        with psycopg.connect(admin_db_conninfo, autocommit=True) as conn:
+        with psycopg.connect(rds_conninfo, autocommit=True) as conn:
             with conn.cursor() as cur:
-                print("Creating database...")
+                print(f"Creating eoAPI '{eoapi_params['dbname']}' database...")
                 create_db(
                     cursor=cur,
-                    db_name=user_params["dbname"],
+                    db_name=eoapi_params["dbname"],
                 )
 
-                print("Creating user...")
+                print(f"Creating eoAPI '{eoapi_params['username']}' user...")
                 create_user(
                     cursor=cur,
-                    username=user_params["username"],
-                    password=user_params["password"],
+                    username=eoapi_params["username"],
+                    password=eoapi_params["password"],
                 )
 
-        # Install extensions on the user DB with
-        # superuser permissions, since they will
-        # otherwise fail to install when run as
-        # the non-superuser within the pgstac
-        # migrations.
-        print("Connecting to STAC DB...")
-        stac_db_conninfo = make_conninfo(
-            dbname=user_params["dbname"],
-            user=connection_params["username"],
-            password=connection_params["password"],
-            host=connection_params["host"],
-            port=connection_params["port"],
+        # Install postgis and pgstac on the eoapi database with
+        # superuser permissions
+        print(f"Connecting to eoAPI '{eoapi_params['dbname']}' database...")
+        eoapi_db_admin_conninfo = make_conninfo(
+            dbname=eoapi_params["dbname"],
+            user=admin_params["username"],
+            password=admin_params["password"],
+            host=admin_params["host"],
+            port=admin_params["port"],
         )
-        with psycopg.connect(stac_db_conninfo, autocommit=True) as conn:
+        with psycopg.connect(eoapi_db_admin_conninfo, autocommit=True) as conn:
             with conn.cursor() as cur:
-                print("Registering PostGIS ...")
+                print(
+                    f"Registering Extension in '{eoapi_params['dbname']}' database..."
+                )
                 register_extensions(cursor=cur)
 
-        stac_db_admin_dsn = (
-            "postgresql://{user}:{password}@{host}:{port}/{dbname}".format(
-                dbname=user_params.get("dbname", "postgres"),
-                user=connection_params["username"],
-                password=connection_params["password"],
-                host=connection_params["host"],
-                port=connection_params["port"],
-            )
-        )
+            print("Starting PgSTAC Migration ")
+            with PgstacDB(connection=conn, debug=True) as pgdb:
+                print(f"Current PgSTAC Version: {pgdb.version}")
 
-        pgdb = PgstacDB(dsn=stac_db_admin_dsn, debug=True)
-        print(f"Current {pgdb.version=}")
+                print(f"Running migrations to PgSTAC {params['pgstac_version']}...")
+                Migrate(pgdb).run_migration(params["pgstac_version"])
 
-        # As admin, run migrations
-        print("Running migrations...")
-        Migrate(pgdb).run_migration(params["pgstac_version"])
-
-        # Assign appropriate permissions to user (requires pgSTAC migrations to have run)
-        with psycopg.connect(admin_db_conninfo, autocommit=True) as conn:
-            with conn.cursor() as cur:
-                print("Setting permissions...")
-                create_permissions(
-                    cursor=cur,
-                    db_name=user_params["dbname"],
-                    username=user_params["username"],
-                )
-
-        print("Adding mosaic index...")
         with psycopg.connect(
-            stac_db_admin_dsn,
+            eoapi_db_admin_conninfo,
             autocommit=True,
             options="-c search_path=pgstac,public -c application_name=pgstac",
         ) as conn:
-            conn.execute(
-                sql.SQL(
-                    "CREATE INDEX IF NOT EXISTS searches_mosaic ON searches ((true)) WHERE metadata->>'type'='mosaic';"
+            print("Customize PgSTAC database...")
+            # Update permissions to eoAPI user to assume pgstac_* roles
+            with conn.cursor() as cur:
+                print(f"Update '{eoapi_params['username']}' permissions...")
+                update_user_permissions(
+                    cursor=cur,
+                    db_name=eoapi_params["dbname"],
+                    username=eoapi_params["username"],
                 )
+
+                customization(cursor=cur, params=params)
+
+        # Make sure the user can access the database
+        eoapi_user_dsn = (
+            "postgresql://{user}:{password}@{host}:{port}/{dbname}".format(
+                dbname=eoapi_params["dbname"],
+                user=eoapi_params["username"],
+                password=eoapi_params["password"],
+                host=admin_params["host"],
+                port=admin_params["port"],
             )
+        )
+        print("Checking eoAPI user access to the PgSTAC database...")
+        with PgstacDB(dsn=eoapi_user_dsn, debug=True) as pgdb:
+            print(f"    OK - User has access to pgstac db, pgstac schema version: {pgdb.version}")
 
     except Exception as e:
         print(f"Unable to bootstrap database with exception={e}")

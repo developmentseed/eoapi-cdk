@@ -14,7 +14,12 @@ import { Construct } from "constructs";
 import { CustomLambdaFunctionProps } from "../utils";
 
 const instanceSizes: Record<string, number> = require("./instance-memory.json");
-const DEFAULT_PGSTAC_VERSION = "0.7.10";
+const DEFAULT_PGSTAC_VERSION = "0.8.5";
+
+let defaultPgSTACCustomOptions :{ [key: string]: any } = {
+  "context": "FALSE",
+  "mosaic_index": "TRUE"
+}
 
 function hasVpc(
   instance: rds.DatabaseInstance | rds.IDatabaseInstance
@@ -106,12 +111,7 @@ export class PgStacDatabase extends Construct {
     // connect to database
     this.db.connections.allowFrom(handler, ec2.Port.tcp(5432));
 
-    let customResourceProperties : { [key: string]: any} = {};
-
-    // if customResourceProperties are provided, fill in the values. 
-    if (props.customResourceProperties) {
-      Object.assign(customResourceProperties, props.customResourceProperties);
-    }
+    let customResourceProperties : { [key: string]: any} = props.customResourceProperties ? { ...defaultPgSTACCustomOptions, ...props.customResourceProperties } : defaultPgSTACCustomOptions;
 
     // update properties
     customResourceProperties["conn_secret_arn"] = this.db.secret!.secretArn;
@@ -195,7 +195,7 @@ export interface PgStacDatabaseProps extends rds.DatabaseInstanceProps {
   /**
    * Lambda function Custom Resource properties. A custom resource property is going to be created
    * to trigger the boostrapping lambda function. This parameter allows the user to specify additional properties
-   * on top of the defaults ones. 
+   * on top of the defaults ones.
    *
    */
   readonly customResourceProperties?: {
