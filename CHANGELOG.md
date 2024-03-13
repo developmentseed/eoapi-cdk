@@ -1,3 +1,10 @@
+# [7.1.0](https://github.com/developmentseed/eoapi-cdk/compare/v7.0.1...v7.1.0) (2024-03-13)
+
+
+### Features
+
+* update runtimes and add pgstac customization options ([#100](https://github.com/developmentseed/eoapi-cdk/issues/100)) ([9e49e7e](https://github.com/developmentseed/eoapi-cdk/commit/9e49e7ea55d2fb9ea4b63c9f713b6caa4cad0249)), closes [#102](https://github.com/developmentseed/eoapi-cdk/issues/102)
+
 ## [7.0.1](https://github.com/developmentseed/eoapi-cdk/compare/v7.0.0...v7.0.1) (2024-02-23)
 
 
