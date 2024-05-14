@@ -8,7 +8,7 @@ import {
     CfnOutput,
     Duration,
   } from "aws-cdk-lib";
-  import { IDomainName, HttpApi } from "@aws-cdk/aws-apigatewayv2-alpha";
+  import { IDomainName, HttpApi, ParameterMapping, MappingValue} from "@aws-cdk/aws-apigatewayv2-alpha";
   import { HttpLambdaIntegration } from "@aws-cdk/aws-apigatewayv2-integrations-alpha";
   import { Construct } from "constructs";
   import { CustomLambdaFunctionProps } from "../utils";
@@ -52,7 +52,13 @@ import {
         defaultDomainMapping: props.tipgApiDomainName ? {
           domainName: props.tipgApiDomainName
         } : undefined,
-        defaultIntegration: new HttpLambdaIntegration("integration", this.tiPgLambdaFunction),
+        defaultIntegration: new HttpLambdaIntegration(
+          "integration",
+          this.tiPgLambdaFunction,
+          props.tipgApiDomainName ? {
+              parameterMapping: new ParameterMapping().overwriteHeader('host', MappingValue.custom(props.tipgApiDomainName.name))
+          } : undefined
+        ),
       });
 
       this.url = tipgApi.url!;

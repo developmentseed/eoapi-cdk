@@ -9,7 +9,7 @@ import {
     Duration,
     aws_logs
   } from "aws-cdk-lib";
-  import { IDomainName, HttpApi } from "@aws-cdk/aws-apigatewayv2-alpha";
+  import { IDomainName, HttpApi, ParameterMapping, MappingValue} from "@aws-cdk/aws-apigatewayv2-alpha";
   import { HttpLambdaIntegration } from "@aws-cdk/aws-apigatewayv2-integrations-alpha";
   import { Construct } from "constructs";
 import { CustomLambdaFunctionProps } from "../utils";
@@ -78,7 +78,13 @@ import { CustomLambdaFunctionProps } from "../utils";
         defaultDomainMapping: props.titilerPgstacApiDomainName ? {
           domainName: props.titilerPgstacApiDomainName
         } : undefined,
-        defaultIntegration: new HttpLambdaIntegration("integration", this.titilerPgstacLambdaFunction),
+        defaultIntegration: new HttpLambdaIntegration(
+          "integration",
+          this.titilerPgstacLambdaFunction,
+          props.titilerPgstacApiDomainName ? {
+              parameterMapping: new ParameterMapping().overwriteHeader('host', MappingValue.custom(props.titilerPgstacApiDomainName.name))
+          } : undefined
+        ),
       });
 
       this.url = stacApi.url!;
