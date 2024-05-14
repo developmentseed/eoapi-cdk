@@ -1,0 +1,23 @@
+line-length = 90
+
+[lint]
+select = [
+    "F",    # flake8
+    "C",    # flake8-comprehensions
+    "B",    # flake8-bugbear
+    "I001", # isort
+]
+
+ignore = [
+    "E203",
+    "E266",
+    "F403",
+    "E231",
+    "E501",  # line too long, handled by black
+    "B008",  # do not perform function calls in argument defaults
+    "B905",  # ignore zip() without an explicit strict= parameter, only support with python >3.10
+]
+
+
+[lint.mccabe]
+max-complexity = 18

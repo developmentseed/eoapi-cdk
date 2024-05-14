@@ -116,7 +116,7 @@ class ListIngestionRequest:
 
         try:
             self.next = json.loads(base64.b64decode(self.next))
-        except (UnicodeDecodeError, binascii.Error):
+        except (UnicodeDecodeError, binascii.Error) as e:
             raise RequestValidationError(
                 [
                     error_wrappers.ErrorWrapper(
@@ -126,7 +126,7 @@ class ListIngestionRequest:
                         "query.next",
                     )
                 ]
-            )
+            ) from e
 
 
 class ListIngestionResponse(BaseModel):

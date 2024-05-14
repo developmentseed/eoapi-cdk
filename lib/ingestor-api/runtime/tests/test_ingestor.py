@@ -52,7 +52,7 @@ def test_handler(
     ingestor.handler(dynamodb_stream_event, {})
     load_items.assert_called_once_with(
         creds="",
-        ingestions=list([example_ingestion]),
+        ingestions=[example_ingestion],
     )
     response = mock_table.get_item(
         Key={"created_by": example_ingestion.created_by, "id": example_ingestion.id}

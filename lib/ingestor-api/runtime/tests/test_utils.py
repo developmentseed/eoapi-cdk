@@ -28,7 +28,7 @@ def dbcreds():
 def test_load_items(loader, pgstacdb, example_ingestion, dbcreds):
     import src.utils as utils
 
-    utils.load_items(dbcreds, list([example_ingestion]))
+    utils.load_items(dbcreds, [example_ingestion])
     loader.return_value.load_items.assert_called_once_with(
         file=jsonable_encoder([example_ingestion.item]),
         insert_mode=Methods.upsert,

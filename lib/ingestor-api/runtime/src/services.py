@@ -22,8 +22,8 @@ class Database:
         )
         try:
             return schemas.Ingestion.parse_obj(response["Item"])
-        except KeyError:
-            raise NotInDb("Record not found")
+        except KeyError as e:
+            raise NotInDb("Record not found") from e
 
     def fetch_many(
         self, status: str, next: dict = None, limit: int = None

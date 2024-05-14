@@ -74,9 +74,7 @@ class TestCreate:
         )
 
         assert response.status_code == 201
-        assert collection_exists.called_once_with(
-            self.example_ingestion.item.collection
-        )
+        assert collection_exists.called_once_with(self.example_ingestion.item.collection)
 
         stored_data = self.db.fetch_many(status="queued")["items"]
         assert len(stored_data) == 1
@@ -119,10 +117,8 @@ class TestCreate:
         assert response.status_code == 422, "should get validation error"
         for asset_type in self.example_ingestion.item.assets.keys():
             assert any(
-                [
-                    err["loc"] == ["body", "assets", asset_type, "href"]
-                    for err in response.json()["detail"]
-                ]
+                err["loc"] == ["body", "assets", asset_type, "href"]
+                for err in response.json()["detail"]
             ), "should reference asset type in validation error response"
         assert (
             len(self.db.fetch_many(status="queued")["items"]) == 0

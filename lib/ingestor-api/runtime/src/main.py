@@ -9,9 +9,7 @@ app = FastAPI(
 )
 
 
-@app.get(
-    "/ingestions", response_model=schemas.ListIngestionResponse, tags=["Ingestion"]
-)
+@app.get("/ingestions", response_model=schemas.ListIngestionResponse, tags=["Ingestion"])
 async def list_ingestions(
     list_request: schemas.ListIngestionRequest = Depends(),
     db: services.Database = Depends(dependencies.get_db),
@@ -78,8 +76,7 @@ def cancel_ingestion(
         raise HTTPException(
             status_code=400,
             detail=(
-                "Unable to delete ingestion if status is not "
-                f"{schemas.Status.queued}"
+                "Unable to delete ingestion if status is not " f"{schemas.Status.queued}"
             ),
         )
     return ingestion.cancel(db)
@@ -100,7 +97,7 @@ def publish_collection(collection: schemas.StacCollection):
         raise HTTPException(
             status_code=400,
             detail=(f"Unable to publish collection: {e}"),
-        )
+        ) from e
 
 
 @app.delete(
@@ -114,7 +111,7 @@ def delete_collection(collection_id: str):
         return {f"Successfully deleted: {collection_id}"}
     except Exception as e:
         print(e)
-        raise HTTPException(status_code=400, detail=(f"{e}"))
+        raise HTTPException(status_code=400, detail=(f"{e}")) from e
 
 
 @app.get("/auth/me")

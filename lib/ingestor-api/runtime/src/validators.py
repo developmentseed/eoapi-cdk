@@ -37,7 +37,7 @@ def s3_object_is_accessible(bucket: str, key: str):
     except client.exceptions.ClientError as e:
         raise ValueError(
             f"Asset not accessible: {e.__dict__['response']['Error']['Message']}"
-        )
+        ) from e
 
 
 def url_is_accessible(href: str):
@@ -49,7 +49,7 @@ def url_is_accessible(href: str):
     except requests.exceptions.HTTPError as e:
         raise ValueError(
             f"Asset not accessible: {e.response.status_code} {e.response.reason}"
-        )
+        ) from e
 
 
 @functools.cache
