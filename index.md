@@ -2332,7 +2332,7 @@ public readonly bucketArn: string;
 
 Bucket ARN.
 
-If specified, the identity used to deploy the stack must have the appropriate permissions to create a deployment for this bucket. 
+If specified, the identity used to deploy the stack must have the appropriate permissions to create a deployment for this bucket.
 In addition, if specified, `cloudFrontDistributionArn` is ignored since the policy of an imported resource can't be modified.
 
 ---
@@ -2677,7 +2677,7 @@ public readonly tipgApiDomainName: IDomainName;
 
 Custom Domain Name for tipg API.
 
-If defined, will create the 
+If defined, will create the
 domain name and integrate it with the tipg API.
 
 ---
@@ -2754,7 +2754,7 @@ public readonly apiEnv: {[ key: string ]: string};
 Customized environment variables to send to titiler-pgstac runtime.
 
 These will be merged with `defaultTitilerPgstacEnv`.
-The database secret arn is automatically added to the environment variables at deployment. 
+The database secret arn is automatically added to the environment variables at deployment.
 /
 
 ---
