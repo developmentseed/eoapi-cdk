@@ -1,3 +1,10 @@
+# [7.2.0](https://github.com/developmentseed/eoapi-cdk/compare/v7.1.0...v7.2.0) (2024-05-14)
+
+
+### Features
+
+* overwrite host headers when custom domain name ([#105](https://github.com/developmentseed/eoapi-cdk/issues/105)) ([e52887f](https://github.com/developmentseed/eoapi-cdk/commit/e52887fcbd3ba662a4754bd4a066774589425ba7))
+
 # [7.1.0](https://github.com/developmentseed/eoapi-cdk/compare/v7.0.1...v7.1.0) (2024-03-13)
 
 
