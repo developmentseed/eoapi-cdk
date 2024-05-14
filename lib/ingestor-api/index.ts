@@ -46,7 +46,7 @@ export class StacIngestor extends Construct {
         ),
       ],
     });
-    
+
     const handler = this.buildApiLambda({
       table: this.table,
       env,
@@ -113,7 +113,7 @@ export class StacIngestor extends Construct {
     subnetSelection: undefined | ec2.SubnetSelection
     lambdaFunctionOptions?: CustomLambdaFunctionProps;
   }): lambda.Function {
-        
+
     const handler = new lambda.Function(this, "api-handler", {
       // defaults
       runtime: lambda.Runtime.PYTHON_3_11,
@@ -162,7 +162,7 @@ export class StacIngestor extends Construct {
     lambdaFunctionOptions?: CustomLambdaFunctionProps;
   }): lambda.Function {
 
-    
+
     const handler = new lambda.Function(this, "stac-ingestor",{
       // defaults
       runtime: lambda.Runtime.PYTHON_3_11,
@@ -319,17 +319,17 @@ export interface StacIngestorProps {
    readonly ingestorDomainNameOptions?: apigateway.DomainNameOptions;
 
   /**
-     * Can be used to override the default lambda function properties. 
+     * Can be used to override the default lambda function properties.
      *
      * @default - default settings are defined in the construct.
      */
   readonly apiLambdaFunctionOptions?: CustomLambdaFunctionProps;
 
   /**
-     * Can be used to override the default lambda function properties. 
+     * Can be used to override the default lambda function properties.
      *
      * @default - default settings are defined in the construct.
      */
 readonly ingestorLambdaFunctionOptions?: CustomLambdaFunctionProps;
-  
+
 }

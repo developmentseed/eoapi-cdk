@@ -18,7 +18,7 @@ jobs:
         with:
           name: python
           path: dist
-          
+
       - run: pip install twine
 
       - run: twine upload dist/*

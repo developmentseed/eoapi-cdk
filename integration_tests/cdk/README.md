@@ -8,11 +8,11 @@ This is a wrapper CDK code that is used to test a deployment of the `eoapi-cdk` 
 - python
 - docker
 - node
-- AWS credentials environment variables configured to point to an account. 
+- AWS credentials environment variables configured to point to an account.
 
 ## Installation
 
-Install python dependencies with 
+Install python dependencies with
 
 ```
 python -m venv .venv
@@ -28,7 +28,7 @@ pip install eoapi-cdk
 
 Or alternatively, compile and package from the root of this repository to get the python version of the constructs locally.
 
-Also install node dependencies with 
+Also install node dependencies with
 
 ```
 npm install
@@ -42,7 +42,7 @@ npx cdk --version
 
 ## Deployment
 
-First, synthesize the app 
+First, synthesize the app
 
 ```
 npx cdk synth --all
