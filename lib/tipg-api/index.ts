@@ -49,7 +49,7 @@ import {
         this.tiPgLambdaFunction.connections.allowTo(props.db, ec2.Port.tcp(5432), "allow connections from tipg");
       }
       const tipgApi = new HttpApi(this, `${Stack.of(this).stackName}-tipg-api`, {
-        defaultDomainMapping: props.tipgApiDomainName ? { 
+        defaultDomainMapping: props.tipgApiDomainName ? {
           domainName: props.tipgApiDomainName
         } : undefined,
         defaultIntegration: new HttpLambdaIntegration("integration", this.tiPgLambdaFunction),
@@ -91,11 +91,11 @@ import {
      * Customized environment variables to send to titiler-pgstac runtime.
      */
     readonly apiEnv?: Record<string, string>;
-  
+
     /**
-     * Custom Domain Name for tipg API. If defined, will create the 
-     * domain name and integrate it with the tipg API. 
-     * 
+     * Custom Domain Name for tipg API. If defined, will create the
+     * domain name and integrate it with the tipg API.
+     *
      * @default - undefined
      */
     readonly tipgApiDomainName?: IDomainName;

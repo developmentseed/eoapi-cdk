@@ -217,9 +217,7 @@ def handler(event, context):
         )
         with psycopg.connect(eoapi_db_admin_conninfo, autocommit=True) as conn:
             with conn.cursor() as cur:
-                print(
-                    f"Registering Extension in '{eoapi_params['dbname']}' database..."
-                )
+                print(f"Registering Extension in '{eoapi_params['dbname']}' database...")
                 register_extensions(cursor=cur)
 
             print("Starting PgSTAC Migration ")
@@ -247,18 +245,18 @@ def handler(event, context):
                 customization(cursor=cur, params=params)
 
         # Make sure the user can access the database
-        eoapi_user_dsn = (
-            "postgresql://{user}:{password}@{host}:{port}/{dbname}".format(
-                dbname=eoapi_params["dbname"],
-                user=eoapi_params["username"],
-                password=eoapi_params["password"],
-                host=admin_params["host"],
-                port=admin_params["port"],
-            )
+        eoapi_user_dsn = "postgresql://{user}:{password}@{host}:{port}/{dbname}".format(
+            dbname=eoapi_params["dbname"],
+            user=eoapi_params["username"],
+            password=eoapi_params["password"],
+            host=admin_params["host"],
+            port=admin_params["port"],
         )
         print("Checking eoAPI user access to the PgSTAC database...")
         with PgstacDB(dsn=eoapi_user_dsn, debug=True) as pgdb:
-            print(f"    OK - User has access to pgstac db, pgstac schema version: {pgdb.version}")
+            print(
+                f"    OK - User has access to pgstac db, pgstac schema version: {pgdb.version}"
+            )
 
     except Exception as e:
         print(f"Unable to bootstrap database with exception={e}")

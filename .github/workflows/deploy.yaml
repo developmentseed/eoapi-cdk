@@ -2,7 +2,7 @@ name: Deployment
 
 on:
   workflow_dispatch:
-    
+
 jobs:
   build_package_and_deploy:
     name: Build, package and deploy
@@ -30,7 +30,7 @@ jobs:
       - name: Generate distribution packages
         run: npm run package
 
-      
+
       - name: Install deployment environment
         id: install_deploy_env
         run: |
@@ -40,7 +40,7 @@ jobs:
           pip install dist/python/*.gz
           cd integration_tests/cdk
           pip install -r requirements.txt
-          npm install   
+          npm install
           deactivate
           cd -
 
@@ -56,7 +56,7 @@ jobs:
           PROJECT_ID: ${{ steps.short-sha.outputs.sha }}
         run: |
           source .deployment_venv/bin/activate
-          
+
           # synthesize the stack
           cd integration_tests/cdk
           npx cdk synth --debug --all --require-approval never
@@ -65,7 +65,7 @@ jobs:
           npx cdk deploy --ci --all --require-approval never
           deactivate
           cd -
-          
+
       - name: Tear down any infrastructure
         if: always()
         env:

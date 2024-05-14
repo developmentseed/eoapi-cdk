@@ -7,15 +7,9 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class AppConfig(BaseSettings):
-    model_config = SettingsConfigDict(
-        env_file=".env"
-    )
-    aws_default_account: str = pydantic.Field(
-        description="AWS account ID"
-    )
-    project_id: str = pydantic.Field(
-        description="Project ID", default="eoapicdk"
-    )
+    model_config = SettingsConfigDict(env_file=".env")
+    aws_default_account: str = pydantic.Field(description="AWS account ID")
+    project_id: str = pydantic.Field(description="Project ID", default="eoapicdk")
     stage: str = pydantic.Field(description="Stage of deployment", default="test")
     # because of its validator, `tags` should always come after `project_id` and `stage`
     tags: Dict[str, str] | None = pydantic.Field(

@@ -52,9 +52,9 @@ def decode_token(
 
         claims.validate()
         return claims
-    except errors.JoseError:  #
+    except errors.JoseError as e:
         logger.exception("Unable to decode token")
-        raise HTTPException(status_code=403, detail="Bad auth token")
+        raise HTTPException(status_code=403, detail="Bad auth token") from e
 
 
 def get_username_from_token(
@@ -88,7 +88,7 @@ def fetch_ingestion(
 ):
     try:
         return db.fetch_one(username=username, ingestion_id=ingestion_id)
-    except services.NotInDb:
+    except services.NotInDb as e:
         raise HTTPException(
             status_code=404, detail="No ingestion found with provided ID"
-        )
+        ) from e

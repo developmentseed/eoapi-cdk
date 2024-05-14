@@ -15,9 +15,11 @@ from tipg.database import connect_to_db  # noqa: E402
 
 # skipping linting rule that wants all imports at the top
 from tipg.main import app  # noqa: E402
-from tipg.settings import CustomSQLSettings  # noqa: E402
-from tipg.settings import DatabaseSettings  # noqa: E402
-from tipg.settings import PostgresSettings  # noqa: E402; noqa: E402
+from tipg.settings import (
+    CustomSQLSettings,  # noqa: E402
+    DatabaseSettings,  # noqa: E402
+    PostgresSettings,  # noqa: E402; noqa: E402
+)
 
 postgres_settings = PostgresSettings()
 db_settings = DatabaseSettings()

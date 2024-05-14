@@ -1,28 +1,19 @@
-from config import build_app_config, AppConfig
-from aws_cdk import (
-    Stack,
-    aws_ec2,
-    aws_rds,
-    App,
-    RemovalPolicy
-)
+from aws_cdk import App, RemovalPolicy, Stack, aws_ec2, aws_rds
+from config import AppConfig, build_app_config
 from constructs import Construct
 from eoapi_cdk import (
     PgStacApiLambda,
     PgStacDatabase,
-    TitilerPgstacApiLambda,
     TiPgApiLambda,
+    TitilerPgstacApiLambda,
 )
 
 
 class VpcStack(Stack):
-    def __init__(self, scope: Construct, app_config: AppConfig, id: str, **kwargs) -> None:
-        super().__init__(
-            scope,
-            id=id,
-            tags=app_config.tags,
-            **kwargs
-        )
+    def __init__(
+        self, scope: Construct, app_config: AppConfig, id: str, **kwargs
+    ) -> None:
+        super().__init__(scope, id=id, tags=app_config.tags, **kwargs)
 
         self.vpc = aws_ec2.Vpc(
             self,
@@ -31,7 +22,7 @@ class VpcStack(Stack):
                 aws_ec2.SubnetConfiguration(
                     name="ingress", subnet_type=aws_ec2.SubnetType.PUBLIC, cidr_mask=24
                 ),
-            ]
+            ],
         )
 
         self.vpc.add_interface_endpoint(
@@ -88,7 +79,7 @@ class pgStacInfraStack(Stack):
             ),
             allocated_storage=app_config.db_allocated_storage,
             instance_type=aws_ec2.InstanceType(app_config.db_instance_type),
-            removal_policy=RemovalPolicy.DESTROY
+            removal_policy=RemovalPolicy.DESTROY,
         )
 
         pgstac_db.db.connections.allow_default_port_from_any_ipv4()
@@ -101,7 +92,7 @@ class pgStacInfraStack(Stack):
                 "description": f"{app_config.stage} STAC API",
             },
             db=pgstac_db.db,
-            db_secret=pgstac_db.pgstac_secret
+            db_secret=pgstac_db.pgstac_secret,
         )
 
         TitilerPgstacApiLambda(
@@ -145,10 +136,7 @@ vpc_stack = VpcStack(scope=app, app_config=app_config, id=vpc_stack_id)
 pgstac_infra_stack_id = f"pgstac{app_config.project_id}"
 
 pgstac_infra_stack = pgStacInfraStack(
-    scope=app,
-    vpc=vpc_stack.vpc,
-    app_config=app_config,
-    id=pgstac_infra_stack_id
+    scope=app, vpc=vpc_stack.vpc, app_config=app_config, id=pgstac_infra_stack_id
 )
 
 app.synth()

@@ -19,7 +19,7 @@ export class PgStacApiLambda extends Construct {
 
   constructor(scope: Construct, id: string, props: PgStacApiLambdaProps) {
     super(scope, id);
-    
+
     console.log(props)
     console.log(props.lambdaFunctionOptions);
     this.stacApiLambdaFunction = new lambda.Function(this, "lambda", {
@@ -51,7 +51,7 @@ export class PgStacApiLambda extends Construct {
       this.stacApiLambdaFunction.connections.allowTo(props.db, ec2.Port.tcp(5432));
     }
     const stacApi = new HttpApi(this, `${Stack.of(this).stackName}-stac-api`, {
-      defaultDomainMapping: props.stacApiDomainName ? { 
+      defaultDomainMapping: props.stacApiDomainName ? {
         domainName: props.stacApiDomainName
       } : undefined,
       defaultIntegration: new HttpLambdaIntegration("integration", this.stacApiLambdaFunction),
@@ -104,4 +104,3 @@ export interface PgStacApiLambdaProps {
      */
   readonly lambdaFunctionOptions?: CustomLambdaFunctionProps;
 }
-
