@@ -1,3 +1,10 @@
+## [7.2.1](https://github.com/developmentseed/eoapi-cdk/compare/v7.2.0...v7.2.1) (2024-08-20)
+
+
+### Bug Fixes
+
+* install compilation dependency for numexpr ([#109](https://github.com/developmentseed/eoapi-cdk/issues/109)) ([2762944](https://github.com/developmentseed/eoapi-cdk/commit/2762944344512bda476d1924a58feef2b0c4a7aa))
+
 # [7.2.0](https://github.com/developmentseed/eoapi-cdk/compare/v7.1.0...v7.2.0) (2024-05-14)
 
 
