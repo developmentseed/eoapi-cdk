@@ -4,8 +4,14 @@ FROM --platform=linux/amd64 public.ecr.aws/lambda/python:${PYTHON_VERSION}
 WORKDIR /tmp
 RUN python -m pip install pip -U
 
+# Install system dependencies to compile (numexpr)
+RUN yum install -y gcc-c++
+
 COPY runtime/requirements.txt requirements.txt
 RUN python -m pip install -r requirements.txt "mangum>=0.14,<0.15" -t /asset
+
+# Remove system dependencies
+RUN yum remove -y gcc-c++
 
 # Reduce package size and remove useless files
 RUN find /asset -type f -name '*.pyc' | while read f; do n=$(echo $f | sed 's/__pycache__\///' | sed 's/.cpython-[0-9]*//'); cp $f $n; done;
