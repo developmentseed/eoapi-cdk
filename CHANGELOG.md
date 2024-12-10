@@ -1,3 +1,15 @@
+# [7.3.0](https://github.com/developmentseed/eoapi-cdk/compare/v7.2.1...v7.3.0) (2024-12-10)
+
+
+### Bug Fixes
+
+* update units for effectiveCacheSize and tempBuffers ([#112](https://github.com/developmentseed/eoapi-cdk/issues/112)) ([2e3d728](https://github.com/developmentseed/eoapi-cdk/commit/2e3d72820dedc252f15692f1d327630e6fa3f5e6))
+
+
+### Features
+
+* set search_path to include pgstac for eoapi user ([#111](https://github.com/developmentseed/eoapi-cdk/issues/111)) ([0470dcf](https://github.com/developmentseed/eoapi-cdk/commit/0470dcfb2bf7f6940dbbb1f0033c8e3fe129bdb7))
+
 ## [7.2.1](https://github.com/developmentseed/eoapi-cdk/compare/v7.2.0...v7.2.1) (2024-08-20)
 
 
