@@ -127,6 +127,7 @@ def update_user_permissions(cursor, db_name: str, username: str) -> None:
             "GRANT pgstac_read TO {username};"
             "GRANT pgstac_ingest TO {username};"
             "GRANT pgstac_admin TO {username};"
+            "ALTER USER {username} SET search_path TO pgstac, public;"  # add pgstac to search_path by default
         ).format(
             db_name=sql.Identifier(db_name),
             username=sql.Identifier(username),
