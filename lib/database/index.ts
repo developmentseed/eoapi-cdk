@@ -159,11 +159,11 @@ export class PgStacDatabase extends Construct {
     return {
       maxConnections: `${maxConnections}`,
       sharedBuffers: `${sharedBuffers / 8}`, // Represented in 8kb blocks
-      effectiveCacheSize: `${effectiveCacheSize}`,
+      effectiveCacheSize: `${effectiveCacheSize / 8}`, // Represented in 8kb blocks
       workMem: `${workMem}`,
       maintenanceWorkMem: `${maintenanceWorkMem}`,
       maxLocksPerTransaction: "1024",
-      tempBuffers: `${tempBuffers}`,
+      tempBuffers: `${tempBuffers / 8}`, // Represented in 8kb blocks
       seqPageCost: `${seqPageCost}`,
       randomPageCost: `${randomPageCost}`,
     };
