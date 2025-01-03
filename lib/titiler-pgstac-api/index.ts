@@ -71,7 +71,7 @@ import { CustomLambdaFunctionProps } from "../utils";
       props.dbSecret.grantRead(this.titilerPgstacLambdaFunction);
 
       if (props.vpc) {
-        this.titilerPgstacLambdaFunction.connections.allowTo(props.db, ec2.Port.tcp(5432), "allow connections from titiler");
+        this.titilerPgstacLambdaFunction.connections.allowTo(props.connectionTarget, ec2.Port.tcp(5432), "allow connections from titiler");
       }
 
       const stacApi = new HttpApi(this, `${Stack.of(this).stackName}-titiler-pgstac-api`, {
@@ -103,10 +103,10 @@ import { CustomLambdaFunctionProps } from "../utils";
      */
     readonly vpc?: ec2.IVpc;
 
-    /**
-     * RDS Instance with installed pgSTAC.
-     */
-    readonly db: rds.IDatabaseInstance;
+  /**
+   * RDS Instance with installed pgSTAC or pgbouncer server.
+   */
+  readonly connectionTarget: rds.IDatabaseInstance | ec2.IInstance;
 
     /**
      * Subnet into which the lambda should be deployed.

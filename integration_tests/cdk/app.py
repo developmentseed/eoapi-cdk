@@ -79,6 +79,7 @@ class pgStacInfraStack(Stack):
             ),
             allocated_storage=app_config.db_allocated_storage,
             instance_type=aws_ec2.InstanceType(app_config.db_instance_type),
+            add_pgbouncer=True,
             removal_policy=RemovalPolicy.DESTROY,
         )
 
@@ -91,7 +92,8 @@ class pgStacInfraStack(Stack):
                 "NAME": app_config.build_service_name("STAC API"),
                 "description": f"{app_config.stage} STAC API",
             },
-            db=pgstac_db.db,
+            vpc=vpc,
+            connection_target=pgstac_db.connection_target,
             db_secret=pgstac_db.pgstac_secret,
         )
 
@@ -102,7 +104,8 @@ class pgStacInfraStack(Stack):
                 "NAME": app_config.build_service_name("titiler pgSTAC API"),
                 "description": f"{app_config.stage} titiler pgstac API",
             },
-            db=pgstac_db.db,
+            vpc=vpc,
+            connection_target=pgstac_db.connection_target,
             db_secret=pgstac_db.pgstac_secret,
             buckets=[],
             lambda_function_options={
@@ -113,7 +116,8 @@ class pgStacInfraStack(Stack):
         TiPgApiLambda(
             self,
             "tipg-api",
-            db=pgstac_db.db,
+            vpc=vpc,
+            connection_target=pgstac_db.connection_target,
             db_secret=pgstac_db.pgstac_secret,
             api_env={
                 "NAME": app_config.build_service_name("tipg API"),

@@ -46,7 +46,7 @@ import {
 
       props.dbSecret.grantRead(this.tiPgLambdaFunction);
       if (props.vpc){
-        this.tiPgLambdaFunction.connections.allowTo(props.db, ec2.Port.tcp(5432), "allow connections from tipg");
+        this.tiPgLambdaFunction.connections.allowTo(props.connectionTarget, ec2.Port.tcp(5432), "allow connections from tipg");
       }
       const tipgApi = new HttpApi(this, `${Stack.of(this).stackName}-tipg-api`, {
         defaultDomainMapping: props.tipgApiDomainName ? {
@@ -78,9 +78,9 @@ import {
     readonly vpc?: ec2.IVpc;
 
     /**
-     * RDS Instance with installed pgSTAC.
+     * RDS Instance with installed pgSTAC or pgbouncer server.
      */
-    readonly db: rds.IDatabaseInstance;
+    readonly connectionTarget: rds.IDatabaseInstance | ec2.IInstance;
 
     /**
      * Subnet into which the lambda should be deployed.

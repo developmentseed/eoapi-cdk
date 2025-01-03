@@ -11,3 +11,4 @@ __pycache__
 tests/*.egg*
 tests/*venv*
 tests/__pycache__
+integration_tests/cdk/cdk.out

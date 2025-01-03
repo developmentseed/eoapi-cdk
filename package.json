@@ -14,7 +14,8 @@
     "package": "jsii-pacmak -v",
     "docgen": "mkdir -p docs && jsii-docgen -o docs/index.md",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "semantic-release": "semantic-release"
+    "semantic-release": "semantic-release",
+    "install:all": "npm ci && cd lib/database/lambda/pgbouncer-secret-updater && npm ci && cd ../../../../"
   },
   "keywords": [],
   "author": {
@@ -42,9 +43,9 @@
     "@semantic-release/changelog": "^6.0.1",
     "@semantic-release/git": "^10.0.1",
     "@types/node": "^18.7.23",
-    "jsii": "5.3.20",
-    "jsii-docgen": "10.3.17",
-    "jsii-pacmak": "1.94.0",
+    "jsii": "5.7.4",
+    "jsii-docgen": "10.6.1",
+    "jsii-pacmak": "1.106.0",
     "nodemon": "^2.0.20",
     "npm-run-all": "^4.1.5",
     "prettier": "^2.7.1",

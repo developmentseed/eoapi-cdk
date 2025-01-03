@@ -8,18 +8,18 @@ import {
   RemovalPolicy,
   Duration,
   aws_logs,
-
 } from "aws-cdk-lib";
 import { Construct } from "constructs";
 import { CustomLambdaFunctionProps } from "../utils";
+import { PgBouncer } from "./PgBouncer";
 
 const instanceSizes: Record<string, number> = require("./instance-memory.json");
 const DEFAULT_PGSTAC_VERSION = "0.8.5";
 
-let defaultPgSTACCustomOptions :{ [key: string]: any } = {
-  "context": "FALSE",
-  "mosaic_index": "TRUE"
-}
+let defaultPgSTACCustomOptions: { [key: string]: any } = {
+  context: "FALSE",
+  mosaic_index: "TRUE",
+};
 
 function hasVpc(
   instance: rds.DatabaseInstance | rds.IDatabaseInstance
@@ -35,6 +35,8 @@ function hasVpc(
 export class PgStacDatabase extends Construct {
   db: rds.DatabaseInstance;
   pgstacSecret: secretsmanager.ISecret;
+  private _pgBouncerServer?: PgBouncer;
+  public readonly connectionTarget: rds.IDatabaseInstance | ec2.Instance;
 
   constructor(scope: Construct, id: string, props: PgStacDatabaseProps) {
     super(scope, id);
@@ -46,6 +48,7 @@ export class PgStacDatabase extends Construct {
     const parameterGroup = new rds.ParameterGroup(this, "parameterGroup", {
       engine: props.engine,
       parameters: {
+        max_connections: defaultParameters.maxConnections,
         shared_buffers: defaultParameters.sharedBuffers,
         effective_cache_size: defaultParameters.effectiveCacheSize,
         work_mem: defaultParameters.workMem,
@@ -73,7 +76,10 @@ export class PgStacDatabase extends Construct {
       timeout: Duration.minutes(2),
       code: aws_lambda.Code.fromDockerBuild(__dirname, {
         file: "bootstrapper_runtime/Dockerfile",
-        buildArgs: {PGSTAC_VERSION: DEFAULT_PGSTAC_VERSION, PYTHON_VERSION: "3.11"}
+        buildArgs: {
+          PGSTAC_VERSION: DEFAULT_PGSTAC_VERSION,
+          PYTHON_VERSION: "3.11",
+        },
       }),
       vpc: hasVpc(this.db) ? this.db.vpc : props.vpc,
       allowPublicSubnet: true,
@@ -111,23 +117,60 @@ export class PgStacDatabase extends Construct {
     // connect to database
     this.db.connections.allowFrom(handler, ec2.Port.tcp(5432));
 
-    let customResourceProperties : { [key: string]: any} = props.customResourceProperties ? { ...defaultPgSTACCustomOptions, ...props.customResourceProperties } : defaultPgSTACCustomOptions;
+    let customResourceProperties: { [key: string]: any } =
+      props.customResourceProperties
+        ? { ...defaultPgSTACCustomOptions, ...props.customResourceProperties }
+        : defaultPgSTACCustomOptions;
 
     // update properties
     customResourceProperties["conn_secret_arn"] = this.db.secret!.secretArn;
-    customResourceProperties["new_user_secret_arn"] = this.pgstacSecret.secretArn;
+    customResourceProperties["new_user_secret_arn"] =
+      this.pgstacSecret.secretArn;
 
     // if props.lambdaFunctionOptions doesn't have 'code' defined, update pgstac_version (needed for default runtime)
     if (!props.bootstrapperLambdaFunctionOptions?.code) {
       customResourceProperties["pgstac_version"] = DEFAULT_PGSTAC_VERSION;
     }
     // this.connections = props.database.connections;
-    new CustomResource(this, "bootstrapper", {
+    const bootstrapper = new CustomResource(this, "bootstrapper", {
       serviceToken: handler.functionArn,
       properties: customResourceProperties,
       removalPolicy: RemovalPolicy.RETAIN, // This retains the custom resource (which doesn't really exist), not the database
     });
 
+    // PgBouncer: connection pooler
+    const addPgbouncer = props.addPgbouncer ?? true;
+    if (addPgbouncer) {
+      this._pgBouncerServer = new PgBouncer(this, "pgbouncer", {
+        instanceName: `${Stack.of(this).stackName}-pgbouncer`,
+        instanceType: ec2.InstanceType.of(
+          ec2.InstanceClass.T3,
+          ec2.InstanceSize.MICRO
+        ),
+        vpc: props.vpc,
+        database: {
+          connections: this.db.connections,
+          secret: this.pgstacSecret,
+        },
+        dbMaxConnections: parseInt(defaultParameters.maxConnections),
+        usePublicSubnet: true,
+        pgBouncerConfig: {
+          poolMode: "transaction",
+          maxClientConn: 1000,
+          defaultPoolSize: 20,
+          minPoolSize: 10,
+          reservePoolSize: 5,
+          reservePoolTimeout: 5,
+        },
+      });
+
+      this._pgBouncerServer.node.addDependency(bootstrapper);
+
+      this.pgstacSecret = this._pgBouncerServer.pgbouncerSecret;
+      this.connectionTarget = this._pgBouncerServer.instance;
+    } else {
+      this.connectionTarget = this.db;
+    }
   }
 
   public getParameters(
@@ -178,12 +221,12 @@ export interface PgStacDatabaseProps extends rds.DatabaseInstanceProps {
    */
   readonly pgstacDbName?: string;
 
-    /**
+  /**
    * Prefix to assign to the generated `secrets_manager.Secret`
    *
    * @default pgstac
    */
-    readonly secretsPrefix?: string;
+  readonly secretsPrefix?: string;
 
   /**
    * Name of user that will be generated for connecting to the pgSTAC database.
@@ -193,6 +236,13 @@ export interface PgStacDatabaseProps extends rds.DatabaseInstanceProps {
   readonly pgstacUsername?: string;
 
   /**
+   * Add pgbouncer instance for managing traffic to the pgSTAC database
+   *
+   * @default true
+   */
+  readonly addPgbouncer?: boolean;
+
+  /**
    * Lambda function Custom Resource properties. A custom resource property is going to be created
    * to trigger the boostrapping lambda function. This parameter allows the user to specify additional properties
    * on top of the defaults ones.
@@ -200,7 +250,7 @@ export interface PgStacDatabaseProps extends rds.DatabaseInstanceProps {
    */
   readonly customResourceProperties?: {
     [key: string]: any;
-}
+  };
 
   /**
    * Can be used to override the default lambda function properties.
