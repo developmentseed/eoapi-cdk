@@ -36,7 +36,9 @@ export class PgStacDatabase extends Construct {
   db: rds.DatabaseInstance;
   pgstacSecret: secretsmanager.ISecret;
   private _pgBouncerServer?: PgBouncer;
+
   public readonly connectionTarget: rds.IDatabaseInstance | ec2.Instance;
+  public readonly securityGroup?: ec2.SecurityGroup;
 
   constructor(scope: Construct, id: string, props: PgStacDatabaseProps) {
     super(scope, id);
@@ -153,7 +155,9 @@ export class PgStacDatabase extends Construct {
           secret: this.pgstacSecret,
         },
         dbMaxConnections: parseInt(defaultParameters.maxConnections),
-        usePublicSubnet: true,
+        usePublicSubnet:
+          !props.vpcSubnets ||
+          props.vpcSubnets.subnetType === ec2.SubnetType.PUBLIC,
         pgBouncerConfig: {
           poolMode: "transaction",
           maxClientConn: 1000,
@@ -168,6 +172,7 @@ export class PgStacDatabase extends Construct {
 
       this.pgstacSecret = this._pgBouncerServer.pgbouncerSecret;
       this.connectionTarget = this._pgBouncerServer.instance;
+      this.securityGroup = this._pgBouncerServer.securityGroup;
     } else {
       this.connectionTarget = this.db;
     }

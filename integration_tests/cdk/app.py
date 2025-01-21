@@ -83,18 +83,21 @@ class pgStacInfraStack(Stack):
             removal_policy=RemovalPolicy.DESTROY,
         )
 
-        pgstac_db.db.connections.allow_default_port_from_any_ipv4()
+        assert pgstac_db.security_group
+
+        pgstac_db.security_group.add_ingress_rule(
+            aws_ec2.Peer.any_ipv4(), aws_ec2.Port.tcp(5432)
+        )
 
         PgStacApiLambda(
             self,
             "pgstac-api",
+            connection_target=pgstac_db.connection_target,
+            db_secret=pgstac_db.pgstac_secret,
             api_env={
                 "NAME": app_config.build_service_name("STAC API"),
                 "description": f"{app_config.stage} STAC API",
             },
-            vpc=vpc,
-            connection_target=pgstac_db.connection_target,
-            db_secret=pgstac_db.pgstac_secret,
         )
 
         TitilerPgstacApiLambda(
@@ -104,7 +107,6 @@ class pgStacInfraStack(Stack):
                 "NAME": app_config.build_service_name("titiler pgSTAC API"),
                 "description": f"{app_config.stage} titiler pgstac API",
             },
-            vpc=vpc,
             connection_target=pgstac_db.connection_target,
             db_secret=pgstac_db.pgstac_secret,
             buckets=[],
@@ -116,7 +118,6 @@ class pgStacInfraStack(Stack):
         TiPgApiLambda(
             self,
             "tipg-api",
-            vpc=vpc,
             connection_target=pgstac_db.connection_target,
             db_secret=pgstac_db.pgstac_secret,
             api_env={

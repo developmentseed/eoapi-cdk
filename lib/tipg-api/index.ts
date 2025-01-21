@@ -1,9 +1,9 @@
 import {
     Stack,
     aws_ec2 as ec2,
-    aws_rds as rds,
     aws_lambda as lambda,
     aws_logs as logs,
+    aws_rds as rds,
     aws_secretsmanager as secretsmanager,
     CfnOutput,
     Duration,
@@ -45,9 +45,11 @@ import {
       });
 
       props.dbSecret.grantRead(this.tiPgLambdaFunction);
+
       if (props.vpc){
         this.tiPgLambdaFunction.connections.allowTo(props.connectionTarget, ec2.Port.tcp(5432), "allow connections from tipg");
       }
+
       const tipgApi = new HttpApi(this, `${Stack.of(this).stackName}-tipg-api`, {
         defaultDomainMapping: props.tipgApiDomainName ? {
           domainName: props.tipgApiDomainName
@@ -91,7 +93,6 @@ import {
      * Secret containing connection information for pgSTAC database.
      */
     readonly dbSecret: secretsmanager.ISecret;
-
 
     /**
      * Customized environment variables to send to titiler-pgstac runtime.

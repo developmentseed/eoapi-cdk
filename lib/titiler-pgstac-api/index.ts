@@ -103,10 +103,10 @@ import { CustomLambdaFunctionProps } from "../utils";
      */
     readonly vpc?: ec2.IVpc;
 
-  /**
-   * RDS Instance with installed pgSTAC or pgbouncer server.
-   */
-  readonly connectionTarget: rds.IDatabaseInstance | ec2.IInstance;
+    /**
+     * RDS Instance with installed pgSTAC or pgbouncer server.
+     */
+    readonly connectionTarget: rds.IDatabaseInstance | ec2.IInstance;
 
     /**
      * Subnet into which the lambda should be deployed.

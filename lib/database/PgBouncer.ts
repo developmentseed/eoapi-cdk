@@ -70,6 +70,7 @@ export interface PgBouncerProps {
 export class PgBouncer extends Construct {
   public readonly instance: ec2.Instance;
   public readonly pgbouncerSecret: secretsmanager.Secret;
+  public readonly securityGroup: ec2.SecurityGroup;
 
   // The max_connections parameter in PgBouncer determines the maximum number of
   // connections to open on the actual database instance. We want that number to
@@ -134,6 +135,13 @@ export class PgBouncer extends Construct {
       })
     );
 
+    // Create a security group and allow connections from the Lambda IP ranges for this region
+    this.securityGroup = new ec2.SecurityGroup(this, "PgBouncerSecurityGroup", {
+      vpc: props.vpc,
+      description: "Security group for PgBouncer instance",
+      allowAllOutbound: true,
+    });
+
     // Create PgBouncer instance
     this.instance = new ec2.Instance(this, "Instance", {
       vpc: props.vpc,
@@ -142,6 +150,7 @@ export class PgBouncer extends Construct {
           ? ec2.SubnetType.PUBLIC
           : ec2.SubnetType.PRIVATE_WITH_EGRESS,
       },
+      securityGroup: this.securityGroup,
       instanceType,
       instanceName: props.instanceName,
       machineImage: ec2.MachineImage.fromSsmParameter(
@@ -161,6 +170,7 @@ export class PgBouncer extends Construct {
       ],
       userData: this.loadUserDataScript(pgBouncerConfig, props.database),
       userDataCausesReplacement: true,
+      associatePublicIpAddress: props.usePublicSubnet,
     });
 
     // Allow PgBouncer to connect to RDS
@@ -201,7 +211,9 @@ export class PgBouncer extends Construct {
     new CustomResource(this, "pgbouncerSecretBootstrapper", {
       serviceToken: secretUpdaterFn.functionArn,
       properties: {
-        instanceIp: this.instance.instancePrivateIp,
+        instanceIp: props.usePublicSubnet
+          ? this.instance.instancePublicIp
+          : this.instance.instancePrivateIp,
       },
     });
   }
