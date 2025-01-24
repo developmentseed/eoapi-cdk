@@ -3,5 +3,5 @@ constructs==10.3.0
 pydantic==2.0.2
 pydantic-settings==2.0.1
 python-dotenv==1.0.0
-pyyaml==6.0
+pyyaml==6.0.2
 types-PyYAML==6.0.12.10
