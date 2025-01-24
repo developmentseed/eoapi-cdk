@@ -1,3 +1,10 @@
+## [7.4.1](https://github.com/developmentseed/eoapi-cdk/compare/v7.4.0...v7.4.1) (2025-01-24)
+
+
+### Bug Fixes
+
+* install packaging>=24.2 with twine ([#118](https://github.com/developmentseed/eoapi-cdk/issues/118)) ([caaf9e3](https://github.com/developmentseed/eoapi-cdk/commit/caaf9e3bd18593447a005eddf1d6bcef823b7d3b))
+
 # [7.4.0](https://github.com/developmentseed/eoapi-cdk/compare/v7.3.0...v7.4.0) (2025-01-24)
 
 
