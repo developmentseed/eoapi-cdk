@@ -461,6 +461,8 @@ Any object.
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
 | <code><a href="#eoapi-cdk.PgStacDatabase.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
+| <code><a href="#eoapi-cdk.PgStacDatabase.property.connectionTarget">connectionTarget</a></code> | <code>aws-cdk-lib.aws_ec2.Instance \| aws-cdk-lib.aws_rds.IDatabaseInstance</code> | *No description.* |
+| <code><a href="#eoapi-cdk.PgStacDatabase.property.securityGroup">securityGroup</a></code> | <code>aws-cdk-lib.aws_ec2.SecurityGroup</code> | *No description.* |
 | <code><a href="#eoapi-cdk.PgStacDatabase.property.db">db</a></code> | <code>aws-cdk-lib.aws_rds.DatabaseInstance</code> | *No description.* |
 | <code><a href="#eoapi-cdk.PgStacDatabase.property.pgstacSecret">pgstacSecret</a></code> | <code>aws-cdk-lib.aws_secretsmanager.ISecret</code> | *No description.* |
 
@@ -475,6 +477,26 @@ public readonly node: Node;
 - *Type:* constructs.Node
 
 The tree node.
+
+---
+
+##### `connectionTarget`<sup>Required</sup> <a name="connectionTarget" id="eoapi-cdk.PgStacDatabase.property.connectionTarget"></a>
+
+```typescript
+public readonly connectionTarget: Instance | IDatabaseInstance;
+```
+
+- *Type:* aws-cdk-lib.aws_ec2.Instance | aws-cdk-lib.aws_rds.IDatabaseInstance
+
+---
+
+##### `securityGroup`<sup>Optional</sup> <a name="securityGroup" id="eoapi-cdk.PgStacDatabase.property.securityGroup"></a>
+
+```typescript
+public readonly securityGroup: SecurityGroup;
+```
+
+- *Type:* aws-cdk-lib.aws_ec2.SecurityGroup
 
 ---
 
@@ -1268,7 +1290,7 @@ const pgStacApiLambdaProps: PgStacApiLambdaProps = { ... }
 
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
-| <code><a href="#eoapi-cdk.PgStacApiLambdaProps.property.db">db</a></code> | <code>aws-cdk-lib.aws_rds.IDatabaseInstance</code> | RDS Instance with installed pgSTAC. |
+| <code><a href="#eoapi-cdk.PgStacApiLambdaProps.property.db">db</a></code> | <code>aws-cdk-lib.aws_rds.IDatabaseInstance \| aws-cdk-lib.aws_ec2.IInstance</code> | RDS Instance with installed pgSTAC or pgbouncer server. |
 | <code><a href="#eoapi-cdk.PgStacApiLambdaProps.property.dbSecret">dbSecret</a></code> | <code>aws-cdk-lib.aws_secretsmanager.ISecret</code> | Secret containing connection information for pgSTAC database. |
 | <code><a href="#eoapi-cdk.PgStacApiLambdaProps.property.apiEnv">apiEnv</a></code> | <code>{[ key: string ]: string}</code> | Customized environment variables to send to fastapi-pgstac runtime. |
 | <code><a href="#eoapi-cdk.PgStacApiLambdaProps.property.lambdaFunctionOptions">lambdaFunctionOptions</a></code> | <code>any</code> | Can be used to override the default lambda function properties. |
@@ -1281,12 +1303,12 @@ const pgStacApiLambdaProps: PgStacApiLambdaProps = { ... }
 ##### `db`<sup>Required</sup> <a name="db" id="eoapi-cdk.PgStacApiLambdaProps.property.db"></a>
 
 ```typescript
-public readonly db: IDatabaseInstance;
+public readonly db: IDatabaseInstance | IInstance;
 ```
 
-- *Type:* aws-cdk-lib.aws_rds.IDatabaseInstance
+- *Type:* aws-cdk-lib.aws_rds.IDatabaseInstance | aws-cdk-lib.aws_ec2.IInstance
 
-RDS Instance with installed pgSTAC.
+RDS Instance with installed pgSTAC or pgbouncer server.
 
 ---
 
@@ -1430,6 +1452,7 @@ const pgStacDatabaseProps: PgStacDatabaseProps = { ... }
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.credentials">credentials</a></code> | <code>aws-cdk-lib.aws_rds.Credentials</code> | Credentials for the administrative user. |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.storageEncrypted">storageEncrypted</a></code> | <code>boolean</code> | Indicates whether the DB instance is encrypted. |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.storageEncryptionKey">storageEncryptionKey</a></code> | <code>aws-cdk-lib.aws_kms.IKey</code> | The KMS key that's used to encrypt the DB instance. |
+| <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.addPgbouncer">addPgbouncer</a></code> | <code>boolean</code> | Add pgbouncer instance for managing traffic to the pgSTAC database. |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.bootstrapperLambdaFunctionOptions">bootstrapperLambdaFunctionOptions</a></code> | <code>any</code> | Can be used to override the default lambda function properties. |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.customResourceProperties">customResourceProperties</a></code> | <code>{[ key: string ]: any}</code> | Lambda function Custom Resource properties. |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.pgstacDbName">pgstacDbName</a></code> | <code>string</code> | Name of database that is to be created and onto which pgSTAC will be installed. |
@@ -2203,6 +2226,19 @@ The KMS key that's used to encrypt the DB instance.
 
 ---
 
+##### `addPgbouncer`<sup>Optional</sup> <a name="addPgbouncer" id="eoapi-cdk.PgStacDatabaseProps.property.addPgbouncer"></a>
+
+```typescript
+public readonly addPgbouncer: boolean;
+```
+
+- *Type:* boolean
+- *Default:* true
+
+Add pgbouncer instance for managing traffic to the pgSTAC database.
+
+---
+
 ##### `bootstrapperLambdaFunctionOptions`<sup>Optional</sup> <a name="bootstrapperLambdaFunctionOptions" id="eoapi-cdk.PgStacDatabaseProps.property.bootstrapperLambdaFunctionOptions"></a>
 
 ```typescript
@@ -2595,7 +2631,7 @@ const tiPgApiLambdaProps: TiPgApiLambdaProps = { ... }
 
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
-| <code><a href="#eoapi-cdk.TiPgApiLambdaProps.property.db">db</a></code> | <code>aws-cdk-lib.aws_rds.IDatabaseInstance</code> | RDS Instance with installed pgSTAC. |
+| <code><a href="#eoapi-cdk.TiPgApiLambdaProps.property.db">db</a></code> | <code>aws-cdk-lib.aws_rds.IDatabaseInstance \| aws-cdk-lib.aws_ec2.IInstance</code> | RDS Instance with installed pgSTAC or pgbouncer server. |
 | <code><a href="#eoapi-cdk.TiPgApiLambdaProps.property.dbSecret">dbSecret</a></code> | <code>aws-cdk-lib.aws_secretsmanager.ISecret</code> | Secret containing connection information for pgSTAC database. |
 | <code><a href="#eoapi-cdk.TiPgApiLambdaProps.property.apiEnv">apiEnv</a></code> | <code>{[ key: string ]: string}</code> | Customized environment variables to send to titiler-pgstac runtime. |
 | <code><a href="#eoapi-cdk.TiPgApiLambdaProps.property.lambdaFunctionOptions">lambdaFunctionOptions</a></code> | <code>any</code> | Can be used to override the default lambda function properties. |
@@ -2608,12 +2644,12 @@ const tiPgApiLambdaProps: TiPgApiLambdaProps = { ... }
 ##### `db`<sup>Required</sup> <a name="db" id="eoapi-cdk.TiPgApiLambdaProps.property.db"></a>
 
 ```typescript
-public readonly db: IDatabaseInstance;
+public readonly db: IDatabaseInstance | IInstance;
 ```
 
-- *Type:* aws-cdk-lib.aws_rds.IDatabaseInstance
+- *Type:* aws-cdk-lib.aws_rds.IDatabaseInstance | aws-cdk-lib.aws_ec2.IInstance
 
-RDS Instance with installed pgSTAC.
+RDS Instance with installed pgSTAC or pgbouncer server.
 
 ---
 
@@ -2708,7 +2744,7 @@ const titilerPgStacApiLambdaProps: TitilerPgStacApiLambdaProps = { ... }
 
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
-| <code><a href="#eoapi-cdk.TitilerPgStacApiLambdaProps.property.db">db</a></code> | <code>aws-cdk-lib.aws_rds.IDatabaseInstance</code> | RDS Instance with installed pgSTAC. |
+| <code><a href="#eoapi-cdk.TitilerPgStacApiLambdaProps.property.db">db</a></code> | <code>aws-cdk-lib.aws_rds.IDatabaseInstance \| aws-cdk-lib.aws_ec2.IInstance</code> | RDS Instance with installed pgSTAC or pgbouncer server. |
 | <code><a href="#eoapi-cdk.TitilerPgStacApiLambdaProps.property.dbSecret">dbSecret</a></code> | <code>aws-cdk-lib.aws_secretsmanager.ISecret</code> | Secret containing connection information for pgSTAC database. |
 | <code><a href="#eoapi-cdk.TitilerPgStacApiLambdaProps.property.apiEnv">apiEnv</a></code> | <code>{[ key: string ]: string}</code> | Customized environment variables to send to titiler-pgstac runtime. |
 | <code><a href="#eoapi-cdk.TitilerPgStacApiLambdaProps.property.buckets">buckets</a></code> | <code>string[]</code> | list of buckets the lambda will be granted access to. |
@@ -2722,12 +2758,12 @@ const titilerPgStacApiLambdaProps: TitilerPgStacApiLambdaProps = { ... }
 ##### `db`<sup>Required</sup> <a name="db" id="eoapi-cdk.TitilerPgStacApiLambdaProps.property.db"></a>
 
 ```typescript
-public readonly db: IDatabaseInstance;
+public readonly db: IDatabaseInstance | IInstance;
 ```
 
-- *Type:* aws-cdk-lib.aws_rds.IDatabaseInstance
+- *Type:* aws-cdk-lib.aws_rds.IDatabaseInstance | aws-cdk-lib.aws_ec2.IInstance
 
-RDS Instance with installed pgSTAC.
+RDS Instance with installed pgSTAC or pgbouncer server.
 
 ---
 
