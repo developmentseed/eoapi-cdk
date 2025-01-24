@@ -92,7 +92,7 @@ class pgStacInfraStack(Stack):
         PgStacApiLambda(
             self,
             "pgstac-api",
-            connection_target=pgstac_db.connection_target,
+            db=pgstac_db.connection_target,
             db_secret=pgstac_db.pgstac_secret,
             api_env={
                 "NAME": app_config.build_service_name("STAC API"),
@@ -107,7 +107,7 @@ class pgStacInfraStack(Stack):
                 "NAME": app_config.build_service_name("titiler pgSTAC API"),
                 "description": f"{app_config.stage} titiler pgstac API",
             },
-            connection_target=pgstac_db.connection_target,
+            db=pgstac_db.connection_target,
             db_secret=pgstac_db.pgstac_secret,
             buckets=[],
             lambda_function_options={
@@ -118,7 +118,7 @@ class pgStacInfraStack(Stack):
         TiPgApiLambda(
             self,
             "tipg-api",
-            connection_target=pgstac_db.connection_target,
+            db=pgstac_db.connection_target,
             db_secret=pgstac_db.pgstac_secret,
             api_env={
                 "NAME": app_config.build_service_name("tipg API"),

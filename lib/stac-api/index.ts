@@ -47,7 +47,7 @@ export class PgStacApiLambda extends Construct {
     props.dbSecret.grantRead(this.stacApiLambdaFunction);
 
     if (props.vpc){
-      this.stacApiLambdaFunction.connections.allowTo(props.connectionTarget, ec2.Port.tcp(5432), "allow connections from stac-fastapi-pgstac");
+      this.stacApiLambdaFunction.connections.allowTo(props.db, ec2.Port.tcp(5432), "allow connections from stac-fastapi-pgstac");
     }
 
     const stacApi = new HttpApi(this, `${Stack.of(this).stackName}-stac-api`, {
@@ -81,7 +81,7 @@ export interface PgStacApiLambdaProps {
   /**
    * RDS Instance with installed pgSTAC or pgbouncer server.
    */
-  readonly connectionTarget: rds.IDatabaseInstance | ec2.IInstance;
+  readonly db: rds.IDatabaseInstance | ec2.IInstance;
 
   /**
    * Subnet into which the lambda should be deployed.
