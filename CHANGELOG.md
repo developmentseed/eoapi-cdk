@@ -1,3 +1,10 @@
+# [7.4.0](https://github.com/developmentseed/eoapi-cdk/compare/v7.3.0...v7.4.0) (2025-01-24)
+
+
+### Features
+
+* add pgbouncer ([#114](https://github.com/developmentseed/eoapi-cdk/issues/114)) ([5952858](https://github.com/developmentseed/eoapi-cdk/commit/5952858d280c753a423d79c0ab5f4da549792a11))
+
 # [7.3.0](https://github.com/developmentseed/eoapi-cdk/compare/v7.2.1...v7.3.0) (2024-12-10)
 
 
