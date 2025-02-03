@@ -1,3 +1,10 @@
+## [7.4.2](https://github.com/developmentseed/eoapi-cdk/compare/v7.4.1...v7.4.2) (2025-02-03)
+
+
+### Bug Fixes
+
+* ensure dependency secret update function completes ([#120](https://github.com/developmentseed/eoapi-cdk/issues/120)) ([90cdc89](https://github.com/developmentseed/eoapi-cdk/commit/90cdc89381f36528172e0035d50a174f7f1ee330))
+
 ## [7.4.1](https://github.com/developmentseed/eoapi-cdk/compare/v7.4.0...v7.4.1) (2025-01-24)
 
 
