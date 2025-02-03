@@ -71,6 +71,7 @@ export class PgBouncer extends Construct {
   public readonly instance: ec2.Instance;
   public readonly pgbouncerSecret: secretsmanager.Secret;
   public readonly securityGroup: ec2.SecurityGroup;
+  public readonly secretUpdateComplete: CustomResource;
 
   // The max_connections parameter in PgBouncer determines the maximum number of
   // connections to open on the actual database instance. We want that number to
@@ -208,14 +209,18 @@ export class PgBouncer extends Construct {
     props.database.secret.grantRead(secretUpdaterFn);
     this.pgbouncerSecret.grantWrite(secretUpdaterFn);
 
-    new CustomResource(this, "pgbouncerSecretBootstrapper", {
-      serviceToken: secretUpdaterFn.functionArn,
-      properties: {
-        instanceIp: props.usePublicSubnet
-          ? this.instance.instancePublicIp
-          : this.instance.instancePrivateIp,
-      },
-    });
+    this.secretUpdateComplete = new CustomResource(
+      this,
+      "pgbouncerSecretBootstrapper",
+      {
+        serviceToken: secretUpdaterFn.functionArn,
+        properties: {
+          instanceIp: props.usePublicSubnet
+            ? this.instance.instancePublicIp
+            : this.instance.instancePrivateIp,
+        },
+      }
+    );
   }
 
   private loadUserDataScript(

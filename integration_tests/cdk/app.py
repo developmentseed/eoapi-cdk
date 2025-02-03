@@ -85,6 +85,9 @@ class pgStacInfraStack(Stack):
 
         assert pgstac_db.security_group
 
+        # make sure we can get the secret value!
+        assert pgstac_db.pgstac_secret.secret_value_from_json("host").to_string()
+
         pgstac_db.security_group.add_ingress_rule(
             aws_ec2.Peer.any_ipv4(), aws_ec2.Port.tcp(5432)
         )
