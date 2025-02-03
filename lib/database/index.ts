@@ -171,7 +171,9 @@ export class PgStacDatabase extends Construct {
       this._pgBouncerServer.node.addDependency(bootstrapper);
 
       this.pgstacSecret = this._pgBouncerServer.pgbouncerSecret;
+
       this.connectionTarget = this._pgBouncerServer.instance;
+
       this.securityGroup = this._pgBouncerServer.securityGroup;
     } else {
       this.connectionTarget = this.db;
