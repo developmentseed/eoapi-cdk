@@ -1,6 +1,6 @@
 {
   "name": "eoapi-cdk",
-  "version": "7.4.2",
+  "version": "7.5.0",
   "description": "A set of constructs deploying pgSTAC with CDK",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",

@@ -1,3 +1,10 @@
+# [7.5.0](https://github.com/developmentseed/eoapi-cdk/compare/v7.4.2...v7.5.0) (2025-02-04)
+
+
+### Features
+
+* configure pgstac version in custom properties ([#123](https://github.com/developmentseed/eoapi-cdk/issues/123)) ([a29ea21](https://github.com/developmentseed/eoapi-cdk/commit/a29ea216dbb4631081f052c312ee9c7957276dae))
+
 ## [7.4.2](https://github.com/developmentseed/eoapi-cdk/compare/v7.4.1...v7.4.2) (2025-02-03)
 
 
