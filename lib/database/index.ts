@@ -79,8 +79,7 @@ export class PgStacDatabase extends Construct {
       code: aws_lambda.Code.fromDockerBuild(__dirname, {
         file: "bootstrapper_runtime/Dockerfile",
         buildArgs: {
-          PGSTAC_VERSION: DEFAULT_PGSTAC_VERSION,
-          PYTHON_VERSION: "3.11",
+          PYTHON_VERSION: "3.11"
         },
       }),
       vpc: hasVpc(this.db) ? this.db.vpc : props.vpc,
@@ -131,7 +130,7 @@ export class PgStacDatabase extends Construct {
 
     // if props.lambdaFunctionOptions doesn't have 'code' defined, update pgstac_version (needed for default runtime)
     if (!props.bootstrapperLambdaFunctionOptions?.code) {
-      customResourceProperties["pgstac_version"] = DEFAULT_PGSTAC_VERSION;
+      customResourceProperties["pgstac_version"] = props.pgstacVersion || DEFAULT_PGSTAC_VERSION;
     }
     // this.connections = props.database.connections;
     const bootstrapper = new CustomResource(this, "bootstrapper", {
@@ -225,6 +224,13 @@ export interface PgStacDatabaseProps extends rds.DatabaseInstanceProps {
    * @default pgstac
    */
   readonly pgstacDbName?: string;
+
+  /**
+      * Version of pgstac to install on the database
+      *
+      * @default 0.8.5
+      */
+  readonly pgstacVersion?: string;
 
   /**
    * Prefix to assign to the generated `secrets_manager.Secret`
