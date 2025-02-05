@@ -7,5 +7,4 @@ pydantic_ssm_settings>=0.2.0,<1.0
 pydantic>=1.9.0
 pypgstac==0.8.5
 requests>=2.27.1
-# Waiting for https://github.com/stac-utils/stac-pydantic/pull/116
-stac-pydantic @ git+https://github.com/alukach/stac-pydantic.git@patch-1
+stac-pydantic>=3.0

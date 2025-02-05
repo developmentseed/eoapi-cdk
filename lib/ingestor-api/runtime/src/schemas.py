@@ -14,7 +14,7 @@ from pydantic import (
     PositiveInt,
     dataclasses,
     error_wrappers,
-    validator,
+    field_validator,
 )
 from stac_pydantic import Collection, Item, shared
 
@@ -25,7 +25,7 @@ if TYPE_CHECKING:
 
 
 class AccessibleAsset(shared.Asset):
-    @validator("href")
+    @field_validator("href")
     def is_accessible(cls, href):
         url = urlparse(href)
 
@@ -44,7 +44,7 @@ class AccessibleAsset(shared.Asset):
 class AccessibleItem(Item):
     assets: Dict[str, AccessibleAsset]
 
-    @validator("collection")
+    @field_validator("collection")
     def exists(cls, collection):
         validators.collection_exists(collection_id=collection)
         return collection
@@ -66,15 +66,14 @@ class Status(str, enum.Enum):
 class Ingestion(BaseModel):
     id: str
     status: Status
-    message: Optional[str]
+    message: Optional[str] = None
     created_by: str
-    created_at: datetime = None
-    updated_at: datetime = None
+    created_at: datetime = datetime.now()
+    updated_at: datetime = datetime.now()
 
     item: Union[Item, Json[Item]]
 
-    @validator("created_at", pre=True, always=True, allow_reuse=True)
-    @validator("updated_at", pre=True, always=True, allow_reuse=True)
+    @field_validator("created_at", "updated_at", mode="before")
     def set_ts_now(cls, v):
         return v or datetime.now()
 
@@ -94,10 +93,10 @@ class Ingestion(BaseModel):
     def dynamodb_dict(self):
         """DynamoDB-friendly serialization"""
         # convert to dictionary
-        output = self.dict(exclude={"item"})
+        output = self.model_dump(exclude={"item"})
 
         # add STAC item as string
-        output["item"] = self.item.json()
+        output["item"] = self.item.model_dump_json()
 
         # make JSON-friendly (will be able to do with Pydantic V2, https://github.com/pydantic/pydantic/issues/1409#issuecomment-1423995424)
         return jsonable_encoder(output)
@@ -106,7 +105,7 @@ class Ingestion(BaseModel):
 @dataclasses.dataclass
 class ListIngestionRequest:
     status: Status = Status.queued
-    limit: PositiveInt = None
+    limit: Optional[PositiveInt] = None
     next: Optional[str] = None
 
     def __post_init_post_parse__(self) -> None:
@@ -133,7 +132,7 @@ class ListIngestionResponse(BaseModel):
     items: List[Ingestion]
     next: Optional[str]
 
-    @validator("next", pre=True)
+    @field_validator("next", mode="before")
     def b64_encode_next(cls, next):
         """
         Base64 encode next parameter for easier transportability
@@ -144,5 +143,5 @@ class ListIngestionResponse(BaseModel):
 
 
 class UpdateIngestionRequest(BaseModel):
-    status: Status = None
-    message: str = None
+    status: Optional[Status] = None
+    message: Optional[str] = None

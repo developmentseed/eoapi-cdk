@@ -2,10 +2,11 @@ import os
 from getpass import getuser
 from typing import Optional
 
-from pydantic import AnyHttpUrl, BaseSettings, Field, constr
-from pydantic_ssm_settings import AwsSsmSourceConfig
+from pydantic import AnyHttpUrl, Field, constr
+from pydantic_settings import BaseSettings
+from pydantic_ssm_settings.settings import SsmBaseSettings
 
-AwsArn = constr(regex=r"^arn:aws:iam::\d{12}:role/.+")
+AwsArn = constr(pattern=r"^arn:aws:iam::\d{12}:role/.+")
 
 
 class Settings(BaseSettings):
@@ -27,8 +28,8 @@ class Settings(BaseSettings):
         description="Path from where to serve this URL.", default=False
     )
 
-    class Config(AwsSsmSourceConfig):
-        env_file = ".env"
+    class Config(SsmBaseSettings):
+        env_file: str = ".env"
 
     @classmethod
     def from_ssm(cls, stack: str):
