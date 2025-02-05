@@ -81,18 +81,16 @@ class pgStacInfraStack(Stack):
             instance_type=aws_ec2.InstanceType(app_config.db_instance_type),
             add_pgbouncer=True,
             removal_policy=RemovalPolicy.DESTROY,
+            pgstac_version="0.9.2",
         )
 
         assert pgstac_db.security_group
-
-        # make sure we can get the secret value!
-        assert pgstac_db.pgstac_secret.secret_value_from_json("host").to_string()
 
         pgstac_db.security_group.add_ingress_rule(
             aws_ec2.Peer.any_ipv4(), aws_ec2.Port.tcp(5432)
         )
 
-        PgStacApiLambda(
+        stac_api = PgStacApiLambda(
             self,
             "pgstac-api",
             db=pgstac_db.connection_target,
@@ -100,8 +98,15 @@ class pgStacInfraStack(Stack):
             api_env={
                 "NAME": app_config.build_service_name("STAC API"),
                 "description": f"{app_config.stage} STAC API",
+                # test that we can use the pgbouncer secret in downstream resources
+                "POSTGRES_HOST": pgstac_db.pgstac_secret.secret_value_from_json(
+                    "host"
+                ).to_string(),
             },
         )
+
+        # make sure stac_api does not try to build before the secret has been boostrapped
+        stac_api.node.add_dependency(pgstac_db.secret_bootstrapper)
 
         TitilerPgstacApiLambda(
             self,

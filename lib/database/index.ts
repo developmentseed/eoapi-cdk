@@ -39,6 +39,7 @@ export class PgStacDatabase extends Construct {
 
   public readonly connectionTarget: rds.IDatabaseInstance | ec2.Instance;
   public readonly securityGroup?: ec2.SecurityGroup;
+  public readonly secretBootstrapper?: CustomResource;
 
   constructor(scope: Construct, id: string, props: PgStacDatabaseProps) {
     super(scope, id);
@@ -79,7 +80,7 @@ export class PgStacDatabase extends Construct {
       code: aws_lambda.Code.fromDockerBuild(__dirname, {
         file: "bootstrapper_runtime/Dockerfile",
         buildArgs: {
-          PYTHON_VERSION: "3.11"
+          PYTHON_VERSION: "3.11",
         },
       }),
       vpc: hasVpc(this.db) ? this.db.vpc : props.vpc,
@@ -130,16 +131,20 @@ export class PgStacDatabase extends Construct {
 
     // if props.lambdaFunctionOptions doesn't have 'code' defined, update pgstac_version (needed for default runtime)
     if (!props.bootstrapperLambdaFunctionOptions?.code) {
-      customResourceProperties["pgstac_version"] = props.pgstacVersion || DEFAULT_PGSTAC_VERSION;
+      customResourceProperties["pgstac_version"] =
+        props.pgstacVersion || DEFAULT_PGSTAC_VERSION;
     }
-    // this.connections = props.database.connections;
+
+    // add timestamp to properties to ensure the Lambda gets re-executed on each deploy
+    customResourceProperties["timestamp"] = new Date().toISOString();
+
     const bootstrapper = new CustomResource(this, "bootstrapper", {
       serviceToken: handler.functionArn,
       properties: customResourceProperties,
       removalPolicy: RemovalPolicy.RETAIN, // This retains the custom resource (which doesn't really exist), not the database
     });
 
-    // PgBouncer: connection pooler
+    // PgBouncer: connection poolercustomresource trigger on redeploy
     const addPgbouncer = props.addPgbouncer ?? true;
     if (addPgbouncer) {
       this._pgBouncerServer = new PgBouncer(this, "pgbouncer", {
@@ -172,6 +177,7 @@ export class PgStacDatabase extends Construct {
       this.pgstacSecret = this._pgBouncerServer.pgbouncerSecret;
       this.connectionTarget = this._pgBouncerServer.instance;
       this.securityGroup = this._pgBouncerServer.securityGroup;
+      this.secretBootstrapper = this._pgBouncerServer.secretUpdateComplete;
     } else {
       this.connectionTarget = this.db;
     }
@@ -226,10 +232,10 @@ export interface PgStacDatabaseProps extends rds.DatabaseInstanceProps {
   readonly pgstacDbName?: string;
 
   /**
-      * Version of pgstac to install on the database
-      *
-      * @default 0.8.5
-      */
+   * Version of pgstac to install on the database
+   *
+   * @default 0.8.5
+   */
   readonly pgstacVersion?: string;
 
   /**
