@@ -3,7 +3,7 @@ cachetools==5.3.0
 fastapi>=0.75.1
 orjson>=3.6.8
 psycopg[binary,pool]>=3.0.15
-pydantic_ssm_settings>=0.2.0
+pydantic_ssm_settings>=0.2.0,<1.0
 pydantic>=1.9.0
 pypgstac==0.8.5
 requests>=2.27.1
