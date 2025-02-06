@@ -1,3 +1,10 @@
+## [7.5.1](https://github.com/developmentseed/eoapi-cdk/compare/v7.5.0...v7.5.1) (2025-02-06)
+
+
+### Bug Fixes
+
+* ensure db bootstrapper runs on each deploy ([#124](https://github.com/developmentseed/eoapi-cdk/issues/124)) ([bb4bff8](https://github.com/developmentseed/eoapi-cdk/commit/bb4bff8fd4a93fea6cce4bd7fcb8de60807ee37a))
+
 # [7.5.0](https://github.com/developmentseed/eoapi-cdk/compare/v7.4.2...v7.5.0) (2025-02-04)
 
 
