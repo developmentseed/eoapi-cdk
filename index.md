@@ -462,6 +462,7 @@ Any object.
 | --- | --- | --- |
 | <code><a href="#eoapi-cdk.PgStacDatabase.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
 | <code><a href="#eoapi-cdk.PgStacDatabase.property.connectionTarget">connectionTarget</a></code> | <code>aws-cdk-lib.aws_ec2.Instance \| aws-cdk-lib.aws_rds.IDatabaseInstance</code> | *No description.* |
+| <code><a href="#eoapi-cdk.PgStacDatabase.property.secretBootstrapper">secretBootstrapper</a></code> | <code>aws-cdk-lib.CustomResource</code> | *No description.* |
 | <code><a href="#eoapi-cdk.PgStacDatabase.property.securityGroup">securityGroup</a></code> | <code>aws-cdk-lib.aws_ec2.SecurityGroup</code> | *No description.* |
 | <code><a href="#eoapi-cdk.PgStacDatabase.property.db">db</a></code> | <code>aws-cdk-lib.aws_rds.DatabaseInstance</code> | *No description.* |
 | <code><a href="#eoapi-cdk.PgStacDatabase.property.pgstacSecret">pgstacSecret</a></code> | <code>aws-cdk-lib.aws_secretsmanager.ISecret</code> | *No description.* |
@@ -487,6 +488,16 @@ public readonly connectionTarget: Instance | IDatabaseInstance;
 ```
 
 - *Type:* aws-cdk-lib.aws_ec2.Instance | aws-cdk-lib.aws_rds.IDatabaseInstance
+
+---
+
+##### `secretBootstrapper`<sup>Optional</sup> <a name="secretBootstrapper" id="eoapi-cdk.PgStacDatabase.property.secretBootstrapper"></a>
+
+```typescript
+public readonly secretBootstrapper: CustomResource;
+```
+
+- *Type:* aws-cdk-lib.CustomResource
 
 ---
 
