@@ -21,6 +21,7 @@ def test_environ():
     os.environ["STAC_URL"] = "https://test-stac.url"
     os.environ["DATA_ACCESS_ROLE"] = "arn:aws:iam::123456789012:role/test-role"
     os.environ["DB_SECRET_ARN"] = "testing"
+    os.environ["ROOT_PATH"] = "testing"
 
 
 @pytest.fixture
@@ -259,7 +260,7 @@ def stac_collection(example_stac_collection):
     return schemas.StacCollection(**example_stac_collection)
 
 
-@pytest.fixture
+@pytest.fixture(scope="function")
 def example_ingestion(example_stac_item):
     from src import schemas
 
@@ -267,5 +268,5 @@ def example_ingestion(example_stac_item):
         id=example_stac_item["id"],
         created_by="test-user",
         status=schemas.Status.queued,
-        item=Item.parse_obj(example_stac_item),
+        item=Item.model_validate(example_stac_item),
     )

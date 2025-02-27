@@ -74,7 +74,9 @@ class TestCreate:
         )
 
         assert response.status_code == 201
-        assert collection_exists.called_once_with(self.example_ingestion.item.collection)
+        collection_exists.assert_called_once_with(
+            collection_id=self.example_ingestion.item.collection
+        )
 
         stored_data = self.db.fetch_many(status="queued")["items"]
         assert len(stored_data) == 1
@@ -87,7 +89,6 @@ class TestCreate:
             ingestion_endpoint,
             json=jsonable_encoder(self.example_ingestion.item),
         )
-
         collection_missing.assert_called_once_with(
             collection_id=self.example_ingestion.item.collection
         )
@@ -140,7 +141,7 @@ class TestList:
     def populate_table(self, count=100) -> List["schemas.Ingestion"]:
         example_ingestions = []
         for i in range(count):
-            ingestion = self.example_ingestion.copy()
+            ingestion = self.example_ingestion.model_copy()
             ingestion.id = str(i)
             ingestion.created_at = ingestion.created_at + timedelta(hours=i)
             self.mock_table.put_item(Item=ingestion.dynamodb_dict())
