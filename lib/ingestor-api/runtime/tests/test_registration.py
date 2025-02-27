@@ -75,7 +75,9 @@ class TestCreate:
 
         assert response.status_code == 201
         print("item's collection", self.example_ingestion.item.collection)
-        collection_exists.assert_called_once_with(self.example_ingestion.item.collection)
+        collection_exists.assert_called_once_with(
+            collection_id=self.example_ingestion.item.collection
+        )
 
         stored_data = self.db.fetch_many(status="queued")["items"]
         assert len(stored_data) == 1
