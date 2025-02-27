@@ -1,3 +1,10 @@
+# [7.6.0](https://github.com/developmentseed/eoapi-cdk/compare/v7.5.1...v7.6.0) (2025-02-27)
+
+
+### Features
+
+* update ingestor-api runtime dependencies ([#125](https://github.com/developmentseed/eoapi-cdk/issues/125)) ([562955d](https://github.com/developmentseed/eoapi-cdk/commit/562955d02f925e3ce8101cc2f64dfab6553c28b8))
+
 ## [7.5.1](https://github.com/developmentseed/eoapi-cdk/compare/v7.5.0...v7.5.1) (2025-02-06)
 
 
