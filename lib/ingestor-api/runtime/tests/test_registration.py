@@ -74,7 +74,6 @@ class TestCreate:
         )
 
         assert response.status_code == 201
-        print("item's collection", self.example_ingestion.item.collection)
         collection_exists.assert_called_once_with(
             collection_id=self.example_ingestion.item.collection
         )
