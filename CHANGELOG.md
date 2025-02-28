@@ -1,3 +1,10 @@
+## [7.6.1](https://github.com/developmentseed/eoapi-cdk/compare/v7.6.0...v7.6.1) (2025-02-28)
+
+
+### Bug Fixes
+
+* update types for url config parameters to be compatible with str ([#127](https://github.com/developmentseed/eoapi-cdk/issues/127)) ([cab4c0e](https://github.com/developmentseed/eoapi-cdk/commit/cab4c0e3d71261d1feefcb38e5fb40dccb530b57))
+
 # [7.6.0](https://github.com/developmentseed/eoapi-cdk/compare/v7.5.1...v7.6.0) (2025-02-27)
 
 
