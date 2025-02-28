@@ -1,5 +1,3 @@
-import os
-
 import boto3
 import pytest
 from fastapi.testclient import TestClient
@@ -8,20 +6,20 @@ from stac_pydantic import Item
 
 
 @pytest.fixture
-def test_environ():
-    # Mocked AWS Credentials for moto (best practice recommendation from moto)
-    os.environ["AWS_ACCESS_KEY_ID"] = "testing"
-    os.environ["AWS_SECRET_ACCESS_KEY"] = "testing"
-    os.environ["AWS_SECURITY_TOKEN"] = "testing"
-    os.environ["AWS_SESSION_TOKEN"] = "testing"
+def test_environ(monkeypatch):
+    # Mocked AWS Credentials for moto
+    monkeypatch.setenv("AWS_ACCESS_KEY_ID", "testing")
+    monkeypatch.setenv("AWS_SECRET_ACCESS_KEY", "testing")
+    monkeypatch.setenv("AWS_SECURITY_TOKEN", "testing")
+    monkeypatch.setenv("AWS_SESSION_TOKEN", "testing")
 
     # Config mocks
-    os.environ["DYNAMODB_TABLE"] = "test_table"
-    os.environ["JWKS_URL"] = "https://test-jwks.url"
-    os.environ["STAC_URL"] = "https://test-stac.url"
-    os.environ["DATA_ACCESS_ROLE"] = "arn:aws:iam::123456789012:role/test-role"
-    os.environ["DB_SECRET_ARN"] = "testing"
-    os.environ["ROOT_PATH"] = "testing"
+    monkeypatch.setenv("DYNAMODB_TABLE", "test_table")
+    monkeypatch.setenv("JWKS_URL", "https://test-jwks.url")
+    monkeypatch.setenv("STAC_URL", "https://test-stac.url")
+    monkeypatch.setenv("DATA_ACCESS_ROLE", "arn:aws:iam::123456789012:role/test-role")
+    monkeypatch.setenv("DB_SECRET_ARN", "testing")
+    monkeypatch.setenv("ROOT_PATH", "testing")
 
 
 @pytest.fixture
