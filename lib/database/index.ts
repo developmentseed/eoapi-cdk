@@ -14,7 +14,7 @@ import { CustomLambdaFunctionProps } from "../utils";
 import { PgBouncer } from "./PgBouncer";
 
 const instanceSizes: Record<string, number> = require("./instance-memory.json");
-const DEFAULT_PGSTAC_VERSION = "0.8.5";
+const DEFAULT_PGSTAC_VERSION = "0.9.5";
 
 let defaultPgSTACCustomOptions: { [key: string]: any } = {
   context: "FALSE",
