@@ -5,7 +5,8 @@ Handler for AWS Lambda.
 import asyncio
 import os
 
-from .utils import get_secret_dict
+from mangum import Mangum
+from utils import get_secret_dict
 
 pgstac_secret_arn = os.environ["PGSTAC_SECRET_ARN"]
 
@@ -19,12 +20,9 @@ os.environ.update(
         "postgres_port": str(secret["port"]),
     }
 )
-
-from mangum import Mangum
 from titiler.pgstac.db import connect_to_db  # noqa: E402
 from titiler.pgstac.main import app  # noqa: E402
 from titiler.pgstac.settings import PostgresSettings
-from utils import get_secret_dict
 
 
 @app.on_event("startup")
