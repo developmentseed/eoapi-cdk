@@ -7,7 +7,7 @@ RUN python -m pip install pip -U
 # Install system dependencies to compile (numexpr)
 RUN yum install -y gcc-c++
 
-COPY runtime/requirements.txt requirements.txt
+COPY titiler-pgstac-api/runtime/requirements.txt requirements.txt
 RUN python -m pip install -r requirements.txt "mangum>=0.14,<0.15" -t /asset
 
 # Remove system dependencies
@@ -26,6 +26,7 @@ RUN cd /asset && \
   -not -path "./numpy.libs/*" \
   -exec strip --strip-unneeded {} \;
 
-COPY runtime/src/*.py /asset/
+COPY titiler-pgstac-api/runtime/src/*.py /asset/
+COPY utils/utils.py /asset/
 
 CMD ["echo", "hello world"]

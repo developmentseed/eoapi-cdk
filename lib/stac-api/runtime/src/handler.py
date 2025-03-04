@@ -6,12 +6,10 @@ import asyncio
 import os
 
 from mangum import Mangum
+from utils import get_secret_dict
 
-from .config import get_secret_dict
+secret = get_secret_dict(secret_arn_env_var="PGSTAC_SECRET_ARN")
 
-pgstac_secret_arn = os.environ["PGSTAC_SECRET_ARN"]
-
-secret = get_secret_dict(pgstac_secret_arn)
 os.environ.update(
     {
         "postgres_host_reader": secret["host"],
@@ -23,7 +21,25 @@ os.environ.update(
     }
 )
 
-from .app import app
+from stac_fastapi.pgstac.app import app
+from stac_fastapi.pgstac.db import close_db_connection, connect_to_db
+
+
+@app.on_event("startup")
+async def startup_event():
+    """Connect to database on startup."""
+    print("Setting up DB connection...")
+    await connect_to_db(app)
+    print("DB connection setup.")
+
+
+@app.on_event("shutdown")
+async def shutdown_event():
+    """Close database connection."""
+    print("Closing up DB connection...")
+    await close_db_connection(app)
+    print("DB connection closed.")
+
 
 handler = Mangum(app, lifespan="off")
 
