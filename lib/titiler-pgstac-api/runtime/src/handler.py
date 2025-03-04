@@ -4,22 +4,11 @@ Handler for AWS Lambda.
 
 import asyncio
 import os
-from functools import lru_cache
 
 from mangum import Mangum
 from utils import get_secret_dict
 
-
-@lru_cache(maxsize=1)
-def get_db_credentials():
-    """Cache the credentials to avoid repeated Secrets Manager calls."""
-    pgstac_secret_arn = os.environ.get("PGSTAC_SECRET_ARN")
-    if not pgstac_secret_arn:
-        raise ValueError("PGSTAC_SECRET_ARN is not set!")
-    return get_secret_dict(pgstac_secret_arn)
-
-
-secret = get_db_credentials()
+secret = get_secret_dict(secret_arn_env_var="PGSTAC_SECRET_ARN")
 os.environ.update(
     {
         "postgres_host": secret["host"],
