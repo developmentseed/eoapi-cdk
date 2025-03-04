@@ -1,410 +1,356 @@
 ## [7.6.1](https://github.com/developmentseed/eoapi-cdk/compare/v7.6.0...v7.6.1) (2025-02-28)
 
-
 ### Bug Fixes
 
-* update types for url config parameters to be compatible with str ([#127](https://github.com/developmentseed/eoapi-cdk/issues/127)) ([cab4c0e](https://github.com/developmentseed/eoapi-cdk/commit/cab4c0e3d71261d1feefcb38e5fb40dccb530b57))
+- update types for url config parameters to be compatible with str ([#127](https://github.com/developmentseed/eoapi-cdk/issues/127)) ([cab4c0e](https://github.com/developmentseed/eoapi-cdk/commit/cab4c0e3d71261d1feefcb38e5fb40dccb530b57))
 
 # [7.6.0](https://github.com/developmentseed/eoapi-cdk/compare/v7.5.1...v7.6.0) (2025-02-27)
 
-
 ### Features
 
-* update ingestor-api runtime dependencies ([#125](https://github.com/developmentseed/eoapi-cdk/issues/125)) ([562955d](https://github.com/developmentseed/eoapi-cdk/commit/562955d02f925e3ce8101cc2f64dfab6553c28b8))
+- update ingestor-api runtime dependencies ([#125](https://github.com/developmentseed/eoapi-cdk/issues/125)) ([562955d](https://github.com/developmentseed/eoapi-cdk/commit/562955d02f925e3ce8101cc2f64dfab6553c28b8))
 
 ## [7.5.1](https://github.com/developmentseed/eoapi-cdk/compare/v7.5.0...v7.5.1) (2025-02-06)
 
-
 ### Bug Fixes
 
-* ensure db bootstrapper runs on each deploy ([#124](https://github.com/developmentseed/eoapi-cdk/issues/124)) ([bb4bff8](https://github.com/developmentseed/eoapi-cdk/commit/bb4bff8fd4a93fea6cce4bd7fcb8de60807ee37a))
+- ensure db bootstrapper runs on each deploy ([#124](https://github.com/developmentseed/eoapi-cdk/issues/124)) ([bb4bff8](https://github.com/developmentseed/eoapi-cdk/commit/bb4bff8fd4a93fea6cce4bd7fcb8de60807ee37a))
 
 # [7.5.0](https://github.com/developmentseed/eoapi-cdk/compare/v7.4.2...v7.5.0) (2025-02-04)
 
-
 ### Features
 
-* configure pgstac version in custom properties ([#123](https://github.com/developmentseed/eoapi-cdk/issues/123)) ([a29ea21](https://github.com/developmentseed/eoapi-cdk/commit/a29ea216dbb4631081f052c312ee9c7957276dae))
+- configure pgstac version in custom properties ([#123](https://github.com/developmentseed/eoapi-cdk/issues/123)) ([a29ea21](https://github.com/developmentseed/eoapi-cdk/commit/a29ea216dbb4631081f052c312ee9c7957276dae))
 
 ## [7.4.2](https://github.com/developmentseed/eoapi-cdk/compare/v7.4.1...v7.4.2) (2025-02-03)
 
-
 ### Bug Fixes
 
-* ensure dependency secret update function completes ([#120](https://github.com/developmentseed/eoapi-cdk/issues/120)) ([90cdc89](https://github.com/developmentseed/eoapi-cdk/commit/90cdc89381f36528172e0035d50a174f7f1ee330))
-* upgrade workflow versions ([#121](https://github.com/developmentseed/eoapi-cdk/issues/121)) ([45e72dd](https://github.com/developmentseed/eoapi-cdk/commit/45e72dd7cf20ae32e1b643ffcafd54bcac2cfd1e))
+- ensure dependency secret update function completes ([#120](https://github.com/developmentseed/eoapi-cdk/issues/120)) ([90cdc89](https://github.com/developmentseed/eoapi-cdk/commit/90cdc89381f36528172e0035d50a174f7f1ee330))
+- upgrade workflow versions ([#121](https://github.com/developmentseed/eoapi-cdk/issues/121)) ([45e72dd](https://github.com/developmentseed/eoapi-cdk/commit/45e72dd7cf20ae32e1b643ffcafd54bcac2cfd1e))
 
 ## [7.4.2](https://github.com/developmentseed/eoapi-cdk/compare/v7.4.1...v7.4.2) (2025-02-03)
 
-
 ### Bug Fixes
 
-* ensure dependency secret update function completes ([#120](https://github.com/developmentseed/eoapi-cdk/issues/120)) ([90cdc89](https://github.com/developmentseed/eoapi-cdk/commit/90cdc89381f36528172e0035d50a174f7f1ee330))
+- ensure dependency secret update function completes ([#120](https://github.com/developmentseed/eoapi-cdk/issues/120)) ([90cdc89](https://github.com/developmentseed/eoapi-cdk/commit/90cdc89381f36528172e0035d50a174f7f1ee330))
 
 ## [7.4.1](https://github.com/developmentseed/eoapi-cdk/compare/v7.4.0...v7.4.1) (2025-01-24)
 
-
 ### Bug Fixes
 
-* install packaging>=24.2 with twine ([#118](https://github.com/developmentseed/eoapi-cdk/issues/118)) ([caaf9e3](https://github.com/developmentseed/eoapi-cdk/commit/caaf9e3bd18593447a005eddf1d6bcef823b7d3b))
+- install packaging>=24.2 with twine ([#118](https://github.com/developmentseed/eoapi-cdk/issues/118)) ([caaf9e3](https://github.com/developmentseed/eoapi-cdk/commit/caaf9e3bd18593447a005eddf1d6bcef823b7d3b))
 
 # [7.4.0](https://github.com/developmentseed/eoapi-cdk/compare/v7.3.0...v7.4.0) (2025-01-24)
 
-
 ### Features
 
-* add pgbouncer ([#114](https://github.com/developmentseed/eoapi-cdk/issues/114)) ([5952858](https://github.com/developmentseed/eoapi-cdk/commit/5952858d280c753a423d79c0ab5f4da549792a11))
+- add pgbouncer ([#114](https://github.com/developmentseed/eoapi-cdk/issues/114)) ([5952858](https://github.com/developmentseed/eoapi-cdk/commit/5952858d280c753a423d79c0ab5f4da549792a11))
 
 # [7.3.0](https://github.com/developmentseed/eoapi-cdk/compare/v7.2.1...v7.3.0) (2024-12-10)
 
-
 ### Bug Fixes
 
-* update units for effectiveCacheSize and tempBuffers ([#112](https://github.com/developmentseed/eoapi-cdk/issues/112)) ([2e3d728](https://github.com/developmentseed/eoapi-cdk/commit/2e3d72820dedc252f15692f1d327630e6fa3f5e6))
-
+- update units for effectiveCacheSize and tempBuffers ([#112](https://github.com/developmentseed/eoapi-cdk/issues/112)) ([2e3d728](https://github.com/developmentseed/eoapi-cdk/commit/2e3d72820dedc252f15692f1d327630e6fa3f5e6))
 
 ### Features
 
-* set search_path to include pgstac for eoapi user ([#111](https://github.com/developmentseed/eoapi-cdk/issues/111)) ([0470dcf](https://github.com/developmentseed/eoapi-cdk/commit/0470dcfb2bf7f6940dbbb1f0033c8e3fe129bdb7))
+- set search_path to include pgstac for eoapi user ([#111](https://github.com/developmentseed/eoapi-cdk/issues/111)) ([0470dcf](https://github.com/developmentseed/eoapi-cdk/commit/0470dcfb2bf7f6940dbbb1f0033c8e3fe129bdb7))
 
 ## [7.2.1](https://github.com/developmentseed/eoapi-cdk/compare/v7.2.0...v7.2.1) (2024-08-20)
 
-
 ### Bug Fixes
 
-* install compilation dependency for numexpr ([#109](https://github.com/developmentseed/eoapi-cdk/issues/109)) ([2762944](https://github.com/developmentseed/eoapi-cdk/commit/2762944344512bda476d1924a58feef2b0c4a7aa))
+- install compilation dependency for numexpr ([#109](https://github.com/developmentseed/eoapi-cdk/issues/109)) ([2762944](https://github.com/developmentseed/eoapi-cdk/commit/2762944344512bda476d1924a58feef2b0c4a7aa))
 
 # [7.2.0](https://github.com/developmentseed/eoapi-cdk/compare/v7.1.0...v7.2.0) (2024-05-14)
 
-
 ### Features
 
-* overwrite host headers when custom domain name ([#105](https://github.com/developmentseed/eoapi-cdk/issues/105)) ([e52887f](https://github.com/developmentseed/eoapi-cdk/commit/e52887fcbd3ba662a4754bd4a066774589425ba7))
+- overwrite host headers when custom domain name ([#105](https://github.com/developmentseed/eoapi-cdk/issues/105)) ([e52887f](https://github.com/developmentseed/eoapi-cdk/commit/e52887fcbd3ba662a4754bd4a066774589425ba7))
 
 # [7.1.0](https://github.com/developmentseed/eoapi-cdk/compare/v7.0.1...v7.1.0) (2024-03-13)
 
-
 ### Features
 
-* update runtimes and add pgstac customization options ([#100](https://github.com/developmentseed/eoapi-cdk/issues/100)) ([9e49e7e](https://github.com/developmentseed/eoapi-cdk/commit/9e49e7ea55d2fb9ea4b63c9f713b6caa4cad0249)), closes [#102](https://github.com/developmentseed/eoapi-cdk/issues/102)
+- update runtimes and add pgstac customization options ([#100](https://github.com/developmentseed/eoapi-cdk/issues/100)) ([9e49e7e](https://github.com/developmentseed/eoapi-cdk/commit/9e49e7ea55d2fb9ea4b63c9f713b6caa4cad0249)), closes [#102](https://github.com/developmentseed/eoapi-cdk/issues/102)
 
 ## [7.0.1](https://github.com/developmentseed/eoapi-cdk/compare/v7.0.0...v7.0.1) (2024-02-23)
 
-
 ### Bug Fixes
 
-* dependencies ([#97](https://github.com/developmentseed/eoapi-cdk/issues/97)) ([b09b510](https://github.com/developmentseed/eoapi-cdk/commit/b09b51002b1b2d7fd73ec27d763cd3a511fec2dc))
+- dependencies ([#97](https://github.com/developmentseed/eoapi-cdk/issues/97)) ([b09b510](https://github.com/developmentseed/eoapi-cdk/commit/b09b51002b1b2d7fd73ec27d763cd3a511fec2dc))
 
 # [7.0.0](https://github.com/developmentseed/eoapi-cdk/compare/v6.1.0...v7.0.0) (2024-02-22)
 
-
 ### Features
 
-* add integration tests ([#69](https://github.com/developmentseed/eoapi-cdk/issues/69)) ([17eec16](https://github.com/developmentseed/eoapi-cdk/commit/17eec16b944e4ca489ddcd610aeef2c1c8a5f203))
-
+- add integration tests ([#69](https://github.com/developmentseed/eoapi-cdk/issues/69)) ([17eec16](https://github.com/developmentseed/eoapi-cdk/commit/17eec16b944e4ca489ddcd610aeef2c1c8a5f203))
 
 ### BREAKING CHANGES
 
-* clients need to provide aws_lambda.AssetCode to configure their apps. Solely the python application and the requirements.txt file is not supported anymore.
+- clients need to provide aws_lambda.AssetCode to configure their apps. Solely the python application and the requirements.txt file is not supported anymore.
 
-* fix a couple bugs found in the first changes
+- fix a couple bugs found in the first changes
 
-* avoid maintaining custom interfaces for configurable lambda properties. Allow the user to provide anything and let the CDK method raise error and overwrite values defined within our construct. Make this clear in the documentation
+- avoid maintaining custom interfaces for configurable lambda properties. Allow the user to provide anything and let the CDK method raise error and overwrite values defined within our construct. Make this clear in the documentation
 
-* expose bootstrapper props in pgstacdatabase construct constructor
+- expose bootstrapper props in pgstacdatabase construct constructor
 
-* merge database and boostrapper files to solve casting bug
+- merge database and boostrapper files to solve casting bug
 
-* bump and harmonize pypgstac to 0.7.10 across apps
+- bump and harmonize pypgstac to 0.7.10 across apps
 
-* bump cachetools
+- bump cachetools
 
-* some changes to allow for less security
+- some changes to allow for less security
 
-* bump python to 3.11
+- bump python to 3.11
 
-* change base image for bootstrapper to use python 311
+- change base image for bootstrapper to use python 311
 
-* fix linting issues
+- fix linting issues
 
-* move integration tests to step before release, improve naming of workflows
+- move integration tests to step before release, improve naming of workflows
 
-* lint
+- lint
 
-* fix moto requirement
+- fix moto requirement
 
-* test to fix deployment : try adding s3 endpoint and force allow public subnet
+- test to fix deployment : try adding s3 endpoint and force allow public subnet
 
-* lint and make lambda functions more configurable
+- lint and make lambda functions more configurable
 
-* moving deploy to a separate workflow
+- moving deploy to a separate workflow
 
-* remove useless dependencies in deployment tests, turn on pull request trigger to check the action works
+- remove useless dependencies in deployment tests, turn on pull request trigger to check the action works
 
-* when tearing down the infrastructure, synthesize the cloud formation assets into another directory to avoid conflicts
+- when tearing down the infrastructure, synthesize the cloud formation assets into another directory to avoid conflicts
 
-* update readmes and revive the artifact download in python distribution
+- update readmes and revive the artifact download in python distribution
 
 # [6.1.0](https://github.com/developmentseed/eoapi-cdk/compare/v6.0.2...v6.1.0) (2023-11-12)
 
-
 ### Features
 
-* **stac-browser:** configurable config file in stac browser deployment ([#84](https://github.com/developmentseed/eoapi-cdk/issues/84)) ([b86ad1a](https://github.com/developmentseed/eoapi-cdk/commit/b86ad1a8cb1fb92628f6450c1c8b05258d78280b))
+- **stac-browser:** configurable config file in stac browser deployment ([#84](https://github.com/developmentseed/eoapi-cdk/issues/84)) ([b86ad1a](https://github.com/developmentseed/eoapi-cdk/commit/b86ad1a8cb1fb92628f6450c1c8b05258d78280b))
 
 ## [6.0.2](https://github.com/developmentseed/eoapi-cdk/compare/v6.0.1...v6.0.2) (2023-11-02)
 
-
 ### Bug Fixes
 
-* **bootstrapper:** fix httpx response ([#81](https://github.com/developmentseed/eoapi-cdk/issues/81)) ([b879076](https://github.com/developmentseed/eoapi-cdk/commit/b8790766818b0048e2192849a34f462997a08c0e))
+- **bootstrapper:** fix httpx response ([#81](https://github.com/developmentseed/eoapi-cdk/issues/81)) ([b879076](https://github.com/developmentseed/eoapi-cdk/commit/b8790766818b0048e2192849a34f462997a08c0e))
 
 ## [6.0.1](https://github.com/developmentseed/eoapi-cdk/compare/v6.0.0...v6.0.1) (2023-11-01)
 
-
 ### Bug Fixes
 
-* **ingestor-api-handler:** fix docs endpoint ([#82](https://github.com/developmentseed/eoapi-cdk/issues/82)) ([d134c77](https://github.com/developmentseed/eoapi-cdk/commit/d134c77f84363b3e4560176ccd810b55b6855f07))
+- **ingestor-api-handler:** fix docs endpoint ([#82](https://github.com/developmentseed/eoapi-cdk/issues/82)) ([d134c77](https://github.com/developmentseed/eoapi-cdk/commit/d134c77f84363b3e4560176ccd810b55b6855f07))
 
 # [6.0.0](https://github.com/developmentseed/eoapi-cdk/compare/v5.4.1...v6.0.0) (2023-10-31)
 
-
 ### Features
 
-* custom runtimes, optional VPC, python 3.11 ([#74](https://github.com/developmentseed/eoapi-cdk/issues/74)) ([ba6bf09](https://github.com/developmentseed/eoapi-cdk/commit/ba6bf09651caae8537df7ee737dbf6d0bf975f41))
-
+- custom runtimes, optional VPC, python 3.11 ([#74](https://github.com/developmentseed/eoapi-cdk/issues/74)) ([ba6bf09](https://github.com/developmentseed/eoapi-cdk/commit/ba6bf09651caae8537df7ee737dbf6d0bf975f41))
 
 ### BREAKING CHANGES
 
-* the `bootstrapper` construct was deleted and is no longer available. In addition, we switched from `PythonFunction` to `Function` for all lambdas.
+- the `bootstrapper` construct was deleted and is no longer available. In addition, we switched from `PythonFunction` to `Function` for all lambdas.
 
 ## [5.4.1](https://github.com/developmentseed/eoapi-cdk/compare/v5.4.0...v5.4.1) (2023-10-05)
 
-
 ### Bug Fixes
 
-* synchronize pgstac versions -> 0.7.9 across constructs ([c6bb921](https://github.com/developmentseed/eoapi-cdk/commit/c6bb9213f745f1161d193b120083fac1e7943eb5))
+- synchronize pgstac versions -> 0.7.9 across constructs ([c6bb921](https://github.com/developmentseed/eoapi-cdk/commit/c6bb9213f745f1161d193b120083fac1e7943eb5))
 
 # [5.4.0](https://github.com/developmentseed/eoapi-cdk/compare/v5.3.0...v5.4.0) (2023-09-05)
 
-
 ### Features
 
-* custom runtimes option for titiler and ingestor ([#66](https://github.com/developmentseed/eoapi-cdk/issues/66)) ([3aaedae](https://github.com/developmentseed/eoapi-cdk/commit/3aaedaef86da558eac163348771a545b789ed8b9))
+- custom runtimes option for titiler and ingestor ([#66](https://github.com/developmentseed/eoapi-cdk/issues/66)) ([3aaedae](https://github.com/developmentseed/eoapi-cdk/commit/3aaedaef86da558eac163348771a545b789ed8b9))
 
 # [5.3.0](https://github.com/developmentseed/eoapi-cdk/compare/v5.2.0...v5.3.0) (2023-09-01)
 
-
 ### Features
 
-* add STAC browser option ([#64](https://github.com/developmentseed/eoapi-cdk/issues/64)) ([36499d2](https://github.com/developmentseed/eoapi-cdk/commit/36499d21be710edde5bc9d625acff17edf7a81d6))
+- add STAC browser option ([#64](https://github.com/developmentseed/eoapi-cdk/issues/64)) ([36499d2](https://github.com/developmentseed/eoapi-cdk/commit/36499d21be710edde5bc9d625acff17edf7a81d6))
 
 # [5.2.0](https://github.com/developmentseed/eoapi-cdk/compare/v5.1.0...v5.2.0) (2023-08-30)
 
-
 ### Features
 
-* tipg-api ([#62](https://github.com/developmentseed/eoapi-cdk/issues/62)) ([24faa85](https://github.com/developmentseed/eoapi-cdk/commit/24faa85fc4f1ccb6406768b9f43a4cb095dac0cf))
+- tipg-api ([#62](https://github.com/developmentseed/eoapi-cdk/issues/62)) ([24faa85](https://github.com/developmentseed/eoapi-cdk/commit/24faa85fc4f1ccb6406768b9f43a4cb095dac0cf))
 
 # [5.1.0](https://github.com/developmentseed/eoapi-cdk/compare/v5.0.0...v5.1.0) (2023-08-21)
 
-
 ### Features
 
-* custom domain names for apis ([#63](https://github.com/developmentseed/eoapi-cdk/issues/63)) ([c9eeb00](https://github.com/developmentseed/eoapi-cdk/commit/c9eeb00c2d66bf923f3029743e1c9746f7752c5e)), closes [#61](https://github.com/developmentseed/eoapi-cdk/issues/61)
+- custom domain names for apis ([#63](https://github.com/developmentseed/eoapi-cdk/issues/63)) ([c9eeb00](https://github.com/developmentseed/eoapi-cdk/commit/c9eeb00c2d66bf923f3029743e1c9746f7752c5e)), closes [#61](https://github.com/developmentseed/eoapi-cdk/issues/61)
 
 # [5.0.0](https://github.com/developmentseed/eoapi-cdk/compare/v4.2.3...v5.0.0) (2023-07-12)
 
-
 ### Features
 
-* rename repository to eoapi-cdk ([#59](https://github.com/developmentseed/eoapi-cdk/issues/59)) ([1ed2bb3](https://github.com/developmentseed/eoapi-cdk/commit/1ed2bb3d00328327ada96ce9daaadd940b534285))
-
+- rename repository to eoapi-cdk ([#59](https://github.com/developmentseed/eoapi-cdk/issues/59)) ([1ed2bb3](https://github.com/developmentseed/eoapi-cdk/commit/1ed2bb3d00328327ada96ce9daaadd940b534285))
 
 ### BREAKING CHANGES
 
-* rename repository to eoapi-cdk
+- rename repository to eoapi-cdk
 
 ## [4.2.3](https://github.com/developmentseed/cdk-pgstac/compare/v4.2.2...v4.2.3) (2023-06-30)
 
-
 ### Bug Fixes
 
-* **ingestor-api:** add stack name to ingestor-api apigateway export name ([#48](https://github.com/developmentseed/cdk-pgstac/issues/48)) ([2fdd1e8](https://github.com/developmentseed/cdk-pgstac/commit/2fdd1e8fe4b3b7e82657bcf95bf628eecdb9aa22))
+- **ingestor-api:** add stack name to ingestor-api apigateway export name ([#48](https://github.com/developmentseed/cdk-pgstac/issues/48)) ([2fdd1e8](https://github.com/developmentseed/cdk-pgstac/commit/2fdd1e8fe4b3b7e82657bcf95bf628eecdb9aa22))
 
 ## [4.2.2](https://github.com/developmentseed/cdk-pgstac/compare/v4.2.1...v4.2.2) (2023-06-16)
 
-
 ### Bug Fixes
 
-* **titiler-pgstac-api:** fix destination path in titiler pgstac Dockerfile COPY command ([#46](https://github.com/developmentseed/cdk-pgstac/issues/46)) ([302bd22](https://github.com/developmentseed/cdk-pgstac/commit/302bd22fd3ff5af7335bb9285be798fb550cf19b))
+- **titiler-pgstac-api:** fix destination path in titiler pgstac Dockerfile COPY command ([#46](https://github.com/developmentseed/cdk-pgstac/issues/46)) ([302bd22](https://github.com/developmentseed/cdk-pgstac/commit/302bd22fd3ff5af7335bb9285be798fb550cf19b))
 
 ## [4.2.1](https://github.com/developmentseed/cdk-pgstac/compare/v4.2.0...v4.2.1) (2023-06-12)
 
-
 ### Bug Fixes
 
-* **bootstrapper:** bootstrapper should use httpx ([#45](https://github.com/developmentseed/cdk-pgstac/issues/45)) ([36bb361](https://github.com/developmentseed/cdk-pgstac/commit/36bb361cf65caa1ae9a633eb8e39066106f02258))
+- **bootstrapper:** bootstrapper should use httpx ([#45](https://github.com/developmentseed/cdk-pgstac/issues/45)) ([36bb361](https://github.com/developmentseed/cdk-pgstac/commit/36bb361cf65caa1ae9a633eb8e39066106f02258))
 
 # [4.2.0](https://github.com/developmentseed/cdk-pgstac/compare/v4.1.0...v4.2.0) (2023-06-09)
 
-
 ### Features
 
-* **titiler-pgstac-api:** add titiler-pgstac endpoint ([#42](https://github.com/developmentseed/cdk-pgstac/issues/42)) ([a02acef](https://github.com/developmentseed/cdk-pgstac/commit/a02acef3ed78049dd55c242a5b04bfc627c53661))
+- **titiler-pgstac-api:** add titiler-pgstac endpoint ([#42](https://github.com/developmentseed/cdk-pgstac/issues/42)) ([a02acef](https://github.com/developmentseed/cdk-pgstac/commit/a02acef3ed78049dd55c242a5b04bfc627c53661))
 
 # [4.1.0](https://github.com/developmentseed/cdk-pgstac/compare/v4.0.0...v4.1.0) (2023-05-30)
 
-
 ### Features
 
-* **stac-api:** add stac api lambda function field ([#43](https://github.com/developmentseed/cdk-pgstac/issues/43)) ([3a91a37](https://github.com/developmentseed/cdk-pgstac/commit/3a91a37ec329c09a66c85c23adfb1afb1345ba16))
+- **stac-api:** add stac api lambda function field ([#43](https://github.com/developmentseed/cdk-pgstac/issues/43)) ([3a91a37](https://github.com/developmentseed/cdk-pgstac/commit/3a91a37ec329c09a66c85c23adfb1afb1345ba16))
 
 # [4.0.0](https://github.com/developmentseed/cdk-pgstac/compare/v3.0.1...v4.0.0) (2023-04-25)
 
-
 ### Features
 
-* **ingestor-api:** expose ingestor handler role ([#39](https://github.com/developmentseed/cdk-pgstac/issues/39)) ([559f3a9](https://github.com/developmentseed/cdk-pgstac/commit/559f3a91d4d712302aa5661539d495b2ee299f83))
-
+- **ingestor-api:** expose ingestor handler role ([#39](https://github.com/developmentseed/cdk-pgstac/issues/39)) ([559f3a9](https://github.com/developmentseed/cdk-pgstac/commit/559f3a91d4d712302aa5661539d495b2ee299f83))
 
 ### BREAKING CHANGES
 
-* **ingestor-api:** the role name is automatically generated by AWS and thus users can not use the name that
-was specified before, but should directly interact with the new property we are adding.
+- **ingestor-api:** the role name is automatically generated by AWS and thus users can not use the name that
+  was specified before, but should directly interact with the new property we are adding.
 
-* change name of variable to comply with formatting rules, remove readonly statement
+- change name of variable to comply with formatting rules, remove readonly statement
 
 ## [3.0.1](https://github.com/developmentseed/cdk-pgstac/compare/v3.0.0...v3.0.1) (2023-04-14)
 
-
 ### Bug Fixes
 
-* **bootstraper:** fix version inconsistencies and [#19](https://github.com/developmentseed/cdk-pgstac/issues/19) regressions ([#34](https://github.com/developmentseed/cdk-pgstac/issues/34)) ([ebeac2a](https://github.com/developmentseed/cdk-pgstac/commit/ebeac2a1b36ff5825157bea8e76392a14d613b91))
+- **bootstraper:** fix version inconsistencies and [#19](https://github.com/developmentseed/cdk-pgstac/issues/19) regressions ([#34](https://github.com/developmentseed/cdk-pgstac/issues/34)) ([ebeac2a](https://github.com/developmentseed/cdk-pgstac/commit/ebeac2a1b36ff5825157bea8e76392a14d613b91))
 
 # [3.0.0](https://github.com/developmentseed/cdk-pgstac/compare/v2.6.3...v3.0.0) (2023-04-04)
 
-
 ### Code Refactoring
 
-* **bootstrapper:** remove VEDA logic ([#29](https://github.com/developmentseed/cdk-pgstac/issues/29)) ([e98039e](https://github.com/developmentseed/cdk-pgstac/commit/e98039ef4ace023faa205f0b0d1ad0efec38a69f))
-
+- **bootstrapper:** remove VEDA logic ([#29](https://github.com/developmentseed/cdk-pgstac/issues/29)) ([e98039e](https://github.com/developmentseed/cdk-pgstac/commit/e98039ef4ace023faa205f0b0d1ad0efec38a69f))
 
 ### BREAKING CHANGES
 
-* **bootstrapper:** remove dashboard schema and functions from the database bootstrapper and remove automatic collection summary udpate from ingestor.
+- **bootstrapper:** remove dashboard schema and functions from the database bootstrapper and remove automatic collection summary udpate from ingestor.
 
 ## [2.6.3](https://github.com/developmentseed/cdk-pgstac/compare/v2.6.2...v2.6.3) (2023-03-28)
 
-
 ### Bug Fixes
 
-* **ingestor-api:** store STAC item as string in DynamoDB ([#26](https://github.com/developmentseed/cdk-pgstac/issues/26)) ([bd7a1fa](https://github.com/developmentseed/cdk-pgstac/commit/bd7a1fa799cc9765df2939a444593205efa6bf4d))
+- **ingestor-api:** store STAC item as string in DynamoDB ([#26](https://github.com/developmentseed/cdk-pgstac/issues/26)) ([bd7a1fa](https://github.com/developmentseed/cdk-pgstac/commit/bd7a1fa799cc9765df2939a444593205efa6bf4d))
 
 ## [2.6.2](https://github.com/developmentseed/cdk-pgstac/compare/v2.6.1...v2.6.2) (2023-03-16)
 
-
 ### Bug Fixes
 
-* **ingestor-api:** queries require sequences ([#23](https://github.com/developmentseed/cdk-pgstac/issues/23)) ([00d71cc](https://github.com/developmentseed/cdk-pgstac/commit/00d71cc1d253e77f1cd11afe9e4b513a577a67a2))
+- **ingestor-api:** queries require sequences ([#23](https://github.com/developmentseed/cdk-pgstac/issues/23)) ([00d71cc](https://github.com/developmentseed/cdk-pgstac/commit/00d71cc1d253e77f1cd11afe9e4b513a577a67a2))
 
 ## [2.6.1](https://github.com/developmentseed/cdk-pgstac/compare/v2.6.0...v2.6.1) (2023-03-16)
 
-
 ### Reverts
 
-* Revert "Release 2.7.0. (#21)" (#22) ([f08e8e8](https://github.com/developmentseed/cdk-pgstac/commit/f08e8e8140c15ed608ab16a053641e20603bf7c5)), closes [#21](https://github.com/developmentseed/cdk-pgstac/issues/21) [#22](https://github.com/developmentseed/cdk-pgstac/issues/22)
+- Revert "Release 2.7.0. (#21)" (#22) ([f08e8e8](https://github.com/developmentseed/cdk-pgstac/commit/f08e8e8140c15ed608ab16a053641e20603bf7c5)), closes [#21](https://github.com/developmentseed/cdk-pgstac/issues/21) [#22](https://github.com/developmentseed/cdk-pgstac/issues/22)
 
 # [2.6.0](https://github.com/developmentseed/cdk-pgstac/compare/v2.5.1...v2.6.0) (2023-03-10)
 
-
 ### Features
 
-* collection endpoint ([#18](https://github.com/developmentseed/cdk-pgstac/issues/18)) ([d3e9911](https://github.com/developmentseed/cdk-pgstac/commit/d3e991155644d9da08ff7293976a284c252a383b))
+- collection endpoint ([#18](https://github.com/developmentseed/cdk-pgstac/issues/18)) ([d3e9911](https://github.com/developmentseed/cdk-pgstac/commit/d3e991155644d9da08ff7293976a284c252a383b))
 
 ## [2.5.1](https://github.com/developmentseed/cdk-pgstac/compare/v2.5.0...v2.5.1) (2022-12-06)
 
-
 ### Bug Fixes
 
-* **ingestor-api:** Correct import path for settings ([be40af7](https://github.com/developmentseed/cdk-pgstac/commit/be40af70326f04d7ed9583569ad49f12da416d6f))
+- **ingestor-api:** Correct import path for settings ([be40af7](https://github.com/developmentseed/cdk-pgstac/commit/be40af70326f04d7ed9583569ad49f12da416d6f))
 
 # [2.5.0](https://github.com/developmentseed/cdk-pgstac/compare/v2.4.0...v2.5.0) (2022-12-01)
 
-
 ### Features
 
-* **ingestor-api:** Add flag to enable requester pays ([efc160d](https://github.com/developmentseed/cdk-pgstac/commit/efc160d3530a70d1fc8f88ef9dce4a4d48456834))
+- **ingestor-api:** Add flag to enable requester pays ([efc160d](https://github.com/developmentseed/cdk-pgstac/commit/efc160d3530a70d1fc8f88ef9dce4a4d48456834))
 
 # [2.4.0](https://github.com/developmentseed/cdk-pgstac/compare/v2.3.1...v2.4.0) (2022-11-08)
 
-
 ### Features
 
-* **bastion-host:** Append ec2 instance with 'bastion host' ([4ee8599](https://github.com/developmentseed/cdk-pgstac/commit/4ee8599b5e03799152e07df935be047821554a32))
+- **bastion-host:** Append ec2 instance with 'bastion host' ([4ee8599](https://github.com/developmentseed/cdk-pgstac/commit/4ee8599b5e03799152e07df935be047821554a32))
 
 ## [2.3.1](https://github.com/developmentseed/cdk-pgstac/compare/v2.3.0...v2.3.1) (2022-11-08)
 
-
 ### Bug Fixes
 
-* **bastion-host:** `createElasticIp` default to true ([ec99fad](https://github.com/developmentseed/cdk-pgstac/commit/ec99fad9d3606f4ca572229e82d992f3295f9045))
+- **bastion-host:** `createElasticIp` default to true ([ec99fad](https://github.com/developmentseed/cdk-pgstac/commit/ec99fad9d3606f4ca572229e82d992f3295f9045))
 
 # [2.3.0](https://github.com/developmentseed/cdk-pgstac/compare/v2.2.1...v2.3.0) (2022-11-08)
 
-
 ### Features
 
-* **bastion-host:** Make elastic IP optional ([d77b578](https://github.com/developmentseed/cdk-pgstac/commit/d77b578df0a713a993bfa81709485df7fbc423c3))
+- **bastion-host:** Make elastic IP optional ([d77b578](https://github.com/developmentseed/cdk-pgstac/commit/d77b578df0a713a993bfa81709485df7fbc423c3))
 
 ## [2.2.1](https://github.com/developmentseed/cdk-pgstac/compare/v2.2.0...v2.2.1) (2022-11-04)
 
-
 ### Bug Fixes
 
-* **stac-db:** Report shared buffers in 8kb units ([d34f2cd](https://github.com/developmentseed/cdk-pgstac/commit/d34f2cd1a833438ffa4e24f062cf16901f8d5584))
+- **stac-db:** Report shared buffers in 8kb units ([d34f2cd](https://github.com/developmentseed/cdk-pgstac/commit/d34f2cd1a833438ffa4e24f062cf16901f8d5584))
 
 # [2.2.0](https://github.com/developmentseed/cdk-pgstac/compare/v2.1.0...v2.2.0) (2022-11-03)
 
-
 ### Features
 
-* **stac-db:** Provide sensible defaults for pgSTAC db parameters ([#1](https://github.com/developmentseed/cdk-pgstac/issues/1)) ([11eb89e](https://github.com/developmentseed/cdk-pgstac/commit/11eb89e45c8a6d4a5b07134b8957a1298f9305c8))
+- **stac-db:** Provide sensible defaults for pgSTAC db parameters ([#1](https://github.com/developmentseed/cdk-pgstac/issues/1)) ([11eb89e](https://github.com/developmentseed/cdk-pgstac/commit/11eb89e45c8a6d4a5b07134b8957a1298f9305c8))
 
 # [2.1.0](https://github.com/developmentseed/cdk-pgstac/compare/v2.0.0...v2.1.0) (2022-11-01)
 
-
 ### Features
 
-* **ingestor-api:** Make apiEnv optional ([5841734](https://github.com/developmentseed/cdk-pgstac/commit/584173458e35a69cd7bc398acd3482dd21c58228))
+- **ingestor-api:** Make apiEnv optional ([5841734](https://github.com/developmentseed/cdk-pgstac/commit/584173458e35a69cd7bc398acd3482dd21c58228))
 
 # [2.0.0](https://github.com/developmentseed/cdk-pgstac/compare/v1.3.0...v2.0.0) (2022-11-01)
 
-
 ### chore
 
-* **ci:** bump version ([d10c5b2](https://github.com/developmentseed/cdk-pgstac/commit/d10c5b2afcd7e38effedb5181a1ed7595b03495f))
-
+- **ci:** bump version ([d10c5b2](https://github.com/developmentseed/cdk-pgstac/commit/d10c5b2afcd7e38effedb5181a1ed7595b03495f))
 
 ### BREAKING CHANGES
 
-* **ci:** Experiencing issues publishing GitHub releases
-due to past deleted release. Bumping codebase to 2.0.0 to avoid
-future issues.
+- **ci:** Experiencing issues publishing GitHub releases
+  due to past deleted release. Bumping codebase to 2.0.0 to avoid
+  future issues.
 
 # [1.3.0](https://github.com/developmentseed/cdk-pgstac/compare/v1.2.0...v1.3.0) (2022-11-01)
 
-
 ### Features
 
-* **ingestor-api:** add StacIngestor construct ([d34c6cd](https://github.com/developmentseed/cdk-pgstac/commit/d34c6cdd2c0df838467289a19c2b96adf1c0777e))
-* **stac-api:** export API url from pgStacApi construct ([261dbd2](https://github.com/developmentseed/cdk-pgstac/commit/261dbd2bb85ad895f61922740d211fa8b96c3761))
+- **ingestor-api:** add StacIngestor construct ([d34c6cd](https://github.com/developmentseed/cdk-pgstac/commit/d34c6cdd2c0df838467289a19c2b96adf1c0777e))
+- **stac-api:** export API url from pgStacApi construct ([261dbd2](https://github.com/developmentseed/cdk-pgstac/commit/261dbd2bb85ad895f61922740d211fa8b96c3761))
 
 # [1.2.0](https://github.com/developmentseed/cdk-pgstac/compare/v1.1.0...v1.2.0) (2022-10-26)
 
-
 ### Features
 
-* add bastion host ([de52ad7](https://github.com/developmentseed/cdk-pgstac/commit/de52ad76a2098c85cb4eef6aa0445fcbbea2e618))
-* add PgStacApiLambda ([a092a7a](https://github.com/developmentseed/cdk-pgstac/commit/a092a7aee26ac39210fb7ce7023a09905823500c))
-* Support customizing bootstrap args ([a23356f](https://github.com/developmentseed/cdk-pgstac/commit/a23356f195db8353f08ac0e1fa278e68b5876817))
+- add bastion host ([de52ad7](https://github.com/developmentseed/cdk-pgstac/commit/de52ad76a2098c85cb4eef6aa0445fcbbea2e618))
+- add PgStacApiLambda ([a092a7a](https://github.com/developmentseed/cdk-pgstac/commit/a092a7aee26ac39210fb7ce7023a09905823500c))
+- Support customizing bootstrap args ([a23356f](https://github.com/developmentseed/cdk-pgstac/commit/a23356f195db8353f08ac0e1fa278e68b5876817))
