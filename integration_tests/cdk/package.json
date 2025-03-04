@@ -1,7 +1,7 @@
 {
-    "name": "eoapi-template",
-    "version": "0.1.0",
-    "dependencies": {
-      "aws-cdk": "2.130.0"
-    }
+  "name": "eoapi-template",
+  "version": "0.1.0",
+  "dependencies": {
+    "aws-cdk": "2.130.0"
   }
+}

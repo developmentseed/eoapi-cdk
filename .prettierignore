@@ -1,0 +1,7 @@
+# Ignore artifacts:
+build
+coverage
+dist
+integration_tests/cdk/cdk.out
+toxenv
+.venv

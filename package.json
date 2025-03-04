@@ -42,6 +42,12 @@
   "lint-staged": {
     "**/*": "prettier --write --ignore-unknown"
   },
+  "prettier": {
+    "semi": true,
+    "singleQuote": false,
+    "tabWidth": 2,
+    "trailingComma": "es5"
+  },
   "devDependencies": {
     "@aws-cdk/aws-apigatewayv2-alpha": "2.114.1-alpha.0",
     "@qiwi/semantic-release-gh-pages-plugin": "^5.2.3",
