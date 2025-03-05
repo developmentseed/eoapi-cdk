@@ -8,11 +8,16 @@ import {
   Duration,
   aws_logs,
 } from "aws-cdk-lib";
-import { IDomainName, HttpApi, ParameterMapping, MappingValue} from "@aws-cdk/aws-apigatewayv2-alpha";
+import {
+  IDomainName,
+  HttpApi,
+  ParameterMapping,
+  MappingValue,
+} from "@aws-cdk/aws-apigatewayv2-alpha";
 import { HttpLambdaIntegration } from "@aws-cdk/aws-apigatewayv2-integrations-alpha";
 import { Construct } from "constructs";
 import { CustomLambdaFunctionProps } from "../utils";
-import * as path from 'path';
+import * as path from "path";
 
 export class PgStacApiLambda extends Construct {
   readonly url: string;
@@ -28,9 +33,9 @@ export class PgStacApiLambda extends Construct {
       memorySize: 8192,
       logRetention: aws_logs.RetentionDays.ONE_WEEK,
       timeout: Duration.seconds(30),
-      code: lambda.Code.fromDockerBuild(path.join(__dirname, '..'), {
+      code: lambda.Code.fromDockerBuild(path.join(__dirname, ".."), {
         file: "stac-api/runtime/Dockerfile",
-        buildArgs: { PYTHON_VERSION: '3.11' },
+        buildArgs: { PYTHON_VERSION: "3.11" },
       }),
       vpc: props.vpc,
       vpcSubnets: props.subnetSelection,
@@ -42,25 +47,36 @@ export class PgStacApiLambda extends Construct {
         ...props.apiEnv,
       },
       // overwrites defaults with user-provided configurable properties
-      ...props.lambdaFunctionOptions
+      ...props.lambdaFunctionOptions,
     });
 
     props.dbSecret.grantRead(this.stacApiLambdaFunction);
 
-    if (props.vpc){
-      this.stacApiLambdaFunction.connections.allowTo(props.db, ec2.Port.tcp(5432), "allow connections from stac-fastapi-pgstac");
+    if (props.vpc) {
+      this.stacApiLambdaFunction.connections.allowTo(
+        props.db,
+        ec2.Port.tcp(5432),
+        "allow connections from stac-fastapi-pgstac"
+      );
     }
 
     const stacApi = new HttpApi(this, `${Stack.of(this).stackName}-stac-api`, {
-      defaultDomainMapping: props.stacApiDomainName ? {
-        domainName: props.stacApiDomainName
-      } : undefined,
+      defaultDomainMapping: props.stacApiDomainName
+        ? {
+            domainName: props.stacApiDomainName,
+          }
+        : undefined,
       defaultIntegration: new HttpLambdaIntegration(
         "integration",
         this.stacApiLambdaFunction,
-        props.stacApiDomainName ? {
-            parameterMapping: new ParameterMapping().overwriteHeader('host', MappingValue.custom(props.stacApiDomainName.name))
-        } : undefined
+        props.stacApiDomainName
+          ? {
+              parameterMapping: new ParameterMapping().overwriteHeader(
+                "host",
+                MappingValue.custom(props.stacApiDomainName.name)
+              ),
+            }
+          : undefined
       ),
     });
 
@@ -102,12 +118,12 @@ export interface PgStacApiLambdaProps {
   /**
    * Custom Domain Name Options for STAC API,
    */
-   readonly stacApiDomainName?: IDomainName;
+  readonly stacApiDomainName?: IDomainName;
 
   /**
-     * Can be used to override the default lambda function properties.
-     *
-     * @default - defined in the construct.
-     */
+   * Can be used to override the default lambda function properties.
+   *
+   * @default - defined in the construct.
+   */
   readonly lambdaFunctionOptions?: CustomLambdaFunctionProps;
 }

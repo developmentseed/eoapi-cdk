@@ -12,6 +12,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: "npm"
+
       - name: Set up Python 3.11
         uses: actions/setup-python@v5
         with:
@@ -23,4 +28,6 @@ jobs:
           python -m pip install pre-commit
 
       - name: Run pre-commit
-        run: pre-commit run --all-files
+        run: |
+          pre-commit run --all-files
+          npx prettier . --check
