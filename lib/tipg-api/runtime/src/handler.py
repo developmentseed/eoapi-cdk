@@ -6,31 +6,26 @@ import asyncio
 import os
 
 from mangum import Mangum
+from tipg.collections import register_collection_catalog
+from tipg.database import connect_to_db
+from tipg.main import app
+from tipg.settings import (
+    CustomSQLSettings,
+    DatabaseSettings,
+    PostgresSettings,
+)
 from utils import get_secret_dict
 
 secret = get_secret_dict(secret_arn_env_var="PGSTAC_SECRET_ARN")
-os.environ.update(
-    {
-        "postgres_host": secret["host"],
-        "postgres_dbname": secret["dbname"],
-        "postgres_user": secret["username"],
-        "postgres_pass": secret["password"],
-        "postgres_port": str(secret["port"]),
-    }
+
+
+postgres_settings = PostgresSettings(
+    postgres_host=secret["host"],
+    postgres_dbname=secret["dbname"],
+    postgres_user=secret["username"],
+    postgres_pass=secret["password"],
+    postgres_port=str(secret["port"]),
 )
-
-from tipg.collections import register_collection_catalog  # noqa: E402
-from tipg.database import connect_to_db  # noqa: E402
-
-# skipping linting rule that wants all imports at the top
-from tipg.main import app  # noqa: E402
-from tipg.settings import (
-    CustomSQLSettings,  # noqa: E402
-    DatabaseSettings,  # noqa: E402
-    PostgresSettings,  # noqa: E402; noqa: E402
-)
-
-postgres_settings = PostgresSettings()
 db_settings = DatabaseSettings()
 custom_sql_settings = CustomSQLSettings()
 
