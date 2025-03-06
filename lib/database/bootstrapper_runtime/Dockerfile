@@ -4,8 +4,8 @@ FROM --platform=linux/amd64 public.ecr.aws/lambda/python:${PYTHON_VERSION}
 RUN echo "PYTHON_VERSION: ${PYTHON_VERSION}"
 
 WORKDIR /tmp
-
-RUN pip install httpx psycopg[binary,pool] pypgstac -t /asset
+ARG PGSTAC_VERSION
+RUN pip install httpx psycopg[binary,pool] pypgstac==${PGSTAC_VERSION} -t /asset
 
 COPY bootstrapper_runtime/handler.py /asset/handler.py
 
