@@ -1,17 +1,18 @@
 import {
-    Stack,
-    aws_ec2 as ec2,
-    aws_lambda as lambda,
-    aws_logs as logs,
-    aws_rds as rds,
-    aws_secretsmanager as secretsmanager,
-    CfnOutput,
-    Duration,
-  } from "aws-cdk-lib";
-  import { IDomainName, HttpApi, ParameterMapping, MappingValue} from "@aws-cdk/aws-apigatewayv2-alpha";
-  import { HttpLambdaIntegration } from "@aws-cdk/aws-apigatewayv2-integrations-alpha";
-  import { Construct } from "constructs";
-  import { CustomLambdaFunctionProps } from "../utils";
+  Stack,
+  aws_ec2 as ec2,
+  aws_lambda as lambda,
+  aws_logs as logs,
+  aws_rds as rds,
+  aws_secretsmanager as secretsmanager,
+  CfnOutput,
+  Duration,
+} from "aws-cdk-lib";
+import { IDomainName, HttpApi, ParameterMapping, MappingValue} from "@aws-cdk/aws-apigatewayv2-alpha";
+import { HttpLambdaIntegration } from "@aws-cdk/aws-apigatewayv2-integrations-alpha";
+import { Construct } from "constructs";
+import { CustomLambdaFunctionProps } from "../utils";
+import * as path from 'path';
 
   export class TiPgApiLambda extends Construct {
     readonly url: string;
@@ -27,9 +28,9 @@ import {
         memorySize: 1024,
         logRetention: logs.RetentionDays.ONE_WEEK,
         timeout: Duration.seconds(30),
-        code: lambda.Code.fromDockerBuild(__dirname, {
-        file: "runtime/Dockerfile",
-        buildArgs: { PYTHON_VERSION: '3.11' },
+        code: lambda.Code.fromDockerBuild(path.join(__dirname, '..'), {
+          file: "tipg-api/runtime/Dockerfile",
+          buildArgs: { PYTHON_VERSION: '3.11' },
         }),
         vpc: props.vpc,
         vpcSubnets: props.subnetSelection,
