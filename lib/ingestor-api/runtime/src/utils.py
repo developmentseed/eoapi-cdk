@@ -2,7 +2,6 @@ from typing import Sequence
 
 import boto3
 import pydantic
-from fastapi.encoders import jsonable_encoder
 from pypgstac.db import PgstacDB
 from pypgstac.load import Methods
 
@@ -41,8 +40,7 @@ def load_items(creds: DbCreds, ingestions: Sequence[Ingestion]):
     with PgstacDB(dsn=creds.dsn_string, debug=True) as db:
         loader = Loader(db=db)
 
-        # serialize to JSON-friendly dicts (won't be necessary in Pydantic v2, https://github.com/pydantic/pydantic/issues/1409#issuecomment-1423995424)
-        items = jsonable_encoder(i.item for i in ingestions)
+        items = [i.item.model_dump(mode="json") for i in ingestions]
         loading_result = loader.load_items(
             file=items,
             # use insert_ignore to avoid overwritting existing items or upsert to replace
