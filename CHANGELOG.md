@@ -1,3 +1,10 @@
+## [7.6.2](https://github.com/developmentseed/eoapi-cdk/compare/v7.6.1...v7.6.2) (2025-03-06)
+
+
+### Bug Fixes
+
+* use model_dump(mode="json") for serializing STAC objects ([#131](https://github.com/developmentseed/eoapi-cdk/issues/131)) ([2117b52](https://github.com/developmentseed/eoapi-cdk/commit/2117b524fb4c99ded23048f5b71eb3492568008b))
+
 ## [7.6.1](https://github.com/developmentseed/eoapi-cdk/compare/v7.6.0...v7.6.1) (2025-02-28)
 
 
