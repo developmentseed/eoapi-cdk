@@ -1,2 +1,2 @@
-stac-fastapi-pgstac>=4.0.2,<4.1
+stac-fastapi-pgstac>=5.0,<5.1
 starlette-cramjam>=0.4,<0.5
