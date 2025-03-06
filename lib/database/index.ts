@@ -69,7 +69,7 @@ export class PgStacDatabase extends Construct {
       parameterGroup,
       ...props,
     });
-
+    const pgstac_version = props.pgstacVersion || DEFAULT_PGSTAC_VERSION;
     const handler = new aws_lambda.Function(this, "lambda", {
       // defaults
       runtime: aws_lambda.Runtime.PYTHON_3_11,
@@ -81,6 +81,7 @@ export class PgStacDatabase extends Construct {
         file: "bootstrapper_runtime/Dockerfile",
         buildArgs: {
           PYTHON_VERSION: "3.11",
+          PGSTAC_VERSION: pgstac_version,
         },
       }),
       vpc: hasVpc(this.db) ? this.db.vpc : props.vpc,
@@ -131,8 +132,7 @@ export class PgStacDatabase extends Construct {
 
     // if props.lambdaFunctionOptions doesn't have 'code' defined, update pgstac_version (needed for default runtime)
     if (!props.bootstrapperLambdaFunctionOptions?.code) {
-      customResourceProperties["pgstac_version"] =
-        props.pgstacVersion || DEFAULT_PGSTAC_VERSION;
+      customResourceProperties["pgstac_version"] = pgstac_version;
     }
 
     // add timestamp to properties to ensure the Lambda gets re-executed on each deploy
