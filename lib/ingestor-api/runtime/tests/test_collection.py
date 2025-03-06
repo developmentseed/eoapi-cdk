@@ -47,7 +47,6 @@ def test_ingest_loader_error(stac_collection, pgstacdb):
     ):
         os.environ["DB_SECRET_ARN"] = ""
 
-        # Mock the loader to raise an exception
         with patch("src.collection.Loader") as mock_loader:
             mock_loader_instance = Mock()
             mock_loader.return_value = mock_loader_instance
@@ -58,5 +57,31 @@ def test_ingest_loader_error(stac_collection, pgstacdb):
             with pytest.raises(HTTPException) as excinfo:
                 collection.ingest(stac_collection)
 
-            assert excinfo.value.status_code == 400
+            assert excinfo.value.status_code == 500
             assert "Invalid collection data" in str(excinfo.value.detail)
+
+
+def test_ingest_missing_environment_variable(stac_collection):
+    """Test handling when the required environment variable is missing."""
+    if "DB_SECRET_ARN" in os.environ:
+        del os.environ["DB_SECRET_ARN"]
+
+    with pytest.raises(HTTPException) as excinfo:
+        collection.ingest(stac_collection)
+
+    assert "DB_SECRET_ARN" in str(excinfo.value)
+
+
+def test_ingest_credentials_error(stac_collection):
+    """Test handling of errors during credential retrieval."""
+    with patch(
+        "src.collection.get_db_credentials",
+        side_effect=Exception("Failed to retrieve credentials"),
+    ):
+        os.environ["DB_SECRET_ARN"] = ""
+
+        with pytest.raises(HTTPException) as excinfo:
+            collection.ingest(stac_collection)
+
+        assert excinfo.value.status_code == 500
+        assert "Failed to retrieve credentials" in str(excinfo.value.detail)

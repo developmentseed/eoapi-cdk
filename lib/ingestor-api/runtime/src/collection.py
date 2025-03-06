@@ -24,7 +24,7 @@ def ingest(collection: StacCollection):
             )
     except Exception as e:
         raise HTTPException(
-            status_code=400,
+            status_code=500,
             detail=f"Encountered failure loading collection into pgSTAC: {e}",
         ) from e
 
