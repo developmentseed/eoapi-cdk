@@ -1,5 +1,6 @@
 import os
 
+from fastapi import HTTPException
 from pypgstac.db import PgstacDB
 from pypgstac.load import Methods
 
@@ -18,12 +19,14 @@ def ingest(collection: StacCollection):
         creds = get_db_credentials(os.environ["DB_SECRET_ARN"])
         with PgstacDB(dsn=creds.dsn_string, debug=True) as db:
             loader = Loader(db=db)
-            collection = [
-                collection.to_dict()
-            ]  # pypgstac wants either a string or an Iterable of dicts.
-            loader.load_collections(file=collection, insert_mode=Methods.upsert)
+            loader.load_collections(
+                file=[collection.model_dump(mode="json")], insert_mode=Methods.upsert
+            )
     except Exception as e:
-        print(f"Encountered failure loading collection into pgSTAC: {e}")
+        raise HTTPException(
+            status_code=400,
+            detail=f"Encountered failure loading collection into pgSTAC: {e}",
+        ) from e
 
 
 def delete(collection_id: str):

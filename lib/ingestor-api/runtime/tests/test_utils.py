@@ -1,7 +1,6 @@
 from unittest.mock import Mock, patch
 
 import pytest
-from fastapi.encoders import jsonable_encoder
 from pypgstac.load import Methods
 from src.utils import DbCreds
 
@@ -28,8 +27,9 @@ def dbcreds():
 def test_load_items(loader, pgstacdb, example_ingestion, dbcreds):
     import src.utils as utils
 
-    utils.load_items(dbcreds, [example_ingestion])
+    ingestions = [example_ingestion]
+    utils.load_items(dbcreds, ingestions)
     loader.return_value.load_items.assert_called_once_with(
-        file=jsonable_encoder([example_ingestion.item]),
+        file=[i.item.model_dump(mode="json") for i in ingestions],
         insert_mode=Methods.upsert,
     )
