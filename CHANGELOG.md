@@ -1,3 +1,10 @@
+## [7.6.3](https://github.com/developmentseed/eoapi-cdk/compare/v7.6.2...v7.6.3) (2025-03-07)
+
+
+### Bug Fixes
+
+* reject items without a collection ID ([#133](https://github.com/developmentseed/eoapi-cdk/issues/133)) ([595b0be](https://github.com/developmentseed/eoapi-cdk/commit/595b0be1c5632b74231ce5ed5c350aed5fe8bb83))
+
 ## [7.6.2](https://github.com/developmentseed/eoapi-cdk/compare/v7.6.1...v7.6.2) (2025-03-06)
 
 
