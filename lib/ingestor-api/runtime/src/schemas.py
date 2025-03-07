@@ -43,6 +43,7 @@ class AccessibleAsset(shared.Asset):
 
 class AccessibleItem(Item):
     assets: Dict[str, AccessibleAsset]
+    collection: str  # override because default is str | None
 
     @field_validator("collection")
     def exists(cls, collection):
