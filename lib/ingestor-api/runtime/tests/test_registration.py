@@ -93,9 +93,9 @@ class TestCreate:
             collection_id=self.example_ingestion.item.collection
         )
         assert response.status_code == 422, "should get validation error"
-        assert len(self.db.fetch_many(status="queued")["items"]) == 0, (
-            "data should not be stored in DB"
-        )
+        assert (
+            len(self.db.fetch_many(status="queued")["items"]) == 0
+        ), "data should not be stored in DB"
 
     def test_validates_no_collection_id(
         self, client_authenticated, collection_exists, asset_exists
@@ -108,9 +108,9 @@ class TestCreate:
             json=item_sans_id.model_dump(mode="json"),
         )
         assert response.status_code == 422, "should get validation error"
-        assert len(self.db.fetch_many(status="queued")["items"]) == 0, (
-            "data should not be stored in DB"
-        )
+        assert (
+            len(self.db.fetch_many(status="queued")["items"]) == 0
+        ), "data should not be stored in DB"
 
     def test_validates_missing_assets(
         self, client_authenticated, collection_exists, asset_missing
@@ -136,9 +136,9 @@ class TestCreate:
                 err["loc"] == ["body", "assets", asset_type, "href"]
                 for err in response.json()["detail"]
             ), "should reference asset type in validation error response"
-        assert len(self.db.fetch_many(status="queued")["items"]) == 0, (
-            "data should not be stored in DB"
-        )
+        assert (
+            len(self.db.fetch_many(status="queued")["items"]) == 0
+        ), "data should not be stored in DB"
 
 
 class TestList:
