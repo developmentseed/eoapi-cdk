@@ -160,6 +160,9 @@ class pgStacInfraStack(Stack):
             stac_url=stac_api.url,
             stage="test",
             pgstac_version=PGSTAC_VERSION,
+            api_env={
+                "JWKS_URL": "",  # no authentication!
+            },
         )
 
 
