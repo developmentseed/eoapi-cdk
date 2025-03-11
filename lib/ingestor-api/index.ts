@@ -13,7 +13,7 @@ import {
   Stack,
 } from "aws-cdk-lib";
 import { Construct } from "constructs";
-import { CustomLambdaFunctionProps } from "../utils";
+import { CustomLambdaFunctionProps, DEFAULT_PGSTAC_VERSION } from "../utils";
 
 export class StacIngestor extends Construct {
   table: dynamodb.Table;
@@ -39,10 +39,10 @@ export class StacIngestor extends Construct {
       assumedBy: new iam.ServicePrincipal("lambda.amazonaws.com"),
       managedPolicies: [
         iam.ManagedPolicy.fromAwsManagedPolicyName(
-          "service-role/AWSLambdaBasicExecutionRole",
+          "service-role/AWSLambdaBasicExecutionRole"
         ),
         iam.ManagedPolicy.fromAwsManagedPolicyName(
-          "service-role/AWSLambdaVPCAccessExecutionRole",
+          "service-role/AWSLambdaVPCAccessExecutionRole"
         ),
       ],
     });
@@ -57,6 +57,7 @@ export class StacIngestor extends Construct {
       dbSecurityGroup: props.stacDbSecurityGroup,
       subnetSelection: props.subnetSelection,
       lambdaFunctionOptions: props.apiLambdaFunctionOptions,
+      pgstacVersion: props.pgstacVersion,
     });
 
     this.buildApiEndpoint({
@@ -74,7 +75,8 @@ export class StacIngestor extends Construct {
       dbVpc: props.vpc,
       dbSecurityGroup: props.stacDbSecurityGroup,
       subnetSelection: props.subnetSelection,
-      lambdaFunctionOptions: props.ingestorLambdaFunctionOptions
+      lambdaFunctionOptions: props.ingestorLambdaFunctionOptions,
+      pgstacVersion: props.pgstacVersion,
     });
 
     this.registerSsmParameter({
@@ -110,10 +112,10 @@ export class StacIngestor extends Construct {
     dbSecret: secretsmanager.ISecret;
     dbVpc: undefined | ec2.IVpc;
     dbSecurityGroup: ec2.ISecurityGroup;
-    subnetSelection: undefined | ec2.SubnetSelection
+    subnetSelection: undefined | ec2.SubnetSelection;
     lambdaFunctionOptions?: CustomLambdaFunctionProps;
+    pgstacVersion?: string;
   }): lambda.Function {
-
     const handler = new lambda.Function(this, "api-handler", {
       // defaults
       runtime: lambda.Runtime.PYTHON_3_11,
@@ -121,9 +123,12 @@ export class StacIngestor extends Construct {
       memorySize: 2048,
       logRetention: aws_logs.RetentionDays.ONE_WEEK,
       timeout: Duration.seconds(30),
-      code:lambda.Code.fromDockerBuild(__dirname, {
+      code: lambda.Code.fromDockerBuild(__dirname, {
         file: "runtime/Dockerfile",
-        buildArgs: { PYTHON_VERSION: '3.11' },
+        buildArgs: {
+          PYTHON_VERSION: "3.11",
+          PGSTAC_VERSION: props.pgstacVersion || DEFAULT_PGSTAC_VERSION,
+        },
       }),
       allowPublicSubnet: true,
       vpc: props.dbVpc,
@@ -139,7 +144,7 @@ export class StacIngestor extends Construct {
 
     // Allow handler to connect to DB
 
-    if (props.dbVpc){
+    if (props.dbVpc) {
       props.dbSecurityGroup.addIngressRule(
         handler.connections.securityGroups[0],
         ec2.Port.tcp(5432),
@@ -160,10 +165,9 @@ export class StacIngestor extends Construct {
     dbSecurityGroup: ec2.ISecurityGroup;
     subnetSelection: undefined | ec2.SubnetSelection;
     lambdaFunctionOptions?: CustomLambdaFunctionProps;
+    pgstacVersion?: string;
   }): lambda.Function {
-
-
-    const handler = new lambda.Function(this, "stac-ingestor",{
+    const handler = new lambda.Function(this, "stac-ingestor", {
       // defaults
       runtime: lambda.Runtime.PYTHON_3_11,
       handler: "src.ingestor.handler",
@@ -172,7 +176,10 @@ export class StacIngestor extends Construct {
       timeout: Duration.seconds(180),
       code: lambda.Code.fromDockerBuild(__dirname, {
         file: "runtime/Dockerfile",
-        buildArgs: { PYTHON_VERSION: '3.11' },
+        buildArgs: {
+          PYTHON_VERSION: "3.11",
+          PGSTAC_VERSION: props.pgstacVersion || DEFAULT_PGSTAC_VERSION,
+        },
       }),
       vpc: props.dbVpc,
       vpcSubnets: props.subnetSelection,
@@ -187,7 +194,7 @@ export class StacIngestor extends Construct {
     props.dbSecret.grantRead(handler);
 
     // Allow handler to connect to DB
-    if (props.dbVpc){
+    if (props.dbVpc) {
       props.dbSecurityGroup.addIngressRule(
         handler.connections.securityGroups[0],
         ec2.Port.tcp(5432),
@@ -195,7 +202,7 @@ export class StacIngestor extends Construct {
       );
     }
 
-    // Allow handler to write results back to DBƒ
+    // Allow handler to write results back to DB
     props.table.grantWriteData(handler);
 
     // Trigger handler from writes to DynamoDB table
@@ -221,7 +228,6 @@ export class StacIngestor extends Construct {
     endpointConfiguration?: apigateway.EndpointConfiguration;
     ingestorDomainNameOptions?: apigateway.DomainNameOptions;
   }): apigateway.LambdaRestApi {
-
     return new apigateway.LambdaRestApi(
       this,
       `${Stack.of(this).stackName}-ingestor-api`,
@@ -236,10 +242,12 @@ export class StacIngestor extends Construct {
         endpointConfiguration: props.endpointConfiguration,
         policy: props.policy,
 
-        domainName:  props.ingestorDomainNameOptions ? {
-          domainName: props.ingestorDomainNameOptions.domainName,
-          certificate: props.ingestorDomainNameOptions.certificate,
-        } : undefined,
+        domainName: props.ingestorDomainNameOptions
+          ? {
+              domainName: props.ingestorDomainNameOptions.domainName,
+              certificate: props.ingestorDomainNameOptions.certificate,
+            }
+          : undefined,
       }
     );
   }
@@ -316,20 +324,26 @@ export interface StacIngestorProps {
   /**
    * Custom Domain Name Options for Ingestor API
    */
-   readonly ingestorDomainNameOptions?: apigateway.DomainNameOptions;
+  readonly ingestorDomainNameOptions?: apigateway.DomainNameOptions;
 
   /**
-     * Can be used to override the default lambda function properties.
-     *
-     * @default - default settings are defined in the construct.
-     */
+   * Can be used to override the default lambda function properties.
+   *
+   * @default - default settings are defined in the construct.
+   */
   readonly apiLambdaFunctionOptions?: CustomLambdaFunctionProps;
 
   /**
-     * Can be used to override the default lambda function properties.
-     *
-     * @default - default settings are defined in the construct.
-     */
-readonly ingestorLambdaFunctionOptions?: CustomLambdaFunctionProps;
+   * Can be used to override the default lambda function properties.
+   *
+   * @default - default settings are defined in the construct.
+   */
+  readonly ingestorLambdaFunctionOptions?: CustomLambdaFunctionProps;
 
+  /**
+   * pgstac version - must match the version installed on the pgstac database
+   *
+   * @default - default settings are defined in the construct
+   */
+  readonly pgstacVersion?: string;
 }

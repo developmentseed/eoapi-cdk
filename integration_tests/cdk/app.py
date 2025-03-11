@@ -1,12 +1,15 @@
-from aws_cdk import App, RemovalPolicy, Stack, aws_ec2, aws_rds
+from aws_cdk import App, RemovalPolicy, Stack, aws_ec2, aws_iam, aws_rds
 from config import AppConfig, build_app_config
 from constructs import Construct
 from eoapi_cdk import (
     PgStacApiLambda,
     PgStacDatabase,
+    StacIngestor,
     TiPgApiLambda,
     TitilerPgstacApiLambda,
 )
+
+PGSTAC_VERSION = "0.9.5"
 
 
 class VpcStack(Stack):
@@ -81,7 +84,7 @@ class pgStacInfraStack(Stack):
             instance_type=aws_ec2.InstanceType(app_config.db_instance_type),
             add_pgbouncer=True,
             removal_policy=RemovalPolicy.DESTROY,
-            pgstac_version="0.9.5",
+            pgstac_version=PGSTAC_VERSION,
         )
 
         assert pgstac_db.security_group
@@ -135,6 +138,28 @@ class pgStacInfraStack(Stack):
             lambda_function_options={
                 "allow_public_subnet": True,
             },
+        )
+
+        s3_read_only_role = aws_iam.Role(
+            self,
+            "S3ReadOnlyRole",
+            assumed_by=aws_iam.ServicePrincipal("lambda.amazonaws.com"),
+            description="Role with read-only access to S3 buckets",
+        )
+
+        s3_read_only_role.add_managed_policy(
+            aws_iam.ManagedPolicy.from_aws_managed_policy_name("AmazonS3ReadOnlyAccess")
+        )
+
+        StacIngestor(
+            self,
+            "ingestor",
+            data_access_role=s3_read_only_role,
+            stac_db_secret=pgstac_db.pgstac_secret,
+            stac_db_security_group=pgstac_db.security_group,
+            stac_url=stac_api.url,
+            stage="test",
+            pgstac_version=PGSTAC_VERSION,
         )
 
 
