@@ -1304,6 +1304,7 @@ const pgStacApiLambdaProps: PgStacApiLambdaProps = { ... }
 | <code><a href="#eoapi-cdk.PgStacApiLambdaProps.property.db">db</a></code> | <code>aws-cdk-lib.aws_rds.IDatabaseInstance \| aws-cdk-lib.aws_ec2.IInstance</code> | RDS Instance with installed pgSTAC or pgbouncer server. |
 | <code><a href="#eoapi-cdk.PgStacApiLambdaProps.property.dbSecret">dbSecret</a></code> | <code>aws-cdk-lib.aws_secretsmanager.ISecret</code> | Secret containing connection information for pgSTAC database. |
 | <code><a href="#eoapi-cdk.PgStacApiLambdaProps.property.apiEnv">apiEnv</a></code> | <code>{[ key: string ]: string}</code> | Customized environment variables to send to fastapi-pgstac runtime. |
+| <code><a href="#eoapi-cdk.PgStacApiLambdaProps.property.enabledExtensions">enabledExtensions</a></code> | <code>string[]</code> | List of STAC API extensions to enable. |
 | <code><a href="#eoapi-cdk.PgStacApiLambdaProps.property.lambdaFunctionOptions">lambdaFunctionOptions</a></code> | <code>any</code> | Can be used to override the default lambda function properties. |
 | <code><a href="#eoapi-cdk.PgStacApiLambdaProps.property.stacApiDomainName">stacApiDomainName</a></code> | <code>@aws-cdk/aws-apigatewayv2-alpha.IDomainName</code> | Custom Domain Name Options for STAC API,. |
 | <code><a href="#eoapi-cdk.PgStacApiLambdaProps.property.subnetSelection">subnetSelection</a></code> | <code>aws-cdk-lib.aws_ec2.SubnetSelection</code> | Subnet into which the lambda should be deployed. |
@@ -1344,6 +1345,19 @@ public readonly apiEnv: {[ key: string ]: string};
 - *Type:* {[ key: string ]: string}
 
 Customized environment variables to send to fastapi-pgstac runtime.
+
+---
+
+##### `enabledExtensions`<sup>Optional</sup> <a name="enabledExtensions" id="eoapi-cdk.PgStacApiLambdaProps.property.enabledExtensions"></a>
+
+```typescript
+public readonly enabledExtensions: string[];
+```
+
+- *Type:* string[]
+- *Default:* query, sort, fields, filter, free_text, pagniation, collection_search
+
+List of STAC API extensions to enable.
 
 ---
 
