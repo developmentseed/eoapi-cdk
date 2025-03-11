@@ -10,11 +10,10 @@ import {
   aws_logs,
 } from "aws-cdk-lib";
 import { Construct } from "constructs";
-import { CustomLambdaFunctionProps } from "../utils";
+import { CustomLambdaFunctionProps, DEFAULT_PGSTAC_VERSION } from "../utils";
 import { PgBouncer } from "./PgBouncer";
 
 const instanceSizes: Record<string, number> = require("./instance-memory.json");
-const DEFAULT_PGSTAC_VERSION = "0.9.5";
 
 let defaultPgSTACCustomOptions: { [key: string]: any } = {
   context: "FALSE",

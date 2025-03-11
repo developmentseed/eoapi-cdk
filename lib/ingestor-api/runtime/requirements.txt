@@ -5,6 +5,6 @@ orjson>=3.6.8
 psycopg[binary,pool]>=3.0.15
 pydantic_ssm_settings>=1.0,<2.0
 pydantic>=1.9.0
-pypgstac==0.8.5
+pypgstac
 requests>=2.27.1
 stac-pydantic>=3.0,<4.0

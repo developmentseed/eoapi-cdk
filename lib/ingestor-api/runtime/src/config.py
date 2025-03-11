@@ -22,7 +22,8 @@ class Settings(BaseSettings):
     root_path: Optional[str] = Field(description="Path from where to serve this URL.")
 
     jwks_url: Optional[HttpUrlString] = Field(
-        description="URL of JWKS, e.g. https://cognito-idp.{region}.amazonaws.com/{userpool_id}/.well-known/jwks.json"  # noqa
+        default=None,
+        description="URL of JWKS, e.g. https://cognito-idp.{region}.amazonaws.com/{userpool_id}/.well-known/jwks.json",  # noqa
     )
 
     stac_url: HttpUrlString = Field(description="URL of STAC API")
