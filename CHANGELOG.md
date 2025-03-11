@@ -1,3 +1,15 @@
+# [8.0.0](https://github.com/developmentseed/eoapi-cdk/compare/v7.6.3...v8.0.0) (2025-03-11)
+
+
+### Features
+
+* update versions for pgstac, stac-fastapi-pgstac, titiler-pgstac, and tipg ([507cc99](https://github.com/developmentseed/eoapi-cdk/commit/507cc991e72c2369666e72abe41cf53be0ce29d4))
+
+
+### BREAKING CHANGES
+
+* Major version updates to core dependencies require client code changes.
+
 ## [7.6.3](https://github.com/developmentseed/eoapi-cdk/compare/v7.6.2...v7.6.3) (2025-03-07)
 
 
