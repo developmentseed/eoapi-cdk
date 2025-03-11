@@ -81,7 +81,7 @@ class pgStacInfraStack(Stack):
             instance_type=aws_ec2.InstanceType(app_config.db_instance_type),
             add_pgbouncer=True,
             removal_policy=RemovalPolicy.DESTROY,
-            pgstac_version="0.9.2",
+            pgstac_version="0.9.5",
         )
 
         assert pgstac_db.security_group
