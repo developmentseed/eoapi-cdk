@@ -12,6 +12,7 @@ import { IDomainName, HttpApi, ParameterMapping, MappingValue} from "@aws-cdk/aw
 import { HttpLambdaIntegration } from "@aws-cdk/aws-apigatewayv2-integrations-alpha";
 import { Construct } from "constructs";
 import { CustomLambdaFunctionProps } from "../utils";
+import * as path from 'path';
 
 export class PgStacApiLambda extends Construct {
   readonly url: string;
@@ -23,12 +24,12 @@ export class PgStacApiLambda extends Construct {
     this.stacApiLambdaFunction = new lambda.Function(this, "lambda", {
       // defaults
       runtime: lambda.Runtime.PYTHON_3_11,
-      handler: "src.handler.handler",
+      handler: "handler.handler",
       memorySize: 8192,
       logRetention: aws_logs.RetentionDays.ONE_WEEK,
       timeout: Duration.seconds(30),
-      code: lambda.Code.fromDockerBuild(__dirname, {
-        file: "runtime/Dockerfile",
+      code: lambda.Code.fromDockerBuild(path.join(__dirname, '..'), {
+        file: "stac-api/runtime/Dockerfile",
         buildArgs: { PYTHON_VERSION: '3.11' },
       }),
       vpc: props.vpc,

@@ -6,9 +6,18 @@ import asyncio
 import os
 
 from mangum import Mangum
-from utils import load_pgstac_secret
+from utils import get_secret_dict
 
-load_pgstac_secret(os.environ["PGSTAC_SECRET_ARN"])  # required for the below imports
+secret = get_secret_dict(secret_arn_env_var="PGSTAC_SECRET_ARN")
+os.environ.update(
+    {
+        "postgres_host": secret["host"],
+        "postgres_dbname": secret["dbname"],
+        "postgres_user": secret["username"],
+        "postgres_pass": secret["password"],
+        "postgres_port": str(secret["port"]),
+    }
+)
 
 from tipg.collections import register_collection_catalog  # noqa: E402
 from tipg.database import connect_to_db  # noqa: E402

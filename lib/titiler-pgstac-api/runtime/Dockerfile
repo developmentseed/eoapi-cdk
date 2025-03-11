@@ -7,7 +7,7 @@ RUN python -m pip install pip -U
 # Install system dependencies to compile (numexpr)
 RUN yum install -y gcc-c++
 
-COPY runtime/requirements.txt requirements.txt
+COPY titiler-pgstac-api/runtime/requirements.txt requirements.txt
 RUN python -m pip install -r requirements.txt "mangum>=0.14,<0.15" -t /asset
 
 # Remove system dependencies
@@ -20,6 +20,13 @@ RUN find /asset -type f -name '*.py' -print0 | xargs -0 rm -f
 RUN find /asset -type d -name 'tests' -print0 | xargs -0 rm -rf
 RUN rm -rdf /asset/numpy/doc/ /asset/boto3* /asset/botocore* /asset/bin /asset/geos_license /asset/Misc
 
-COPY runtime/src/*.py /asset/
+# Strip debug symbols from compiled C/C++ code (except for numpy.libs!)
+RUN cd /asset && \
+  find . -type f -name '*.so*' \
+  -not -path "./numpy.libs/*" \
+  -exec strip --strip-unneeded {} \;
+
+COPY titiler-pgstac-api/runtime/src/*.py /asset/
+COPY utils/utils.py /asset/
 
 CMD ["echo", "hello world"]

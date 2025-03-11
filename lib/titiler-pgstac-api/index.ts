@@ -1,19 +1,19 @@
 import {
-    Stack,
-    aws_iam as iam,
-    aws_ec2 as ec2,
-    aws_rds as rds,
-    aws_lambda as lambda,
-    aws_secretsmanager as secretsmanager,
-    CfnOutput,
-    Duration,
-    aws_logs
-  } from "aws-cdk-lib";
-  import { IDomainName, HttpApi, ParameterMapping, MappingValue} from "@aws-cdk/aws-apigatewayv2-alpha";
-  import { HttpLambdaIntegration } from "@aws-cdk/aws-apigatewayv2-integrations-alpha";
-  import { Construct } from "constructs";
+  Stack,
+  aws_iam as iam,
+  aws_ec2 as ec2,
+  aws_rds as rds,
+  aws_lambda as lambda,
+  aws_secretsmanager as secretsmanager,
+  CfnOutput,
+  Duration,
+  aws_logs
+} from "aws-cdk-lib";
+import { IDomainName, HttpApi, ParameterMapping, MappingValue} from "@aws-cdk/aws-apigatewayv2-alpha";
+import { HttpLambdaIntegration } from "@aws-cdk/aws-apigatewayv2-integrations-alpha";
+import { Construct } from "constructs";
 import { CustomLambdaFunctionProps } from "../utils";
-
+import * as path from 'path';
 
   // default settings that can be overridden by the user-provided environment.
   let defaultTitilerPgstacEnv :{ [key: string]: any } = {
@@ -45,8 +45,8 @@ import { CustomLambdaFunctionProps } from "../utils";
         memorySize: 3008,
         logRetention: aws_logs.RetentionDays.ONE_WEEK,
         timeout: Duration.seconds(30),
-        code: lambda.Code.fromDockerBuild(__dirname, {
-          file: "runtime/Dockerfile",
+        code: lambda.Code.fromDockerBuild(path.join(__dirname, '..'), {
+          file: "titiler-pgstac-api/runtime/Dockerfile",
           buildArgs: { PYTHON_VERSION: '3.11' }
         }),
         vpc: props.vpc,

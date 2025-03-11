@@ -8,9 +8,7 @@ import os
 from mangum import Mangum
 from utils import get_secret_dict
 
-pgstac_secret_arn = os.environ["PGSTAC_SECRET_ARN"]
-
-secret = get_secret_dict(pgstac_secret_arn)
+secret = get_secret_dict(secret_arn_env_var="PGSTAC_SECRET_ARN")
 os.environ.update(
     {
         "postgres_host": secret["host"],
