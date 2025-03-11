@@ -2493,6 +2493,7 @@ const stacIngestorProps: StacIngestorProps = { ... }
 | <code><a href="#eoapi-cdk.StacIngestorProps.property.apiPolicy">apiPolicy</a></code> | <code>aws-cdk-lib.aws_iam.PolicyDocument</code> | API Policy Document, useful for creating private APIs. |
 | <code><a href="#eoapi-cdk.StacIngestorProps.property.ingestorDomainNameOptions">ingestorDomainNameOptions</a></code> | <code>aws-cdk-lib.aws_apigateway.DomainNameOptions</code> | Custom Domain Name Options for Ingestor API. |
 | <code><a href="#eoapi-cdk.StacIngestorProps.property.ingestorLambdaFunctionOptions">ingestorLambdaFunctionOptions</a></code> | <code>any</code> | Can be used to override the default lambda function properties. |
+| <code><a href="#eoapi-cdk.StacIngestorProps.property.pgstacVersion">pgstacVersion</a></code> | <code>string</code> | pgstac version - must match the version installed on the pgstac database. |
 | <code><a href="#eoapi-cdk.StacIngestorProps.property.subnetSelection">subnetSelection</a></code> | <code>aws-cdk-lib.aws_ec2.SubnetSelection</code> | Subnet into which the lambda should be deployed if using a VPC. |
 | <code><a href="#eoapi-cdk.StacIngestorProps.property.vpc">vpc</a></code> | <code>aws-cdk-lib.aws_ec2.IVpc</code> | VPC running pgSTAC DB. |
 
@@ -2629,6 +2630,19 @@ public readonly ingestorLambdaFunctionOptions: any;
 - *Default:* default settings are defined in the construct.
 
 Can be used to override the default lambda function properties.
+
+---
+
+##### `pgstacVersion`<sup>Optional</sup> <a name="pgstacVersion" id="eoapi-cdk.StacIngestorProps.property.pgstacVersion"></a>
+
+```typescript
+public readonly pgstacVersion: string;
+```
+
+- *Type:* string
+- *Default:* default settings are defined in the construct
+
+pgstac version - must match the version installed on the pgstac database.
 
 ---
 
