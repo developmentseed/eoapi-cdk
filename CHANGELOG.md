@@ -1,3 +1,10 @@
+## [8.0.2](https://github.com/developmentseed/eoapi-cdk/compare/v8.0.1...v8.0.2) (2025-03-11)
+
+
+### Bug Fixes
+
+* refactor to keep database pgstac and ingestor pypgstac in sync ([#137](https://github.com/developmentseed/eoapi-cdk/issues/137)) ([cdf1a66](https://github.com/developmentseed/eoapi-cdk/commit/cdf1a6629905384b697ef00c39b1a6b10d15b592))
+
 ## [8.0.1](https://github.com/developmentseed/eoapi-cdk/compare/v8.0.0...v8.0.1) (2025-03-11)
 
 
