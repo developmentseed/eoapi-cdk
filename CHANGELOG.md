@@ -1,3 +1,10 @@
+## [8.0.1](https://github.com/developmentseed/eoapi-cdk/compare/v8.0.0...v8.0.1) (2025-03-11)
+
+
+### Bug Fixes
+
+* disable transaction extensions by default ([#136](https://github.com/developmentseed/eoapi-cdk/issues/136)) ([18822f0](https://github.com/developmentseed/eoapi-cdk/commit/18822f09cb6794020cf348a361939e234db4b834))
+
 # [8.0.0](https://github.com/developmentseed/eoapi-cdk/compare/v7.6.3...v8.0.0) (2025-03-11)
 
 
