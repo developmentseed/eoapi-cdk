@@ -14,12 +14,57 @@ import { Construct } from "constructs";
 import { CustomLambdaFunctionProps } from "../utils";
 import * as path from 'path';
 
+export const EXTENSIONS = {
+  QUERY: "query",
+  SORT: "sort",
+  FIELDS: "fields",
+  FILTER: "filter",
+  FREE_TEXT: "free_text",
+  PAGINATION: "pagination",
+  COLLECTION_SEARCH: "collection_search",
+  TRANSACTION: "transaction",
+  BULK_TRANSACTION: "bulk_transactions",
+} as const;
+
+type ExtensionType = typeof EXTENSIONS[keyof typeof EXTENSIONS];
+
+/**
+ * Validates if a given string is a valid STAC extension
+ */
+function isValidExtension(value: string): value is ExtensionType {
+  return Object.values(EXTENSIONS).includes(value as any);
+}
+
 export class PgStacApiLambda extends Construct {
   readonly url: string;
   public stacApiLambdaFunction: lambda.Function;
 
   constructor(scope: Construct, id: string, props: PgStacApiLambdaProps) {
     super(scope, id);
+
+    const defaultExtensions: ExtensionType[] = [
+      EXTENSIONS.QUERY,
+      EXTENSIONS.SORT,
+      EXTENSIONS.FIELDS,
+      EXTENSIONS.FILTER,
+      EXTENSIONS.FREE_TEXT,
+      EXTENSIONS.PAGINATION,
+      EXTENSIONS.COLLECTION_SEARCH,
+    ];
+
+    if (props.enabledExtensions) {
+      for (const ext of props.enabledExtensions) {
+        if (!isValidExtension(ext)) {
+          throw new Error(
+            `Invalid extension: "${ext}". Must be one of: ${Object.values(
+              EXTENSIONS
+            ).join(", ")}`
+          );
+        }
+      }
+    }
+
+    const enabledExtensions = props.enabledExtensions || defaultExtensions;
 
     this.stacApiLambdaFunction = new lambda.Function(this, "lambda", {
       // defaults
@@ -39,6 +84,7 @@ export class PgStacApiLambda extends Construct {
         PGSTAC_SECRET_ARN: props.dbSecret.secretArn,
         DB_MIN_CONN_SIZE: "0",
         DB_MAX_CONN_SIZE: "1",
+        ENABLED_EXTENSIONS: enabledExtensions.join(","),
         ...props.apiEnv,
       },
       // overwrites defaults with user-provided configurable properties
@@ -103,6 +149,13 @@ export interface PgStacApiLambdaProps {
    * Custom Domain Name Options for STAC API,
    */
    readonly stacApiDomainName?: IDomainName;
+
+  /**
+   * List of STAC API extensions to enable.
+   * 
+   * @default - query, sort, fields, filter, free_text, pagniation, collection_search
+   */
+  readonly enabledExtensions?: ExtensionType[];
 
   /**
      * Can be used to override the default lambda function properties.
