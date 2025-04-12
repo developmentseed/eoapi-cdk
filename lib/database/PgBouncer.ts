@@ -182,7 +182,7 @@ export class PgBouncer extends Construct {
 
     // Create a new secret for pgbouncer connection credentials
     this.pgbouncerSecret = new secretsmanager.Secret(this, "PgBouncerSecret", {
-      description: `Connection information for PgBouncer instance ${props.instanceName}`,
+      description: "Connection information for PgBouncer instance",
       generateSecretString: {
         generateStringKey: "dummy",
         secretStringTemplate: "{}",
