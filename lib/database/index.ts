@@ -269,7 +269,7 @@ export interface PgStacDatabaseProps extends rds.DatabaseInstanceProps {
    *
    * @default - defined in the construct
    */
-  readonly pgbouncerInstanceProps?: Partial<ec2.InstanceProps>;
+  readonly pgbouncerInstanceProps?: ec2.InstanceProps | any;
 
   /**
    * Lambda function Custom Resource properties. A custom resource property is going to be created

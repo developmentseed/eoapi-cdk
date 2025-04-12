@@ -135,13 +135,12 @@ export class PgBouncer extends Construct {
     });
 
     // Create PgBouncer instance
-    const defaultInstanceConfig: ec2.InstanceProps = {
+    const defaultInstanceConfig: Omit<ec2.InstanceProps, "vpc"> = {
       instanceName: "pgbouncer",
       instanceType: ec2.InstanceType.of(
         ec2.InstanceClass.T3,
         ec2.InstanceSize.MICRO
       ),
-      vpc: props.vpc,
       vpcSubnets: {
         subnetType: props.usePublicSubnet
           ? ec2.SubnetType.PUBLIC
@@ -171,6 +170,7 @@ export class PgBouncer extends Construct {
     this.instance = new ec2.Instance(this, "Instance", {
       ...defaultInstanceConfig,
       ...props.instanceProps,
+      vpc: props.vpc,
     });
 
     // Allow PgBouncer to connect to RDS
