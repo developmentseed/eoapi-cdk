@@ -56,8 +56,8 @@
     "semantic-release": "^19.0.5"
   },
   "peerDependencies": {
-    "@aws-cdk/aws-apigatewayv2-alpha": "^2.114.1-alpha.0",
-    "@aws-cdk/aws-apigatewayv2-integrations-alpha": "^2.114.1-alpha.0",
+    "@aws-cdk/aws-apigatewayv2-alpha": "2.114.1-alpha.0",
+    "@aws-cdk/aws-apigatewayv2-integrations-alpha": "2.114.1-alpha.0",
     "aws-cdk-lib": "^2.130.0",
     "constructs": "^10.3.0"
   },
