@@ -1,3 +1,10 @@
+## [8.0.3](https://github.com/developmentseed/eoapi-cdk/compare/v8.0.2...v8.0.3) (2025-04-16)
+
+
+### Bug Fixes
+
+* update tipg startup for 1.0 ([#144](https://github.com/developmentseed/eoapi-cdk/issues/144)) ([ae68e70](https://github.com/developmentseed/eoapi-cdk/commit/ae68e70ed98c6a2ae52275fd0b6b83a0c17989b3)), closes [#143](https://github.com/developmentseed/eoapi-cdk/issues/143)
+
 ## [8.0.2](https://github.com/developmentseed/eoapi-cdk/compare/v8.0.1...v8.0.2) (2025-03-11)
 
 
