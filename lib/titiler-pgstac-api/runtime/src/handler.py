@@ -6,27 +6,25 @@ import asyncio
 import os
 
 from mangum import Mangum
+from titiler.pgstac.db import connect_to_db
+from titiler.pgstac.main import app
+from titiler.pgstac.settings import PostgresSettings
 from utils import get_secret_dict
 
 secret = get_secret_dict(secret_arn_env_var="PGSTAC_SECRET_ARN")
-os.environ.update(
-    {
-        "postgres_host": secret["host"],
-        "postgres_dbname": secret["dbname"],
-        "postgres_user": secret["username"],
-        "postgres_pass": secret["password"],
-        "postgres_port": str(secret["port"]),
-    }
+postgres_settings = PostgresSettings(
+    postgres_host=secret["host"],
+    postgres_dbname=secret["dbname"],
+    postgres_user=secret["username"],
+    postgres_pass=secret["password"],
+    postgres_port=int(secret["port"]),
 )
-
-from titiler.pgstac.db import connect_to_db  # noqa: E402
-from titiler.pgstac.main import app  # noqa: E402
 
 
 @app.on_event("startup")
 async def startup_event() -> None:
     """Connect to database on startup."""
-    await connect_to_db(app)
+    await connect_to_db(app, settings=postgres_settings)
 
 
 handler = Mangum(app, lifespan="off")
