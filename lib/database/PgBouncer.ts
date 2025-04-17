@@ -26,11 +26,6 @@ export interface PgBouncerConfigProps {
 
 export interface PgBouncerProps {
   /**
-   * Name for the pgbouncer instance
-   */
-  instanceName: string;
-
-  /**
    * VPC to deploy PgBouncer into
    */
   vpc: ec2.IVpc;
@@ -56,15 +51,14 @@ export interface PgBouncerProps {
   usePublicSubnet?: boolean;
 
   /**
-   * Instance type for PgBouncer
-   * @default t3.micro
-   */
-  instanceType?: ec2.InstanceType;
-
-  /**
    * PgBouncer configuration options
    */
   pgBouncerConfig?: PgBouncerConfigProps;
+
+  /**
+   * EC2 instance options
+   */
+  instanceProps?: Partial<ec2.InstanceProps>;
 }
 
 export class PgBouncer extends Construct {
@@ -78,7 +72,7 @@ export class PgBouncer extends Construct {
   // be slightly smaller than the actual max_connections value on the RDS instance
   // so we perform this calculation.
 
-  private getDefaultConfig(
+  private getDefaultPgbouncerConfig(
     dbMaxConnections: number
   ): Required<PgBouncerConfigProps> {
     // maxDbConnections (and maxUserConnections) are the only settings that need
@@ -99,17 +93,14 @@ export class PgBouncer extends Construct {
     super(scope, id);
 
     // Set defaults for optional props
-    const defaultInstanceType = ec2.InstanceType.of(
-      ec2.InstanceClass.T3,
-      ec2.InstanceSize.MICRO
-    );
 
-    const instanceType = props.instanceType ?? defaultInstanceType;
-    const defaultConfig = this.getDefaultConfig(props.dbMaxConnections);
+    const defaultPgbouncerConfig = this.getDefaultPgbouncerConfig(
+      props.dbMaxConnections
+    );
 
     // Merge provided config with defaults
     const pgBouncerConfig: Required<PgBouncerConfigProps> = {
-      ...defaultConfig,
+      ...defaultPgbouncerConfig,
       ...props.pgBouncerConfig,
     };
 
@@ -144,21 +135,21 @@ export class PgBouncer extends Construct {
     });
 
     // Create PgBouncer instance
-    this.instance = new ec2.Instance(this, "Instance", {
-      vpc: props.vpc,
+    const defaultInstanceConfig: Omit<ec2.InstanceProps, "vpc"> = {
+      instanceName: "pgbouncer",
+      instanceType: ec2.InstanceType.of(
+        ec2.InstanceClass.T3,
+        ec2.InstanceSize.MICRO
+      ),
       vpcSubnets: {
         subnetType: props.usePublicSubnet
           ? ec2.SubnetType.PUBLIC
           : ec2.SubnetType.PRIVATE_WITH_EGRESS,
       },
-      securityGroup: this.securityGroup,
-      instanceType,
-      instanceName: props.instanceName,
       machineImage: ec2.MachineImage.fromSsmParameter(
         "/aws/service/canonical/ubuntu/server/jammy/stable/current/amd64/hvm/ebs-gp2/ami-id",
         { os: ec2.OperatingSystemType.LINUX }
       ),
-      role,
       blockDevices: [
         {
           deviceName: "/dev/xvda",
@@ -169,9 +160,17 @@ export class PgBouncer extends Construct {
           }),
         },
       ],
+      role,
+      securityGroup: this.securityGroup,
       userData: this.loadUserDataScript(pgBouncerConfig, props.database),
       userDataCausesReplacement: true,
       associatePublicIpAddress: props.usePublicSubnet,
+    };
+
+    this.instance = new ec2.Instance(this, "Instance", {
+      ...defaultInstanceConfig,
+      ...props.instanceProps,
+      vpc: props.vpc,
     });
 
     // Allow PgBouncer to connect to RDS
@@ -183,7 +182,7 @@ export class PgBouncer extends Construct {
 
     // Create a new secret for pgbouncer connection credentials
     this.pgbouncerSecret = new secretsmanager.Secret(this, "PgBouncerSecret", {
-      description: `Connection information for PgBouncer instance ${props.instanceName}`,
+      description: "Connection information for PgBouncer instance",
       generateSecretString: {
         generateStringKey: "dummy",
         secretStringTemplate: "{}",
