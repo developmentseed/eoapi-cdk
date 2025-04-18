@@ -68,6 +68,7 @@ jobs:
           PROJECT_ID: ${{ steps.short-sha.outputs.sha }}
         run: |
           source .deployment_venv/bin/activate
+          cd integration_tests/cdk
           npx cdk deploy --ci --all --require-approval never
           deactivate
           cd -
