@@ -1,5 +1,7 @@
 import {
   Stack,
+  aws_apigatewayv2 as apigatewayv2,
+  aws_apigatewayv2_integrations as apigatewayv2_integrations,
   aws_iam as iam,
   aws_ec2 as ec2,
   aws_rds as rds,
@@ -7,10 +9,8 @@ import {
   aws_secretsmanager as secretsmanager,
   CfnOutput,
   Duration,
-  aws_logs
+  aws_logs,
 } from "aws-cdk-lib";
-import { IDomainName, HttpApi, ParameterMapping, MappingValue} from "@aws-cdk/aws-apigatewayv2-alpha";
-import { HttpLambdaIntegration } from "@aws-cdk/aws-apigatewayv2-integrations-alpha";
 import { Construct } from "constructs";
 import { CustomLambdaFunctionProps } from "../utils";
 import * as path from 'path';
@@ -74,18 +74,33 @@ import * as path from 'path';
         this.titilerPgstacLambdaFunction.connections.allowTo(props.db, ec2.Port.tcp(5432), "allow connections from titiler");
       }
 
-      const stacApi = new HttpApi(this, `${Stack.of(this).stackName}-titiler-pgstac-api`, {
-        defaultDomainMapping: props.titilerPgstacApiDomainName ? {
-          domainName: props.titilerPgstacApiDomainName
-        } : undefined,
-        defaultIntegration: new HttpLambdaIntegration(
-          "integration",
-          this.titilerPgstacLambdaFunction,
-          props.titilerPgstacApiDomainName ? {
-              parameterMapping: new ParameterMapping().overwriteHeader('host', MappingValue.custom(props.titilerPgstacApiDomainName.name))
-          } : undefined
-        ),
-      });
+      const stacApi = new apigatewayv2.HttpApi(
+        this,
+        `${Stack.of(this).stackName}-titiler-pgstac-api`,
+        {
+          defaultDomainMapping: props.titilerPgstacApiDomainName
+            ? {
+                domainName: props.titilerPgstacApiDomainName,
+              }
+            : undefined,
+          defaultIntegration:
+            new apigatewayv2_integrations.HttpLambdaIntegration(
+              "integration",
+              this.titilerPgstacLambdaFunction,
+              props.titilerPgstacApiDomainName
+                ? {
+                    parameterMapping:
+                      new apigatewayv2.ParameterMapping().overwriteHeader(
+                        "host",
+                        apigatewayv2.MappingValue.custom(
+                          props.titilerPgstacApiDomainName.name
+                        )
+                      ),
+                  }
+                : undefined
+            ),
+        }
+      );
 
       this.url = stacApi.url!;
 
@@ -97,7 +112,6 @@ import * as path from 'path';
   }
 
   export interface TitilerPgStacApiLambdaProps {
-
     /**
      * VPC into which the lambda should be deployed.
      */
@@ -134,7 +148,7 @@ import * as path from 'path';
      *
      * @default - undefined.
      */
-    readonly titilerPgstacApiDomainName?: IDomainName;
+    readonly titilerPgstacApiDomainName?: apigatewayv2.IDomainName;
 
     /**
      * Can be used to override the default lambda function properties.
@@ -142,5 +156,4 @@ import * as path from 'path';
      * @default - defined in the construct.
      */
     readonly lambdaFunctionOptions?: CustomLambdaFunctionProps;
-
   }

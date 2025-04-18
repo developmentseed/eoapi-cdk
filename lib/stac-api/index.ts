@@ -1,5 +1,7 @@
 import {
   Stack,
+  aws_apigatewayv2 as apigatewayv2,
+  aws_apigatewayv2_integrations as apigatewayv2_integrations,
   aws_ec2 as ec2,
   aws_rds as rds,
   aws_lambda as lambda,
@@ -8,13 +10,6 @@ import {
   Duration,
   aws_logs,
 } from "aws-cdk-lib";
-import {
-  IDomainName,
-  HttpApi,
-  ParameterMapping,
-  MappingValue,
-} from "@aws-cdk/aws-apigatewayv2-alpha";
-import { HttpLambdaIntegration } from "@aws-cdk/aws-apigatewayv2-integrations-alpha";
 import { Construct } from "constructs";
 import { CustomLambdaFunctionProps } from "../utils";
 import * as path from "path";
@@ -106,25 +101,32 @@ export class PgStacApiLambda extends Construct {
       );
     }
 
-    const stacApi = new HttpApi(this, `${Stack.of(this).stackName}-stac-api`, {
-      defaultDomainMapping: props.stacApiDomainName
-        ? {
-            domainName: props.stacApiDomainName,
-          }
-        : undefined,
-      defaultIntegration: new HttpLambdaIntegration(
-        "integration",
-        this.stacApiLambdaFunction,
-        props.stacApiDomainName
+    const stacApi = new apigatewayv2.HttpApi(
+      this,
+      `${Stack.of(this).stackName}-stac-api`,
+      {
+        defaultDomainMapping: props.stacApiDomainName
           ? {
-              parameterMapping: new ParameterMapping().overwriteHeader(
-                "host",
-                MappingValue.custom(props.stacApiDomainName.name)
-              ),
+              domainName: props.stacApiDomainName,
             }
-          : undefined
-      ),
-    });
+          : undefined,
+        defaultIntegration: new apigatewayv2_integrations.HttpLambdaIntegration(
+          "integration",
+          this.stacApiLambdaFunction,
+          props.stacApiDomainName
+            ? {
+                parameterMapping:
+                  new apigatewayv2.ParameterMapping().overwriteHeader(
+                    "host",
+                    apigatewayv2.MappingValue.custom(
+                      props.stacApiDomainName.name
+                    )
+                  ),
+              }
+            : undefined
+        ),
+      }
+    );
 
     this.url = stacApi.url!;
 
@@ -164,7 +166,7 @@ export interface PgStacApiLambdaProps {
   /**
    * Custom Domain Name Options for STAC API,
    */
-  readonly stacApiDomainName?: IDomainName;
+  readonly stacApiDomainName?: apigatewayv2.IDomainName;
 
   /**
    * List of STAC API extensions to enable.
