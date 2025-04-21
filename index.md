@@ -1306,7 +1306,7 @@ const pgStacApiLambdaProps: PgStacApiLambdaProps = { ... }
 | <code><a href="#eoapi-cdk.PgStacApiLambdaProps.property.apiEnv">apiEnv</a></code> | <code>{[ key: string ]: string}</code> | Customized environment variables to send to fastapi-pgstac runtime. |
 | <code><a href="#eoapi-cdk.PgStacApiLambdaProps.property.enabledExtensions">enabledExtensions</a></code> | <code>string[]</code> | List of STAC API extensions to enable. |
 | <code><a href="#eoapi-cdk.PgStacApiLambdaProps.property.lambdaFunctionOptions">lambdaFunctionOptions</a></code> | <code>any</code> | Can be used to override the default lambda function properties. |
-| <code><a href="#eoapi-cdk.PgStacApiLambdaProps.property.stacApiDomainName">stacApiDomainName</a></code> | <code>@aws-cdk/aws-apigatewayv2-alpha.IDomainName</code> | Custom Domain Name Options for STAC API,. |
+| <code><a href="#eoapi-cdk.PgStacApiLambdaProps.property.stacApiDomainName">stacApiDomainName</a></code> | <code>aws-cdk-lib.aws_apigatewayv2.IDomainName</code> | Custom Domain Name Options for STAC API,. |
 | <code><a href="#eoapi-cdk.PgStacApiLambdaProps.property.subnetSelection">subnetSelection</a></code> | <code>aws-cdk-lib.aws_ec2.SubnetSelection</code> | Subnet into which the lambda should be deployed. |
 | <code><a href="#eoapi-cdk.PgStacApiLambdaProps.property.vpc">vpc</a></code> | <code>aws-cdk-lib.aws_ec2.IVpc</code> | VPC into which the lambda should be deployed. |
 
@@ -1380,7 +1380,7 @@ Can be used to override the default lambda function properties.
 public readonly stacApiDomainName: IDomainName;
 ```
 
-- *Type:* @aws-cdk/aws-apigatewayv2-alpha.IDomainName
+- *Type:* aws-cdk-lib.aws_apigatewayv2.IDomainName
 
 Custom Domain Name Options for STAC API,.
 
@@ -1425,6 +1425,7 @@ const pgStacDatabaseProps: PgStacDatabaseProps = { ... }
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.vpc">vpc</a></code> | <code>aws-cdk-lib.aws_ec2.IVpc</code> | The VPC network where the DB subnet group should be created. |
+| <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.applyImmediately">applyImmediately</a></code> | <code>boolean</code> | Specifies whether changes to the DB instance and any pending modifications are applied immediately, regardless of the `preferredMaintenanceWindow` setting. |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.autoMinorVersionUpgrade">autoMinorVersionUpgrade</a></code> | <code>boolean</code> | Indicates that minor engine upgrades are applied automatically to the DB instance during the maintenance window. |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.availabilityZone">availabilityZone</a></code> | <code>string</code> | The name of the Availability Zone where the DB instance will be located. |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.backupRetention">backupRetention</a></code> | <code>aws-cdk-lib.Duration</code> | The number of days during which automatic DB snapshots are retained. |
@@ -1496,6 +1497,28 @@ public readonly vpc: IVpc;
 - *Type:* aws-cdk-lib.aws_ec2.IVpc
 
 The VPC network where the DB subnet group should be created.
+
+---
+
+##### `applyImmediately`<sup>Optional</sup> <a name="applyImmediately" id="eoapi-cdk.PgStacDatabaseProps.property.applyImmediately"></a>
+
+```typescript
+public readonly applyImmediately: boolean;
+```
+
+- *Type:* boolean
+- *Default:* Changes will be applied immediately
+
+Specifies whether changes to the DB instance and any pending modifications are applied immediately, regardless of the `preferredMaintenanceWindow` setting.
+
+If set to `false`, changes are applied during the next maintenance window.
+
+Until RDS applies the changes, the DB instance remains in a drift state.
+As a result, the configuration doesn't fully reflect the requested modifications and temporarily diverges from the intended state.
+
+This property also determines whether the DB instance reboots when a static parameter is modified in the associated DB parameter group.
+
+> [https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Overview.DBInstance.Modifying.html](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Overview.DBInstance.Modifying.html)
 
 ---
 
@@ -2689,7 +2712,7 @@ const tiPgApiLambdaProps: TiPgApiLambdaProps = { ... }
 | <code><a href="#eoapi-cdk.TiPgApiLambdaProps.property.apiEnv">apiEnv</a></code> | <code>{[ key: string ]: string}</code> | Customized environment variables to send to titiler-pgstac runtime. |
 | <code><a href="#eoapi-cdk.TiPgApiLambdaProps.property.lambdaFunctionOptions">lambdaFunctionOptions</a></code> | <code>any</code> | Can be used to override the default lambda function properties. |
 | <code><a href="#eoapi-cdk.TiPgApiLambdaProps.property.subnetSelection">subnetSelection</a></code> | <code>aws-cdk-lib.aws_ec2.SubnetSelection</code> | Subnet into which the lambda should be deployed. |
-| <code><a href="#eoapi-cdk.TiPgApiLambdaProps.property.tipgApiDomainName">tipgApiDomainName</a></code> | <code>@aws-cdk/aws-apigatewayv2-alpha.IDomainName</code> | Custom Domain Name for tipg API. |
+| <code><a href="#eoapi-cdk.TiPgApiLambdaProps.property.tipgApiDomainName">tipgApiDomainName</a></code> | <code>aws-cdk-lib.aws_apigatewayv2.IDomainName</code> | Custom Domain Name for tipg API. |
 | <code><a href="#eoapi-cdk.TiPgApiLambdaProps.property.vpc">vpc</a></code> | <code>aws-cdk-lib.aws_ec2.IVpc</code> | VPC into which the lambda should be deployed. |
 
 ---
@@ -2761,7 +2784,7 @@ Subnet into which the lambda should be deployed.
 public readonly tipgApiDomainName: IDomainName;
 ```
 
-- *Type:* @aws-cdk/aws-apigatewayv2-alpha.IDomainName
+- *Type:* aws-cdk-lib.aws_apigatewayv2.IDomainName
 - *Default:* undefined
 
 Custom Domain Name for tipg API.
@@ -2803,7 +2826,7 @@ const titilerPgStacApiLambdaProps: TitilerPgStacApiLambdaProps = { ... }
 | <code><a href="#eoapi-cdk.TitilerPgStacApiLambdaProps.property.buckets">buckets</a></code> | <code>string[]</code> | list of buckets the lambda will be granted access to. |
 | <code><a href="#eoapi-cdk.TitilerPgStacApiLambdaProps.property.lambdaFunctionOptions">lambdaFunctionOptions</a></code> | <code>any</code> | Can be used to override the default lambda function properties. |
 | <code><a href="#eoapi-cdk.TitilerPgStacApiLambdaProps.property.subnetSelection">subnetSelection</a></code> | <code>aws-cdk-lib.aws_ec2.SubnetSelection</code> | Subnet into which the lambda should be deployed. |
-| <code><a href="#eoapi-cdk.TitilerPgStacApiLambdaProps.property.titilerPgstacApiDomainName">titilerPgstacApiDomainName</a></code> | <code>@aws-cdk/aws-apigatewayv2-alpha.IDomainName</code> | Custom Domain Name Options for Titiler Pgstac API,. |
+| <code><a href="#eoapi-cdk.TitilerPgStacApiLambdaProps.property.titilerPgstacApiDomainName">titilerPgstacApiDomainName</a></code> | <code>aws-cdk-lib.aws_apigatewayv2.IDomainName</code> | Custom Domain Name Options for Titiler Pgstac API,. |
 | <code><a href="#eoapi-cdk.TitilerPgStacApiLambdaProps.property.vpc">vpc</a></code> | <code>aws-cdk-lib.aws_ec2.IVpc</code> | VPC into which the lambda should be deployed. |
 
 ---
@@ -2891,7 +2914,7 @@ Subnet into which the lambda should be deployed.
 public readonly titilerPgstacApiDomainName: IDomainName;
 ```
 
-- *Type:* @aws-cdk/aws-apigatewayv2-alpha.IDomainName
+- *Type:* aws-cdk-lib.aws_apigatewayv2.IDomainName
 - *Default:* undefined.
 
 Custom Domain Name Options for Titiler Pgstac API,.
