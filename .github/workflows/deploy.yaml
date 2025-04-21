@@ -19,6 +19,7 @@ jobs:
       contents: read
     env:
       AWS_ROLE_ARN: ${{ vars.AWS_ROLE_ARN }}
+      AWS_DEFAULT_ACCOUNT: ${{ secrets.AWS_ACCOUNT_ID }}
       AWS_DEFAULT_REGION: 'us-west-2'
     steps:
       - name: Configure AWS credentials
