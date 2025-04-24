@@ -1481,6 +1481,7 @@ const pgStacDatabaseProps: PgStacDatabaseProps = { ... }
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.addPgbouncer">addPgbouncer</a></code> | <code>boolean</code> | Add pgbouncer instance for managing traffic to the pgSTAC database. |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.bootstrapperLambdaFunctionOptions">bootstrapperLambdaFunctionOptions</a></code> | <code>any</code> | Can be used to override the default lambda function properties. |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.customResourceProperties">customResourceProperties</a></code> | <code>{[ key: string ]: any}</code> | Lambda function Custom Resource properties. |
+| <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.pgbouncerInstanceProps">pgbouncerInstanceProps</a></code> | <code>any</code> | Properties for the pgbouncer ec2 instance. |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.pgstacDbName">pgstacDbName</a></code> | <code>string</code> | Name of database that is to be created and onto which pgSTAC will be installed. |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.pgstacUsername">pgstacUsername</a></code> | <code>string</code> | Name of user that will be generated for connecting to the pgSTAC database. |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.pgstacVersion">pgstacVersion</a></code> | <code>string</code> | Version of pgstac to install on the database. |
@@ -2314,6 +2315,19 @@ Lambda function Custom Resource properties.
 A custom resource property is going to be created
 to trigger the boostrapping lambda function. This parameter allows the user to specify additional properties
 on top of the defaults ones.
+
+---
+
+##### `pgbouncerInstanceProps`<sup>Optional</sup> <a name="pgbouncerInstanceProps" id="eoapi-cdk.PgStacDatabaseProps.property.pgbouncerInstanceProps"></a>
+
+```typescript
+public readonly pgbouncerInstanceProps: any;
+```
+
+- *Type:* any
+- *Default:* defined in the construct
+
+Properties for the pgbouncer ec2 instance.
 
 ---
 
