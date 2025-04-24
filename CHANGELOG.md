@@ -1,3 +1,10 @@
+# [8.1.0](https://github.com/developmentseed/eoapi-cdk/compare/v8.0.3...v8.1.0) (2025-04-24)
+
+
+### Features
+
+* add pgbouncerInstanceProps parameter to PgstacDatabase ([#139](https://github.com/developmentseed/eoapi-cdk/issues/139)) ([add27ec](https://github.com/developmentseed/eoapi-cdk/commit/add27ec2e8242e5477b06ec8854c2d763a2795f1))
+
 ## [8.0.3](https://github.com/developmentseed/eoapi-cdk/compare/v8.0.2...v8.0.3) (2025-04-16)
 
 
