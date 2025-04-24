@@ -83,6 +83,9 @@ class pgStacInfraStack(Stack):
             allocated_storage=app_config.db_allocated_storage,
             instance_type=aws_ec2.InstanceType(app_config.db_instance_type),
             add_pgbouncer=True,
+            pgbouncer_instance_props={
+                "instanceName": "test-name",
+            },
             removal_policy=RemovalPolicy.DESTROY,
             pgstac_version=PGSTAC_VERSION,
         )

@@ -144,14 +144,20 @@ export class PgStacDatabase extends Construct {
     });
 
     // PgBouncer: connection poolercustomresource trigger on redeploy
+    const defaultPgbouncerInstanceProps: Partial<ec2.InstanceProps> = {
+      instanceName: `${Stack.of(this).stackName}-pgbouncer`,
+      instanceType: ec2.InstanceType.of(
+        ec2.InstanceClass.T3,
+        ec2.InstanceSize.MICRO
+      ),
+    };
     const addPgbouncer = props.addPgbouncer ?? true;
     if (addPgbouncer) {
       this._pgBouncerServer = new PgBouncer(this, "pgbouncer", {
-        instanceName: `${Stack.of(this).stackName}-pgbouncer`,
-        instanceType: ec2.InstanceType.of(
-          ec2.InstanceClass.T3,
-          ec2.InstanceSize.MICRO
-        ),
+        instanceProps: {
+          ...defaultPgbouncerInstanceProps,
+          ...props.pgbouncerInstanceProps,
+        },
         vpc: props.vpc,
         database: {
           connections: this.db.connections,
@@ -257,6 +263,13 @@ export interface PgStacDatabaseProps extends rds.DatabaseInstanceProps {
    * @default true
    */
   readonly addPgbouncer?: boolean;
+
+  /**
+   * Properties for the pgbouncer ec2 instance
+   *
+   * @default - defined in the construct
+   */
+  readonly pgbouncerInstanceProps?: ec2.InstanceProps | any;
 
   /**
    * Lambda function Custom Resource properties. A custom resource property is going to be created
