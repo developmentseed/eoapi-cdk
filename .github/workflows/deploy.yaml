@@ -30,7 +30,6 @@ jobs:
       - name: Generate distribution packages
         run: npm run package
 
-
       - name: Install deployment environment
         id: install_deploy_env
         run: |
