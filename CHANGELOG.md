@@ -1,3 +1,10 @@
+## [8.1.1](https://github.com/developmentseed/eoapi-cdk/compare/v8.1.0...v8.1.1) (2025-04-30)
+
+
+### Bug Fixes
+
+* upgrade pgbouncer ami to ubuntu 24.04 ([#148](https://github.com/developmentseed/eoapi-cdk/issues/148)) ([292e94f](https://github.com/developmentseed/eoapi-cdk/commit/292e94fc35ece766be84197c08caddf9ec6f2b12))
+
 # [8.1.0](https://github.com/developmentseed/eoapi-cdk/compare/v8.0.3...v8.1.0) (2025-04-24)
 
 
