@@ -19,7 +19,6 @@ curl https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
 sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
 
 # Install required packages
-apt-get update
 
 # Function that makes sure we don't hit a dpkg lock error
 wait_for_dpkg_lock() {
@@ -30,7 +29,12 @@ wait_for_dpkg_lock() {
 }
 
 wait_for_dpkg_lock
-DEBIAN_FRONTEND=noninteractive apt-get install -y pgbouncer jq awscli
+export DEBIAN_FRONTEND=noninteractive
+
+apt-get update
+apt-get upgrade -y
+apt-get install -y pgbouncer jq
+snap install aws-cli --classic
 
 echo "Fetching secret from ARN: ${SECRET_ARN}"
 

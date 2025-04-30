@@ -147,7 +147,7 @@ export class PgBouncer extends Construct {
           : ec2.SubnetType.PRIVATE_WITH_EGRESS,
       },
       machineImage: ec2.MachineImage.fromSsmParameter(
-        "/aws/service/canonical/ubuntu/server/jammy/stable/current/amd64/hvm/ebs-gp2/ami-id",
+        "/aws/service/canonical/ubuntu/server/noble/stable/current/amd64/hvm/ebs-gp3/ami-id",
         { os: ec2.OperatingSystemType.LINUX }
       ),
       blockDevices: [
