@@ -1,4 +1,3 @@
-
 # Deployment CDK code for eoapi-cdk deployment tests
 
 This is a wrapper CDK code that is used to test a deployment of the `eoapi-cdk` constructs.

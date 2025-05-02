@@ -1,0 +1,27 @@
+CHANGELOG.md
+
+# Dependencies
+node_modules/
+
+# Build / Dist output
+dist/
+lib/ # If TS output directory, make sure it's ignored if not meant to be formatted
+
+# Other generated files
+.jsii
+coverage/
+build/
+
+# Package manager lock files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Diagrams or other specific directories
+diagrams/
+
+# Python specific (optional, if ruff handles *.py formatting)
+.venv/
+toxenv/
+integration_tests/cdk/cdk.out/
+*.py
