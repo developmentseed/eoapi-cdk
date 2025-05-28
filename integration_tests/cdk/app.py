@@ -5,6 +5,8 @@ from eoapi_cdk import (
     PgStacApiLambda,
     PgStacDatabase,
     StacIngestor,
+    StacItemGenerator,
+    StacItemLoader,
     TiPgApiLambda,
     TitilerPgstacApiLambda,
 )
@@ -166,6 +168,22 @@ class pgStacInfraStack(Stack):
             api_env={
                 "JWKS_URL": "",  # no authentication!
             },
+        )
+
+        self.stac_item_loader = StacItemLoader(
+            self,
+            "stac-item-loader",
+            pgstac_db=pgstac_db,
+        )
+
+        self.stac_item_generator = StacItemGenerator(
+            self,
+            "stac-item-generator",
+            item_load_topic_arn=self.stac_item_loader.topic.topic_arn,
+        )
+
+        self.stac_item_loader.topic.grant_publish(
+            self.stac_item_generator.lambda_function
         )
 
 

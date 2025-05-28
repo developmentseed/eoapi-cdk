@@ -1,0 +1,16 @@
+[project]
+name = "stac-item-generator"
+version = "0.1.0"
+description = "An application for generating STAC metadata with any stactools package"
+authors = [
+    { name = "hrodmn", email = "henry@developmentseed.org" }
+]
+requires-python = ">=3.11"
+dependencies = [
+    "pydantic>=2.11.0",
+    "stac-pydantic>=3.2.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
