@@ -393,19 +393,31 @@ def test_handler_upsert_existing_item(mock_aws_context, mock_pgstac_dsn, databas
     assert count == len(items), "Item count changed unexpectedly after upsert"
 
 
-def create_s3_event_record(bucket_name, object_key, message_id="test-s3-message-id"):
-    """Helper to create a mock S3 event record"""
+def create_s3_event_notification(bucket_name, object_key):
+    """Helper to create a mock S3 event notification"""
     return {
-        "messageId": message_id,
-        "eventSource": "aws:s3",
-        "eventName": "ObjectCreated:Put",
-        "eventTime": "2023-01-01T12:00:00.000Z",
-        "awsRegion": "us-east-1",
-        "s3": {
-            "bucket": {"name": bucket_name},
-            "object": {"key": object_key, "size": 1024},
-        },
+        "Records": [
+            {
+                "eventSource": "aws:s3",
+                "eventName": "ObjectCreated:Put",
+                "eventTime": "2023-01-01T12:00:00.000Z",
+                "awsRegion": "us-east-1",
+                "s3": {
+                    "bucket": {"name": bucket_name},
+                    "object": {"key": object_key, "size": 1024},
+                },
+            }
+        ]
     }
+
+
+def create_sqs_record_with_s3_event(
+    bucket_name, object_key, message_id="test-s3-message-id"
+):
+    """Helper to create a mock SQS record containing an S3 event notification via SNS"""
+    s3_event = create_s3_event_notification(bucket_name, object_key)
+    sns_message = {"Message": json.dumps(s3_event)}
+    return {"messageId": message_id, "body": json.dumps(sns_message)}
 
 
 def test_handler_with_s3_event(mock_aws_context, mock_pgstac_dsn, database_url):
@@ -418,8 +430,10 @@ def test_handler_with_s3_event(mock_aws_context, mock_pgstac_dsn, database_url):
     # Create a valid STAC item that will be "returned" from S3
     valid_item = create_valid_stac_item(collection_id=collection_id, item_id=item_id)
 
-    # Create S3 event
-    s3_record = create_s3_event_record(bucket_name, object_key, message_id="s3-message-1")
+    # Create SQS record containing S3 event notification via SNS
+    s3_record = create_sqs_record_with_s3_event(
+        bucket_name, object_key, message_id="s3-message-1"
+    )
     event = {"Records": [s3_record]}
 
     # Mock S3 client to return our STAC item
@@ -454,7 +468,7 @@ def test_handler_with_s3_event_invalid_extension(mock_aws_context, mock_pgstac_d
     bucket_name = "test-bucket"
     object_key = "data/image.tif"  # Not a JSON file
 
-    s3_record = create_s3_event_record(
+    s3_record = create_sqs_record_with_s3_event(
         bucket_name, object_key, message_id="s3-invalid-ext"
     )
     event = {"Records": [s3_record]}
@@ -475,7 +489,9 @@ def test_handler_with_s3_event_s3_error(mock_aws_context, mock_pgstac_dsn):
     bucket_name = "test-bucket"
     object_key = "stac/items/missing-item.json"
 
-    s3_record = create_s3_event_record(bucket_name, object_key, message_id="s3-error")
+    s3_record = create_sqs_record_with_s3_event(
+        bucket_name, object_key, message_id="s3-error"
+    )
     event = {"Records": [s3_record]}
 
     # Mock S3 client to raise an exception
@@ -498,7 +514,7 @@ def test_handler_with_s3_event_invalid_json(mock_aws_context, mock_pgstac_dsn):
     bucket_name = "test-bucket"
     object_key = "stac/items/invalid.json"
 
-    s3_record = create_s3_event_record(
+    s3_record = create_sqs_record_with_s3_event(
         bucket_name, object_key, message_id="s3-invalid-json"
     )
     event = {"Records": [s3_record]}
@@ -528,7 +544,7 @@ def test_handler_with_s3_event_invalid_stac_item(mock_aws_context, mock_pgstac_d
     bucket_name = "test-bucket"
     object_key = "stac/items/invalid-stac.json"
 
-    s3_record = create_s3_event_record(
+    s3_record = create_sqs_record_with_s3_event(
         bucket_name, object_key, message_id="s3-invalid-stac"
     )
     event = {"Records": [s3_record]}
@@ -572,7 +588,9 @@ def test_handler_with_mixed_s3_and_sqs_events(
     s3_item = create_valid_stac_item(collection_id=collection_id, item_id=s3_item_id)
     bucket_name = "test-bucket"
     object_key = "stac/items/s3-item.json"
-    s3_record = create_s3_event_record(bucket_name, object_key, message_id="s3-message")
+    s3_record = create_sqs_record_with_s3_event(
+        bucket_name, object_key, message_id="s3-message"
+    )
 
     event = {"Records": [sqs_record, s3_record]}
 
@@ -605,7 +623,9 @@ def test_handler_with_s3_event_binary_content(mock_aws_context, mock_pgstac_dsn)
     bucket_name = "test-bucket"
     object_key = "stac/items/binary.json"
 
-    s3_record = create_s3_event_record(bucket_name, object_key, message_id="s3-binary")
+    s3_record = create_sqs_record_with_s3_event(
+        bucket_name, object_key, message_id="s3-binary"
+    )
     event = {"Records": [s3_record]}
 
     # Mock S3 client to return binary content that can't be decoded as UTF-8
@@ -627,3 +647,137 @@ def test_handler_with_s3_event_binary_content(mock_aws_context, mock_pgstac_dsn)
         assert any(
             f["itemIdentifier"] == "s3-binary" for f in result["batchItemFailures"]
         )
+
+
+def test_handler_with_malformed_sns_message(mock_aws_context, mock_pgstac_dsn):
+    """Test handler with a malformed SNS message"""
+    # Create a record with invalid SNS structure
+    record = {
+        "messageId": "malformed-sns-message",
+        "body": json.dumps({"InvalidField": "missing Message field"}),
+    }
+
+    event = {"Records": [record]}
+
+    # Call handler
+    result = handler(event, mock_aws_context)
+
+    # Should report the message as failed
+    assert result is not None
+    assert "batchItemFailures" in result
+    assert any(
+        f["itemIdentifier"] == "malformed-sns-message"
+        for f in result["batchItemFailures"]
+    )
+
+
+def test_handler_with_empty_sns_message(mock_aws_context, mock_pgstac_dsn):
+    """Test handler with an empty SNS message"""
+    # Create a record with empty SNS message
+    record = {"messageId": "empty-sns-message", "body": json.dumps({"Message": ""})}
+
+    event = {"Records": [record]}
+
+    # Call handler
+    result = handler(event, mock_aws_context)
+
+    # Should report the message as failed
+    assert result is not None
+    assert "batchItemFailures" in result
+    assert any(
+        f["itemIdentifier"] == "empty-sns-message" for f in result["batchItemFailures"]
+    )
+
+
+def test_handler_with_sqs_record_missing_message_id(mock_aws_context, mock_pgstac_dsn):
+    """Test handler with SQS record missing messageId"""
+    # Create a record without messageId
+    record = {"body": json.dumps({"Message": json.dumps(create_valid_stac_item())})}
+
+    event = {"Records": [record]}
+
+    # Call handler - should complete without crashing
+    result = handler(event, mock_aws_context)
+
+    # Should succeed since the record without messageId is skipped
+    assert result is None
+
+
+def test_is_s3_event_function():
+    """Test the is_s3_event helper function"""
+    from stac_item_loader.handler import is_s3_event
+
+    # Test with S3 event
+    s3_event = json.dumps(create_s3_event_notification("bucket", "key"))
+    assert is_s3_event(s3_event) is True
+
+    # Test with STAC item
+    stac_item = json.dumps(create_valid_stac_item())
+    assert is_s3_event(stac_item) is False
+
+    # Test with arbitrary JSON
+    other_json = json.dumps({"some": "data"})
+    assert is_s3_event(other_json) is False
+
+
+def test_process_s3_event_function(mock_aws_context):
+    """Test the process_s3_event helper function"""
+    from stac_item_loader.handler import process_s3_event
+
+    bucket_name = "test-bucket"
+    object_key = "stac/items/test.json"
+    valid_item = create_valid_stac_item()
+
+    # Create S3 event message
+    s3_event = create_s3_event_notification(bucket_name, object_key)
+    message_str = json.dumps(s3_event)
+
+    # Mock S3 client to return our STAC item
+    with patch("stac_item_loader.handler.boto3.session.Session") as mock_session:
+        mock_s3_client = MagicMock()
+        mock_session.return_value.client.return_value = mock_s3_client
+
+        mock_response = {"Body": MagicMock()}
+        mock_response["Body"].read.return_value = json.dumps(valid_item).encode("utf-8")
+        mock_s3_client.get_object.return_value = mock_response
+
+        # Call function
+        result = process_s3_event(message_str)
+
+        # Verify result
+        assert result == valid_item
+
+        # Verify S3 was called correctly
+        mock_s3_client.get_object.assert_called_once_with(
+            Bucket=bucket_name, Key=object_key
+        )
+
+
+def test_process_s3_event_with_no_records():
+    """Test process_s3_event with message containing no records"""
+    from stac_item_loader.handler import process_s3_event
+
+    # Create message with empty Records
+    message_str = json.dumps({"Records": []})
+
+    # Should raise ValueError
+    with pytest.raises(ValueError, match="no S3 event records"):
+        process_s3_event(message_str)
+
+
+def test_process_s3_event_with_multiple_records():
+    """Test process_s3_event with message containing multiple records"""
+    from stac_item_loader.handler import process_s3_event
+
+    # Create message with multiple records
+    s3_event = {
+        "Records": [
+            create_s3_event_notification("bucket1", "key1")["Records"][0],
+            create_s3_event_notification("bucket2", "key2")["Records"][0],
+        ]
+    }
+    message_str = json.dumps(s3_event)
+
+    # Should raise ValueError
+    with pytest.raises(ValueError, match="more than one S3 event record"):
+        process_s3_event(message_str)

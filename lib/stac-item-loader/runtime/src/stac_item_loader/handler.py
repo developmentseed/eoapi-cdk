@@ -82,13 +82,9 @@ def get_pgstac_dsn() -> str:
     return f"postgres://{secret_dict['username']}:{secret_dict['password']}@{secret_dict['host']}:{secret_dict['port']}/{secret_dict['dbname']}"
 
 
-def is_s3_event(event_data: Dict[str, Any]) -> bool:
+def is_s3_event(message_str: str) -> bool:
     """Check if the event data is an S3 event notification."""
-    return (
-        "eventSource" in event_data
-        and event_data["eventSource"] == "aws:s3"
-        and "s3" in event_data
-    )
+    return "aws:s3" in message_str
 
 
 def get_stac_item_from_s3(bucket_name: str, object_key: str) -> Dict[str, Any]:
@@ -123,10 +119,17 @@ def get_stac_item_from_s3(bucket_name: str, object_key: str) -> Dict[str, Any]:
         raise
 
 
-def process_s3_event(event_data: Dict[str, Any]) -> Dict[str, Any]:
+def process_s3_event(message_str: str) -> Dict[str, Any]:
     """Process an S3 event notification and return STAC item data."""
     try:
-        s3_data = event_data["s3"]
+        message_data = json.loads(message_str)
+        records: List[Dict[str, Any]] = message_data.get("Records", [])
+        if not records:
+            raise ValueError("no S3 event records!")
+        elif len(records) > 1:
+            raise ValueError("more than one S3 event record!")
+
+        s3_data = records[0]["s3"]
         bucket_name = s3_data["bucket"]["name"]
         object_key = s3_data["object"]["key"]
 
@@ -173,17 +176,17 @@ def handler(
             continue
 
         try:
-            if is_s3_event(record):
+            sqs_body_str = record["body"]
+            logger.debug(f"[{message_id}] SQS message body: {sqs_body_str}")
+            sns_notification = json.loads(sqs_body_str)
+
+            message_str = sns_notification["Message"]
+            logger.debug(f"[{message_id}] SNS Message content: {message_str}")
+
+            if is_s3_event(message_str):
                 logger.debug(f"[{message_id}] Processing S3 event notification")
-                message_data = process_s3_event(record)
+                message_data = process_s3_event(message_str)
             else:
-                sqs_body_str = record["body"]
-                logger.debug(f"[{message_id}] SQS message body: {sqs_body_str}")
-                sns_notification = json.loads(sqs_body_str)
-
-                message_str = sns_notification["Message"]
-                logger.debug(f"[{message_id}] SNS Message content: {message_str}")
-
                 message_data = json.loads(message_str)
 
             item = Item(**message_data)
