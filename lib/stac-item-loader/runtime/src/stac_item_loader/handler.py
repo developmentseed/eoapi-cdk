@@ -82,6 +82,72 @@ def get_pgstac_dsn() -> str:
     return f"postgres://{secret_dict['username']}:{secret_dict['password']}@{secret_dict['host']}:{secret_dict['port']}/{secret_dict['dbname']}"
 
 
+def is_s3_event(event_data: Dict[str, Any]) -> bool:
+    """Check if the event data is an S3 event notification."""
+    return (
+        "eventSource" in event_data
+        and event_data["eventSource"] == "aws:s3"
+        and "s3" in event_data
+    )
+
+
+def get_stac_item_from_s3(bucket_name: str, object_key: str) -> Dict[str, Any]:
+    """Fetch STAC item JSON from S3."""
+    session = boto3.session.Session()
+    s3_client = session.client("s3")
+
+    try:
+        logger.info(f"Fetching STAC item from s3://{bucket_name}/{object_key}")
+        response = s3_client.get_object(Bucket=bucket_name, Key=object_key)
+        content = response["Body"].read()
+
+        try:
+            stac_item_json = content.decode("utf-8")
+        except UnicodeDecodeError as e:
+            logger.error(
+                f"Failed to decode S3 object as UTF-8: s3://{bucket_name}/{object_key}"
+            )
+            raise ValueError("S3 object is not valid UTF-8 text") from e
+
+        stac_item_data = json.loads(stac_item_json)
+        logger.debug(
+            f"Successfully parsed STAC item from S3: {stac_item_data.get('id', 'unknown')}"
+        )
+
+        return stac_item_data
+
+    except Exception as e:
+        logger.error(
+            f"Failed to fetch STAC item from s3://{bucket_name}/{object_key}: {e}"
+        )
+        raise
+
+
+def process_s3_event(event_data: Dict[str, Any]) -> Dict[str, Any]:
+    """Process an S3 event notification and return STAC item data."""
+    try:
+        s3_data = event_data["s3"]
+        bucket_name = s3_data["bucket"]["name"]
+        object_key = s3_data["object"]["key"]
+
+        # Validate that this looks like a STAC item file
+        if not object_key.endswith((".json", ".geojson")):
+            raise ValueError(
+                f"S3 object key does not appear to be a STAC item: {object_key}"
+            )
+
+        stac_item_data = get_stac_item_from_s3(bucket_name, object_key)
+
+        return stac_item_data
+
+    except KeyError as e:
+        logger.error(f"S3 event missing required field: {e}")
+        raise ValueError(f"Invalid S3 event structure: missing {e}") from e
+    except Exception as e:
+        logger.error(f"Failed to process S3 event: {e}")
+        raise
+
+
 def handler(
     event: Dict[str, Any], context: Context
 ) -> Optional[PartialBatchFailureResponse]:
@@ -99,6 +165,7 @@ def handler(
 
     items_by_collection: DefaultDict[str, List[Dict[str, Any]]] = defaultdict(list)
     message_ids_by_collection: DefaultDict[str, List[str]] = defaultdict(list)
+
     for record in records:
         message_id = record.get("messageId")
         if not message_id:
@@ -106,17 +173,21 @@ def handler(
             continue
 
         try:
-            sqs_body_str = record["body"]
-            logger.debug(f"[{message_id}] SQS message body: {sqs_body_str}")
-            sns_notification = json.loads(sqs_body_str)
+            if is_s3_event(record):
+                logger.debug(f"[{message_id}] Processing S3 event notification")
+                message_data = process_s3_event(record)
+            else:
+                sqs_body_str = record["body"]
+                logger.debug(f"[{message_id}] SQS message body: {sqs_body_str}")
+                sns_notification = json.loads(sqs_body_str)
 
-            message_str = sns_notification["Message"]
-            logger.debug(f"[{message_id}] SNS Message content: {message_str}")
+                message_str = sns_notification["Message"]
+                logger.debug(f"[{message_id}] SNS Message content: {message_str}")
 
-            message_data = json.loads(message_str)
+                message_data = json.loads(message_str)
+
             item = Item(**message_data)
 
-            # validate item
             if not item.collection:
                 raise KeyError(f"item {item.id} is missing a collection id!")
 
@@ -127,6 +198,9 @@ def handler(
         except (ValueError, KeyError, ValidationError, json.JSONDecodeError) as e:
             logger.error(f"[{message_id}] Failed with error: {e}", extra=record)
             batch_item_failures.append({"itemIdentifier": message_id})
+        except Exception as e:
+            logger.error(f"[{message_id}] Unexpected error: {e}", extra=record)
+            batch_item_failures.append({"itemIdentifier": message_id})
 
     for collection_id, items in items_by_collection.items():
         try:
@@ -135,7 +209,6 @@ def handler(
                 logger.info(f"[{collection_id}] loading items into database.")
                 loader.load_items(
                     file=items,  # type: ignore
-                    # use insert_ignore to avoid overwritting existing items or upsert to replace
                     insert_mode=Methods.upsert,
                 )
                 logger.info(f"[{collection_id}] successfully loaded items.")

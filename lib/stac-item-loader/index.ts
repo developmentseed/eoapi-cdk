@@ -16,9 +16,12 @@ import * as path from "path";
  * Configuration properties for the StacItemLoader construct.
  *
  * The StacItemLoader is part of a two-phase serverless STAC ingestion pipeline
- * that loads generated STAC items into a pgstac database. This construct creates
- * the infrastructure for the second phase of the pipeline - receiving batched
- * STAC items and inserting them into PostgreSQL with the pgstac extension.
+ * that loads STAC items into a pgstac database. This construct creates
+ * the infrastructure for receiving STAC items from multiple sources:
+ * 1. SNS messages containing STAC metadata (direct ingestion)
+ * 2. S3 event notifications for STAC items uploaded to S3 buckets
+ *
+ * Items from both sources are batched and inserted into PostgreSQL with the pgstac extension.
  *
  * @example
  * const loader = new StacItemLoader(this, 'ItemLoader', {
@@ -108,23 +111,32 @@ export interface StacItemLoaderProps {
  *
  * The StacItemLoader creates a serverless, event-driven system for loading
  * STAC (SpatioTemporal Asset Catalog) items into a PostgreSQL database with
- * the pgstac extension. This construct implements the second phase of a
- * two-stage ingestion pipeline.
+ * the pgstac extension. This construct supports multiple ingestion pathways
+ * for flexible STAC item loading.
  *
  * ## Architecture Overview
  *
  * This construct creates the following AWS resources:
- * - **SNS Topic**: Entry point for generated STAC items ready for database insertion
- * - **SQS Queue**: Buffers and batches STAC items before processing (60-second visibility timeout)
+ * - **SNS Topic**: Entry point for STAC items and S3 event notifications
+ * - **SQS Queue**: Buffers and batches messages before processing (60-second visibility timeout)
  * - **Dead Letter Queue**: Captures failed loading attempts after 5 retries
- * - **Lambda Function**: Python function that receives batches and inserts items into pgstac
+ * - **Lambda Function**: Python function that processes batches and inserts items into pgstac
  *
  * ## Data Flow
  *
- * 1. Generated STAC items are published to the SNS topic (typically from StacItemGenerator)
+ * The loader supports two primary data ingestion patterns:
+ *
+ * ### Direct STAC Item Publishing
+ * 1. STAC items (JSON) are published directly to the SNS topic
  * 2. The SQS queue collects items and batches them (up to 1000 items or 1 minute window)
- * 3. The Lambda function receives batches, connects to pgstac, and inserts items
- * 4. Failed messages are sent to the dead letter queue for inspection and retry
+ * 3. The Lambda function receives batches, validates items, and inserts into pgstac
+ *
+ * ### S3 Event-Driven Loading
+ * 1. STAC items are uploaded to S3 buckets as JSON/GeoJSON files
+ * 2. S3 event notifications are sent to the SNS topic when items are uploaded
+ * 3. The Lambda function receives S3 events, fetches items from S3, and loads into pgstac
+ *
+ * Failed messages are sent to the dead letter queue for inspection and retry
  *
  * ## Operational Characteristics
  *
@@ -178,6 +190,31 @@ export interface StacItemLoaderProps {
  * }'
  * ```
  *
+ * ## S3 Event Configuration
+ *
+ * To enable S3 event-driven loading, configure S3 bucket notifications to send
+ * events to the SNS topic when STAC items (.json or .geojson files) are uploaded:
+ *
+ * ```typescript
+ * // Configure S3 bucket to send notifications to the loader topic
+ * bucket.addEventNotification(
+ *   s3.EventType.OBJECT_CREATED,
+ *   new s3n.SnsDestination(loader.topic),
+ *   { suffix: '.json' }
+ * );
+ *
+ * bucket.addEventNotification(
+ *   s3.EventType.OBJECT_CREATED,
+ *   new s3n.SnsDestination(loader.topic),
+ *   { suffix: '.geojson' }
+ * );
+ * ```
+ *
+ * When STAC items are uploaded to the configured S3 bucket, the loader will:
+ * 1. Receive S3 event notifications via SNS
+ * 2. Fetch the STAC item JSON from S3
+ * 3. Validate and load the item into the pgstac database
+ *
  * ## Monitoring and Troubleshooting
  *
  * - Monitor Lambda logs: `/aws/lambda/{FunctionName}`
@@ -190,20 +227,23 @@ export interface StacItemLoaderProps {
  */
 export class StacItemLoader extends Construct {
   /**
-   * The SNS topic that receives generated STAC items for loading.
+   * The SNS topic that receives STAC items and S3 event notifications for loading.
    *
-   * External services (like StacItemGenerator) publish STAC item JSON
-   * documents to this topic. The topic fans out to the SQS queue for
-   * batched processing.
+   * This topic serves as the entry point for two types of events:
+   * 1. Direct STAC item JSON documents published by external services
+   * 2. S3 event notifications when STAC items are uploaded to configured buckets
+   *
+   * The topic fans out to the SQS queue for batched processing.
    */
   public readonly topic: sns.Topic;
 
   /**
-   * The SQS queue that buffers STAC items before processing.
+   * The SQS queue that buffers messages before processing.
    *
-   * This queue collects items from the SNS topic and batches them
-   * for efficient database operations. Configured with a visibility
-   * timeout that accommodates Lambda processing time plus buffer.
+   * This queue collects both direct STAC items from SNS and S3 event
+   * notifications, batching them for efficient database operations.
+   * Configured with a visibility timeout that accommodates Lambda
+   * processing time plus buffer.
    */
   public readonly queue: sqs.Queue;
 
@@ -219,9 +259,13 @@ export class StacItemLoader extends Construct {
   /**
    * The Lambda function that loads STAC items into the pgstac database.
    *
-   * This Python function receives batches of STAC items from SQS,
-   * connects to the PostgreSQL database using credentials from
-   * Secrets Manager, and inserts items using pypgstac.
+   * This Python function receives batches of messages from SQS and processes
+   * them based on their type:
+   * - Direct STAC items: Validates and loads directly into pgstac
+   * - S3 events: Fetches STAC items from S3, validates, and loads into pgstac
+   *
+   * The function connects to PostgreSQL using credentials from Secrets Manager
+   * and uses pypgstac for efficient database operations.
    */
   public readonly lambdaFunction: lambda.Function;
 

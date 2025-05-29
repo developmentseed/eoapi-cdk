@@ -1,7 +1,7 @@
 import json
 import os
 from datetime import datetime, timezone
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 import pytest
 from conftest import (
@@ -391,3 +391,239 @@ def test_handler_upsert_existing_item(mock_aws_context, mock_pgstac_dsn, databas
     # Count should remain the same (1 item was updated, not added)
     count = count_collection_items(database_url, collection_id)
     assert count == len(items), "Item count changed unexpectedly after upsert"
+
+
+def create_s3_event_record(bucket_name, object_key, message_id="test-s3-message-id"):
+    """Helper to create a mock S3 event record"""
+    return {
+        "messageId": message_id,
+        "eventSource": "aws:s3",
+        "eventName": "ObjectCreated:Put",
+        "eventTime": "2023-01-01T12:00:00.000Z",
+        "awsRegion": "us-east-1",
+        "s3": {
+            "bucket": {"name": bucket_name},
+            "object": {"key": object_key, "size": 1024},
+        },
+    }
+
+
+def test_handler_with_s3_event(mock_aws_context, mock_pgstac_dsn, database_url):
+    """Test handler with a valid S3 event notification"""
+    collection_id = TEST_COLLECTION_IDS[0]
+    item_id = "s3-test-item"
+    bucket_name = "test-bucket"
+    object_key = "stac/items/test-item.json"
+
+    # Create a valid STAC item that will be "returned" from S3
+    valid_item = create_valid_stac_item(collection_id=collection_id, item_id=item_id)
+
+    # Create S3 event
+    s3_record = create_s3_event_record(bucket_name, object_key, message_id="s3-message-1")
+    event = {"Records": [s3_record]}
+
+    # Mock S3 client to return our STAC item
+    with patch("stac_item_loader.handler.boto3.session.Session") as mock_session:
+        mock_s3_client = MagicMock()
+        mock_session.return_value.client.return_value = mock_s3_client
+
+        # Mock S3 get_object response
+        mock_response = {"Body": MagicMock()}
+        mock_response["Body"].read.return_value = json.dumps(valid_item).encode("utf-8")
+        mock_s3_client.get_object.return_value = mock_response
+
+        # Call handler
+        result = handler(event, mock_aws_context)
+
+        # Check result - should be None for successful processing
+        assert result is None
+
+        # Verify S3 get_object was called with correct parameters
+        mock_s3_client.get_object.assert_called_once_with(
+            Bucket=bucket_name, Key=object_key
+        )
+
+        # Verify the item was added to the database
+        assert check_item_exists(
+            database_url, collection_id, item_id
+        ), "Item from S3 was not found in the database"
+
+
+def test_handler_with_s3_event_invalid_extension(mock_aws_context, mock_pgstac_dsn):
+    """Test handler with S3 event for non-JSON file"""
+    bucket_name = "test-bucket"
+    object_key = "data/image.tif"  # Not a JSON file
+
+    s3_record = create_s3_event_record(
+        bucket_name, object_key, message_id="s3-invalid-ext"
+    )
+    event = {"Records": [s3_record]}
+
+    # Call handler
+    result = handler(event, mock_aws_context)
+
+    # Should report the message as failed
+    assert result is not None
+    assert "batchItemFailures" in result
+    assert any(
+        f["itemIdentifier"] == "s3-invalid-ext" for f in result["batchItemFailures"]
+    )
+
+
+def test_handler_with_s3_event_s3_error(mock_aws_context, mock_pgstac_dsn):
+    """Test handler when S3 get_object fails"""
+    bucket_name = "test-bucket"
+    object_key = "stac/items/missing-item.json"
+
+    s3_record = create_s3_event_record(bucket_name, object_key, message_id="s3-error")
+    event = {"Records": [s3_record]}
+
+    # Mock S3 client to raise an exception
+    with patch("stac_item_loader.handler.boto3.session.Session") as mock_session:
+        mock_s3_client = MagicMock()
+        mock_session.return_value.client.return_value = mock_s3_client
+        mock_s3_client.get_object.side_effect = Exception("S3 object not found")
+
+        # Call handler
+        result = handler(event, mock_aws_context)
+
+        # Should report the message as failed
+        assert result is not None
+        assert "batchItemFailures" in result
+        assert any(f["itemIdentifier"] == "s3-error" for f in result["batchItemFailures"])
+
+
+def test_handler_with_s3_event_invalid_json(mock_aws_context, mock_pgstac_dsn):
+    """Test handler with S3 event that returns invalid JSON"""
+    bucket_name = "test-bucket"
+    object_key = "stac/items/invalid.json"
+
+    s3_record = create_s3_event_record(
+        bucket_name, object_key, message_id="s3-invalid-json"
+    )
+    event = {"Records": [s3_record]}
+
+    # Mock S3 client to return invalid JSON
+    with patch("stac_item_loader.handler.boto3.session.Session") as mock_session:
+        mock_s3_client = MagicMock()
+        mock_session.return_value.client.return_value = mock_s3_client
+
+        mock_response = {"Body": MagicMock()}
+        mock_response["Body"].read.return_value = b"{invalid json content"
+        mock_s3_client.get_object.return_value = mock_response
+
+        # Call handler
+        result = handler(event, mock_aws_context)
+
+        # Should report the message as failed
+        assert result is not None
+        assert "batchItemFailures" in result
+        assert any(
+            f["itemIdentifier"] == "s3-invalid-json" for f in result["batchItemFailures"]
+        )
+
+
+def test_handler_with_s3_event_invalid_stac_item(mock_aws_context, mock_pgstac_dsn):
+    """Test handler with S3 event that returns invalid STAC item"""
+    bucket_name = "test-bucket"
+    object_key = "stac/items/invalid-stac.json"
+
+    s3_record = create_s3_event_record(
+        bucket_name, object_key, message_id="s3-invalid-stac"
+    )
+    event = {"Records": [s3_record]}
+
+    # Create invalid STAC item (missing required fields)
+    invalid_stac = {"id": "test", "type": "Feature"}  # Missing required fields
+
+    # Mock S3 client to return invalid STAC item
+    with patch("stac_item_loader.handler.boto3.session.Session") as mock_session:
+        mock_s3_client = MagicMock()
+        mock_session.return_value.client.return_value = mock_s3_client
+
+        mock_response = {"Body": MagicMock()}
+        mock_response["Body"].read.return_value = json.dumps(invalid_stac).encode("utf-8")
+        mock_s3_client.get_object.return_value = mock_response
+
+        # Call handler
+        result = handler(event, mock_aws_context)
+
+        # Should report the message as failed
+        assert result is not None
+        assert "batchItemFailures" in result
+        assert any(
+            f["itemIdentifier"] == "s3-invalid-stac" for f in result["batchItemFailures"]
+        )
+
+
+def test_handler_with_mixed_s3_and_sqs_events(
+    mock_aws_context, mock_pgstac_dsn, database_url
+):
+    """Test handler with both S3 and SQS events in the same batch"""
+    collection_id = TEST_COLLECTION_IDS[0]
+
+    # Create SQS event with STAC item
+    sqs_item_id = "sqs-item"
+    sqs_item = create_valid_stac_item(collection_id=collection_id, item_id=sqs_item_id)
+    sqs_record = create_sqs_record(sqs_item, message_id="sqs-message")
+
+    # Create S3 event
+    s3_item_id = "s3-item"
+    s3_item = create_valid_stac_item(collection_id=collection_id, item_id=s3_item_id)
+    bucket_name = "test-bucket"
+    object_key = "stac/items/s3-item.json"
+    s3_record = create_s3_event_record(bucket_name, object_key, message_id="s3-message")
+
+    event = {"Records": [sqs_record, s3_record]}
+
+    # Mock S3 client for the S3 event
+    with patch("stac_item_loader.handler.boto3.session.Session") as mock_session:
+        mock_s3_client = MagicMock()
+        mock_session.return_value.client.return_value = mock_s3_client
+
+        mock_response = {"Body": MagicMock()}
+        mock_response["Body"].read.return_value = json.dumps(s3_item).encode("utf-8")
+        mock_s3_client.get_object.return_value = mock_response
+
+        # Call handler
+        result = handler(event, mock_aws_context)
+
+        # Both should succeed
+        assert result is None
+
+        # Verify both items were added to the database
+        assert check_item_exists(
+            database_url, collection_id, sqs_item_id
+        ), "SQS item was not found in the database"
+        assert check_item_exists(
+            database_url, collection_id, s3_item_id
+        ), "S3 item was not found in the database"
+
+
+def test_handler_with_s3_event_binary_content(mock_aws_context, mock_pgstac_dsn):
+    """Test handler with S3 event that returns binary content"""
+    bucket_name = "test-bucket"
+    object_key = "stac/items/binary.json"
+
+    s3_record = create_s3_event_record(bucket_name, object_key, message_id="s3-binary")
+    event = {"Records": [s3_record]}
+
+    # Mock S3 client to return binary content that can't be decoded as UTF-8
+    with patch("stac_item_loader.handler.boto3.session.Session") as mock_session:
+        mock_s3_client = MagicMock()
+        mock_session.return_value.client.return_value = mock_s3_client
+
+        mock_response = {"Body": MagicMock()}
+        # Return binary content that cannot be decoded as UTF-8
+        mock_response["Body"].read.return_value = b"\xff\xfe\x00\x00"
+        mock_s3_client.get_object.return_value = mock_response
+
+        # Call handler
+        result = handler(event, mock_aws_context)
+
+        # Should report the message as failed
+        assert result is not None
+        assert "batchItemFailures" in result
+        assert any(
+            f["itemIdentifier"] == "s3-binary" for f in result["batchItemFailures"]
+        )
