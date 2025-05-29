@@ -30,18 +30,20 @@ jobs:
       - name: Generate distribution packages
         run: npm run package
 
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+        with:
+          version: "0.7.*"
+          enable-cache: true
 
       - name: Install deployment environment
         id: install_deploy_env
         run: |
           # install deployment environment with eoapi-cdk from build
-          python -m venv .deployment_venv
-          source .deployment_venv/bin/activate
-          pip install dist/python/*.gz
+          uv sync --group deploy
+          uv pip install dist/python/*.gz
           cd integration_tests/cdk
-          pip install -r requirements.txt
           npm install
-          deactivate
           cd -
 
       # use short commit SHA to name stacks
@@ -55,15 +57,12 @@ jobs:
         env:
           PROJECT_ID: ${{ steps.short-sha.outputs.sha }}
         run: |
-          source .deployment_venv/bin/activate
-
           # synthesize the stack
           cd integration_tests/cdk
-          npx cdk synth --debug --all --require-approval never
+          uv run npx cdk synth --debug --all --require-approval never
 
           # deploy the stack
-          npx cdk deploy --ci --all --require-approval never
-          deactivate
+          uv run npx cdk deploy --ci --all --require-approval never
           cd -
 
       - name: Tear down any infrastructure
@@ -75,10 +74,9 @@ jobs:
           # run this only if we find a 'cdk.out' directory, which means there might be things to tear down
           if [ -d "cdk.out" ]; then
             cd -
-            source .deployment_venv/bin/activate
             cd integration_tests/cdk
             # see https://github.com/aws/aws-cdk/issues/24946
             # this didn't work : rm -f cdk.out/synth.lock
             # so we just duplicate the cdk output to cdk-destroy.out
-            npx cdk destroy --output cdk-destroy.out --ci --all --force
+            uv run npx cdk destroy --output cdk-destroy.out --ci --all --force
           fi
