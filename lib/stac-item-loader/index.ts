@@ -59,7 +59,7 @@ export interface StacItemLoaderProps {
    * items and perform database insertions. The SQS visibility timeout
    * will be set to this value plus 10 seconds.
    *
-   * @default 45
+   * @default 300
    */
   readonly lambdaTimeoutSeconds?: number;
 
@@ -82,7 +82,7 @@ export interface StacItemLoaderProps {
    * sizes improve database insertion efficiency but require more
    * memory and longer processing time.
    *
-   * @default 1000
+   * @default 500
    */
   readonly batchSize?: number;
 
@@ -272,7 +272,7 @@ export class StacItemLoader extends Construct {
   constructor(scope: Construct, id: string, props: StacItemLoaderProps) {
     super(scope, id);
 
-    const timeoutSeconds = props.lambdaTimeoutSeconds ?? 45;
+    const timeoutSeconds = props.lambdaTimeoutSeconds ?? 120;
     const lambdaRuntime = props.lambdaRuntime ?? lambda.Runtime.PYTHON_3_11;
 
     // Create dead letter queue
@@ -327,7 +327,7 @@ export class StacItemLoader extends Construct {
     // Add SQS event source to the lambda
     this.lambdaFunction.addEventSource(
       new lambdaEventSources.SqsEventSource(this.queue, {
-        batchSize: props.batchSize ?? 1000,
+        batchSize: props.batchSize ?? 500,
         maxBatchingWindow: Duration.minutes(
           props.maxBatchingWindowMinutes ?? 1
         ),

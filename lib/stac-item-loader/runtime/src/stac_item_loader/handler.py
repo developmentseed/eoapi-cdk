@@ -39,6 +39,9 @@ formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(messag
 log_handler.setFormatter(formatter)
 logger.addHandler(log_handler)
 
+botocore_logger = logging.getLogger("botocore")
+botocore_logger.setLevel(logging.WARN)
+
 
 class BatchItemFailure(TypedDict):
     itemIdentifier: str
@@ -93,7 +96,7 @@ def get_stac_item_from_s3(bucket_name: str, object_key: str) -> Dict[str, Any]:
     s3_client = session.client("s3")
 
     try:
-        logger.info(f"Fetching STAC item from s3://{bucket_name}/{object_key}")
+        logger.debug(f"Fetching STAC item from s3://{bucket_name}/{object_key}")
         response = s3_client.get_object(Bucket=bucket_name, Key=object_key)
         content = response["Body"].read()
 
@@ -196,7 +199,7 @@ def handler(
 
             items_by_collection[item.collection].append(item.model_dump(mode="json"))
             message_ids_by_collection[item.collection].append(message_id)
-            logger.info(f"[{message_id}] Successfully processed.")
+            logger.debug(f"[{message_id}] Successfully processed.")
 
         except (ValueError, KeyError, ValidationError, json.JSONDecodeError) as e:
             logger.error(f"[{message_id}] Failed with error: {e}", extra=record)
@@ -214,7 +217,7 @@ def handler(
                     file=items,  # type: ignore
                     insert_mode=Methods.upsert,
                 )
-                logger.info(f"[{collection_id}] successfully loaded items.")
+                logger.info(f"[{collection_id}] successfully loaded {len(items)} items.")
         except Exception as e:
             logger.error(f"[{collection_id}] failed to load items: {str(e)}")
 
