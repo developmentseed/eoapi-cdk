@@ -1,3 +1,10 @@
+# [8.2.0](https://github.com/developmentseed/eoapi-cdk/compare/v8.1.1...v8.2.0) (2025-05-30)
+
+
+### Features
+
+* add stactools-item-generator and stac-item-loader constructs ([#150](https://github.com/developmentseed/eoapi-cdk/issues/150)) ([371f6c3](https://github.com/developmentseed/eoapi-cdk/commit/371f6c36619ee9112da155293d573db5d30f1ba5))
+
 ## [8.1.1](https://github.com/developmentseed/eoapi-cdk/compare/v8.1.0...v8.1.1) (2025-04-30)
 
 
