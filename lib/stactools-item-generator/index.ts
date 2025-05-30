@@ -13,22 +13,22 @@ import { Platform } from "aws-cdk-lib/aws-ecr-assets";
 import * as path from "path";
 
 /**
- * Configuration properties for the StacItemGenerator construct.
+ * Configuration properties for the StactoolsItemGenerator construct.
  *
- * The StacItemGenerator is part of a two-phase serverless STAC ingestion pipeline
+ * The StactoolsItemGenerator is part of a two-phase serverless STAC ingestion pipeline
  * that generates STAC items from source data. This construct creates the
  * infrastructure for the first phase of the pipeline - processing metadata
  * about assets and transforming them into standardized STAC items.
  *
  * @example
- * const generator = new StacItemGenerator(this, 'ItemGenerator', {
+ * const generator = new StactoolsItemGenerator(this, 'ItemGenerator', {
  *   itemLoadTopicArn: loader.topic.topicArn,
  *   lambdaTimeoutSeconds: 120,
  *   maxConcurrency: 100,
  *   batchSize: 10
  * });
  */
-export interface StacItemGeneratorProps {
+export interface StactoolsItemGeneratorProps {
   /**
    * The lambda runtime to use for the item generation function.
    *
@@ -110,7 +110,7 @@ export interface StacItemGeneratorProps {
 /**
  * AWS CDK Construct for STAC Item Generation Infrastructure
  *
- * The StacItemGenerator creates a serverless, event-driven system for generating
+ * The StactoolsItemGenerator creates a serverless, event-driven system for generating
  * STAC (SpatioTemporal Asset Catalog) items from source data. This construct
  * implements the first phase of a two-stage ingestion pipeline that transforms
  * raw geospatial data into standardized STAC metadata.
@@ -165,7 +165,7 @@ export interface StacItemGeneratorProps {
  * });
  *
  * // Create item generator that feeds the loader
- * const generator = new StacItemGenerator(this, 'ItemGenerator', {
+ * const generator = new StactoolsItemGenerator(this, 'ItemGenerator', {
  *   itemLoadTopicArn: loader.topic.topicArn,
  *   lambdaTimeoutSeconds: 120,    // Allow time for package installation
  *   maxConcurrency: 100,          // Control parallel processing
@@ -224,7 +224,7 @@ export interface StacItemGeneratorProps {
  * @see {@link https://github.com/stactools-packages} for available stactools packages
  * @see {@link https://stactools.readthedocs.io/} for stactools documentation
  */
-export class StacItemGenerator extends Construct {
+export class StactoolsItemGenerator extends Construct {
   /**
    * The SQS queue that buffers item generation requests.
    *
@@ -260,7 +260,7 @@ export class StacItemGenerator extends Construct {
    */
   public readonly lambdaFunction: lambda.DockerImageFunction;
 
-  constructor(scope: Construct, id: string, props: StacItemGeneratorProps) {
+  constructor(scope: Construct, id: string, props: StactoolsItemGeneratorProps) {
     super(scope, id);
 
     const timeoutSeconds = props.lambdaTimeoutSeconds ?? 120;
@@ -294,7 +294,7 @@ export class StacItemGenerator extends Construct {
     // Create the lambda function
     this.lambdaFunction = new lambda.DockerImageFunction(this, "Function", {
       code: lambda.DockerImageCode.fromImageAsset(path.join(__dirname, ".."), {
-        file: "stac-item-generator/runtime/Dockerfile",
+        file: "stactools-item-generator/runtime/Dockerfile",
         platform: Platform.LINUX_AMD64,
         buildArgs: {
           PYTHON_VERSION: lambdaRuntime.toString().replace("python", ""),
@@ -326,26 +326,26 @@ export class StacItemGenerator extends Construct {
     // Create outputs
     new CfnOutput(this, "TopicArn", {
       value: this.topic.topicArn,
-      description: "ARN of the StacItemGenerator SNS Topic",
-      exportName: "stac-item-generator-topic-arn",
+      description: "ARN of the StactoolsItemGenerator SNS Topic",
+      exportName: "stactools-item-generator-topic-arn",
     });
 
     new CfnOutput(this, "QueueUrl", {
       value: this.queue.queueUrl,
-      description: "URL of the StacItemGenerator SQS Queue",
-      exportName: "stac-item-generator-queue-url",
+      description: "URL of the StactoolsItemGenerator SQS Queue",
+      exportName: "stactools-item-generator-queue-url",
     });
 
     new CfnOutput(this, "DeadLetterQueueUrl", {
       value: this.deadLetterQueue.queueUrl,
-      description: "URL of the StacItemGenerator Dead Letter Queue",
-      exportName: "stac-item-generator-deadletter-queue-url",
+      description: "URL of the StactoolsItemGenerator Dead Letter Queue",
+      exportName: "stactools-item-generator-deadletter-queue-url",
     });
 
     new CfnOutput(this, "FunctionName", {
       value: this.lambdaFunction.functionName,
-      description: "Name of the StacItemGenerator Lambda Function",
-      exportName: "stac-item-generator-function-name",
+      description: "Name of the StactoolsItemGenerator Lambda Function",
+      exportName: "stactools-item-generator-function-name",
     });
   }
 }

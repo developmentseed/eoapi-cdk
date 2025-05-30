@@ -5,9 +5,9 @@ import subprocess
 from unittest.mock import patch
 
 import pytest
-from stac_item_generator import handler as item_gen_handler
-from stac_item_generator.item import ItemRequest
 from stac_pydantic.item import Item
+from stactools_item_generator import handler as item_gen_handler
+from stactools_item_generator.item import ItemRequest
 
 
 @pytest.fixture(autouse=True)
@@ -35,7 +35,7 @@ def mock_sns_client(mocker):
     mock_client_instance.publish.return_value = {"MessageId": "fake-sns-message-id"}
 
     mock_boto_client = patch(
-        "stac_item_generator.handler.boto3.client",
+        "stactools_item_generator.handler.boto3.client",
         return_value=mock_client_instance,
     ).start()
 
@@ -66,7 +66,7 @@ def mock_create_stac_item(mocker):
 
     # Patch the function to return our mock item
     mock_func = patch(
-        "stac_item_generator.handler.create_stac_item", return_value=mock_item
+        "stactools_item_generator.handler.create_stac_item", return_value=mock_item
     ).start()
 
     # Store the mock item for easy access

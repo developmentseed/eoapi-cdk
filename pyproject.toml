@@ -3,16 +3,16 @@ name = "eoapi-cdk"
 version = "0.0"
 requires-python = ">=3.11"
 dependencies = [
-  "stac-item-generator",
+  "stactools-item-generator",
   "stac-item-loader",
 ]
 
 [tool.uv.sources]
-stac-item-generator = { workspace = true }
+stactools-item-generator = { workspace = true }
 stac-item-loader = { workspace = true }
 
 [tool.uv.workspace]
-members = ["lib/stac-item-loader/runtime", "lib/stac-item-generator/runtime"]
+members = ["lib/stac-item-loader/runtime", "lib/stactools-item-generator/runtime"]
 
 [dependency-groups]
 deploy = [
@@ -36,7 +36,7 @@ dev = [
 addopts = "-vv --ignore=cdk.out --no-header --tb=native"
 pythonpath = "."
 testpaths = [
-    "lib/stac-item-generator/runtime/tests",
+    "lib/stactools-item-generator/runtime/tests",
     "lib/stac-item-loader/runtime/tests",
 ]
 

@@ -1,5 +1,5 @@
 [project]
-name = "stac-item-generator"
+name = "stactools-item-generator"
 version = "0.1.0"
 description = "An application for generating STAC metadata with any stactools package"
 authors = [

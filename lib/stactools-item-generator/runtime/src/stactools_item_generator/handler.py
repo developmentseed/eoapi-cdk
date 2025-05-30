@@ -15,7 +15,7 @@ if TYPE_CHECKING:
 else:
     Context = Annotated[object, "Context object"]
 
-from stac_item_generator.item import ItemRequest, create_stac_item
+from stactools_item_generator.item import ItemRequest, create_stac_item
 
 logger = logging.getLogger()
 if logger.hasHandlers():

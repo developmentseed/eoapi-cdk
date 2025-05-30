@@ -1,5 +1,5 @@
 import pytest
-from stac_item_generator.item import ItemRequest, create_stac_item
+from stactools_item_generator.item import ItemRequest, create_stac_item
 
 
 @pytest.mark.parametrize(

@@ -5,8 +5,8 @@ requires-python = ">=3.11"
 [manifest]
 members = [
     "eoapi-cdk",
-    "stac-item-generator",
     "stac-item-loader",
+    "stactools-item-generator",
 ]
 
 [[package]]
@@ -208,8 +208,8 @@ name = "eoapi-cdk"
 version = "0.0"
 source = { virtual = "." }
 dependencies = [
-    { name = "stac-item-generator" },
     { name = "stac-item-loader" },
+    { name = "stactools-item-generator" },
 ]
 
 [package.dev-dependencies]
@@ -232,8 +232,8 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "stac-item-generator", editable = "lib/stac-item-generator/runtime" },
     { name = "stac-item-loader", editable = "lib/stac-item-loader/runtime" },
+    { name = "stactools-item-generator", editable = "lib/stactools-item-generator/runtime" },
 ]
 
 [package.metadata.requires-dev]
@@ -885,21 +885,6 @@ wheels = [
 ]
 
 [[package]]
-name = "stac-item-generator"
-version = "0.1.0"
-source = { editable = "lib/stac-item-generator/runtime" }
-dependencies = [
-    { name = "pydantic" },
-    { name = "stac-pydantic" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "pydantic", specifier = ">=2.11.0" },
-    { name = "stac-pydantic", specifier = ">=3.2.0" },
-]
-
-[[package]]
 name = "stac-item-loader"
 version = "0.1.0"
 source = { editable = "lib/stac-item-loader/runtime" }
@@ -928,6 +913,21 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/41/56/2ba7ff7d221e1a3dd3ecd3e3ae865970824535de00477531d18526af550d/stac_pydantic-3.2.0.tar.gz", hash = "sha256:b0a7b8662b359941bc9bb4f50d781fbaa2076b2aceb8186b6a48542555164989", size = 20793, upload-time = "2025-03-20T09:10:09.553Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/f3/d3/90347937f859f8a092c25a060488c318c5e0c6311f62a654a58f8b3dbe91/stac_pydantic-3.2.0-py3-none-any.whl", hash = "sha256:747dfe36b271dcb940c0a1d4b4f77f573a9cab35af80d6a141591e19c6c7ddef", size = 23396, upload-time = "2025-03-20T09:10:08.164Z" },
+]
+
+[[package]]
+name = "stactools-item-generator"
+version = "0.1.0"
+source = { editable = "lib/stactools-item-generator/runtime" }
+dependencies = [
+    { name = "pydantic" },
+    { name = "stac-pydantic" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "pydantic", specifier = ">=2.11.0" },
+    { name = "stac-pydantic", specifier = ">=3.2.0" },
 ]
 
 [[package]]

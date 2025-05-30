@@ -14,8 +14,8 @@ from eoapi_cdk import (
     PgStacApiLambda,
     PgStacDatabase,
     StacIngestor,
-    StacItemGenerator,
     StacItemLoader,
+    StactoolsItemGenerator,
     TiPgApiLambda,
     TitilerPgstacApiLambda,
 )
@@ -187,9 +187,9 @@ class pgStacInfraStack(Stack):
             lambda_timeout_seconds=300,
         )
 
-        self.stac_item_generator = StacItemGenerator(
+        self.stac_item_generator = StactoolsItemGenerator(
             self,
-            "stac-item-generator",
+            "stactools-item-generator",
             item_load_topic_arn=self.stac_item_loader.topic.topic_arn,
         )
 
