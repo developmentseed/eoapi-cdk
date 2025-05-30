@@ -183,6 +183,8 @@ class pgStacInfraStack(Stack):
             self,
             "stac-item-loader",
             pgstac_db=pgstac_db,
+            batch_size=500,
+            lambda_timeout_seconds=300,
         )
 
         self.stac_item_generator = StacItemGenerator(

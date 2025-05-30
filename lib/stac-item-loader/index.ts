@@ -28,7 +28,7 @@ import * as path from "path";
  *   pgstacDb: database,
  *   batchSize: 1000,
  *   maxBatchingWindowMinutes: 1,
- *   lambdaTimeoutSeconds: 45
+ *   lambdaTimeoutSeconds: 300
  * });
  */
 export interface StacItemLoaderProps {
@@ -82,6 +82,11 @@ export interface StacItemLoaderProps {
    * sizes improve database insertion efficiency but require more
    * memory and longer processing time.
    *
+   * **Batching Behavior**: SQS will wait to accumulate up to this many
+   * messages before triggering the Lambda, OR until the maxBatchingWindow
+   * timeout is reached, whichever comes first. This creates an efficient
+   * balance between throughput and latency.
+   *
    * @default 500
    */
   readonly batchSize?: number;
@@ -93,9 +98,24 @@ export interface StacItemLoaderProps {
    * after this time period to ensure timely processing of items.
    * This prevents items from waiting indefinitely in low-volume scenarios.
    *
+   * **Important**: This timeout works in conjunction with batchSize - SQS
+   * will trigger the Lambda when EITHER the batch size is reached OR this
+   * time window expires, ensuring items are processed in a timely manner
+   * regardless of volume.
+   *
    * @default 1
    */
   readonly maxBatchingWindowMinutes?: number;
+
+  /**
+   * Maximum concurrent executions for the StacItemLoader Lambda function
+   *
+   * This limit will be applied to the Lambda function and will control how
+   * many concurrent batches will be released from the SQS queue.
+   *
+   * @default 2
+   */
+  readonly maxConcurrency?: number;
 
   /**
    * Additional environment variables for the lambda function.
@@ -127,16 +147,42 @@ export interface StacItemLoaderProps {
  * The loader supports two primary data ingestion patterns:
  *
  * ### Direct STAC Item Publishing
- * 1. STAC items (JSON) are published directly to the SNS topic
- * 2. The SQS queue collects items and batches them (up to 1000 items or 1 minute window)
+ * 1. STAC items (JSON) are published directly to the SNS topic in message bodies
+ * 2. The SQS queue collects messages and batches them (up to {batchSize} items or 1 minute window)
  * 3. The Lambda function receives batches, validates items, and inserts into pgstac
  *
  * ### S3 Event-Driven Loading
- * 1. STAC items are uploaded to S3 buckets as JSON/GeoJSON files
- * 2. S3 event notifications are sent to the SNS topic when items are uploaded
- * 3. The Lambda function receives S3 events, fetches items from S3, and loads into pgstac
+ * 1. An S3 bucket is configured to send notifications to the SNS topic when json files are created
+ * 2. STAC items are uploaded to S3 buckets as JSON/GeoJSON files
+ * 3. S3 event notifications are sent to the SNS topic when items are uploaded
+ * 4. The Lambda function receives S3 events in the SQS message batch, fetches items from S3, and loads into pgstac
  *
- * Failed messages are sent to the dead letter queue for inspection and retry
+ * ## Batching Behavior
+ *
+ * The SQS-to-Lambda integration uses intelligent batching to optimize performance:
+ *
+ * - **Batch Size**: Lambda waits to receive up to `batchSize` messages (default: 500)
+ * - **Batching Window**: If fewer than `batchSize` messages are available, Lambda
+ *   triggers after `maxBatchingWindow` minutes (default: 1 minute)
+ * - **Trigger Condition**: Lambda executes when EITHER condition is met first
+ * - **Concurrency**: Limited to `maxConcurrency` concurrent executions to prevent database overload
+ * - **Partial Failures**: Uses `reportBatchItemFailures` to retry only failed items
+ *
+ * This approach balances throughput (larger batches = fewer database connections)
+ * with latency (time-based triggers prevent indefinite waiting).
+ *
+ * ## Error Handling and Dead Letter Queue
+ *
+ * Failed messages are sent to the dead letter queue after 5 processing attempts.
+ * **Important**: This construct provides NO automated handling of dead letter queue
+ * messages - monitoring, inspection, and reprocessing of failed items is the
+ * responsibility of the implementing application.
+ *
+ * Consider implementing:
+ * - CloudWatch alarms on dead letter queue depth
+ * - Manual or automated reprocessing workflows
+ * - Logging and alerting for failed items
+ * - Regular cleanup of old dead letter messages (14-day retention)
  *
  * ## Operational Characteristics
  *
@@ -166,7 +212,7 @@ export interface StacItemLoaderProps {
  *   pgstacDb: database,
  *   batchSize: 1000,          // Process up to 1000 items per batch
  *   maxBatchingWindowMinutes: 1, // Wait max 1 minute to fill batch
- *   lambdaTimeoutSeconds: 45     // Allow 45 seconds for database operations
+ *   lambdaTimeoutSeconds: 300     // Allow up to 300 seconds for database operations
  * });
  *
  * // The topic ARN can be used by other services to publish items
@@ -218,12 +264,28 @@ export interface StacItemLoaderProps {
  * ## Monitoring and Troubleshooting
  *
  * - Monitor Lambda logs: `/aws/lambda/{FunctionName}`
- * - Check dead letter queue for failed items
+ * - **Dead Letter Queue**: Check for failed items - **no automated handling provided**
  * - Use batch item failure reporting for partial batch processing
  * - CloudWatch metrics available for queue depth and Lambda performance
  *
- * @see {@link https://github.com/stactools-packages} for stactools packages
- * @see {@link https://github.com/stac-utils/pgstac} for pgstac documentation
+ * ### Dead Letter Queue Management
+ *
+ * Applications must implement their own dead letter queue monitoring:
+ *
+ * ```typescript
+ * // Example: CloudWatch alarm for dead letter queue depth
+ * new cloudwatch.Alarm(this, 'DeadLetterAlarm', {
+ *   metric: loader.deadLetterQueue.metricApproximateNumberOfVisibleMessages(),
+ *   threshold: 1,
+ *   evaluationPeriods: 1
+ * });
+ *
+ * // Example: Lambda to reprocess dead letter messages
+ * const reprocessFunction = new lambda.Function(this, 'Reprocess', {
+ *   // Implementation to fetch and republish failed messages
+ * });
+ * ```
+ *
  */
 export class StacItemLoader extends Construct {
   /**
@@ -253,6 +315,14 @@ export class StacItemLoader extends Construct {
    * Messages that fail processing after 5 attempts are sent here
    * for inspection and potential replay. Retains messages for 14 days
    * to allow for debugging and manual intervention.
+   *
+   * **User Responsibility**: This construct provides NO automated monitoring,
+   * alerting, or reprocessing of dead letter queue messages. Applications
+   * using this construct must implement their own:
+   * - Dead letter queue depth monitoring and alerting
+   * - Failed message inspection and debugging workflows
+   * - Manual or automated reprocessing mechanisms
+   * - Cleanup procedures for old failed messages
    */
   public readonly deadLetterQueue: sqs.Queue;
 
@@ -272,8 +342,9 @@ export class StacItemLoader extends Construct {
   constructor(scope: Construct, id: string, props: StacItemLoaderProps) {
     super(scope, id);
 
-    const timeoutSeconds = props.lambdaTimeoutSeconds ?? 120;
+    const timeoutSeconds = props.lambdaTimeoutSeconds ?? 300;
     const lambdaRuntime = props.lambdaRuntime ?? lambda.Runtime.PYTHON_3_11;
+    const maxConcurrency = props.maxConcurrency ?? 2;
 
     // Create dead letter queue
     this.deadLetterQueue = new sqs.Queue(this, "DeadLetterQueue", {
@@ -314,6 +385,7 @@ export class StacItemLoader extends Construct {
       }),
       memorySize: props.memorySize ?? 1024,
       timeout: Duration.seconds(timeoutSeconds),
+      reservedConcurrentExecutions: maxConcurrency,
       logRetention: logs.RetentionDays.ONE_WEEK,
       environment: {
         PGSTAC_SECRET_ARN: props.pgstacDb.pgstacSecret.secretArn,
@@ -331,6 +403,7 @@ export class StacItemLoader extends Construct {
         maxBatchingWindow: Duration.minutes(
           props.maxBatchingWindowMinutes ?? 1
         ),
+        maxConcurrency: maxConcurrency,
         reportBatchItemFailures: true,
       })
     );
