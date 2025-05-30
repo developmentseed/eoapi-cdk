@@ -1,18 +1,122 @@
 
-# Exclude typescript source and config
+# ====================
+# Source Files (exclude TypeScript sources, keep compiled JS and declarations)
+# ====================
 *.ts
-tsconfig.json
-
-# Include javascript files and typescript declarations
-!*.js
 !*.d.ts
+!*.js
+tsconfig.json
+tsconfig.*.json
+tsconfig.tsbuildinfo
 
-# Exclude jsii outdir
-dist
-
-# Include .jsii and .jsii.gz
+# ====================
+# jsii-specific files (include these in package)
+# ====================
 !.jsii
 !.jsii.gz
 
-# Exclude any dev environments
-.venv
+# ====================
+# Build and Distribution
+# ====================
+dist/
+lib/**/*.ts
+!lib/**/*.js
+!lib/**/*.d.ts
+
+# ====================
+# Development and Testing
+# ====================
+.git/
+.github/
+.gitignore
+.pre-commit-config.yaml
+.husky/
+.devcontainer/
+integration_tests/
+test/
+tests/
+__tests__/
+lib/**/tests/
+lib/**/test/
+lib/**/__tests__/
+*.test.js
+*.test.ts
+*.test.py
+*.spec.js
+*.spec.ts
+*.spec.py
+conftest.py
+lib/**/conftest.py
+.coverage/
+coverage/
+.nyc_output/
+
+# ====================
+# Node.js and npm
+# ====================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.npm
+.node_repl_history
+package-lock.json
+yarn.lock
+
+# ====================
+# Python (for this hybrid project)
+# ====================
+.venv/
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.tox/
+toxenv/
+.coverage
+.coverage.*
+htmlcov/
+tox.ini
+ruff.toml
+.ruff_cache/
+
+# ====================
+# Documentation and Demos
+# ====================
+docs/
+diagrams/
+*.md
+!README.md
+
+# ====================
+# IDE and Editor
+# ====================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# ====================
+# Semantic Release and CI/CD
+# ====================
+.semantic-release/
+.travis.yml
+.circleci/
+.github/
+CHANGELOG.md
+
+# ====================
+# Other Development Files
+# ====================
+.nvmrc
+.editorconfig
+.eslintrc*
+.prettierrc*
+nodemon.json
+
+
+# Exclude jsii outdir
+dist
