@@ -36,6 +36,7 @@ export class PgStacDatabase extends Construct {
   pgstacSecret: secretsmanager.ISecret;
   private _pgBouncerServer?: PgBouncer;
 
+  public readonly pgstacVersion: string;
   public readonly connectionTarget: rds.IDatabaseInstance | ec2.Instance;
   public readonly securityGroup?: ec2.SecurityGroup;
   public readonly secretBootstrapper?: CustomResource;
@@ -68,7 +69,9 @@ export class PgStacDatabase extends Construct {
       parameterGroup,
       ...props,
     });
-    const pgstac_version = props.pgstacVersion || DEFAULT_PGSTAC_VERSION;
+
+    this.pgstacVersion = props.pgstacVersion || DEFAULT_PGSTAC_VERSION;
+
     const handler = new aws_lambda.Function(this, "lambda", {
       // defaults
       runtime: aws_lambda.Runtime.PYTHON_3_11,
@@ -80,7 +83,7 @@ export class PgStacDatabase extends Construct {
         file: "bootstrapper_runtime/Dockerfile",
         buildArgs: {
           PYTHON_VERSION: "3.11",
-          PGSTAC_VERSION: pgstac_version,
+          PGSTAC_VERSION: this.pgstacVersion,
         },
       }),
       vpc: hasVpc(this.db) ? this.db.vpc : props.vpc,
@@ -131,7 +134,7 @@ export class PgStacDatabase extends Construct {
 
     // if props.lambdaFunctionOptions doesn't have 'code' defined, update pgstac_version (needed for default runtime)
     if (!props.bootstrapperLambdaFunctionOptions?.code) {
-      customResourceProperties["pgstac_version"] = pgstac_version;
+      customResourceProperties["pgstac_version"] = this.pgstacVersion;
     }
 
     // add timestamp to properties to ensure the Lambda gets re-executed on each deploy
@@ -144,14 +147,20 @@ export class PgStacDatabase extends Construct {
     });
 
     // PgBouncer: connection poolercustomresource trigger on redeploy
+    const defaultPgbouncerInstanceProps: Partial<ec2.InstanceProps> = {
+      instanceName: `${Stack.of(this).stackName}-pgbouncer`,
+      instanceType: ec2.InstanceType.of(
+        ec2.InstanceClass.T3,
+        ec2.InstanceSize.MICRO
+      ),
+    };
     const addPgbouncer = props.addPgbouncer ?? true;
     if (addPgbouncer) {
       this._pgBouncerServer = new PgBouncer(this, "pgbouncer", {
-        instanceName: `${Stack.of(this).stackName}-pgbouncer`,
-        instanceType: ec2.InstanceType.of(
-          ec2.InstanceClass.T3,
-          ec2.InstanceSize.MICRO
-        ),
+        instanceProps: {
+          ...defaultPgbouncerInstanceProps,
+          ...props.pgbouncerInstanceProps,
+        },
         vpc: props.vpc,
         database: {
           connections: this.db.connections,
@@ -257,6 +266,13 @@ export interface PgStacDatabaseProps extends rds.DatabaseInstanceProps {
    * @default true
    */
   readonly addPgbouncer?: boolean;
+
+  /**
+   * Properties for the pgbouncer ec2 instance
+   *
+   * @default - defined in the construct
+   */
+  readonly pgbouncerInstanceProps?: ec2.InstanceProps | any;
 
   /**
    * Lambda function Custom Resource properties. A custom resource property is going to be created

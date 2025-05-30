@@ -1,0 +1,45 @@
+[project]
+name = "eoapi-cdk"
+version = "0.0"
+requires-python = ">=3.11"
+dependencies = [
+  "stactools-item-generator",
+  "stac-item-loader",
+]
+
+[tool.uv.sources]
+stactools-item-generator = { workspace = true }
+stac-item-loader = { workspace = true }
+
+[tool.uv.workspace]
+members = ["lib/stac-item-loader/runtime", "lib/stactools-item-generator/runtime"]
+
+[dependency-groups]
+deploy = [
+    "aws-cdk-lib==2.190.0",
+    "constructs==10.3.0",
+    "pydantic>=2.11.5",
+    "pydantic-settings[yaml]>=2.8.1",
+    "python-dotenv>=1.1.0",
+    "pyyaml>=6.0.2",
+    "types-pyyaml>=6.0.12.20250516",
+]
+dev = [
+    "aws-lambda-typing>=2.20.0",
+    "httpx>=0.28.1",
+    "pytest>=8.3.5",
+    "pytest-mock>=3.14.0",
+    "pytest-postgresql>=7.0.1",
+]
+
+[tool.pytest.ini_options]
+addopts = "-vv --ignore=cdk.out --no-header --tb=native"
+pythonpath = "."
+testpaths = [
+    "lib/stactools-item-generator/runtime/tests",
+    "lib/stac-item-loader/runtime/tests",
+]
+
+[tool.ruff]
+
+[tool.ruff.lint]
