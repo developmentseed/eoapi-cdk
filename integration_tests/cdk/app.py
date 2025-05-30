@@ -1,10 +1,21 @@
-from aws_cdk import App, RemovalPolicy, Stack, aws_ec2, aws_iam, aws_rds
+from aws_cdk import (
+    App,
+    RemovalPolicy,
+    Stack,
+    aws_ec2,
+    aws_iam,
+    aws_rds,
+    aws_s3,
+    aws_s3_notifications,
+)
 from config import AppConfig, build_app_config
 from constructs import Construct
 from eoapi_cdk import (
     PgStacApiLambda,
     PgStacDatabase,
     StacIngestor,
+    StacItemLoader,
+    StactoolsItemGenerator,
     TiPgApiLambda,
     TitilerPgstacApiLambda,
 )
@@ -167,6 +178,37 @@ class pgStacInfraStack(Stack):
                 "JWKS_URL": "",  # no authentication!
             },
         )
+
+        self.stac_item_loader = StacItemLoader(
+            self,
+            "stac-item-loader",
+            pgstac_db=pgstac_db,
+            batch_size=500,
+            lambda_timeout_seconds=300,
+        )
+
+        self.stac_item_generator = StactoolsItemGenerator(
+            self,
+            "stactools-item-generator",
+            item_load_topic_arn=self.stac_item_loader.topic.topic_arn,
+        )
+
+        self.stac_item_loader.topic.grant_publish(
+            self.stac_item_generator.lambda_function
+        )
+
+        stac_bucket = aws_s3.Bucket(
+            self,
+            "stac-item-bucket",
+        )
+
+        stac_bucket.add_event_notification(
+            aws_s3.EventType.OBJECT_CREATED,
+            aws_s3_notifications.SnsDestination(self.stac_item_loader.topic),
+            aws_s3.NotificationKeyFilter(suffix=".json"),
+        )
+
+        stac_bucket.grant_read(self.stac_item_loader.lambda_function)
 
 
 app = App()
