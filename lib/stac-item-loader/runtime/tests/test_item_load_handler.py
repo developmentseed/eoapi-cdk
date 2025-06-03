@@ -10,6 +10,7 @@ from conftest import (
     count_collection_items,
     get_all_collection_items,
 )
+from pypgstac.db import PgstacDB
 from stac_item_loader.handler import get_pgstac_dsn, handler
 
 
@@ -35,6 +36,7 @@ def create_valid_stac_item(collection_id=TEST_COLLECTION_IDS[0], item_id="test-i
         },
         "assets": {},
         "links": [],
+        "stac_version": "1.1.0",
     }
 
 
@@ -781,3 +783,198 @@ def test_process_s3_event_with_multiple_records():
     # Should raise ValueError
     with pytest.raises(ValueError, match="more than one S3 event record"):
         process_s3_event(message_str)
+
+
+@patch.dict(os.environ, {"CREATE_COLLECTIONS_IF_MISSING": "true"})
+def test_handler_creates_missing_collection(
+    mock_aws_context, mock_pgstac_dsn, database_url
+):
+    """Test that collections are created when CREATE_COLLECTIONS_IF_MISSING is set and collection doesn't exist"""
+    missing_collection_id = "missing-test-collection"
+    item_id = "test-item-missing-collection"
+
+    with PgstacDB(dsn=database_url) as db:
+        result = db.query_one(
+            f"SELECT count(*) as count from collections where id = '{missing_collection_id}'"
+        )
+        assert result == 0, "Collection should not exist initially"
+
+    valid_item = create_valid_stac_item(
+        collection_id=missing_collection_id, item_id=item_id
+    )
+
+    event = {"Records": [create_sqs_record(valid_item, message_id="test-message-1")]}
+    result = handler(event, mock_aws_context)
+
+    assert result is None
+
+    with PgstacDB(dsn=database_url) as db:
+        result = db.query_one(
+            f"SELECT count(*) as count from collections where id = '{missing_collection_id}'"
+        )
+        assert result == 1, "Collection should have been created"
+
+    assert check_item_exists(
+        database_url, missing_collection_id, item_id
+    ), "Item was not found in the database"
+
+
+def test_handler_does_not_create_collection_without_env_var(
+    mock_aws_context, mock_pgstac_dsn, database_url
+):
+    """Test that collections are NOT created when CREATE_COLLECTIONS_IF_MISSING env var is not set"""
+    if "CREATE_COLLECTIONS_IF_MISSING" in os.environ:
+        del os.environ["CREATE_COLLECTIONS_IF_MISSING"]
+
+    missing_collection_id = "missing-test-collection-2"
+    item_id = "test-item-missing-collection-2"
+
+    with PgstacDB(dsn=database_url) as db:
+        result = db.query_one(
+            f"SELECT count(*) as count from collections where id = '{missing_collection_id}'"
+        )
+        assert result == 0, "Collection should not exist initially"
+
+    valid_item = create_valid_stac_item(
+        collection_id=missing_collection_id, item_id=item_id
+    )
+
+    event = {"Records": [create_sqs_record(valid_item, message_id="test-message-1")]}
+    result = handler(event, mock_aws_context)
+
+    assert result is not None
+    assert "batchItemFailures" in result
+    assert any(
+        failure["itemIdentifier"] == "test-message-1"
+        for failure in result["batchItemFailures"]
+    )
+
+    with PgstacDB(dsn=database_url) as db:
+        result = db.query_one(
+            f"SELECT count(*) as count from collections where id = '{missing_collection_id}'"
+        )
+        assert result == 0, "Collection should not have been created"
+
+    assert not check_item_exists(
+        database_url, missing_collection_id, item_id
+    ), "Item should not have been added to the database"
+
+
+@patch.dict(os.environ, {"CREATE_COLLECTIONS_IF_MISSING": "true"})
+def test_handler_does_not_recreate_existing_collection(
+    mock_aws_context, mock_pgstac_dsn, database_url
+):
+    """Test that existing collections are not recreated when they already exist"""
+    existing_collection_id = TEST_COLLECTION_IDS[0]
+    item_id = "test-item-existing-collection"
+
+    with PgstacDB(dsn=database_url) as db:
+        original_collection = db.query_one(
+            f"SELECT * from collections where id = '{existing_collection_id}'"
+        )
+        assert original_collection is not None, "Test collection should exist"
+
+    valid_item = create_valid_stac_item(
+        collection_id=existing_collection_id, item_id=item_id
+    )
+
+    event = {"Records": [create_sqs_record(valid_item, message_id="test-message-1")]}
+    result = handler(event, mock_aws_context)
+
+    assert result is None
+
+    with PgstacDB(dsn=database_url) as db:
+        current_collection = db.query_one(
+            f"SELECT * from collections where id = '{existing_collection_id}'"
+        )
+        assert (
+            current_collection == original_collection
+        ), "Existing collection should not have been modified"
+
+    assert check_item_exists(
+        database_url, existing_collection_id, item_id
+    ), "Item was not found in the database"
+
+
+@patch.dict(os.environ, {"CREATE_COLLECTIONS_IF_MISSING": "true"})
+def test_handler_creates_collection_with_multiple_items(
+    mock_aws_context, mock_pgstac_dsn, database_url
+):
+    """Test that collection creation works with multiple items from the same missing collection"""
+    missing_collection_id = "missing-test-collection-multi"
+    item_ids = ["test-item-1", "test-item-2", "test-item-3"]
+
+    with PgstacDB(dsn=database_url) as db:
+        result = db.query_one(
+            f"SELECT count(*) as count from collections where id = '{missing_collection_id}'"
+        )
+        assert result == 0, "Collection should not exist initially"
+
+    items = [
+        create_valid_stac_item(collection_id=missing_collection_id, item_id=item_id)
+        for item_id in item_ids
+    ]
+
+    event = {
+        "Records": [
+            create_sqs_record(item, message_id=f"test-message-{i}")
+            for i, item in enumerate(items)
+        ]
+    }
+
+    result = handler(event, mock_aws_context)
+
+    assert result is None
+
+    with PgstacDB(dsn=database_url) as db:
+        result = db.query_one(
+            f"SELECT count(*) as count from collections where id = '{missing_collection_id}'"
+        )
+        assert result == 1, "Collection should have been created exactly once"
+
+    for item_id in item_ids:
+        assert check_item_exists(
+            database_url, missing_collection_id, item_id
+        ), f"Item {item_id} was not found in the database"
+
+
+@patch.dict(os.environ, {"CREATE_COLLECTIONS_IF_MISSING": "true"})
+@patch("pypgstac.load.Loader.load_collections")
+def test_handler_collection_creation_failure(
+    mock_load_collections, mock_aws_context, mock_pgstac_dsn, database_url
+):
+    """Test collection creation failure handling"""
+    mock_load_collections.side_effect = Exception("Failed to create collection")
+
+    missing_collection_id = "missing-test-collection-fail"
+    item_id = "test-item-collection-fail"
+
+    with PgstacDB(dsn=database_url) as db:
+        result = db.query_one(
+            f"SELECT count(*) as count from collections where id = '{missing_collection_id}'"
+        )
+        assert result == 0, "Collection should not exist initially"
+
+    valid_item = create_valid_stac_item(
+        collection_id=missing_collection_id, item_id=item_id
+    )
+
+    event = {"Records": [create_sqs_record(valid_item, message_id="test-message-1")]}
+    result = handler(event, mock_aws_context)
+
+    assert result is not None
+    assert "batchItemFailures" in result
+    assert any(
+        failure["itemIdentifier"] == "test-message-1"
+        for failure in result["batchItemFailures"]
+    )
+
+    with PgstacDB(dsn=database_url) as db:
+        result = db.query_one(
+            f"SELECT count(*) as count from collections where id = '{missing_collection_id}'"
+        )
+        assert result == 0, "Collection should not have been created due to failure"
+
+    assert not check_item_exists(
+        database_url, missing_collection_id, item_id
+    ), "Item should not have been added to the database"
