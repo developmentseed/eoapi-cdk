@@ -18,7 +18,9 @@ import boto3.session
 from pydantic import ValidationError
 from pypgstac.db import PgstacDB
 from pypgstac.load import Loader, Methods
+from stac_pydantic.collection import Collection, Extent, SpatialExtent, TimeInterval
 from stac_pydantic.item import Item
+from stac_pydantic.links import Link, Links
 
 if TYPE_CHECKING:
     from aws_lambda_typing.context import Context
@@ -212,6 +214,31 @@ def handler(
         try:
             with PgstacDB(dsn=pgstac_dsn) as db:
                 loader = Loader(db=db)
+                if os.getenv("CREATE_COLLECTIONS_IF_MISSING"):
+                    collection_exists = db.query_one(
+                        f"SELECT count(*) as count from collections where id = '{collection_id}'"
+                    )
+                    if not collection_exists:
+                        logger.info(
+                            f"[{collection_id}] loading collection into database because it is missing."
+                        )
+                        collection = Collection(
+                            id=collection_id,
+                            description=collection_id,
+                            links=Links([Link(href="placeholder", rel="self")]),
+                            type="Collection",
+                            license="proprietary",
+                            extent=Extent(
+                                spatial=SpatialExtent(bbox=[[-180, -90, 180, 90]]),
+                                temporal=TimeInterval(interval=[[None, None]]),
+                            ),
+                            stac_version=items[0]["stac_version"],
+                        )
+                        loader.load_collections(
+                            [collection.model_dump()],  # type: ignore
+                            insert_mode=Methods.upsert,
+                        )
+
                 logger.info(f"[{collection_id}] loading items into database.")
                 loader.load_items(
                     file=items,  # type: ignore
