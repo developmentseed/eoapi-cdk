@@ -3470,6 +3470,10 @@ Additional environment variables for the lambda function.
 These will be merged with the default environment variables including
 PGSTAC_SECRET_ARN. Use this for custom configuration or debugging flags.
 
+If you want to enable the option to upload a boilerplate collection record
+in the event that the collection record does not yet exist for an item that
+is set to be loaded, set the variable `"CREATE_COLLECTIONS_IF_MISSING": "TRUE"`.
+
 ---
 
 ##### `lambdaFunctionOptions`<sup>Optional</sup> <a name="lambdaFunctionOptions" id="eoapi-cdk.StacItemLoaderProps.property.lambdaFunctionOptions"></a>
