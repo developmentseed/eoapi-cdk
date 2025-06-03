@@ -1,3 +1,10 @@
+## [8.2.1](https://github.com/developmentseed/eoapi-cdk/compare/v8.2.0...v8.2.1) (2025-06-03)
+
+
+### Bug Fixes
+
+* add vpc, subnet_selection, lambaFunctionOptions props ([#151](https://github.com/developmentseed/eoapi-cdk/issues/151)) ([eb48205](https://github.com/developmentseed/eoapi-cdk/commit/eb48205920d2efd1c8f664f68de9445ef0bd22c7))
+
 # [8.2.0](https://github.com/developmentseed/eoapi-cdk/compare/v8.1.1...v8.2.0) (2025-05-30)
 
 
