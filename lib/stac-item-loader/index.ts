@@ -1,4 +1,5 @@
 import {
+  aws_ec2 as ec2,
   aws_lambda as lambda,
   aws_sqs as sqs,
   aws_sns as sns,
@@ -11,6 +12,7 @@ import {
 import { Construct } from "constructs";
 import { PgStacDatabase } from "../database";
 import * as path from "path";
+import { CustomLambdaFunctionProps } from "../utils";
 
 /**
  * Configuration properties for the StacItemLoader construct.
@@ -40,6 +42,16 @@ export interface StacItemLoaderProps {
    * use AWS Secrets Manager to securely access database credentials.
    */
   readonly pgstacDb: PgStacDatabase;
+
+  /**
+   * VPC into which the lambda should be deployed.
+   */
+  readonly vpc?: ec2.IVpc;
+
+  /**
+   * Subnet into which the lambda should be deployed.
+   */
+  readonly subnetSelection?: ec2.SubnetSelection;
 
   /**
    * The lambda runtime to use for the item loading function.
@@ -124,6 +136,13 @@ export interface StacItemLoaderProps {
    * PGSTAC_SECRET_ARN. Use this for custom configuration or debugging flags.
    */
   readonly environment?: { [key: string]: string };
+
+  /**
+   * Can be used to override the default lambda function properties.
+   *
+   * @default - defined in the construct.
+   */
+  readonly lambdaFunctionOptions?: CustomLambdaFunctionProps;
 }
 
 /**
@@ -375,6 +394,8 @@ export class StacItemLoader extends Construct {
     this.lambdaFunction = new lambda.Function(this, "Function", {
       runtime: lambdaRuntime,
       handler: "stac_item_loader.handler.handler",
+      vpc: props.vpc,
+      vpcSubnets: props.subnetSelection,
       code: lambda.Code.fromDockerBuild(path.join(__dirname, ".."), {
         file: "stac-item-loader/runtime/Dockerfile",
         platform: "linux/amd64",
@@ -391,6 +412,8 @@ export class StacItemLoader extends Construct {
         PGSTAC_SECRET_ARN: props.pgstacDb.pgstacSecret.secretArn,
         ...props.environment,
       },
+      // overwrites defaults with user-provided configurable properties
+      ...props.lambdaFunctionOptions,
     });
 
     // Grant permissions to read the database secret

@@ -1,4 +1,5 @@
 import {
+  aws_ec2 as ec2,
   aws_lambda as lambda,
   aws_sqs as sqs,
   aws_sns as sns,
@@ -11,6 +12,7 @@ import {
 import { Construct } from "constructs";
 import { Platform } from "aws-cdk-lib/aws-ecr-assets";
 import * as path from "path";
+import { CustomLambdaFunctionProps } from "../utils";
 
 /**
  * Configuration properties for the StactoolsItemGenerator construct.
@@ -39,6 +41,16 @@ export interface StactoolsItemGeneratorProps {
    * @default lambda.Runtime.PYTHON_3_11
    */
   readonly lambdaRuntime?: lambda.Runtime;
+
+  /**
+   * VPC into which the lambda should be deployed.
+   */
+  readonly vpc?: ec2.IVpc;
+
+  /**
+   * Subnet into which the lambda should be deployed.
+   */
+  readonly subnetSelection?: ec2.SubnetSelection;
 
   /**
    * The timeout for the item generation lambda in seconds.
@@ -105,6 +117,13 @@ export interface StactoolsItemGeneratorProps {
    * processing and database insertion.
    */
   readonly itemLoadTopicArn: string;
+
+  /**
+   * Can be used to override the default lambda function properties.
+   *
+   * @default - defined in the construct.
+   */
+  readonly lambdaFunctionOptions?: CustomLambdaFunctionProps;
 }
 
 /**
@@ -260,7 +279,11 @@ export class StactoolsItemGenerator extends Construct {
    */
   public readonly lambdaFunction: lambda.DockerImageFunction;
 
-  constructor(scope: Construct, id: string, props: StactoolsItemGeneratorProps) {
+  constructor(
+    scope: Construct,
+    id: string,
+    props: StactoolsItemGeneratorProps
+  ) {
     super(scope, id);
 
     const timeoutSeconds = props.lambdaTimeoutSeconds ?? 120;
@@ -301,6 +324,8 @@ export class StactoolsItemGenerator extends Construct {
         },
       }),
       memorySize: props.memorySize ?? 1024,
+      vpc: props.vpc,
+      vpcSubnets: props.subnetSelection,
       timeout: Duration.seconds(timeoutSeconds),
       logRetention: logs.RetentionDays.ONE_WEEK,
       environment: {
@@ -308,6 +333,8 @@ export class StactoolsItemGenerator extends Construct {
         LOG_LEVEL: "INFO",
         ...props.environment,
       },
+      // overwrites defaults with user-provided configurable properties
+      ...props.lambdaFunctionOptions,
     });
 
     // Add SQS event source to the lambda
