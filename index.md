@@ -3407,11 +3407,14 @@ const stacItemLoaderProps: StacItemLoaderProps = { ... }
 | <code><a href="#eoapi-cdk.StacItemLoaderProps.property.pgstacDb">pgstacDb</a></code> | <code><a href="#eoapi-cdk.PgStacDatabase">PgStacDatabase</a></code> | The PgSTAC database instance to load items into. |
 | <code><a href="#eoapi-cdk.StacItemLoaderProps.property.batchSize">batchSize</a></code> | <code>number</code> | SQS batch size for lambda event source. |
 | <code><a href="#eoapi-cdk.StacItemLoaderProps.property.environment">environment</a></code> | <code>{[ key: string ]: string}</code> | Additional environment variables for the lambda function. |
+| <code><a href="#eoapi-cdk.StacItemLoaderProps.property.lambdaFunctionOptions">lambdaFunctionOptions</a></code> | <code>any</code> | Can be used to override the default lambda function properties. |
 | <code><a href="#eoapi-cdk.StacItemLoaderProps.property.lambdaRuntime">lambdaRuntime</a></code> | <code>aws-cdk-lib.aws_lambda.Runtime</code> | The lambda runtime to use for the item loading function. |
 | <code><a href="#eoapi-cdk.StacItemLoaderProps.property.lambdaTimeoutSeconds">lambdaTimeoutSeconds</a></code> | <code>number</code> | The timeout for the item load lambda in seconds. |
 | <code><a href="#eoapi-cdk.StacItemLoaderProps.property.maxBatchingWindowMinutes">maxBatchingWindowMinutes</a></code> | <code>number</code> | Maximum batching window in minutes. |
 | <code><a href="#eoapi-cdk.StacItemLoaderProps.property.maxConcurrency">maxConcurrency</a></code> | <code>number</code> | Maximum concurrent executions for the StacItemLoader Lambda function. |
 | <code><a href="#eoapi-cdk.StacItemLoaderProps.property.memorySize">memorySize</a></code> | <code>number</code> | Memory size for the lambda function in MB. |
+| <code><a href="#eoapi-cdk.StacItemLoaderProps.property.subnetSelection">subnetSelection</a></code> | <code>aws-cdk-lib.aws_ec2.SubnetSelection</code> | Subnet into which the lambda should be deployed. |
+| <code><a href="#eoapi-cdk.StacItemLoaderProps.property.vpc">vpc</a></code> | <code>aws-cdk-lib.aws_ec2.IVpc</code> | VPC into which the lambda should be deployed. |
 
 ---
 
@@ -3466,6 +3469,19 @@ Additional environment variables for the lambda function.
 
 These will be merged with the default environment variables including
 PGSTAC_SECRET_ARN. Use this for custom configuration or debugging flags.
+
+---
+
+##### `lambdaFunctionOptions`<sup>Optional</sup> <a name="lambdaFunctionOptions" id="eoapi-cdk.StacItemLoaderProps.property.lambdaFunctionOptions"></a>
+
+```typescript
+public readonly lambdaFunctionOptions: any;
+```
+
+- *Type:* any
+- *Default:* defined in the construct.
+
+Can be used to override the default lambda function properties.
 
 ---
 
@@ -3558,6 +3574,30 @@ database operations.
 
 ---
 
+##### `subnetSelection`<sup>Optional</sup> <a name="subnetSelection" id="eoapi-cdk.StacItemLoaderProps.property.subnetSelection"></a>
+
+```typescript
+public readonly subnetSelection: SubnetSelection;
+```
+
+- *Type:* aws-cdk-lib.aws_ec2.SubnetSelection
+
+Subnet into which the lambda should be deployed.
+
+---
+
+##### `vpc`<sup>Optional</sup> <a name="vpc" id="eoapi-cdk.StacItemLoaderProps.property.vpc"></a>
+
+```typescript
+public readonly vpc: IVpc;
+```
+
+- *Type:* aws-cdk-lib.aws_ec2.IVpc
+
+VPC into which the lambda should be deployed.
+
+---
+
 ### StactoolsItemGeneratorProps <a name="StactoolsItemGeneratorProps" id="eoapi-cdk.StactoolsItemGeneratorProps"></a>
 
 Configuration properties for the StactoolsItemGenerator construct.
@@ -3594,10 +3634,13 @@ const stactoolsItemGeneratorProps: StactoolsItemGeneratorProps = { ... }
 | <code><a href="#eoapi-cdk.StactoolsItemGeneratorProps.property.itemLoadTopicArn">itemLoadTopicArn</a></code> | <code>string</code> | ARN of the SNS topic to publish generated items to. |
 | <code><a href="#eoapi-cdk.StactoolsItemGeneratorProps.property.batchSize">batchSize</a></code> | <code>number</code> | SQS batch size for lambda event source. |
 | <code><a href="#eoapi-cdk.StactoolsItemGeneratorProps.property.environment">environment</a></code> | <code>{[ key: string ]: string}</code> | Additional environment variables for the lambda function. |
+| <code><a href="#eoapi-cdk.StactoolsItemGeneratorProps.property.lambdaFunctionOptions">lambdaFunctionOptions</a></code> | <code>any</code> | Can be used to override the default lambda function properties. |
 | <code><a href="#eoapi-cdk.StactoolsItemGeneratorProps.property.lambdaRuntime">lambdaRuntime</a></code> | <code>aws-cdk-lib.aws_lambda.Runtime</code> | The lambda runtime to use for the item generation function. |
 | <code><a href="#eoapi-cdk.StactoolsItemGeneratorProps.property.lambdaTimeoutSeconds">lambdaTimeoutSeconds</a></code> | <code>number</code> | The timeout for the item generation lambda in seconds. |
 | <code><a href="#eoapi-cdk.StactoolsItemGeneratorProps.property.maxConcurrency">maxConcurrency</a></code> | <code>number</code> | Maximum number of concurrent executions. |
 | <code><a href="#eoapi-cdk.StactoolsItemGeneratorProps.property.memorySize">memorySize</a></code> | <code>number</code> | Memory size for the lambda function in MB. |
+| <code><a href="#eoapi-cdk.StactoolsItemGeneratorProps.property.subnetSelection">subnetSelection</a></code> | <code>aws-cdk-lib.aws_ec2.SubnetSelection</code> | Subnet into which the lambda should be deployed. |
+| <code><a href="#eoapi-cdk.StactoolsItemGeneratorProps.property.vpc">vpc</a></code> | <code>aws-cdk-lib.aws_ec2.IVpc</code> | VPC into which the lambda should be deployed. |
 
 ---
 
@@ -3647,6 +3690,19 @@ Additional environment variables for the lambda function.
 These will be merged with default environment variables including
 ITEM_LOAD_TOPIC_ARN and LOG_LEVEL. Use this for custom configuration
 or to pass credentials for external data sources.
+
+---
+
+##### `lambdaFunctionOptions`<sup>Optional</sup> <a name="lambdaFunctionOptions" id="eoapi-cdk.StactoolsItemGeneratorProps.property.lambdaFunctionOptions"></a>
+
+```typescript
+public readonly lambdaFunctionOptions: any;
+```
+
+- *Type:* any
+- *Default:* defined in the construct.
+
+Can be used to override the default lambda function properties.
 
 ---
 
@@ -3719,6 +3775,30 @@ Memory size for the lambda function in MB.
 Higher memory allocation may be needed for processing large geospatial
 datasets or when stactools packages have high memory requirements.
 More memory also provides proportionally more CPU power.
+
+---
+
+##### `subnetSelection`<sup>Optional</sup> <a name="subnetSelection" id="eoapi-cdk.StactoolsItemGeneratorProps.property.subnetSelection"></a>
+
+```typescript
+public readonly subnetSelection: SubnetSelection;
+```
+
+- *Type:* aws-cdk-lib.aws_ec2.SubnetSelection
+
+Subnet into which the lambda should be deployed.
+
+---
+
+##### `vpc`<sup>Optional</sup> <a name="vpc" id="eoapi-cdk.StactoolsItemGeneratorProps.property.vpc"></a>
+
+```typescript
+public readonly vpc: IVpc;
+```
+
+- *Type:* aws-cdk-lib.aws_ec2.IVpc
+
+VPC into which the lambda should be deployed.
 
 ---
 
