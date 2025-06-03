@@ -1,3 +1,10 @@
+## [8.2.2](https://github.com/developmentseed/eoapi-cdk/compare/v8.2.1...v8.2.2) (2025-06-03)
+
+
+### Bug Fixes
+
+* add option to create collection if missing ([#152](https://github.com/developmentseed/eoapi-cdk/issues/152)) ([83f0e1e](https://github.com/developmentseed/eoapi-cdk/commit/83f0e1e7f04b36d8b749cb64488e18b598ce4990))
+
 ## [8.2.1](https://github.com/developmentseed/eoapi-cdk/compare/v8.2.0...v8.2.1) (2025-06-03)
 
 
