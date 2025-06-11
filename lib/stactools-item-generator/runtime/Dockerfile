@@ -15,6 +15,6 @@ COPY stactools-item-generator/runtime/src/stactools_item_generator/ ${LAMBDA_TAS
 
 RUN uv export --no-dev --no-editable -o requirements.txt && \
   uv pip install --target ${LAMBDA_TASK_ROOT} -r requirements.txt && \
-  uv tool install --with requests stactools;
+  uv tool install --with "numpy<2.3.0",requests stactools;
 
 CMD ["stactools_item_generator.handler.handler"]
