@@ -1,3 +1,10 @@
+## [8.2.3](https://github.com/developmentseed/eoapi-cdk/compare/v8.2.2...v8.2.3) (2025-06-11)
+
+
+### Bug Fixes
+
+* pin to numpy>=2.2.6,<2.3.0 and numexpr>=2.10.0<2.10.1 ([#154](https://github.com/developmentseed/eoapi-cdk/issues/154)) ([94d8f34](https://github.com/developmentseed/eoapi-cdk/commit/94d8f34982ba41f4fc895306a641830ad1ffa6d8))
+
 ## [8.2.2](https://github.com/developmentseed/eoapi-cdk/compare/v8.2.1...v8.2.2) (2025-06-03)
 
 
