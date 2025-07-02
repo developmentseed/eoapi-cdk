@@ -6,9 +6,12 @@ from unittest.mock import MagicMock, patch
 import pytest
 from conftest import (
     TEST_COLLECTION_IDS,
+    check_collection_exists,
     check_item_exists,
     count_collection_items,
+    count_collections,
     get_all_collection_items,
+    get_collection,
 )
 from pypgstac.db import PgstacDB
 from stac_item_loader.handler import get_pgstac_dsn, handler
@@ -36,6 +39,23 @@ def create_valid_stac_item(collection_id=TEST_COLLECTION_IDS[0], item_id="test-i
         },
         "assets": {},
         "links": [],
+        "stac_version": "1.1.0",
+    }
+
+
+def create_valid_stac_collection(collection_id="test-collection"):
+    """Create a valid STAC collection"""
+    return {
+        "id": collection_id,
+        "type": "Collection",
+        "title": f"Test Collection {collection_id}",
+        "description": f"A test collection with ID {collection_id}",
+        "license": "proprietary",
+        "extent": {
+            "spatial": {"bbox": [[-180, -90, 180, 90]]},
+            "temporal": {"interval": [[None, None]]},
+        },
+        "links": [{"href": "placeholder", "rel": "self"}],
         "stac_version": "1.1.0",
     }
 
@@ -649,6 +669,353 @@ def test_handler_with_s3_event_binary_content(mock_aws_context, mock_pgstac_dsn)
         assert any(
             f["itemIdentifier"] == "s3-binary" for f in result["batchItemFailures"]
         )
+
+
+def test_handler_with_valid_collection(mock_aws_context, mock_pgstac_dsn, database_url):
+    """Test handler with a valid STAC collection"""
+    collection_id = "test-new-collection"
+    valid_collection = create_valid_stac_collection(collection_id=collection_id)
+
+    # Create event with one collection record
+    event = {
+        "Records": [
+            create_sqs_record(valid_collection, message_id="test-collection-message-1")
+        ]
+    }
+
+    # Call handler
+    result = handler(event, mock_aws_context)
+
+    # Check result - should be None for successful processing
+    assert result is None
+
+    # Verify the collection was added to the database
+    assert check_collection_exists(
+        database_url, collection_id
+    ), "Collection was not found in the database"
+
+
+def test_handler_with_multiple_collections(
+    mock_aws_context, mock_pgstac_dsn, database_url
+):
+    """Test handler with multiple valid STAC collections"""
+    collection_ids = [f"test-multi-collection-{i}" for i in range(3)]
+    collections = [
+        create_valid_stac_collection(collection_id=collection_id)
+        for collection_id in collection_ids
+    ]
+
+    # Create event with multiple collection records
+    event = {
+        "Records": [
+            create_sqs_record(collection, message_id=f"test-collection-message-{i}")
+            for i, collection in enumerate(collections)
+        ]
+    }
+
+    # Get initial count of collections
+    initial_count = count_collections(database_url)
+
+    # Call handler
+    result = handler(event, mock_aws_context)
+
+    # All should succeed
+    assert result is None
+
+    # Verify all collections were added
+    for collection_id in collection_ids:
+        assert check_collection_exists(
+            database_url, collection_id
+        ), f"Collection {collection_id} was not found in the database"
+
+    # Verify the count increased by the expected amount
+    new_count = count_collections(database_url)
+    assert new_count == initial_count + len(
+        collections
+    ), f"Expected {initial_count + len(collections)} collections, but found {new_count}"
+
+
+def test_handler_with_invalid_collection(mock_aws_context, mock_pgstac_dsn):
+    """Test handler with an invalid STAC collection (missing required fields)"""
+    # Create an invalid STAC collection (missing extent)
+    invalid_collection = create_valid_stac_collection()
+    del invalid_collection["extent"]  # Make it invalid
+
+    message_id = "test-invalid-collection-message"
+    event = {"Records": [create_sqs_record(invalid_collection, message_id=message_id)]}
+
+    # Call handler
+    result = handler(event, mock_aws_context)
+
+    # Should return a failure response
+    assert result is not None
+    assert "batchItemFailures" in result
+    # The message ID of the failed collection should be in the response
+    assert any(
+        failure["itemIdentifier"] == message_id for failure in result["batchItemFailures"]
+    )
+
+
+def test_handler_with_mixed_collections_and_items(
+    mock_aws_context, mock_pgstac_dsn, database_url
+):
+    """Test handler with a mix of collections and items"""
+    # Create a new collection
+    collection_id = "test-mixed-collection"
+    collection = create_valid_stac_collection(collection_id=collection_id)
+
+    # Create an item for the existing test collection
+    existing_collection_id = TEST_COLLECTION_IDS[0]
+    item_id = "test-mixed-item"
+    item = create_valid_stac_item(collection_id=existing_collection_id, item_id=item_id)
+
+    collection_message_id = "mixed-collection-message"
+    item_message_id = "mixed-item-message"
+
+    event = {
+        "Records": [
+            create_sqs_record(collection, message_id=collection_message_id),
+            create_sqs_record(item, message_id=item_message_id),
+        ]
+    }
+
+    # Get initial counts
+    initial_collection_count = count_collections(database_url)
+    initial_item_count = count_collection_items(database_url, existing_collection_id)
+
+    # Call handler
+    result = handler(event, mock_aws_context)
+
+    # Both should succeed
+    assert result is None
+
+    # Verify the collection was added
+    assert check_collection_exists(
+        database_url, collection_id
+    ), "Collection was not found in the database"
+
+    # Verify the item was added
+    assert check_item_exists(
+        database_url, existing_collection_id, item_id
+    ), "Item was not found in the database"
+
+    # Verify counts increased correctly
+    new_collection_count = count_collections(database_url)
+    new_item_count = count_collection_items(database_url, existing_collection_id)
+
+    assert new_collection_count == initial_collection_count + 1
+    assert new_item_count == initial_item_count + 1
+
+
+def test_handler_with_collection_from_s3(mock_aws_context, mock_pgstac_dsn, database_url):
+    """Test handler with a valid STAC collection from S3"""
+    collection_id = "test-s3-collection"
+    bucket_name = "test-bucket"
+    object_key = "stac/collections/test-collection.json"
+
+    # Create a valid STAC collection that will be "returned" from S3
+    valid_collection = create_valid_stac_collection(collection_id=collection_id)
+
+    # Create SQS record containing S3 event notification via SNS
+    s3_record = create_sqs_record_with_s3_event(
+        bucket_name, object_key, message_id="s3-collection-message-1"
+    )
+    event = {"Records": [s3_record]}
+
+    # Mock S3 client to return our STAC collection
+    with patch("stac_item_loader.handler.boto3.session.Session") as mock_session:
+        mock_s3_client = MagicMock()
+        mock_session.return_value.client.return_value = mock_s3_client
+
+        # Mock S3 get_object response
+        mock_response = {"Body": MagicMock()}
+        mock_response["Body"].read.return_value = json.dumps(valid_collection).encode(
+            "utf-8"
+        )
+        mock_s3_client.get_object.return_value = mock_response
+
+        # Call handler
+        result = handler(event, mock_aws_context)
+
+        # Check result - should be None for successful processing
+        assert result is None
+
+        # Verify S3 get_object was called with correct parameters
+        mock_s3_client.get_object.assert_called_once_with(
+            Bucket=bucket_name, Key=object_key
+        )
+
+        # Verify the collection was added to the database
+        assert check_collection_exists(
+            database_url, collection_id
+        ), "Collection from S3 was not found in the database"
+
+
+def test_handler_upsert_existing_collection(
+    mock_aws_context, mock_pgstac_dsn, database_url
+):
+    """Test handler correctly updates an existing collection via upsert"""
+    collection_id = "upsert-test-collection"
+
+    # Create initial collection
+    initial_collection = create_valid_stac_collection(collection_id=collection_id)
+    initial_collection["title"] = "Initial Title"
+
+    # Insert the initial collection
+    event = {
+        "Records": [
+            create_sqs_record(initial_collection, message_id="initial-collection-insert")
+        ]
+    }
+    handler(event, mock_aws_context)
+
+    # Verify the initial collection was inserted
+    assert check_collection_exists(database_url, collection_id)
+
+    # Get the inserted collection to verify its properties
+    initial_db_collection = get_collection(database_url, collection_id)
+    assert initial_db_collection is not None
+    assert initial_db_collection["content"]["title"] == "Initial Title"
+
+    # Create an updated version of the same collection
+    updated_collection = create_valid_stac_collection(collection_id=collection_id)
+    updated_collection["title"] = "Updated Title"
+
+    # Update the collection using the handler
+    event = {
+        "Records": [
+            create_sqs_record(updated_collection, message_id="update-collection-message")
+        ]
+    }
+    result = handler(event, mock_aws_context)
+
+    # Check result - should be None for successful processing
+    assert result is None
+
+    # Verify the collection was updated
+    updated_db_collection = get_collection(database_url, collection_id)
+    assert updated_db_collection is not None
+    assert (
+        updated_db_collection["content"]["title"] == "Updated Title"
+    ), "Collection was not properly updated with new title"
+
+    # Count should remain the same (1 collection was updated, not added)
+    # We can't easily check this without knowing the exact initial count
+
+
+@patch("pypgstac.load.Loader.load_collections")
+def test_handler_with_collection_load_error(
+    mock_load_collections, mock_aws_context, mock_pgstac_dsn
+):
+    """Test handler when collection loading fails"""
+    # Make the load_collections method raise an exception
+    mock_load_collections.side_effect = Exception("Failed to load collections")
+
+    # Create a valid collection
+    valid_collection = create_valid_stac_collection(collection_id="error-test-collection")
+
+    message_id = "collection-load-error-message"
+    event = {"Records": [create_sqs_record(valid_collection, message_id=message_id)]}
+
+    # Call handler
+    result = handler(event, mock_aws_context)
+
+    # Should report the message as failed
+    assert result is not None
+    assert "batchItemFailures" in result
+    assert any(f["itemIdentifier"] == message_id for f in result["batchItemFailures"])
+
+
+def test_handler_with_unknown_type(mock_aws_context, mock_pgstac_dsn):
+    """Test handler with unknown STAC type (neither Feature nor Collection)"""
+    # Create an object with unknown type
+    unknown_object = {
+        "id": "test-unknown",
+        "type": "Catalog",  # Neither Feature nor Collection
+        "description": "A test catalog",
+        "stac_version": "1.1.0",
+    }
+
+    message_id = "unknown-type-message"
+    event = {"Records": [create_sqs_record(unknown_object, message_id=message_id)]}
+
+    # Call handler
+    result = handler(event, mock_aws_context)
+
+    # Should return a failure response
+    assert result is not None
+    assert "batchItemFailures" in result
+    # The message ID of the failed object should be in the response
+    assert any(
+        failure["itemIdentifier"] == message_id for failure in result["batchItemFailures"]
+    )
+
+
+@pytest.mark.parametrize("missing_field", ["id", "type", "extent", "license"])
+def test_handler_with_collection_missing_required_fields(
+    mock_aws_context, mock_pgstac_dsn, missing_field
+):
+    """Test handler with collections missing required STAC fields"""
+    collection = create_valid_stac_collection(collection_id="missing-field-collection")
+
+    # Remove a required field
+    del collection[missing_field]
+
+    message_id = f"collection-missing-{missing_field}"
+    event = {"Records": [create_sqs_record(collection, message_id=message_id)]}
+
+    # Call handler
+    result = handler(event, mock_aws_context)
+
+    # Should report the message as failed
+    assert result is not None
+    assert "batchItemFailures" in result
+    assert any(f["itemIdentifier"] == message_id for f in result["batchItemFailures"])
+
+
+def test_handler_with_mixed_valid_invalid_collections(
+    mock_aws_context, mock_pgstac_dsn, database_url
+):
+    """Test handler with a mix of valid and invalid collections"""
+    valid_collection_id = "valid-collection"
+    valid_collection = create_valid_stac_collection(collection_id=valid_collection_id)
+
+    invalid_collection = create_valid_stac_collection(collection_id="invalid-collection")
+    del invalid_collection["extent"]  # Make it invalid
+
+    valid_message_id = "valid-collection-message"
+    invalid_message_id = "invalid-collection-message"
+
+    event = {
+        "Records": [
+            create_sqs_record(valid_collection, message_id=valid_message_id),
+            create_sqs_record(invalid_collection, message_id=invalid_message_id),
+        ]
+    }
+
+    # Get initial count
+    initial_count = count_collections(database_url)
+
+    # Call handler
+    result = handler(event, mock_aws_context)
+
+    # Should have a partial failure
+    assert result is not None
+    assert "batchItemFailures" in result
+    failures = [f["itemIdentifier"] for f in result["batchItemFailures"]]
+    assert invalid_message_id in failures
+    assert valid_message_id not in failures
+
+    # Verify only the valid collection was added
+    assert check_collection_exists(
+        database_url, valid_collection_id
+    ), "Valid collection was not found in the database"
+
+    # Verify count increased by exactly 1
+    new_count = count_collections(database_url)
+    assert (
+        new_count == initial_count + 1
+    ), f"Expected {initial_count + 1} collections, but found {new_count}"
 
 
 def test_handler_with_malformed_sns_message(mock_aws_context, mock_pgstac_dsn):

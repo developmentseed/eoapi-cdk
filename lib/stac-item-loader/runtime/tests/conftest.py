@@ -162,3 +162,69 @@ def count_collection_items(database_url, collection_id):
 
         result = list(db.query(query, (collection_id,)))
         return result[0][0]
+
+
+def check_collection_exists(database_url, collection_id):
+    """
+    Check if a collection with the given ID exists.
+
+    Args:
+        database_url: Connection string for the database
+        collection_id: The collection ID to check
+
+    Returns:
+        bool: True if the collection exists, False otherwise
+    """
+    with PgstacDB(dsn=database_url) as db:
+        query = """
+        SELECT COUNT(*)
+        FROM pgstac.collections
+        WHERE id = %s
+        """
+
+        result = list(db.query(query, (collection_id,)))
+        return result[0][0] > 0
+
+
+def get_collection(database_url, collection_id):
+    """
+    Get a collection from the database.
+
+    Args:
+        database_url: Connection string for the database
+        collection_id: The collection ID to retrieve
+
+    Returns:
+        dict or None: Collection data if it exists, None otherwise
+    """
+    with PgstacDB(dsn=database_url) as db:
+        query = """
+        SELECT id, content
+        FROM pgstac.collections
+        WHERE id = %s
+        """
+
+        result = list(db.query(query, (collection_id,)))
+        if result:
+            return {"id": result[0][0], "content": result[0][1]}
+        return None
+
+
+def count_collections(database_url):
+    """
+    Count the total number of collections in the database.
+
+    Args:
+        database_url: Connection string for the database
+
+    Returns:
+        int: Total number of collections
+    """
+    with PgstacDB(dsn=database_url) as db:
+        query = """
+        SELECT COUNT(*)
+        FROM pgstac.collections
+        """
+
+        result = list(db.query(query))
+        return result[0][0]
