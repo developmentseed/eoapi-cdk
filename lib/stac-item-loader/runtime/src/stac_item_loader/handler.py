@@ -92,40 +92,40 @@ def is_s3_event(message_str: str) -> bool:
     return "aws:s3" in message_str
 
 
-def get_stac_item_from_s3(bucket_name: str, object_key: str) -> Dict[str, Any]:
-    """Fetch STAC item JSON from S3."""
+def get_stac_object_from_s3(bucket_name: str, object_key: str) -> Dict[str, Any]:
+    """Fetch STAC JSON from S3."""
     session = boto3.session.Session()
     s3_client = session.client("s3")
 
     try:
-        logger.debug(f"Fetching STAC item from s3://{bucket_name}/{object_key}")
+        logger.debug(f"Fetching STAC object from s3://{bucket_name}/{object_key}")
         response = s3_client.get_object(Bucket=bucket_name, Key=object_key)
         content = response["Body"].read()
 
         try:
-            stac_item_json = content.decode("utf-8")
+            stac_json = content.decode("utf-8")
         except UnicodeDecodeError as e:
             logger.error(
                 f"Failed to decode S3 object as UTF-8: s3://{bucket_name}/{object_key}"
             )
             raise ValueError("S3 object is not valid UTF-8 text") from e
 
-        stac_item_data = json.loads(stac_item_json)
+        stac_data = json.loads(stac_json)
         logger.debug(
-            f"Successfully parsed STAC item from S3: {stac_item_data.get('id', 'unknown')}"
+            f"Successfully parsed STAC metadata from S3: {stac_data.get('id', 'unknown')}"
         )
 
-        return stac_item_data
+        return stac_data
 
     except Exception as e:
         logger.error(
-            f"Failed to fetch STAC item from s3://{bucket_name}/{object_key}: {e}"
+            f"Failed to fetch STAC metadata from s3://{bucket_name}/{object_key}: {e}"
         )
         raise
 
 
 def process_s3_event(message_str: str) -> Dict[str, Any]:
-    """Process an S3 event notification and return STAC item data."""
+    """Process an S3 event notification and return STAC metadata."""
     try:
         message_data = json.loads(message_str)
         records: List[Dict[str, Any]] = message_data.get("Records", [])
@@ -138,15 +138,15 @@ def process_s3_event(message_str: str) -> Dict[str, Any]:
         bucket_name = s3_data["bucket"]["name"]
         object_key = s3_data["object"]["key"]
 
-        # Validate that this looks like a STAC item file
+        # Validate that this looks like a STAC file
         if not object_key.endswith((".json", ".geojson")):
             raise ValueError(
-                f"S3 object key does not appear to be a STAC item: {object_key}"
+                f"S3 object key does not appear to be a STAC document: {object_key}"
             )
 
-        stac_item_data = get_stac_item_from_s3(bucket_name, object_key)
+        stac_data = get_stac_object_from_s3(bucket_name, object_key)
 
-        return stac_item_data
+        return stac_data
 
     except KeyError as e:
         logger.error(f"S3 event missing required field: {e}")
@@ -169,8 +169,10 @@ def handler(
     )
     pgstac_dsn = get_pgstac_dsn()
 
-    batch_item_failures: List[BatchItemFailure] = []
+    batch_failures: List[BatchItemFailure] = []
 
+    collections: List[Dict[str, Any]] = []
+    collection_message_ids: List[str] = []
     items_by_collection: DefaultDict[str, List[Dict[str, Any]]] = defaultdict(list)
     message_ids_by_collection: DefaultDict[str, List[str]] = defaultdict(list)
 
@@ -194,21 +196,47 @@ def handler(
             else:
                 message_data = json.loads(message_str)
 
-            item = Item(**message_data)
+            if message_data["type"] == "Feature":
+                item = Item(**message_data)
 
-            if not item.collection:
-                raise KeyError(f"item {item.id} is missing a collection id!")
+                if not item.collection:
+                    raise KeyError(f"item {item.id} is missing a collection id!")
 
-            items_by_collection[item.collection].append(item.model_dump(mode="json"))
-            message_ids_by_collection[item.collection].append(message_id)
+                items_by_collection[item.collection].append(item.model_dump(mode="json"))
+                message_ids_by_collection[item.collection].append(message_id)
+            elif message_data["type"] == "Collection":
+                collection = Collection(**message_data)
+                collections.append(collection.model_dump(mode="json"))
+                collection_message_ids.append(message_id)
+            else:
+                raise ValueError(
+                    f"expected either a 'Feature' or a 'Collection', received a {message_data['type']}"
+                )
+
             logger.debug(f"[{message_id}] Successfully processed.")
 
         except (ValueError, KeyError, ValidationError, json.JSONDecodeError) as e:
             logger.error(f"[{message_id}] Failed with error: {e}", extra=record)
-            batch_item_failures.append({"itemIdentifier": message_id})
+            batch_failures.append({"itemIdentifier": message_id})
         except Exception as e:
             logger.error(f"[{message_id}] Unexpected error: {e}", extra=record)
-            batch_item_failures.append({"itemIdentifier": message_id})
+            batch_failures.append({"itemIdentifier": message_id})
+
+    if collections:
+        try:
+            with PgstacDB(dsn=pgstac_dsn) as db:
+                loader = Loader(db=db)
+                logger.info("loading collections into database.")
+                loader.load_collections(
+                    file=collections,  # type: ignore
+                    insert_mode=Methods.upsert,
+                )
+                logger.info(f"successfully loaded {len(collections)} collections.")
+        except Exception as e:
+            logger.error(f"failed to load collections: {str(e)}")
+            batch_failures.extend(
+                [{"itemIdentifier": message_id} for message_id in collection_message_ids]
+            )
 
     for collection_id, items in items_by_collection.items():
         try:
@@ -248,21 +276,21 @@ def handler(
         except Exception as e:
             logger.error(f"[{collection_id}] failed to load items: {str(e)}")
 
-            batch_item_failures.extend(
+            batch_failures.extend(
                 [
                     {"itemIdentifier": message_id}
                     for message_id in message_ids_by_collection[collection_id]
                 ]
             )
 
-    if batch_item_failures:
+    if batch_failures:
         logger.warning(
-            f"Finished processing batch. {len(batch_item_failures)} failure(s) reported."
+            f"Finished processing batch. {len(batch_failures)} failure(s) reported."
         )
         logger.info(
-            f"Returning failed item identifiers: {[f['itemIdentifier'] for f in batch_item_failures]}"
+            f"Returning failed item identifiers: {[f['itemIdentifier'] for f in batch_failures]}"
         )
-        return {"batchItemFailures": batch_item_failures}
+        return {"batchItemFailures": batch_failures}
     else:
         logger.info("Finished processing batch. All records successful.")
         return None
