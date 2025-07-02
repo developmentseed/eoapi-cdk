@@ -14,7 +14,7 @@ from conftest import (
     get_collection,
 )
 from pypgstac.db import PgstacDB
-from stac_item_loader.handler import get_pgstac_dsn, handler
+from stac_loader.handler import get_pgstac_dsn, handler
 
 
 def create_sqs_record(item_data, message_id="test-message-id"):
@@ -323,7 +323,7 @@ def test_handler_with_nonexistent_collection(mock_aws_context, mock_pgstac_dsn):
     assert any(f["itemIdentifier"] == message_id for f in result["batchItemFailures"])
 
 
-@patch("stac_item_loader.handler.PgstacDB")
+@patch("stac_loader.handler.PgstacDB")
 def test_handler_with_database_connection_error(
     mock_pgstac_db, mock_aws_context, mock_pgstac_dsn
 ):
@@ -459,7 +459,7 @@ def test_handler_with_s3_event(mock_aws_context, mock_pgstac_dsn, database_url):
     event = {"Records": [s3_record]}
 
     # Mock S3 client to return our STAC item
-    with patch("stac_item_loader.handler.boto3.session.Session") as mock_session:
+    with patch("stac_loader.handler.boto3.session.Session") as mock_session:
         mock_s3_client = MagicMock()
         mock_session.return_value.client.return_value = mock_s3_client
 
@@ -517,7 +517,7 @@ def test_handler_with_s3_event_s3_error(mock_aws_context, mock_pgstac_dsn):
     event = {"Records": [s3_record]}
 
     # Mock S3 client to raise an exception
-    with patch("stac_item_loader.handler.boto3.session.Session") as mock_session:
+    with patch("stac_loader.handler.boto3.session.Session") as mock_session:
         mock_s3_client = MagicMock()
         mock_session.return_value.client.return_value = mock_s3_client
         mock_s3_client.get_object.side_effect = Exception("S3 object not found")
@@ -542,7 +542,7 @@ def test_handler_with_s3_event_invalid_json(mock_aws_context, mock_pgstac_dsn):
     event = {"Records": [s3_record]}
 
     # Mock S3 client to return invalid JSON
-    with patch("stac_item_loader.handler.boto3.session.Session") as mock_session:
+    with patch("stac_loader.handler.boto3.session.Session") as mock_session:
         mock_s3_client = MagicMock()
         mock_session.return_value.client.return_value = mock_s3_client
 
@@ -575,7 +575,7 @@ def test_handler_with_s3_event_invalid_stac_item(mock_aws_context, mock_pgstac_d
     invalid_stac = {"id": "test", "type": "Feature"}  # Missing required fields
 
     # Mock S3 client to return invalid STAC item
-    with patch("stac_item_loader.handler.boto3.session.Session") as mock_session:
+    with patch("stac_loader.handler.boto3.session.Session") as mock_session:
         mock_s3_client = MagicMock()
         mock_session.return_value.client.return_value = mock_s3_client
 
@@ -617,7 +617,7 @@ def test_handler_with_mixed_s3_and_sqs_events(
     event = {"Records": [sqs_record, s3_record]}
 
     # Mock S3 client for the S3 event
-    with patch("stac_item_loader.handler.boto3.session.Session") as mock_session:
+    with patch("stac_loader.handler.boto3.session.Session") as mock_session:
         mock_s3_client = MagicMock()
         mock_session.return_value.client.return_value = mock_s3_client
 
@@ -651,7 +651,7 @@ def test_handler_with_s3_event_binary_content(mock_aws_context, mock_pgstac_dsn)
     event = {"Records": [s3_record]}
 
     # Mock S3 client to return binary content that can't be decoded as UTF-8
-    with patch("stac_item_loader.handler.boto3.session.Session") as mock_session:
+    with patch("stac_loader.handler.boto3.session.Session") as mock_session:
         mock_s3_client = MagicMock()
         mock_session.return_value.client.return_value = mock_s3_client
 
@@ -823,7 +823,7 @@ def test_handler_with_collection_from_s3(mock_aws_context, mock_pgstac_dsn, data
     event = {"Records": [s3_record]}
 
     # Mock S3 client to return our STAC collection
-    with patch("stac_item_loader.handler.boto3.session.Session") as mock_session:
+    with patch("stac_loader.handler.boto3.session.Session") as mock_session:
         mock_s3_client = MagicMock()
         mock_session.return_value.client.return_value = mock_s3_client
 
@@ -1074,7 +1074,7 @@ def test_handler_with_sqs_record_missing_message_id(mock_aws_context, mock_pgsta
 
 def test_is_s3_event_function():
     """Test the is_s3_event helper function"""
-    from stac_item_loader.handler import is_s3_event
+    from stac_loader.handler import is_s3_event
 
     # Test with S3 event
     s3_event = json.dumps(create_s3_event_notification("bucket", "key"))
@@ -1091,7 +1091,7 @@ def test_is_s3_event_function():
 
 def test_process_s3_event_function(mock_aws_context):
     """Test the process_s3_event helper function"""
-    from stac_item_loader.handler import process_s3_event
+    from stac_loader.handler import process_s3_event
 
     bucket_name = "test-bucket"
     object_key = "stac/items/test.json"
@@ -1102,7 +1102,7 @@ def test_process_s3_event_function(mock_aws_context):
     message_str = json.dumps(s3_event)
 
     # Mock S3 client to return our STAC item
-    with patch("stac_item_loader.handler.boto3.session.Session") as mock_session:
+    with patch("stac_loader.handler.boto3.session.Session") as mock_session:
         mock_s3_client = MagicMock()
         mock_session.return_value.client.return_value = mock_s3_client
 
@@ -1124,7 +1124,7 @@ def test_process_s3_event_function(mock_aws_context):
 
 def test_process_s3_event_with_no_records():
     """Test process_s3_event with message containing no records"""
-    from stac_item_loader.handler import process_s3_event
+    from stac_loader.handler import process_s3_event
 
     # Create message with empty Records
     message_str = json.dumps({"Records": []})
@@ -1136,7 +1136,7 @@ def test_process_s3_event_with_no_records():
 
 def test_process_s3_event_with_multiple_records():
     """Test process_s3_event with message containing multiple records"""
-    from stac_item_loader.handler import process_s3_event
+    from stac_loader.handler import process_s3_event
 
     # Create message with multiple records
     s3_event = {

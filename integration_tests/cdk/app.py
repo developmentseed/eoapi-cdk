@@ -14,7 +14,7 @@ from eoapi_cdk import (
     PgStacApiLambda,
     PgStacDatabase,
     StacIngestor,
-    StacItemLoader,
+    StacLoader,
     StactoolsItemGenerator,
     TiPgApiLambda,
     TitilerPgstacApiLambda,
@@ -179,9 +179,9 @@ class pgStacInfraStack(Stack):
             },
         )
 
-        self.stac_item_loader = StacItemLoader(
+        self.stac_loader = StacLoader(
             self,
-            "stac-item-loader",
+            "stac-loader",
             pgstac_db=pgstac_db,
             batch_size=500,
             lambda_timeout_seconds=300,
@@ -190,12 +190,10 @@ class pgStacInfraStack(Stack):
         self.stac_item_generator = StactoolsItemGenerator(
             self,
             "stactools-item-generator",
-            item_load_topic_arn=self.stac_item_loader.topic.topic_arn,
+            item_load_topic_arn=self.stac_loader.topic.topic_arn,
         )
 
-        self.stac_item_loader.topic.grant_publish(
-            self.stac_item_generator.lambda_function
-        )
+        self.stac_loader.topic.grant_publish(self.stac_item_generator.lambda_function)
 
         stac_bucket = aws_s3.Bucket(
             self,
@@ -204,11 +202,11 @@ class pgStacInfraStack(Stack):
 
         stac_bucket.add_event_notification(
             aws_s3.EventType.OBJECT_CREATED,
-            aws_s3_notifications.SnsDestination(self.stac_item_loader.topic),
+            aws_s3_notifications.SnsDestination(self.stac_loader.topic),
             aws_s3.NotificationKeyFilter(suffix=".json"),
         )
 
-        stac_bucket.grant_read(self.stac_item_loader.lambda_function)
+        stac_bucket.grant_read(self.stac_loader.lambda_function)
 
 
 app = App()

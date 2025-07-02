@@ -112,7 +112,7 @@ export interface StactoolsItemGeneratorProps {
   /**
    * ARN of the SNS topic to publish generated items to.
    *
-   * This is typically the topic from a StacItemLoader construct.
+   * This is typically the topic from a StacLoader construct.
    * Generated STAC items will be published here for downstream
    * processing and database insertion.
    */
@@ -179,7 +179,7 @@ export interface StactoolsItemGeneratorProps {
  *
  * ```typescript
  * // Create item loader first (or get existing topic ARN)
- * const loader = new StacItemLoader(this, 'ItemLoader', {
+ * const loader = new StacLoader(this, 'ItemLoader', {
  *   pgstacDb: database
  * });
  *

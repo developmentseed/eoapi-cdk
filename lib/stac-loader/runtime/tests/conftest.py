@@ -76,7 +76,7 @@ def mock_aws_context():
 @pytest.fixture
 def mock_pgstac_dsn(database_url):
     """Mock the get_pgstac_dsn function to return the test database URL"""
-    with patch("stac_item_loader.handler.get_pgstac_dsn", return_value=database_url):
+    with patch("stac_loader.handler.get_pgstac_dsn", return_value=database_url):
         yield
 
 

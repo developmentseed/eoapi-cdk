@@ -1,5 +1,5 @@
 [project]
-name = "stac-item-loader"
+name = "stac-loader"
 version = "0.1.0"
 description = "An application for loading STAC items into a pgstac database"
 authors = [

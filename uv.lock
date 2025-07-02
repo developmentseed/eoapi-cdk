@@ -5,7 +5,7 @@ requires-python = ">=3.11"
 [manifest]
 members = [
     "eoapi-cdk",
-    "stac-item-loader",
+    "stac-loader",
     "stactools-item-generator",
 ]
 
@@ -208,7 +208,7 @@ name = "eoapi-cdk"
 version = "0.0"
 source = { virtual = "." }
 dependencies = [
-    { name = "stac-item-loader" },
+    { name = "stac-loader" },
     { name = "stactools-item-generator" },
 ]
 
@@ -232,7 +232,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "stac-item-loader", editable = "lib/stac-item-loader/runtime" },
+    { name = "stac-loader", editable = "lib/stac-loader/runtime" },
     { name = "stactools-item-generator", editable = "lib/stactools-item-generator/runtime" },
 ]
 
@@ -885,9 +885,9 @@ wheels = [
 ]
 
 [[package]]
-name = "stac-item-loader"
+name = "stac-loader"
 version = "0.1.0"
-source = { editable = "lib/stac-item-loader/runtime" }
+source = { editable = "lib/stac-loader/runtime" }
 dependencies = [
     { name = "boto3" },
     { name = "pypgstac", extra = ["psycopg"] },

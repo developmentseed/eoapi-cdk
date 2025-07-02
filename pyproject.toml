@@ -4,15 +4,15 @@ version = "0.0"
 requires-python = ">=3.11"
 dependencies = [
   "stactools-item-generator",
-  "stac-item-loader",
+  "stac-loader",
 ]
 
 [tool.uv.sources]
 stactools-item-generator = { workspace = true }
-stac-item-loader = { workspace = true }
+stac-loader = { workspace = true }
 
 [tool.uv.workspace]
-members = ["lib/stac-item-loader/runtime", "lib/stactools-item-generator/runtime"]
+members = ["lib/stac-loader/runtime", "lib/stactools-item-generator/runtime"]
 
 [dependency-groups]
 deploy = [
@@ -37,7 +37,7 @@ addopts = "-vv --ignore=cdk.out --no-header --tb=native"
 pythonpath = "."
 testpaths = [
     "lib/stactools-item-generator/runtime/tests",
-    "lib/stac-item-loader/runtime/tests",
+    "lib/stac-loader/runtime/tests",
 ]
 
 [tool.ruff]

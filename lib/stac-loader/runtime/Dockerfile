@@ -7,12 +7,12 @@ ENV PYTHONUNBUFFERED=1
 
 WORKDIR /asset
 
-COPY stac-item-loader/runtime/pyproject.toml pyproject.toml
-COPY stac-item-loader/runtime/src/stac_item_loader/ stac_item_loader/
+COPY stac-loader/runtime/pyproject.toml pyproject.toml
+COPY stac-loader/runtime/src/stac_loader/ stac_loader/
 
 ARG PGSTAC_VERSION=0.9.6
 RUN uv add --no-sync pypgstac==${PGSTAC_VERSION} && \
   uv export --no-dev --no-editable -o requirements.txt && \
   uv pip install --target /asset -r requirements.txt
 
-CMD ["stac_item_loader.handler.handler"]
+CMD ["stac_loader.handler.handler"]

@@ -15,9 +15,9 @@ import * as path from "path";
 import { CustomLambdaFunctionProps } from "../utils";
 
 /**
- * Configuration properties for the StacItemLoader construct.
+ * Configuration properties for the StacLoader construct.
  *
- * The StacItemLoader is part of a two-phase serverless STAC ingestion pipeline
+ * The StacLoader is part of a two-phase serverless STAC ingestion pipeline
  * that loads STAC items into a pgstac database. This construct creates
  * the infrastructure for receiving STAC items from multiple sources:
  * 1. SNS messages containing STAC metadata (direct ingestion)
@@ -26,14 +26,14 @@ import { CustomLambdaFunctionProps } from "../utils";
  * Items from both sources are batched and inserted into PostgreSQL with the pgstac extension.
  *
  * @example
- * const loader = new StacItemLoader(this, 'ItemLoader', {
+ * const loader = new StacLoader(this, 'ItemLoader', {
  *   pgstacDb: database,
  *   batchSize: 1000,
  *   maxBatchingWindowMinutes: 1,
  *   lambdaTimeoutSeconds: 300
  * });
  */
-export interface StacItemLoaderProps {
+export interface StacLoaderProps {
   /**
    * The PgSTAC database instance to load items into.
    *
@@ -120,7 +120,7 @@ export interface StacItemLoaderProps {
   readonly maxBatchingWindowMinutes?: number;
 
   /**
-   * Maximum concurrent executions for the StacItemLoader Lambda function
+   * Maximum concurrent executions for the StacLoader Lambda function
    *
    * This limit will be applied to the Lambda function and will control how
    * many concurrent batches will be released from the SQS queue.
@@ -152,7 +152,7 @@ export interface StacItemLoaderProps {
 /**
  * AWS CDK Construct for STAC Item Loading Infrastructure
  *
- * The StacItemLoader creates a serverless, event-driven system for loading
+ * The StacLoader creates a serverless, event-driven system for loading
  * STAC (SpatioTemporal Asset Catalog) items into a PostgreSQL database with
  * the pgstac extension. This construct supports multiple ingestion pathways
  * for flexible STAC item loading.
@@ -231,7 +231,7 @@ export interface StacItemLoaderProps {
  * });
  *
  * // Create item loader
- * const loader = new StacItemLoader(this, 'ItemLoader', {
+ * const loader = new StacLoader(this, 'ItemLoader', {
  *   pgstacDb: database,
  *   batchSize: 1000,          // Process up to 1000 items per batch
  *   maxBatchingWindowMinutes: 1, // Wait max 1 minute to fill batch
@@ -310,7 +310,7 @@ export interface StacItemLoaderProps {
  * ```
  *
  */
-export class StacItemLoader extends Construct {
+export class StacLoader extends Construct {
   /**
    * The SNS topic that receives STAC items and S3 event notifications for loading.
    *
@@ -362,7 +362,7 @@ export class StacItemLoader extends Construct {
    */
   public readonly lambdaFunction: lambda.Function;
 
-  constructor(scope: Construct, id: string, props: StacItemLoaderProps) {
+  constructor(scope: Construct, id: string, props: StacLoaderProps) {
     super(scope, id);
 
     const timeoutSeconds = props.lambdaTimeoutSeconds ?? 300;
@@ -386,7 +386,7 @@ export class StacItemLoader extends Construct {
 
     // Create SNS topic
     this.topic = new sns.Topic(this, "Topic", {
-      displayName: `${id}-StacItemLoaderTopic`,
+      displayName: `${id}-StacLoaderTopic`,
     });
 
     // Subscribe the queue to the topic
@@ -397,11 +397,11 @@ export class StacItemLoader extends Construct {
     // Create the lambda function
     this.lambdaFunction = new lambda.Function(this, "Function", {
       runtime: lambdaRuntime,
-      handler: "stac_item_loader.handler.handler",
+      handler: "stac_loader.handler.handler",
       vpc: props.vpc,
       vpcSubnets: props.subnetSelection,
       code: lambda.Code.fromDockerBuild(path.join(__dirname, ".."), {
-        file: "stac-item-loader/runtime/Dockerfile",
+        file: "stac-loader/runtime/Dockerfile",
         platform: "linux/amd64",
         buildArgs: {
           PYTHON_VERSION: lambdaRuntime.toString().replace("python", ""),
@@ -438,26 +438,46 @@ export class StacItemLoader extends Construct {
     // Create outputs
     new CfnOutput(this, "TopicArn", {
       value: this.topic.topicArn,
-      description: "ARN of the StacItemLoader SNS Topic",
-      exportName: "stac-item-loader-topic-arn",
+      description: "ARN of the StacLoader SNS Topic",
+      exportName: "stac-loader-topic-arn",
     });
 
     new CfnOutput(this, "QueueUrl", {
       value: this.queue.queueUrl,
-      description: "URL of the StacItemLoader SQS Queue",
-      exportName: "stac-item-loader-queue-url",
+      description: "URL of the StacLoader SQS Queue",
+      exportName: "stac-loader-queue-url",
     });
 
     new CfnOutput(this, "DeadLetterQueueUrl", {
       value: this.deadLetterQueue.queueUrl,
-      description: "URL of the StacItemLoader Dead Letter Queue",
-      exportName: "stac-item-loader-deadletter-queue-url",
+      description: "URL of the StacLoader Dead Letter Queue",
+      exportName: "stac-loader-deadletter-queue-url",
     });
 
     new CfnOutput(this, "FunctionName", {
       value: this.lambdaFunction.functionName,
-      description: "Name of the StacItemLoader Lambda Function",
-      exportName: "stac-item-loader-function-name",
+      description: "Name of the StacLoader Lambda Function",
+      exportName: "stac-loader-function-name",
     });
   }
 }
+
+/**
+ * @deprecated Use StacLoader instead. StacItemLoader will be removed in a future version.
+ */
+export class StacItemLoader extends StacLoader {
+  constructor(scope: Construct, id: string, props: StacLoaderProps) {
+    console.warn(
+      `StacItemLoader is deprecated. Please use StacLoader instead. ` +
+        `StacItemLoader will be removed in a future version.`
+    );
+
+    super(scope, id, props);
+  }
+}
+
+// Also create a deprecated interface alias if you had a separate interface
+/**
+ * @deprecated Use StacLoaderProps instead. StacItemLoaderProps will be removed in a future version.
+ */
+export interface StacItemLoaderProps extends StacLoaderProps {}
