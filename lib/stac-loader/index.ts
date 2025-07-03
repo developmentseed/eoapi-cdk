@@ -18,15 +18,15 @@ import { CustomLambdaFunctionProps } from "../utils";
  * Configuration properties for the StacLoader construct.
  *
  * The StacLoader is part of a two-phase serverless STAC ingestion pipeline
- * that loads STAC items into a pgstac database. This construct creates
- * the infrastructure for receiving STAC items from multiple sources:
+ * that loads STAC collections and items into a pgstac database. This construct creates
+ * the infrastructure for receiving STAC objects from multiple sources:
  * 1. SNS messages containing STAC metadata (direct ingestion)
- * 2. S3 event notifications for STAC items uploaded to S3 buckets
+ * 2. S3 event notifications for STAC objects uploaded to S3 buckets
  *
- * Items from both sources are batched and inserted into PostgreSQL with the pgstac extension.
+ * Objects from both sources are batched and inserted into PostgreSQL with the pgstac extension.
  *
  * @example
- * const loader = new StacLoader(this, 'ItemLoader', {
+ * const loader = new StacLoader(this, 'StacLoader', {
  *   pgstacDb: database,
  *   batchSize: 1000,
  *   maxBatchingWindowMinutes: 1,
@@ -35,10 +35,10 @@ import { CustomLambdaFunctionProps } from "../utils";
  */
 export interface StacLoaderProps {
   /**
-   * The PgSTAC database instance to load items into.
+   * The PgSTAC database instance to load data into.
    *
    * This database must have the pgstac extension installed and be properly
-   * configured with collections before items can be loaded. The loader will
+   * configured with collections before objects can be loaded. The loader will
    * use AWS Secrets Manager to securely access database credentials.
    */
   readonly pgstacDb: PgStacDatabase;
@@ -68,7 +68,7 @@ export interface StacLoaderProps {
    * The timeout for the item load lambda in seconds.
    *
    * This should accommodate the time needed to process up to `batchSize`
-   * items and perform database insertions. The SQS visibility timeout
+   * objects and perform database insertions. The SQS visibility timeout
    * will be set to this value plus 10 seconds.
    *
    * @default 300
@@ -79,7 +79,7 @@ export interface StacLoaderProps {
    * Memory size for the lambda function in MB.
    *
    * Higher memory allocation may improve performance when processing
-   * large batches of STAC items, especially for memory-intensive
+   * large batches of STAC objects, especially for memory-intensive
    * database operations.
    *
    * @default 1024
@@ -89,7 +89,7 @@ export interface StacLoaderProps {
   /**
    * SQS batch size for lambda event source.
    *
-   * This determines the maximum number of STAC items that will be
+   * This determines the maximum number of STAC objects that will be
    * processed together in a single lambda invocation. Larger batch
    * sizes improve database insertion efficiency but require more
    * memory and longer processing time.
@@ -107,12 +107,12 @@ export interface StacLoaderProps {
    * Maximum batching window in minutes.
    *
    * Even if the batch size isn't reached, the lambda will be triggered
-   * after this time period to ensure timely processing of items.
-   * This prevents items from waiting indefinitely in low-volume scenarios.
+   * after this time period to ensure timely processing of objects.
+   * This prevents objects from waiting indefinitely in low-volume scenarios.
    *
    * **Important**: This timeout works in conjunction with batchSize - SQS
    * will trigger the Lambda when EITHER the batch size is reached OR this
-   * time window expires, ensuring items are processed in a timely manner
+   * time window expires, ensuring objects are processed in a timely manner
    * regardless of volume.
    *
    * @default 1
@@ -150,35 +150,35 @@ export interface StacLoaderProps {
 }
 
 /**
- * AWS CDK Construct for STAC Item Loading Infrastructure
+ * AWS CDK Construct for STAC Object Loading Infrastructure
  *
  * The StacLoader creates a serverless, event-driven system for loading
- * STAC (SpatioTemporal Asset Catalog) items into a PostgreSQL database with
+ * STAC (SpatioTemporal Asset Catalog) objects into a PostgreSQL database with
  * the pgstac extension. This construct supports multiple ingestion pathways
- * for flexible STAC item loading.
+ * for flexible STAC object loading.
  *
  * ## Architecture Overview
  *
  * This construct creates the following AWS resources:
- * - **SNS Topic**: Entry point for STAC items and S3 event notifications
+ * - **SNS Topic**: Entry point for STAC objects and S3 event notifications
  * - **SQS Queue**: Buffers and batches messages before processing (60-second visibility timeout)
  * - **Dead Letter Queue**: Captures failed loading attempts after 5 retries
- * - **Lambda Function**: Python function that processes batches and inserts items into pgstac
+ * - **Lambda Function**: Python function that processes batches and inserts objects into pgstac
  *
  * ## Data Flow
  *
  * The loader supports two primary data ingestion patterns:
  *
- * ### Direct STAC Item Publishing
- * 1. STAC items (JSON) are published directly to the SNS topic in message bodies
- * 2. The SQS queue collects messages and batches them (up to {batchSize} items or 1 minute window)
- * 3. The Lambda function receives batches, validates items, and inserts into pgstac
+ * ### Direct STAC Object Publishing
+ * 1. STAC objects (JSON) are published directly to the SNS topic in message bodies
+ * 2. The SQS queue collects messages and batches them (up to {batchSize} objects or 1 minute window)
+ * 3. The Lambda function receives batches, validates objects, and inserts into pgstac
  *
  * ### S3 Event-Driven Loading
  * 1. An S3 bucket is configured to send notifications to the SNS topic when json files are created
- * 2. STAC items are uploaded to S3 buckets as JSON/GeoJSON files
- * 3. S3 event notifications are sent to the SNS topic when items are uploaded
- * 4. The Lambda function receives S3 events in the SQS message batch, fetches items from S3, and loads into pgstac
+ * 2. STAC objects are uploaded to S3 buckets as JSON/GeoJSON files
+ * 3. S3 event notifications are sent to the SNS topic when objects are uploaded
+ * 4. The Lambda function receives S3 events in the SQS message batch, fetches objects from S3, and loads into pgstac
  *
  * ## Batching Behavior
  *
@@ -189,7 +189,7 @@ export interface StacLoaderProps {
  *   triggers after `maxBatchingWindow` minutes (default: 1 minute)
  * - **Trigger Condition**: Lambda executes when EITHER condition is met first
  * - **Concurrency**: Limited to `maxConcurrency` concurrent executions to prevent database overload
- * - **Partial Failures**: Uses `reportBatchItemFailures` to retry only failed items
+ * - **Partial Failures**: Uses `reportBatchItemFailures` to retry only failed objects
  *
  * This approach balances throughput (larger batches = fewer database connections)
  * with latency (time-based triggers prevent indefinite waiting).
@@ -198,13 +198,13 @@ export interface StacLoaderProps {
  *
  * Failed messages are sent to the dead letter queue after 5 processing attempts.
  * **Important**: This construct provides NO automated handling of dead letter queue
- * messages - monitoring, inspection, and reprocessing of failed items is the
+ * messages - monitoring, inspection, and reprocessing of failed objects is the
  * responsibility of the implementing application.
  *
  * Consider implementing:
  * - CloudWatch alarms on dead letter queue depth
  * - Manual or automated reprocessing workflows
- * - Logging and alerting for failed items
+ * - Logging and alerting for failed objects
  * - Regular cleanup of old dead letter messages (14-day retention)
  *
  * ## Operational Characteristics
@@ -218,7 +218,7 @@ export interface StacLoaderProps {
  * ## Prerequisites
  *
  * Before using this construct, ensure:
- * - The pgstac database has collections loaded (items require existing collection IDs)
+ * - The pgstac database has collections loaded (objects require existing collection IDs)
  * - Database credentials are stored in AWS Secrets Manager
  * - The pgstac extension is properly installed and configured
  *
@@ -230,26 +230,39 @@ export interface StacLoaderProps {
  *   pgstacVersion: '0.9.5'
  * });
  *
- * // Create item loader
- * const loader = new StacLoader(this, 'ItemLoader', {
+ * // Create Object loader
+ * const loader = new StacLoader(this, 'StacLoader', {
  *   pgstacDb: database,
- *   batchSize: 1000,          // Process up to 1000 items per batch
+ *   batchSize: 1000,          // Process up to 1000 objects per batch
  *   maxBatchingWindowMinutes: 1, // Wait max 1 minute to fill batch
  *   lambdaTimeoutSeconds: 300     // Allow up to 300 seconds for database operations
  * });
  *
- * // The topic ARN can be used by other services to publish items
+ * // The topic ARN can be used by other services to publish objects
  * new CfnOutput(this, 'LoaderTopicArn', {
  *   value: loader.topic.topicArn
  * });
  * ```
  *
- * ## Direct Item Publishing
+ * ## Direct Object Publishing
  *
- * External services can publish STAC items directly to the topic:
+ * External services can publish STAC objects directly to the topic:
  *
  * ```bash
- * aws sns publish --topic-arn $ITEM_LOAD_TOPIC --message '{
+ * aws sns publish --topic-arn $STAC_LOAD_TOPIC --message  '{
+ *   "id": "example-collection",
+ *   "type": "Collection",
+ *   "title": "Example Collection",
+ *   "description": "An example collection",
+ *   "license": "proprietary",
+ *   "extent": {
+ *       "spatial": {"bbox": [[-180, -90, 180, 90]]},
+ *       "temporal": {"interval": [[null, null]]},
+ *   },
+ *   "stac_version": "1.1.0",
+ * }'
+ *
+ * aws sns publish --topic-arn $STAC_LOAD_TOPIC --message '{
  *   "type": "Feature",
  *   "stac_version": "1.0.0",
  *   "id": "example-item",
@@ -257,12 +270,14 @@ export interface StacLoaderProps {
  *   "geometry": {"type": "Polygon", "coordinates": [...]},
  *   "collection": "example-collection"
  * }'
+ *
+ *
  * ```
  *
  * ## S3 Event Configuration
  *
  * To enable S3 event-driven loading, configure S3 bucket notifications to send
- * events to the SNS topic when STAC items (.json or .geojson files) are uploaded:
+ * events to the SNS topic when STAC objects (.json or .geojson files) are uploaded:
  *
  * ```typescript
  * // Configure S3 bucket to send notifications to the loader topic
@@ -279,16 +294,16 @@ export interface StacLoaderProps {
  * );
  * ```
  *
- * When STAC items are uploaded to the configured S3 bucket, the loader will:
+ * When STAC objects are uploaded to the configured S3 bucket, the loader will:
  * 1. Receive S3 event notifications via SNS
- * 2. Fetch the STAC item JSON from S3
- * 3. Validate and load the item into the pgstac database
+ * 2. Fetch the STAC JSON from S3
+ * 3. Validate and load the objects into the pgstac database
  *
  * ## Monitoring and Troubleshooting
  *
  * - Monitor Lambda logs: `/aws/lambda/{FunctionName}`
- * - **Dead Letter Queue**: Check for failed items - **no automated handling provided**
- * - Use batch item failure reporting for partial batch processing
+ * - **Dead Letter Queue**: Check for failed objects - **no automated handling provided**
+ * - Use batch objects failure reporting for partial batch processing
  * - CloudWatch metrics available for queue depth and Lambda performance
  *
  * ### Dead Letter Queue Management
@@ -312,11 +327,11 @@ export interface StacLoaderProps {
  */
 export class StacLoader extends Construct {
   /**
-   * The SNS topic that receives STAC items and S3 event notifications for loading.
+   * The SNS topic that receives STAC objects and S3 event notifications for loading.
    *
    * This topic serves as the entry point for two types of events:
-   * 1. Direct STAC item JSON documents published by external services
-   * 2. S3 event notifications when STAC items are uploaded to configured buckets
+   * 1. Direct STAC JSON documents published by external services
+   * 2. S3 event notifications when STAC objects are uploaded to configured buckets
    *
    * The topic fans out to the SQS queue for batched processing.
    */
@@ -325,7 +340,7 @@ export class StacLoader extends Construct {
   /**
    * The SQS queue that buffers messages before processing.
    *
-   * This queue collects both direct STAC items from SNS and S3 event
+   * This queue collects both direct STAC objects from SNS and S3 event
    * notifications, batching them for efficient database operations.
    * Configured with a visibility timeout that accommodates Lambda
    * processing time plus buffer.
@@ -333,7 +348,7 @@ export class StacLoader extends Construct {
   public readonly queue: sqs.Queue;
 
   /**
-   * Dead letter queue for failed item loading attempts.
+   * Dead letter queue for failed objects loading attempts.
    *
    * Messages that fail processing after 5 attempts are sent here
    * for inspection and potential replay. Retains messages for 14 days
@@ -350,12 +365,12 @@ export class StacLoader extends Construct {
   public readonly deadLetterQueue: sqs.Queue;
 
   /**
-   * The Lambda function that loads STAC items into the pgstac database.
+   * The Lambda function that loads STAC objects into the pgstac database.
    *
    * This Python function receives batches of messages from SQS and processes
    * them based on their type:
-   * - Direct STAC items: Validates and loads directly into pgstac
-   * - S3 events: Fetches STAC items from S3, validates, and loads into pgstac
+   * - Direct STAC objects: Validates and loads directly into pgstac
+   * - S3 events: Fetches STAC JSON from S3, validates, and loads into pgstac
    *
    * The function connects to PostgreSQL using credentials from Secrets Manager
    * and uses pypgstac for efficient database operations.
