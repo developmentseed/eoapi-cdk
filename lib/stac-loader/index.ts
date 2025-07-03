@@ -8,6 +8,7 @@ import {
   aws_logs as logs,
   Duration,
   CfnOutput,
+  Stack,
 } from "aws-cdk-lib";
 import { Construct } from "constructs";
 import { PgStacDatabase } from "../database";
@@ -451,28 +452,29 @@ export class StacLoader extends Construct {
     );
 
     // Create outputs
+    const exportPrefix = Stack.of(this).stackName;
     new CfnOutput(this, "TopicArn", {
       value: this.topic.topicArn,
       description: "ARN of the StacLoader SNS Topic",
-      exportName: "stac-loader-topic-arn",
+      exportName: `${exportPrefix}-stac-loader-topic-arn`,
     });
 
     new CfnOutput(this, "QueueUrl", {
       value: this.queue.queueUrl,
       description: "URL of the StacLoader SQS Queue",
-      exportName: "stac-loader-queue-url",
+      exportName: `${exportPrefix}-stac-loader-queue-url`,
     });
 
     new CfnOutput(this, "DeadLetterQueueUrl", {
       value: this.deadLetterQueue.queueUrl,
       description: "URL of the StacLoader Dead Letter Queue",
-      exportName: "stac-loader-deadletter-queue-url",
+      exportName: `${exportPrefix}-stac-loader-deadletter-queue-url`,
     });
 
     new CfnOutput(this, "FunctionName", {
       value: this.lambdaFunction.functionName,
       description: "Name of the StacLoader Lambda Function",
-      exportName: "stac-loader-function-name",
+      exportName: `${exportPrefix}-stac-loader-function-name`,
     });
   }
 }
