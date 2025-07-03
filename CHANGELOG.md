@@ -1,3 +1,10 @@
+# [8.3.0](https://github.com/developmentseed/eoapi-cdk/compare/v8.2.3...v8.3.0) (2025-07-03)
+
+
+### Features
+
+* add collection loading capability ([#160](https://github.com/developmentseed/eoapi-cdk/issues/160)) ([adbf49b](https://github.com/developmentseed/eoapi-cdk/commit/adbf49bf6371f65dcd54790801e5b68345b35479))
+
 ## [8.2.3](https://github.com/developmentseed/eoapi-cdk/compare/v8.2.2...v8.2.3) (2025-06-11)
 
 
