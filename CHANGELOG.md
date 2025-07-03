@@ -1,3 +1,10 @@
+## [8.3.1](https://github.com/developmentseed/eoapi-cdk/compare/v8.3.0...v8.3.1) (2025-07-03)
+
+
+### Bug Fixes
+
+* add stack name to exportNames in StacLoader ([#162](https://github.com/developmentseed/eoapi-cdk/issues/162)) ([372b677](https://github.com/developmentseed/eoapi-cdk/commit/372b677ba416f11407b10020b26493e07985d49c))
+
 # [8.3.0](https://github.com/developmentseed/eoapi-cdk/compare/v8.2.3...v8.3.0) (2025-07-03)
 
 
