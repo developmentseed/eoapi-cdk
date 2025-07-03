@@ -815,178 +815,19 @@ public readonly table: Table;
 
 ### StacItemLoader <a name="StacItemLoader" id="eoapi-cdk.StacItemLoader"></a>
 
-AWS CDK Construct for STAC Item Loading Infrastructure.
-
-The StacItemLoader creates a serverless, event-driven system for loading
-STAC (SpatioTemporal Asset Catalog) items into a PostgreSQL database with
-the pgstac extension. This construct supports multiple ingestion pathways
-for flexible STAC item loading.
-
-## Architecture Overview
-
-This construct creates the following AWS resources:
-- **SNS Topic**: Entry point for STAC items and S3 event notifications
-- **SQS Queue**: Buffers and batches messages before processing (60-second visibility timeout)
-- **Dead Letter Queue**: Captures failed loading attempts after 5 retries
-- **Lambda Function**: Python function that processes batches and inserts items into pgstac
-
-## Data Flow
-
-The loader supports two primary data ingestion patterns:
-
-### Direct STAC Item Publishing
-1. STAC items (JSON) are published directly to the SNS topic in message bodies
-2. The SQS queue collects messages and batches them (up to {batchSize} items or 1 minute window)
-3. The Lambda function receives batches, validates items, and inserts into pgstac
-
-### S3 Event-Driven Loading
-1. An S3 bucket is configured to send notifications to the SNS topic when json files are created
-2. STAC items are uploaded to S3 buckets as JSON/GeoJSON files
-3. S3 event notifications are sent to the SNS topic when items are uploaded
-4. The Lambda function receives S3 events in the SQS message batch, fetches items from S3, and loads into pgstac
-
-## Batching Behavior
-
-The SQS-to-Lambda integration uses intelligent batching to optimize performance:
-
-- **Batch Size**: Lambda waits to receive up to `batchSize` messages (default: 500)
-- **Batching Window**: If fewer than `batchSize` messages are available, Lambda
-  triggers after `maxBatchingWindow` minutes (default: 1 minute)
-- **Trigger Condition**: Lambda executes when EITHER condition is met first
-- **Concurrency**: Limited to `maxConcurrency` concurrent executions to prevent database overload
-- **Partial Failures**: Uses `reportBatchItemFailures` to retry only failed items
-
-This approach balances throughput (larger batches = fewer database connections)
-with latency (time-based triggers prevent indefinite waiting).
-
-## Error Handling and Dead Letter Queue
-
-Failed messages are sent to the dead letter queue after 5 processing attempts.
-**Important**: This construct provides NO automated handling of dead letter queue
-messages - monitoring, inspection, and reprocessing of failed items is the
-responsibility of the implementing application.
-
-Consider implementing:
-- CloudWatch alarms on dead letter queue depth
-- Manual or automated reprocessing workflows
-- Logging and alerting for failed items
-- Regular cleanup of old dead letter messages (14-day retention)
-
-## Operational Characteristics
-
-- **Scalability**: Lambda scales automatically based on queue depth
-- **Reliability**: Dead letter queue captures failures for debugging
-- **Efficiency**: Batching optimizes database operations for high throughput
-- **Security**: Database credentials accessed via AWS Secrets Manager
-- **Observability**: CloudWatch logs retained for one week
-
-## Prerequisites
-
-Before using this construct, ensure:
-- The pgstac database has collections loaded (items require existing collection IDs)
-- Database credentials are stored in AWS Secrets Manager
-- The pgstac extension is properly installed and configured
-
-## Usage Example
-
-```typescript
-// Create database first
-const database = new PgStacDatabase(this, 'Database', {
-  pgstacVersion: '0.9.5'
-});
-
-// Create item loader
-const loader = new StacItemLoader(this, 'ItemLoader', {
-  pgstacDb: database,
-  batchSize: 1000,          // Process up to 1000 items per batch
-  maxBatchingWindowMinutes: 1, // Wait max 1 minute to fill batch
-  lambdaTimeoutSeconds: 300     // Allow up to 300 seconds for database operations
-});
-
-// The topic ARN can be used by other services to publish items
-new CfnOutput(this, 'LoaderTopicArn', {
-  value: loader.topic.topicArn
-});
-```
-
-## Direct Item Publishing
-
-External services can publish STAC items directly to the topic:
-
-```bash
-aws sns publish --topic-arn $ITEM_LOAD_TOPIC --message '{
-  "type": "Feature",
-  "stac_version": "1.0.0",
-  "id": "example-item",
-  "properties": {"datetime": "2021-01-01T00:00:00Z"},
-  "geometry": {"type": "Polygon", "coordinates": [...]},
-  "collection": "example-collection"
-}'
-```
-
-## S3 Event Configuration
-
-To enable S3 event-driven loading, configure S3 bucket notifications to send
-events to the SNS topic when STAC items (.json or .geojson files) are uploaded:
-
-```typescript
-// Configure S3 bucket to send notifications to the loader topic
-bucket.addEventNotification(
-  s3.EventType.OBJECT_CREATED,
-  new s3n.SnsDestination(loader.topic),
-  { suffix: '.json' }
-);
-
-bucket.addEventNotification(
-  s3.EventType.OBJECT_CREATED,
-  new s3n.SnsDestination(loader.topic),
-  { suffix: '.geojson' }
-);
-```
-
-When STAC items are uploaded to the configured S3 bucket, the loader will:
-1. Receive S3 event notifications via SNS
-2. Fetch the STAC item JSON from S3
-3. Validate and load the item into the pgstac database
-
-## Monitoring and Troubleshooting
-
-- Monitor Lambda logs: `/aws/lambda/{FunctionName}`
-- **Dead Letter Queue**: Check for failed items - **no automated handling provided**
-- Use batch item failure reporting for partial batch processing
-- CloudWatch metrics available for queue depth and Lambda performance
-
-### Dead Letter Queue Management
-
-Applications must implement their own dead letter queue monitoring:
-
-```typescript
-// Example: CloudWatch alarm for dead letter queue depth
-new cloudwatch.Alarm(this, 'DeadLetterAlarm', {
-  metric: loader.deadLetterQueue.metricApproximateNumberOfVisibleMessages(),
-  threshold: 1,
-  evaluationPeriods: 1
-});
-
-// Example: Lambda to reprocess dead letter messages
-const reprocessFunction = new lambda.Function(this, 'Reprocess', {
-  // Implementation to fetch and republish failed messages
-});
-```
-
 #### Initializers <a name="Initializers" id="eoapi-cdk.StacItemLoader.Initializer"></a>
 
 ```typescript
 import { StacItemLoader } from 'eoapi-cdk'
 
-new StacItemLoader(scope: Construct, id: string, props: StacItemLoaderProps)
+new StacItemLoader(scope: Construct, id: string, props: StacLoaderProps)
 ```
 
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
 | <code><a href="#eoapi-cdk.StacItemLoader.Initializer.parameter.scope">scope</a></code> | <code>constructs.Construct</code> | *No description.* |
 | <code><a href="#eoapi-cdk.StacItemLoader.Initializer.parameter.id">id</a></code> | <code>string</code> | *No description.* |
-| <code><a href="#eoapi-cdk.StacItemLoader.Initializer.parameter.props">props</a></code> | <code><a href="#eoapi-cdk.StacItemLoaderProps">StacItemLoaderProps</a></code> | *No description.* |
+| <code><a href="#eoapi-cdk.StacItemLoader.Initializer.parameter.props">props</a></code> | <code><a href="#eoapi-cdk.StacLoaderProps">StacLoaderProps</a></code> | *No description.* |
 
 ---
 
@@ -1004,7 +845,7 @@ new StacItemLoader(scope: Construct, id: string, props: StacItemLoaderProps)
 
 ##### `props`<sup>Required</sup> <a name="props" id="eoapi-cdk.StacItemLoader.Initializer.parameter.props"></a>
 
-- *Type:* <a href="#eoapi-cdk.StacItemLoaderProps">StacItemLoaderProps</a>
+- *Type:* <a href="#eoapi-cdk.StacLoaderProps">StacLoaderProps</a>
 
 ---
 
@@ -1016,7 +857,7 @@ new StacItemLoader(scope: Construct, id: string, props: StacItemLoaderProps)
 
 ---
 
-##### `toString` <a name="toString" id="eoapi-cdk.StacItemLoader.toString"></a>
+##### ~~`toString`~~ <a name="toString" id="eoapi-cdk.StacItemLoader.toString"></a>
 
 ```typescript
 public toString(): string
@@ -1032,7 +873,7 @@ Returns a string representation of this construct.
 
 ---
 
-##### `isConstruct` <a name="isConstruct" id="eoapi-cdk.StacItemLoader.isConstruct"></a>
+##### ~~`isConstruct`~~ <a name="isConstruct" id="eoapi-cdk.StacItemLoader.isConstruct"></a>
 
 ```typescript
 import { StacItemLoader } from 'eoapi-cdk'
@@ -1069,14 +910,16 @@ Any object.
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
 | <code><a href="#eoapi-cdk.StacItemLoader.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
-| <code><a href="#eoapi-cdk.StacItemLoader.property.deadLetterQueue">deadLetterQueue</a></code> | <code>aws-cdk-lib.aws_sqs.Queue</code> | Dead letter queue for failed item loading attempts. |
-| <code><a href="#eoapi-cdk.StacItemLoader.property.lambdaFunction">lambdaFunction</a></code> | <code>aws-cdk-lib.aws_lambda.Function</code> | The Lambda function that loads STAC items into the pgstac database. |
+| <code><a href="#eoapi-cdk.StacItemLoader.property.deadLetterQueue">deadLetterQueue</a></code> | <code>aws-cdk-lib.aws_sqs.Queue</code> | Dead letter queue for failed objects loading attempts. |
+| <code><a href="#eoapi-cdk.StacItemLoader.property.lambdaFunction">lambdaFunction</a></code> | <code>aws-cdk-lib.aws_lambda.Function</code> | The Lambda function that loads STAC objects into the pgstac database. |
 | <code><a href="#eoapi-cdk.StacItemLoader.property.queue">queue</a></code> | <code>aws-cdk-lib.aws_sqs.Queue</code> | The SQS queue that buffers messages before processing. |
-| <code><a href="#eoapi-cdk.StacItemLoader.property.topic">topic</a></code> | <code>aws-cdk-lib.aws_sns.Topic</code> | The SNS topic that receives STAC items and S3 event notifications for loading. |
+| <code><a href="#eoapi-cdk.StacItemLoader.property.topic">topic</a></code> | <code>aws-cdk-lib.aws_sns.Topic</code> | The SNS topic that receives STAC objects and S3 event notifications for loading. |
 
 ---
 
-##### `node`<sup>Required</sup> <a name="node" id="eoapi-cdk.StacItemLoader.property.node"></a>
+##### ~~`node`~~<sup>Required</sup> <a name="node" id="eoapi-cdk.StacItemLoader.property.node"></a>
+
+- *Deprecated:* Use StacLoader instead. StacItemLoader will be removed in a future version.
 
 ```typescript
 public readonly node: Node;
@@ -1088,7 +931,9 @@ The tree node.
 
 ---
 
-##### `deadLetterQueue`<sup>Required</sup> <a name="deadLetterQueue" id="eoapi-cdk.StacItemLoader.property.deadLetterQueue"></a>
+##### ~~`deadLetterQueue`~~<sup>Required</sup> <a name="deadLetterQueue" id="eoapi-cdk.StacItemLoader.property.deadLetterQueue"></a>
+
+- *Deprecated:* Use StacLoader instead. StacItemLoader will be removed in a future version.
 
 ```typescript
 public readonly deadLetterQueue: Queue;
@@ -1096,7 +941,7 @@ public readonly deadLetterQueue: Queue;
 
 - *Type:* aws-cdk-lib.aws_sqs.Queue
 
-Dead letter queue for failed item loading attempts.
+Dead letter queue for failed objects loading attempts.
 
 Messages that fail processing after 5 attempts are sent here
 for inspection and potential replay. Retains messages for 14 days
@@ -1112,7 +957,9 @@ using this construct must implement their own:
 
 ---
 
-##### `lambdaFunction`<sup>Required</sup> <a name="lambdaFunction" id="eoapi-cdk.StacItemLoader.property.lambdaFunction"></a>
+##### ~~`lambdaFunction`~~<sup>Required</sup> <a name="lambdaFunction" id="eoapi-cdk.StacItemLoader.property.lambdaFunction"></a>
+
+- *Deprecated:* Use StacLoader instead. StacItemLoader will be removed in a future version.
 
 ```typescript
 public readonly lambdaFunction: Function;
@@ -1120,19 +967,21 @@ public readonly lambdaFunction: Function;
 
 - *Type:* aws-cdk-lib.aws_lambda.Function
 
-The Lambda function that loads STAC items into the pgstac database.
+The Lambda function that loads STAC objects into the pgstac database.
 
 This Python function receives batches of messages from SQS and processes
 them based on their type:
-- Direct STAC items: Validates and loads directly into pgstac
-- S3 events: Fetches STAC items from S3, validates, and loads into pgstac
+- Direct STAC objects: Validates and loads directly into pgstac
+- S3 events: Fetches STAC JSON from S3, validates, and loads into pgstac
 
 The function connects to PostgreSQL using credentials from Secrets Manager
 and uses pypgstac for efficient database operations.
 
 ---
 
-##### `queue`<sup>Required</sup> <a name="queue" id="eoapi-cdk.StacItemLoader.property.queue"></a>
+##### ~~`queue`~~<sup>Required</sup> <a name="queue" id="eoapi-cdk.StacItemLoader.property.queue"></a>
+
+- *Deprecated:* Use StacLoader instead. StacItemLoader will be removed in a future version.
 
 ```typescript
 public readonly queue: Queue;
@@ -1142,14 +991,16 @@ public readonly queue: Queue;
 
 The SQS queue that buffers messages before processing.
 
-This queue collects both direct STAC items from SNS and S3 event
+This queue collects both direct STAC objects from SNS and S3 event
 notifications, batching them for efficient database operations.
 Configured with a visibility timeout that accommodates Lambda
 processing time plus buffer.
 
 ---
 
-##### `topic`<sup>Required</sup> <a name="topic" id="eoapi-cdk.StacItemLoader.property.topic"></a>
+##### ~~`topic`~~<sup>Required</sup> <a name="topic" id="eoapi-cdk.StacItemLoader.property.topic"></a>
+
+- *Deprecated:* Use StacLoader instead. StacItemLoader will be removed in a future version.
 
 ```typescript
 public readonly topic: Topic;
@@ -1157,11 +1008,381 @@ public readonly topic: Topic;
 
 - *Type:* aws-cdk-lib.aws_sns.Topic
 
-The SNS topic that receives STAC items and S3 event notifications for loading.
+The SNS topic that receives STAC objects and S3 event notifications for loading.
 
 This topic serves as the entry point for two types of events:
-1. Direct STAC item JSON documents published by external services
-2. S3 event notifications when STAC items are uploaded to configured buckets
+1. Direct STAC JSON documents published by external services
+2. S3 event notifications when STAC objects are uploaded to configured buckets
+
+The topic fans out to the SQS queue for batched processing.
+
+---
+
+
+### StacLoader <a name="StacLoader" id="eoapi-cdk.StacLoader"></a>
+
+AWS CDK Construct for STAC Object Loading Infrastructure.
+
+The StacLoader creates a serverless, event-driven system for loading
+STAC (SpatioTemporal Asset Catalog) objects into a PostgreSQL database with
+the pgstac extension. This construct supports multiple ingestion pathways
+for flexible STAC object loading.
+
+## Architecture Overview
+
+This construct creates the following AWS resources:
+- **SNS Topic**: Entry point for STAC objects and S3 event notifications
+- **SQS Queue**: Buffers and batches messages before processing (60-second visibility timeout)
+- **Dead Letter Queue**: Captures failed loading attempts after 5 retries
+- **Lambda Function**: Python function that processes batches and inserts objects into pgstac
+
+## Data Flow
+
+The loader supports two primary data ingestion patterns:
+
+### Direct STAC Object Publishing
+1. STAC objects (JSON) are published directly to the SNS topic in message bodies
+2. The SQS queue collects messages and batches them (up to {batchSize} objects or 1 minute window)
+3. The Lambda function receives batches, validates objects, and inserts into pgstac
+
+### S3 Event-Driven Loading
+1. An S3 bucket is configured to send notifications to the SNS topic when json files are created
+2. STAC objects are uploaded to S3 buckets as JSON/GeoJSON files
+3. S3 event notifications are sent to the SNS topic when objects are uploaded
+4. The Lambda function receives S3 events in the SQS message batch, fetches objects from S3, and loads into pgstac
+
+## Batching Behavior
+
+The SQS-to-Lambda integration uses intelligent batching to optimize performance:
+
+- **Batch Size**: Lambda waits to receive up to `batchSize` messages (default: 500)
+- **Batching Window**: If fewer than `batchSize` messages are available, Lambda
+  triggers after `maxBatchingWindow` minutes (default: 1 minute)
+- **Trigger Condition**: Lambda executes when EITHER condition is met first
+- **Concurrency**: Limited to `maxConcurrency` concurrent executions to prevent database overload
+- **Partial Failures**: Uses `reportBatchItemFailures` to retry only failed objects
+
+This approach balances throughput (larger batches = fewer database connections)
+with latency (time-based triggers prevent indefinite waiting).
+
+## Error Handling and Dead Letter Queue
+
+Failed messages are sent to the dead letter queue after 5 processing attempts.
+**Important**: This construct provides NO automated handling of dead letter queue
+messages - monitoring, inspection, and reprocessing of failed objects is the
+responsibility of the implementing application.
+
+Consider implementing:
+- CloudWatch alarms on dead letter queue depth
+- Manual or automated reprocessing workflows
+- Logging and alerting for failed objects
+- Regular cleanup of old dead letter messages (14-day retention)
+
+## Operational Characteristics
+
+- **Scalability**: Lambda scales automatically based on queue depth
+- **Reliability**: Dead letter queue captures failures for debugging
+- **Efficiency**: Batching optimizes database operations for high throughput
+- **Security**: Database credentials accessed via AWS Secrets Manager
+- **Observability**: CloudWatch logs retained for one week
+
+## Prerequisites
+
+Before using this construct, ensure:
+- The pgstac database has collections loaded (objects require existing collection IDs)
+- Database credentials are stored in AWS Secrets Manager
+- The pgstac extension is properly installed and configured
+
+## Usage Example
+
+```typescript
+// Create database first
+const database = new PgStacDatabase(this, 'Database', {
+  pgstacVersion: '0.9.5'
+});
+
+// Create Object loader
+const loader = new StacLoader(this, 'StacLoader', {
+  pgstacDb: database,
+  batchSize: 1000,          // Process up to 1000 objects per batch
+  maxBatchingWindowMinutes: 1, // Wait max 1 minute to fill batch
+  lambdaTimeoutSeconds: 300     // Allow up to 300 seconds for database operations
+});
+
+// The topic ARN can be used by other services to publish objects
+new CfnOutput(this, 'LoaderTopicArn', {
+  value: loader.topic.topicArn
+});
+```
+
+## Direct Object Publishing
+
+External services can publish STAC objects directly to the topic:
+
+```bash
+aws sns publish --topic-arn $STAC_LOAD_TOPIC --message  '{
+  "id": "example-collection",
+  "type": "Collection",
+  "title": "Example Collection",
+  "description": "An example collection",
+  "license": "proprietary",
+  "extent": {
+      "spatial": {"bbox": [[-180, -90, 180, 90]]},
+      "temporal": {"interval": [[null, null]]},
+  },
+  "stac_version": "1.1.0",
+}'
+
+aws sns publish --topic-arn $STAC_LOAD_TOPIC --message '{
+  "type": "Feature",
+  "stac_version": "1.0.0",
+  "id": "example-item",
+  "properties": {"datetime": "2021-01-01T00:00:00Z"},
+  "geometry": {"type": "Polygon", "coordinates": [...]},
+  "collection": "example-collection"
+}'
+
+
+```
+
+## S3 Event Configuration
+
+To enable S3 event-driven loading, configure S3 bucket notifications to send
+events to the SNS topic when STAC objects (.json or .geojson files) are uploaded:
+
+```typescript
+// Configure S3 bucket to send notifications to the loader topic
+bucket.addEventNotification(
+  s3.EventType.OBJECT_CREATED,
+  new s3n.SnsDestination(loader.topic),
+  { suffix: '.json' }
+);
+
+bucket.addEventNotification(
+  s3.EventType.OBJECT_CREATED,
+  new s3n.SnsDestination(loader.topic),
+  { suffix: '.geojson' }
+);
+```
+
+When STAC objects are uploaded to the configured S3 bucket, the loader will:
+1. Receive S3 event notifications via SNS
+2. Fetch the STAC JSON from S3
+3. Validate and load the objects into the pgstac database
+
+## Monitoring and Troubleshooting
+
+- Monitor Lambda logs: `/aws/lambda/{FunctionName}`
+- **Dead Letter Queue**: Check for failed objects - **no automated handling provided**
+- Use batch objects failure reporting for partial batch processing
+- CloudWatch metrics available for queue depth and Lambda performance
+
+### Dead Letter Queue Management
+
+Applications must implement their own dead letter queue monitoring:
+
+```typescript
+// Example: CloudWatch alarm for dead letter queue depth
+new cloudwatch.Alarm(this, 'DeadLetterAlarm', {
+  metric: loader.deadLetterQueue.metricApproximateNumberOfVisibleMessages(),
+  threshold: 1,
+  evaluationPeriods: 1
+});
+
+// Example: Lambda to reprocess dead letter messages
+const reprocessFunction = new lambda.Function(this, 'Reprocess', {
+  // Implementation to fetch and republish failed messages
+});
+```
+
+#### Initializers <a name="Initializers" id="eoapi-cdk.StacLoader.Initializer"></a>
+
+```typescript
+import { StacLoader } from 'eoapi-cdk'
+
+new StacLoader(scope: Construct, id: string, props: StacLoaderProps)
+```
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#eoapi-cdk.StacLoader.Initializer.parameter.scope">scope</a></code> | <code>constructs.Construct</code> | *No description.* |
+| <code><a href="#eoapi-cdk.StacLoader.Initializer.parameter.id">id</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#eoapi-cdk.StacLoader.Initializer.parameter.props">props</a></code> | <code><a href="#eoapi-cdk.StacLoaderProps">StacLoaderProps</a></code> | *No description.* |
+
+---
+
+##### `scope`<sup>Required</sup> <a name="scope" id="eoapi-cdk.StacLoader.Initializer.parameter.scope"></a>
+
+- *Type:* constructs.Construct
+
+---
+
+##### `id`<sup>Required</sup> <a name="id" id="eoapi-cdk.StacLoader.Initializer.parameter.id"></a>
+
+- *Type:* string
+
+---
+
+##### `props`<sup>Required</sup> <a name="props" id="eoapi-cdk.StacLoader.Initializer.parameter.props"></a>
+
+- *Type:* <a href="#eoapi-cdk.StacLoaderProps">StacLoaderProps</a>
+
+---
+
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#eoapi-cdk.StacLoader.toString">toString</a></code> | Returns a string representation of this construct. |
+
+---
+
+##### `toString` <a name="toString" id="eoapi-cdk.StacLoader.toString"></a>
+
+```typescript
+public toString(): string
+```
+
+Returns a string representation of this construct.
+
+#### Static Functions <a name="Static Functions" id="Static Functions"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#eoapi-cdk.StacLoader.isConstruct">isConstruct</a></code> | Checks if `x` is a construct. |
+
+---
+
+##### `isConstruct` <a name="isConstruct" id="eoapi-cdk.StacLoader.isConstruct"></a>
+
+```typescript
+import { StacLoader } from 'eoapi-cdk'
+
+StacLoader.isConstruct(x: any)
+```
+
+Checks if `x` is a construct.
+
+Use this method instead of `instanceof` to properly detect `Construct`
+instances, even when the construct library is symlinked.
+
+Explanation: in JavaScript, multiple copies of the `constructs` library on
+disk are seen as independent, completely different libraries. As a
+consequence, the class `Construct` in each copy of the `constructs` library
+is seen as a different class, and an instance of one class will not test as
+`instanceof` the other class. `npm install` will not create installations
+like this, but users may manually symlink construct libraries together or
+use a monorepo tool: in those cases, multiple copies of the `constructs`
+library can be accidentally installed, and `instanceof` will behave
+unpredictably. It is safest to avoid using `instanceof`, and using
+this type-testing method instead.
+
+###### `x`<sup>Required</sup> <a name="x" id="eoapi-cdk.StacLoader.isConstruct.parameter.x"></a>
+
+- *Type:* any
+
+Any object.
+
+---
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#eoapi-cdk.StacLoader.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
+| <code><a href="#eoapi-cdk.StacLoader.property.deadLetterQueue">deadLetterQueue</a></code> | <code>aws-cdk-lib.aws_sqs.Queue</code> | Dead letter queue for failed objects loading attempts. |
+| <code><a href="#eoapi-cdk.StacLoader.property.lambdaFunction">lambdaFunction</a></code> | <code>aws-cdk-lib.aws_lambda.Function</code> | The Lambda function that loads STAC objects into the pgstac database. |
+| <code><a href="#eoapi-cdk.StacLoader.property.queue">queue</a></code> | <code>aws-cdk-lib.aws_sqs.Queue</code> | The SQS queue that buffers messages before processing. |
+| <code><a href="#eoapi-cdk.StacLoader.property.topic">topic</a></code> | <code>aws-cdk-lib.aws_sns.Topic</code> | The SNS topic that receives STAC objects and S3 event notifications for loading. |
+
+---
+
+##### `node`<sup>Required</sup> <a name="node" id="eoapi-cdk.StacLoader.property.node"></a>
+
+```typescript
+public readonly node: Node;
+```
+
+- *Type:* constructs.Node
+
+The tree node.
+
+---
+
+##### `deadLetterQueue`<sup>Required</sup> <a name="deadLetterQueue" id="eoapi-cdk.StacLoader.property.deadLetterQueue"></a>
+
+```typescript
+public readonly deadLetterQueue: Queue;
+```
+
+- *Type:* aws-cdk-lib.aws_sqs.Queue
+
+Dead letter queue for failed objects loading attempts.
+
+Messages that fail processing after 5 attempts are sent here
+for inspection and potential replay. Retains messages for 14 days
+to allow for debugging and manual intervention.
+
+**User Responsibility**: This construct provides NO automated monitoring,
+alerting, or reprocessing of dead letter queue messages. Applications
+using this construct must implement their own:
+- Dead letter queue depth monitoring and alerting
+- Failed message inspection and debugging workflows
+- Manual or automated reprocessing mechanisms
+- Cleanup procedures for old failed messages
+
+---
+
+##### `lambdaFunction`<sup>Required</sup> <a name="lambdaFunction" id="eoapi-cdk.StacLoader.property.lambdaFunction"></a>
+
+```typescript
+public readonly lambdaFunction: Function;
+```
+
+- *Type:* aws-cdk-lib.aws_lambda.Function
+
+The Lambda function that loads STAC objects into the pgstac database.
+
+This Python function receives batches of messages from SQS and processes
+them based on their type:
+- Direct STAC objects: Validates and loads directly into pgstac
+- S3 events: Fetches STAC JSON from S3, validates, and loads into pgstac
+
+The function connects to PostgreSQL using credentials from Secrets Manager
+and uses pypgstac for efficient database operations.
+
+---
+
+##### `queue`<sup>Required</sup> <a name="queue" id="eoapi-cdk.StacLoader.property.queue"></a>
+
+```typescript
+public readonly queue: Queue;
+```
+
+- *Type:* aws-cdk-lib.aws_sqs.Queue
+
+The SQS queue that buffers messages before processing.
+
+This queue collects both direct STAC objects from SNS and S3 event
+notifications, batching them for efficient database operations.
+Configured with a visibility timeout that accommodates Lambda
+processing time plus buffer.
+
+---
+
+##### `topic`<sup>Required</sup> <a name="topic" id="eoapi-cdk.StacLoader.property.topic"></a>
+
+```typescript
+public readonly topic: Topic;
+```
+
+- *Type:* aws-cdk-lib.aws_sns.Topic
+
+The SNS topic that receives STAC objects and S3 event notifications for loading.
+
+This topic serves as the entry point for two types of events:
+1. Direct STAC JSON documents published by external services
+2. S3 event notifications when STAC objects are uploaded to configured buckets
 
 The topic fans out to the SQS queue for batched processing.
 
@@ -1222,7 +1443,7 @@ The function expects messages matching the ItemRequest model:
 
 ```typescript
 // Create item loader first (or get existing topic ARN)
-const loader = new StacItemLoader(this, 'ItemLoader', {
+const loader = new StacLoader(this, 'ItemLoader', {
   pgstacDb: database
 });
 
@@ -3370,28 +3591,6 @@ VPC running pgSTAC DB.
 
 ### StacItemLoaderProps <a name="StacItemLoaderProps" id="eoapi-cdk.StacItemLoaderProps"></a>
 
-Configuration properties for the StacItemLoader construct.
-
-The StacItemLoader is part of a two-phase serverless STAC ingestion pipeline
-that loads STAC items into a pgstac database. This construct creates
-the infrastructure for receiving STAC items from multiple sources:
-1. SNS messages containing STAC metadata (direct ingestion)
-2. S3 event notifications for STAC items uploaded to S3 buckets
-
-Items from both sources are batched and inserted into PostgreSQL with the pgstac extension.
-
-*Example*
-
-```typescript
-const loader = new StacItemLoader(this, 'ItemLoader', {
-  pgstacDb: database,
-  batchSize: 1000,
-  maxBatchingWindowMinutes: 1,
-  lambdaTimeoutSeconds: 300
-});
-```
-
-
 #### Initializer <a name="Initializer" id="eoapi-cdk.StacItemLoaderProps.Initializer"></a>
 
 ```typescript
@@ -3404,21 +3603,23 @@ const stacItemLoaderProps: StacItemLoaderProps = { ... }
 
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
-| <code><a href="#eoapi-cdk.StacItemLoaderProps.property.pgstacDb">pgstacDb</a></code> | <code><a href="#eoapi-cdk.PgStacDatabase">PgStacDatabase</a></code> | The PgSTAC database instance to load items into. |
+| <code><a href="#eoapi-cdk.StacItemLoaderProps.property.pgstacDb">pgstacDb</a></code> | <code><a href="#eoapi-cdk.PgStacDatabase">PgStacDatabase</a></code> | The PgSTAC database instance to load data into. |
 | <code><a href="#eoapi-cdk.StacItemLoaderProps.property.batchSize">batchSize</a></code> | <code>number</code> | SQS batch size for lambda event source. |
 | <code><a href="#eoapi-cdk.StacItemLoaderProps.property.environment">environment</a></code> | <code>{[ key: string ]: string}</code> | Additional environment variables for the lambda function. |
 | <code><a href="#eoapi-cdk.StacItemLoaderProps.property.lambdaFunctionOptions">lambdaFunctionOptions</a></code> | <code>any</code> | Can be used to override the default lambda function properties. |
 | <code><a href="#eoapi-cdk.StacItemLoaderProps.property.lambdaRuntime">lambdaRuntime</a></code> | <code>aws-cdk-lib.aws_lambda.Runtime</code> | The lambda runtime to use for the item loading function. |
 | <code><a href="#eoapi-cdk.StacItemLoaderProps.property.lambdaTimeoutSeconds">lambdaTimeoutSeconds</a></code> | <code>number</code> | The timeout for the item load lambda in seconds. |
 | <code><a href="#eoapi-cdk.StacItemLoaderProps.property.maxBatchingWindowMinutes">maxBatchingWindowMinutes</a></code> | <code>number</code> | Maximum batching window in minutes. |
-| <code><a href="#eoapi-cdk.StacItemLoaderProps.property.maxConcurrency">maxConcurrency</a></code> | <code>number</code> | Maximum concurrent executions for the StacItemLoader Lambda function. |
+| <code><a href="#eoapi-cdk.StacItemLoaderProps.property.maxConcurrency">maxConcurrency</a></code> | <code>number</code> | Maximum concurrent executions for the StacLoader Lambda function. |
 | <code><a href="#eoapi-cdk.StacItemLoaderProps.property.memorySize">memorySize</a></code> | <code>number</code> | Memory size for the lambda function in MB. |
 | <code><a href="#eoapi-cdk.StacItemLoaderProps.property.subnetSelection">subnetSelection</a></code> | <code>aws-cdk-lib.aws_ec2.SubnetSelection</code> | Subnet into which the lambda should be deployed. |
 | <code><a href="#eoapi-cdk.StacItemLoaderProps.property.vpc">vpc</a></code> | <code>aws-cdk-lib.aws_ec2.IVpc</code> | VPC into which the lambda should be deployed. |
 
 ---
 
-##### `pgstacDb`<sup>Required</sup> <a name="pgstacDb" id="eoapi-cdk.StacItemLoaderProps.property.pgstacDb"></a>
+##### ~~`pgstacDb`~~<sup>Required</sup> <a name="pgstacDb" id="eoapi-cdk.StacItemLoaderProps.property.pgstacDb"></a>
+
+- *Deprecated:* Use StacLoaderProps instead. StacItemLoaderProps will be removed in a future version.
 
 ```typescript
 public readonly pgstacDb: PgStacDatabase;
@@ -3426,15 +3627,17 @@ public readonly pgstacDb: PgStacDatabase;
 
 - *Type:* <a href="#eoapi-cdk.PgStacDatabase">PgStacDatabase</a>
 
-The PgSTAC database instance to load items into.
+The PgSTAC database instance to load data into.
 
 This database must have the pgstac extension installed and be properly
-configured with collections before items can be loaded. The loader will
+configured with collections before objects can be loaded. The loader will
 use AWS Secrets Manager to securely access database credentials.
 
 ---
 
-##### `batchSize`<sup>Optional</sup> <a name="batchSize" id="eoapi-cdk.StacItemLoaderProps.property.batchSize"></a>
+##### ~~`batchSize`~~<sup>Optional</sup> <a name="batchSize" id="eoapi-cdk.StacItemLoaderProps.property.batchSize"></a>
+
+- *Deprecated:* Use StacLoaderProps instead. StacItemLoaderProps will be removed in a future version.
 
 ```typescript
 public readonly batchSize: number;
@@ -3445,7 +3648,7 @@ public readonly batchSize: number;
 
 SQS batch size for lambda event source.
 
-This determines the maximum number of STAC items that will be
+This determines the maximum number of STAC objects that will be
 processed together in a single lambda invocation. Larger batch
 sizes improve database insertion efficiency but require more
 memory and longer processing time.
@@ -3457,7 +3660,9 @@ balance between throughput and latency.
 
 ---
 
-##### `environment`<sup>Optional</sup> <a name="environment" id="eoapi-cdk.StacItemLoaderProps.property.environment"></a>
+##### ~~`environment`~~<sup>Optional</sup> <a name="environment" id="eoapi-cdk.StacItemLoaderProps.property.environment"></a>
+
+- *Deprecated:* Use StacLoaderProps instead. StacItemLoaderProps will be removed in a future version.
 
 ```typescript
 public readonly environment: {[ key: string ]: string};
@@ -3476,7 +3681,9 @@ is set to be loaded, set the variable `"CREATE_COLLECTIONS_IF_MISSING": "TRUE"`.
 
 ---
 
-##### `lambdaFunctionOptions`<sup>Optional</sup> <a name="lambdaFunctionOptions" id="eoapi-cdk.StacItemLoaderProps.property.lambdaFunctionOptions"></a>
+##### ~~`lambdaFunctionOptions`~~<sup>Optional</sup> <a name="lambdaFunctionOptions" id="eoapi-cdk.StacItemLoaderProps.property.lambdaFunctionOptions"></a>
+
+- *Deprecated:* Use StacLoaderProps instead. StacItemLoaderProps will be removed in a future version.
 
 ```typescript
 public readonly lambdaFunctionOptions: any;
@@ -3489,7 +3696,9 @@ Can be used to override the default lambda function properties.
 
 ---
 
-##### `lambdaRuntime`<sup>Optional</sup> <a name="lambdaRuntime" id="eoapi-cdk.StacItemLoaderProps.property.lambdaRuntime"></a>
+##### ~~`lambdaRuntime`~~<sup>Optional</sup> <a name="lambdaRuntime" id="eoapi-cdk.StacItemLoaderProps.property.lambdaRuntime"></a>
+
+- *Deprecated:* Use StacLoaderProps instead. StacItemLoaderProps will be removed in a future version.
 
 ```typescript
 public readonly lambdaRuntime: Runtime;
@@ -3506,7 +3715,9 @@ version specified in the database configuration.
 
 ---
 
-##### `lambdaTimeoutSeconds`<sup>Optional</sup> <a name="lambdaTimeoutSeconds" id="eoapi-cdk.StacItemLoaderProps.property.lambdaTimeoutSeconds"></a>
+##### ~~`lambdaTimeoutSeconds`~~<sup>Optional</sup> <a name="lambdaTimeoutSeconds" id="eoapi-cdk.StacItemLoaderProps.property.lambdaTimeoutSeconds"></a>
+
+- *Deprecated:* Use StacLoaderProps instead. StacItemLoaderProps will be removed in a future version.
 
 ```typescript
 public readonly lambdaTimeoutSeconds: number;
@@ -3518,12 +3729,14 @@ public readonly lambdaTimeoutSeconds: number;
 The timeout for the item load lambda in seconds.
 
 This should accommodate the time needed to process up to `batchSize`
-items and perform database insertions. The SQS visibility timeout
+objects and perform database insertions. The SQS visibility timeout
 will be set to this value plus 10 seconds.
 
 ---
 
-##### `maxBatchingWindowMinutes`<sup>Optional</sup> <a name="maxBatchingWindowMinutes" id="eoapi-cdk.StacItemLoaderProps.property.maxBatchingWindowMinutes"></a>
+##### ~~`maxBatchingWindowMinutes`~~<sup>Optional</sup> <a name="maxBatchingWindowMinutes" id="eoapi-cdk.StacItemLoaderProps.property.maxBatchingWindowMinutes"></a>
+
+- *Deprecated:* Use StacLoaderProps instead. StacItemLoaderProps will be removed in a future version.
 
 ```typescript
 public readonly maxBatchingWindowMinutes: number;
@@ -3535,17 +3748,19 @@ public readonly maxBatchingWindowMinutes: number;
 Maximum batching window in minutes.
 
 Even if the batch size isn't reached, the lambda will be triggered
-after this time period to ensure timely processing of items.
-This prevents items from waiting indefinitely in low-volume scenarios.
+after this time period to ensure timely processing of objects.
+This prevents objects from waiting indefinitely in low-volume scenarios.
 
 **Important**: This timeout works in conjunction with batchSize - SQS
 will trigger the Lambda when EITHER the batch size is reached OR this
-time window expires, ensuring items are processed in a timely manner
+time window expires, ensuring objects are processed in a timely manner
 regardless of volume.
 
 ---
 
-##### `maxConcurrency`<sup>Optional</sup> <a name="maxConcurrency" id="eoapi-cdk.StacItemLoaderProps.property.maxConcurrency"></a>
+##### ~~`maxConcurrency`~~<sup>Optional</sup> <a name="maxConcurrency" id="eoapi-cdk.StacItemLoaderProps.property.maxConcurrency"></a>
+
+- *Deprecated:* Use StacLoaderProps instead. StacItemLoaderProps will be removed in a future version.
 
 ```typescript
 public readonly maxConcurrency: number;
@@ -3554,14 +3769,16 @@ public readonly maxConcurrency: number;
 - *Type:* number
 - *Default:* 2
 
-Maximum concurrent executions for the StacItemLoader Lambda function.
+Maximum concurrent executions for the StacLoader Lambda function.
 
 This limit will be applied to the Lambda function and will control how
 many concurrent batches will be released from the SQS queue.
 
 ---
 
-##### `memorySize`<sup>Optional</sup> <a name="memorySize" id="eoapi-cdk.StacItemLoaderProps.property.memorySize"></a>
+##### ~~`memorySize`~~<sup>Optional</sup> <a name="memorySize" id="eoapi-cdk.StacItemLoaderProps.property.memorySize"></a>
+
+- *Deprecated:* Use StacLoaderProps instead. StacItemLoaderProps will be removed in a future version.
 
 ```typescript
 public readonly memorySize: number;
@@ -3573,12 +3790,14 @@ public readonly memorySize: number;
 Memory size for the lambda function in MB.
 
 Higher memory allocation may improve performance when processing
-large batches of STAC items, especially for memory-intensive
+large batches of STAC objects, especially for memory-intensive
 database operations.
 
 ---
 
-##### `subnetSelection`<sup>Optional</sup> <a name="subnetSelection" id="eoapi-cdk.StacItemLoaderProps.property.subnetSelection"></a>
+##### ~~`subnetSelection`~~<sup>Optional</sup> <a name="subnetSelection" id="eoapi-cdk.StacItemLoaderProps.property.subnetSelection"></a>
+
+- *Deprecated:* Use StacLoaderProps instead. StacItemLoaderProps will be removed in a future version.
 
 ```typescript
 public readonly subnetSelection: SubnetSelection;
@@ -3590,7 +3809,243 @@ Subnet into which the lambda should be deployed.
 
 ---
 
-##### `vpc`<sup>Optional</sup> <a name="vpc" id="eoapi-cdk.StacItemLoaderProps.property.vpc"></a>
+##### ~~`vpc`~~<sup>Optional</sup> <a name="vpc" id="eoapi-cdk.StacItemLoaderProps.property.vpc"></a>
+
+- *Deprecated:* Use StacLoaderProps instead. StacItemLoaderProps will be removed in a future version.
+
+```typescript
+public readonly vpc: IVpc;
+```
+
+- *Type:* aws-cdk-lib.aws_ec2.IVpc
+
+VPC into which the lambda should be deployed.
+
+---
+
+### StacLoaderProps <a name="StacLoaderProps" id="eoapi-cdk.StacLoaderProps"></a>
+
+Configuration properties for the StacLoader construct.
+
+The StacLoader is part of a two-phase serverless STAC ingestion pipeline
+that loads STAC collections and items into a pgstac database. This construct creates
+the infrastructure for receiving STAC objects from multiple sources:
+1. SNS messages containing STAC metadata (direct ingestion)
+2. S3 event notifications for STAC objects uploaded to S3 buckets
+
+Objects from both sources are batched and inserted into PostgreSQL with the pgstac extension.
+
+*Example*
+
+```typescript
+const loader = new StacLoader(this, 'StacLoader', {
+  pgstacDb: database,
+  batchSize: 1000,
+  maxBatchingWindowMinutes: 1,
+  lambdaTimeoutSeconds: 300
+});
+```
+
+
+#### Initializer <a name="Initializer" id="eoapi-cdk.StacLoaderProps.Initializer"></a>
+
+```typescript
+import { StacLoaderProps } from 'eoapi-cdk'
+
+const stacLoaderProps: StacLoaderProps = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#eoapi-cdk.StacLoaderProps.property.pgstacDb">pgstacDb</a></code> | <code><a href="#eoapi-cdk.PgStacDatabase">PgStacDatabase</a></code> | The PgSTAC database instance to load data into. |
+| <code><a href="#eoapi-cdk.StacLoaderProps.property.batchSize">batchSize</a></code> | <code>number</code> | SQS batch size for lambda event source. |
+| <code><a href="#eoapi-cdk.StacLoaderProps.property.environment">environment</a></code> | <code>{[ key: string ]: string}</code> | Additional environment variables for the lambda function. |
+| <code><a href="#eoapi-cdk.StacLoaderProps.property.lambdaFunctionOptions">lambdaFunctionOptions</a></code> | <code>any</code> | Can be used to override the default lambda function properties. |
+| <code><a href="#eoapi-cdk.StacLoaderProps.property.lambdaRuntime">lambdaRuntime</a></code> | <code>aws-cdk-lib.aws_lambda.Runtime</code> | The lambda runtime to use for the item loading function. |
+| <code><a href="#eoapi-cdk.StacLoaderProps.property.lambdaTimeoutSeconds">lambdaTimeoutSeconds</a></code> | <code>number</code> | The timeout for the item load lambda in seconds. |
+| <code><a href="#eoapi-cdk.StacLoaderProps.property.maxBatchingWindowMinutes">maxBatchingWindowMinutes</a></code> | <code>number</code> | Maximum batching window in minutes. |
+| <code><a href="#eoapi-cdk.StacLoaderProps.property.maxConcurrency">maxConcurrency</a></code> | <code>number</code> | Maximum concurrent executions for the StacLoader Lambda function. |
+| <code><a href="#eoapi-cdk.StacLoaderProps.property.memorySize">memorySize</a></code> | <code>number</code> | Memory size for the lambda function in MB. |
+| <code><a href="#eoapi-cdk.StacLoaderProps.property.subnetSelection">subnetSelection</a></code> | <code>aws-cdk-lib.aws_ec2.SubnetSelection</code> | Subnet into which the lambda should be deployed. |
+| <code><a href="#eoapi-cdk.StacLoaderProps.property.vpc">vpc</a></code> | <code>aws-cdk-lib.aws_ec2.IVpc</code> | VPC into which the lambda should be deployed. |
+
+---
+
+##### `pgstacDb`<sup>Required</sup> <a name="pgstacDb" id="eoapi-cdk.StacLoaderProps.property.pgstacDb"></a>
+
+```typescript
+public readonly pgstacDb: PgStacDatabase;
+```
+
+- *Type:* <a href="#eoapi-cdk.PgStacDatabase">PgStacDatabase</a>
+
+The PgSTAC database instance to load data into.
+
+This database must have the pgstac extension installed and be properly
+configured with collections before objects can be loaded. The loader will
+use AWS Secrets Manager to securely access database credentials.
+
+---
+
+##### `batchSize`<sup>Optional</sup> <a name="batchSize" id="eoapi-cdk.StacLoaderProps.property.batchSize"></a>
+
+```typescript
+public readonly batchSize: number;
+```
+
+- *Type:* number
+- *Default:* 500
+
+SQS batch size for lambda event source.
+
+This determines the maximum number of STAC objects that will be
+processed together in a single lambda invocation. Larger batch
+sizes improve database insertion efficiency but require more
+memory and longer processing time.
+
+**Batching Behavior**: SQS will wait to accumulate up to this many
+messages before triggering the Lambda, OR until the maxBatchingWindow
+timeout is reached, whichever comes first. This creates an efficient
+balance between throughput and latency.
+
+---
+
+##### `environment`<sup>Optional</sup> <a name="environment" id="eoapi-cdk.StacLoaderProps.property.environment"></a>
+
+```typescript
+public readonly environment: {[ key: string ]: string};
+```
+
+- *Type:* {[ key: string ]: string}
+
+Additional environment variables for the lambda function.
+
+These will be merged with the default environment variables including
+PGSTAC_SECRET_ARN. Use this for custom configuration or debugging flags.
+
+If you want to enable the option to upload a boilerplate collection record
+in the event that the collection record does not yet exist for an item that
+is set to be loaded, set the variable `"CREATE_COLLECTIONS_IF_MISSING": "TRUE"`.
+
+---
+
+##### `lambdaFunctionOptions`<sup>Optional</sup> <a name="lambdaFunctionOptions" id="eoapi-cdk.StacLoaderProps.property.lambdaFunctionOptions"></a>
+
+```typescript
+public readonly lambdaFunctionOptions: any;
+```
+
+- *Type:* any
+- *Default:* defined in the construct.
+
+Can be used to override the default lambda function properties.
+
+---
+
+##### `lambdaRuntime`<sup>Optional</sup> <a name="lambdaRuntime" id="eoapi-cdk.StacLoaderProps.property.lambdaRuntime"></a>
+
+```typescript
+public readonly lambdaRuntime: Runtime;
+```
+
+- *Type:* aws-cdk-lib.aws_lambda.Runtime
+- *Default:* lambda.Runtime.PYTHON_3_11
+
+The lambda runtime to use for the item loading function.
+
+The function is implemented in Python and uses pypgstac for database
+operations. Ensure the runtime version is compatible with the pgstac
+version specified in the database configuration.
+
+---
+
+##### `lambdaTimeoutSeconds`<sup>Optional</sup> <a name="lambdaTimeoutSeconds" id="eoapi-cdk.StacLoaderProps.property.lambdaTimeoutSeconds"></a>
+
+```typescript
+public readonly lambdaTimeoutSeconds: number;
+```
+
+- *Type:* number
+- *Default:* 300
+
+The timeout for the item load lambda in seconds.
+
+This should accommodate the time needed to process up to `batchSize`
+objects and perform database insertions. The SQS visibility timeout
+will be set to this value plus 10 seconds.
+
+---
+
+##### `maxBatchingWindowMinutes`<sup>Optional</sup> <a name="maxBatchingWindowMinutes" id="eoapi-cdk.StacLoaderProps.property.maxBatchingWindowMinutes"></a>
+
+```typescript
+public readonly maxBatchingWindowMinutes: number;
+```
+
+- *Type:* number
+- *Default:* 1
+
+Maximum batching window in minutes.
+
+Even if the batch size isn't reached, the lambda will be triggered
+after this time period to ensure timely processing of objects.
+This prevents objects from waiting indefinitely in low-volume scenarios.
+
+**Important**: This timeout works in conjunction with batchSize - SQS
+will trigger the Lambda when EITHER the batch size is reached OR this
+time window expires, ensuring objects are processed in a timely manner
+regardless of volume.
+
+---
+
+##### `maxConcurrency`<sup>Optional</sup> <a name="maxConcurrency" id="eoapi-cdk.StacLoaderProps.property.maxConcurrency"></a>
+
+```typescript
+public readonly maxConcurrency: number;
+```
+
+- *Type:* number
+- *Default:* 2
+
+Maximum concurrent executions for the StacLoader Lambda function.
+
+This limit will be applied to the Lambda function and will control how
+many concurrent batches will be released from the SQS queue.
+
+---
+
+##### `memorySize`<sup>Optional</sup> <a name="memorySize" id="eoapi-cdk.StacLoaderProps.property.memorySize"></a>
+
+```typescript
+public readonly memorySize: number;
+```
+
+- *Type:* number
+- *Default:* 1024
+
+Memory size for the lambda function in MB.
+
+Higher memory allocation may improve performance when processing
+large batches of STAC objects, especially for memory-intensive
+database operations.
+
+---
+
+##### `subnetSelection`<sup>Optional</sup> <a name="subnetSelection" id="eoapi-cdk.StacLoaderProps.property.subnetSelection"></a>
+
+```typescript
+public readonly subnetSelection: SubnetSelection;
+```
+
+- *Type:* aws-cdk-lib.aws_ec2.SubnetSelection
+
+Subnet into which the lambda should be deployed.
+
+---
+
+##### `vpc`<sup>Optional</sup> <a name="vpc" id="eoapi-cdk.StacLoaderProps.property.vpc"></a>
 
 ```typescript
 public readonly vpc: IVpc;
@@ -3658,7 +4113,7 @@ public readonly itemLoadTopicArn: string;
 
 ARN of the SNS topic to publish generated items to.
 
-This is typically the topic from a StacItemLoader construct.
+This is typically the topic from a StacLoader construct.
 Generated STAC items will be published here for downstream
 processing and database insertion.
 
