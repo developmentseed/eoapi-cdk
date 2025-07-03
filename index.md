@@ -1128,9 +1128,10 @@ aws sns publish --topic-arn $STAC_LOAD_TOPIC --message  '{
   "license": "proprietary",
   "extent": {
       "spatial": {"bbox": [[-180, -90, 180, 90]]},
-      "temporal": {"interval": [[null, null]]},
+      "temporal": {"interval": [[null, null]]}
   },
   "stac_version": "1.1.0",
+  "links": []
 }'
 
 aws sns publish --topic-arn $STAC_LOAD_TOPIC --message '{
