@@ -1,3 +1,10 @@
+## [8.3.2](https://github.com/developmentseed/eoapi-cdk/compare/v8.3.1...v8.3.2) (2025-07-06)
+
+
+### Bug Fixes
+
+* add unique prefix to stactools-item-generator export names ([#164](https://github.com/developmentseed/eoapi-cdk/issues/164)) ([5f5d88b](https://github.com/developmentseed/eoapi-cdk/commit/5f5d88bbc450857aaa70e5e582ba3de404ab756c))
+
 ## [8.3.1](https://github.com/developmentseed/eoapi-cdk/compare/v8.3.0...v8.3.1) (2025-07-03)
 
 
