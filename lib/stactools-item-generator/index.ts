@@ -8,6 +8,7 @@ import {
   aws_logs as logs,
   Duration,
   CfnOutput,
+  Stack,
 } from "aws-cdk-lib";
 import { Construct } from "constructs";
 import { Platform } from "aws-cdk-lib/aws-ecr-assets";
@@ -351,28 +352,29 @@ export class StactoolsItemGenerator extends Construct {
     // The consuming construct should handle this permission
 
     // Create outputs
+    const exportPrefix = Stack.of(this).stackName;
     new CfnOutput(this, "TopicArn", {
       value: this.topic.topicArn,
       description: "ARN of the StactoolsItemGenerator SNS Topic",
-      exportName: "stactools-item-generator-topic-arn",
+      exportName: `${exportPrefix}-stactools-item-generator-topic-arn`,
     });
 
     new CfnOutput(this, "QueueUrl", {
       value: this.queue.queueUrl,
       description: "URL of the StactoolsItemGenerator SQS Queue",
-      exportName: "stactools-item-generator-queue-url",
+      exportName: `${exportPrefix}-stactools-item-generator-queue-url`,
     });
 
     new CfnOutput(this, "DeadLetterQueueUrl", {
       value: this.deadLetterQueue.queueUrl,
       description: "URL of the StactoolsItemGenerator Dead Letter Queue",
-      exportName: "stactools-item-generator-deadletter-queue-url",
+      exportName: `${exportPrefix}-stactools-item-generator-deadletter-queue-url`,
     });
 
     new CfnOutput(this, "FunctionName", {
       value: this.lambdaFunction.functionName,
       description: "Name of the StactoolsItemGenerator Lambda Function",
-      exportName: "stactools-item-generator-function-name",
+      exportName: `${exportPrefix}-stactools-item-generator-function-name`,
     });
   }
 }
