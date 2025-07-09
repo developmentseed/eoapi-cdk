@@ -1,3 +1,10 @@
+## [8.3.3](https://github.com/developmentseed/eoapi-cdk/compare/v8.3.2...v8.3.3) (2025-07-09)
+
+
+### Bug Fixes
+
+* stactools-item-generator issues ([12591c5](https://github.com/developmentseed/eoapi-cdk/commit/12591c5bea32b53ffe62f3601f0f9d23bb4246f5))
+
 ## [8.3.2](https://github.com/developmentseed/eoapi-cdk/compare/v8.3.1...v8.3.2) (2025-07-06)
 
 
