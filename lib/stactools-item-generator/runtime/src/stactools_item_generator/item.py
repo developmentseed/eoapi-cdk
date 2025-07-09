@@ -49,7 +49,7 @@ def create_stac_item(request: ItemRequest) -> Item:
     command = [
         "uvx",
         "--with",
-        f"requests,{request.package_name}",
+        f"requests,numpy<2.3.0,{request.package_name}",
         "--from",
         "stactools",
         "stac",
