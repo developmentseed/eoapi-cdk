@@ -13,7 +13,8 @@ WORKDIR ${LAMBDA_TASK_ROOT}
 COPY stactools-item-generator/runtime/pyproject.toml pyproject.toml
 COPY stactools-item-generator/runtime/src/stactools_item_generator/ ${LAMBDA_TASK_ROOT}/stactools_item_generator/
 
-RUN uv export --no-dev --no-editable -o requirements.txt && \
+RUN yum install -y git && yum clean all && rm -rf /var/cache/yum && \
+  uv export --no-dev --no-editable -o requirements.txt && \
   uv pip install --target ${LAMBDA_TASK_ROOT} -r requirements.txt && \
   uv tool install --with "numpy<2.3.0",requests stactools;
 
