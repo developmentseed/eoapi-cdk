@@ -35,11 +35,14 @@ function isValidExtension(value: string): value is ExtensionType {
   return Object.values(EXTENSIONS).includes(value as any);
 }
 
-export class PgStacApiLambda extends Construct {
-  readonly url: string;
-  public stacApiLambdaFunction: lambda.Function;
+export class PgStacApiLambdaRuntime extends Construct {
+  public readonly stacApiLambdaFunction: lambda.Function;
 
-  constructor(scope: Construct, id: string, props: PgStacApiLambdaProps) {
+  constructor(
+    scope: Construct,
+    id: string,
+    props: PgStacApiLambdaRuntimeProps
+  ) {
     super(scope, id);
 
     const defaultExtensions: ExtensionType[] = [
@@ -100,44 +103,10 @@ export class PgStacApiLambda extends Construct {
         "allow connections from stac-fastapi-pgstac"
       );
     }
-
-    const stacApi = new apigatewayv2.HttpApi(
-      this,
-      `${Stack.of(this).stackName}-stac-api`,
-      {
-        defaultDomainMapping: props.stacApiDomainName
-          ? {
-              domainName: props.stacApiDomainName,
-            }
-          : undefined,
-        defaultIntegration: new apigatewayv2_integrations.HttpLambdaIntegration(
-          "integration",
-          this.stacApiLambdaFunction,
-          props.stacApiDomainName
-            ? {
-                parameterMapping:
-                  new apigatewayv2.ParameterMapping().overwriteHeader(
-                    "host",
-                    apigatewayv2.MappingValue.custom(
-                      props.stacApiDomainName.name
-                    )
-                  ),
-              }
-            : undefined
-        ),
-      }
-    );
-
-    this.url = stacApi.url!;
-
-    new CfnOutput(this, "stac-api-output", {
-      exportName: `${Stack.of(this).stackName}-url`,
-      value: this.url,
-    });
   }
 }
 
-export interface PgStacApiLambdaProps {
+export interface PgStacApiLambdaRuntimeProps {
   /**
    * VPC into which the lambda should be deployed.
    */
@@ -164,14 +133,9 @@ export interface PgStacApiLambdaProps {
   readonly apiEnv?: Record<string, string>;
 
   /**
-   * Custom Domain Name Options for STAC API,
-   */
-  readonly stacApiDomainName?: apigatewayv2.IDomainName;
-
-  /**
    * List of STAC API extensions to enable.
    *
-   * @default - query, sort, fields, filter, free_text, pagniation, collection_search
+   * @default - query, sort, fields, filter, free_text, pagination, collection_search
    */
   readonly enabledExtensions?: ExtensionType[];
 
@@ -181,4 +145,97 @@ export interface PgStacApiLambdaProps {
    * @default - defined in the construct.
    */
   readonly lambdaFunctionOptions?: CustomLambdaFunctionProps;
+}
+
+export class PgStacApiLambdaApiGateway extends Construct {
+  readonly url: string;
+
+  constructor(
+    scope: Construct,
+    id: string,
+    props: PgStacApiLambdaApiGatewayProps
+  ) {
+    super(scope, id);
+
+    const stacApi = new apigatewayv2.HttpApi(
+      this,
+      `${Stack.of(this).stackName}-stac-api`,
+      {
+        defaultDomainMapping: props.stacApiDomainName
+          ? {
+              domainName: props.stacApiDomainName,
+            }
+          : undefined,
+        defaultIntegration: new apigatewayv2_integrations.HttpLambdaIntegration(
+          "integration",
+          props.lambdaFunction,
+          props.stacApiDomainName
+            ? {
+                parameterMapping:
+                  new apigatewayv2.ParameterMapping().overwriteHeader(
+                    "host",
+                    apigatewayv2.MappingValue.custom(
+                      props.stacApiDomainName.name
+                    )
+                  ),
+              }
+            : undefined
+        ),
+      }
+    );
+
+    this.url = stacApi.url!;
+
+    new CfnOutput(this, "stac-api-output", {
+      exportName: `${Stack.of(this).stackName}-url`,
+      value: this.url,
+    });
+  }
+}
+
+export interface PgStacApiLambdaApiGatewayProps {
+  /**
+   * Lambda function to integrate with the API Gateway.
+   */
+  readonly lambdaFunction: lambda.Function;
+
+  /**
+   * Custom Domain Name Options for STAC API,
+   */
+  readonly stacApiDomainName?: apigatewayv2.IDomainName;
+}
+
+export class PgStacApiLambda extends Construct {
+  readonly url: string;
+  public stacApiLambdaFunction: lambda.Function;
+
+  constructor(scope: Construct, id: string, props: PgStacApiLambdaProps) {
+    super(scope, id);
+
+    const runtime = new PgStacApiLambdaRuntime(this, "runtime", {
+      vpc: props.vpc,
+      subnetSelection: props.subnetSelection,
+      db: props.db,
+      dbSecret: props.dbSecret,
+      enabledExtensions: props.enabledExtensions,
+      apiEnv: props.apiEnv,
+      lambdaFunctionOptions: props.lambdaFunctionOptions,
+    });
+    this.stacApiLambdaFunction = runtime.stacApiLambdaFunction;
+
+    const api = new PgStacApiLambdaApiGateway(this, "api", {
+      lambdaFunction: runtime.stacApiLambdaFunction,
+      stacApiDomainName: props.stacApiDomainName,
+    });
+
+    this.url = api.url;
+  }
+}
+
+export interface PgStacApiLambdaProps
+  extends PgStacApiLambdaRuntimeProps,
+    Omit<PgStacApiLambdaApiGatewayProps, "lambdaFunction"> {
+  // This interface combines both runtime and API gateway props
+  // The lambdaFunction property from PgStacApiLambdaApiGatewayProps is excluded
+  // as it will be provided by the runtime construct
 }
