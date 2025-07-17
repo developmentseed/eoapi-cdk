@@ -32,27 +32,31 @@ export class LambdaApiGateway extends Construct {
   constructor(scope: Construct, id: string, props: LambdaApiGatewayProps) {
     super(scope, id);
 
-    const defaultDomainMapping = props.domainName
-      ? { domainName: props.domainName }
-      : undefined;
+    const {
+      apiName = `${Stack.of(this).stackName}-${id}`,
+      domainName,
+      lambdaFunction,
+    } = props;
+
+    const defaultDomainMapping = domainName ? { domainName } : undefined;
 
     const defaultIntegration =
       new apigatewayv2_integrations.HttpLambdaIntegration(
         "integration",
-        props.lambdaFunction,
-        props.domainName
+        lambdaFunction,
+        domainName
           ? {
               parameterMapping:
                 new apigatewayv2.ParameterMapping().overwriteHeader(
                   "host",
-                  apigatewayv2.MappingValue.custom(props.domainName.name)
+                  apigatewayv2.MappingValue.custom(domainName.name)
                 ),
             }
           : undefined
       );
 
     const api = new apigatewayv2.HttpApi(this, "api", {
-      apiName: props.apiName || `${Stack.of(this).stackName}-${id}`,
+      apiName,
       defaultDomainMapping,
       defaultIntegration: defaultIntegration,
     });
