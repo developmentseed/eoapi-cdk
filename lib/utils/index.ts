@@ -28,6 +28,11 @@ export interface LambdaApiGatewayProps {
    * Name for the CfnOutput export.
    */
   readonly outputName: string;
+
+  /**
+   * Name of the API Gateway.
+   */
+  readonly apiName?: string;
 }
 
 export class LambdaApiGateway extends Construct {
@@ -56,7 +61,7 @@ export class LambdaApiGateway extends Construct {
       );
 
     const api = new apigatewayv2.HttpApi(this, "api", {
-      apiName: `${Stack.of(this).stackName}-${id}`,
+      apiName: props.apiName || `${Stack.of(this).stackName}-${id}`,
       defaultDomainMapping,
       defaultIntegration: defaultIntegration,
     });
