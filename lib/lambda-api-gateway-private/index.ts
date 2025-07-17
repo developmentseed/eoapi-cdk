@@ -23,11 +23,6 @@ export interface PrivateLambdaApiGatewayProps {
   vpc: ec2.IVpc;
 
   /**
-   * Subnet selection for the API Gateway.
-   */
-  subnetSelection: ec2.SubnetSelection;
-
-  /**
    * Whether to create a VPC endpoint for the API Gateway.
    *
    * @default - true
@@ -35,9 +30,36 @@ export interface PrivateLambdaApiGatewayProps {
   createVpcEndpoint?: boolean;
 
   /**
+   * The subnets in which to create a VPC endpoint network interface. At most one per availability zone.
+
+   */
+  vpcEndpointSubnetSelection?: ec2.SubnetSelection;
+
+  /**
+   * Name for the API Gateway.
+   *
+   * @default - `${scope.node.id}-private-api`
+   */
+  restApiName?: string;
+
+  /**
+   * Description for the API Gateway.
+   *
+   * @default - "Private REST API Gateway for STAC API"
+   */
+  description?: string;
+
+  /**
    * Deploy options for the API Gateway.
    */
   deployOptions?: apigateway.StageOptions;
+
+  /**
+   * Policy for the API Gateway.
+   *
+   * @default - Policy that allows any principal with the same VPC to invoke the API.
+   */
+  policy?: iam.PolicyDocument;
 }
 
 export class PrivateLambdaApiGateway extends Construct {
@@ -52,11 +74,14 @@ export class PrivateLambdaApiGateway extends Construct {
     super(scope, id);
 
     const {
+      restApiName = `${scope.node.id}-private-api`,
+      description = "Private REST API Gateway for STAC API",
       lambdaFunction,
       vpc,
-      subnetSelection,
+      vpcEndpointSubnetSelection,
       createVpcEndpoint = true,
       deployOptions,
+      policy,
       lambdaIntegrationOptions,
     } = props;
 
@@ -65,7 +90,7 @@ export class PrivateLambdaApiGateway extends Construct {
       this.vpcEndpoint = new ec2.InterfaceVpcEndpoint(this, "vpc-endpoint", {
         vpc,
         service: ec2.InterfaceVpcEndpointAwsService.APIGATEWAY,
-        subnets: subnetSelection,
+        subnets: vpcEndpointSubnetSelection,
       });
     }
 
@@ -76,22 +101,24 @@ export class PrivateLambdaApiGateway extends Construct {
 
     // Create Private REST API Gateway
     this.api = new apigateway.RestApi(this, "rest-api", {
-      restApiName: `${scope.node.id}-private-api`,
-      description: "Private REST API Gateway for STAC API",
+      restApiName,
+      description,
       endpointTypes: [apigateway.EndpointType.PRIVATE],
-      policy: new iam.PolicyDocument({
-        statements: [
-          new iam.PolicyStatement({
-            effect: iam.Effect.ALLOW,
-            principals: [new iam.AnyPrincipal()],
-            actions: ["execute-api:Invoke"],
-            resources: ["execute-api:/*"],
-            conditions: {
-              StringEquals: { "aws:SourceVpc": vpc.vpcId },
-            },
-          }),
-        ],
-      }),
+      policy:
+        policy ??
+        new iam.PolicyDocument({
+          statements: [
+            new iam.PolicyStatement({
+              effect: iam.Effect.ALLOW,
+              principals: [new iam.AnyPrincipal()],
+              actions: ["execute-api:Invoke"],
+              resources: ["execute-api:/*"],
+              conditions: {
+                StringEquals: { "aws:SourceVpc": vpc.vpcId },
+              },
+            }),
+          ],
+        }),
       deployOptions: deployOptions ?? {
         loggingLevel: apigateway.MethodLoggingLevel.INFO,
         dataTraceEnabled: true,
