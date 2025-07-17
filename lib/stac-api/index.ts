@@ -8,7 +8,8 @@ import {
   aws_logs,
 } from "aws-cdk-lib";
 import { Construct } from "constructs";
-import { CustomLambdaFunctionProps, LambdaApiGateway } from "../utils";
+import { CustomLambdaFunctionProps } from "../utils";
+import { LambdaApiGateway } from "../lambda-api-gateway";
 import * as path from "path";
 
 export const EXTENSIONS = {
