@@ -36,7 +36,7 @@ function isValidExtension(value: string): value is ExtensionType {
 }
 
 export class PgStacApiLambdaRuntime extends Construct {
-  public readonly stacApiLambdaFunction: lambda.Function;
+  public readonly lambdaFunction: lambda.Function;
 
   constructor(
     scope: Construct,
@@ -69,7 +69,7 @@ export class PgStacApiLambdaRuntime extends Construct {
 
     const enabledExtensions = props.enabledExtensions || defaultExtensions;
 
-    this.stacApiLambdaFunction = new lambda.Function(this, "lambda", {
+    this.lambdaFunction = new lambda.Function(this, "lambda", {
       // defaults
       runtime: lambda.Runtime.PYTHON_3_11,
       handler: "handler.handler",
@@ -94,10 +94,10 @@ export class PgStacApiLambdaRuntime extends Construct {
       ...props.lambdaFunctionOptions,
     });
 
-    props.dbSecret.grantRead(this.stacApiLambdaFunction);
+    props.dbSecret.grantRead(this.lambdaFunction);
 
     if (props.vpc) {
-      this.stacApiLambdaFunction.connections.allowTo(
+      this.lambdaFunction.connections.allowTo(
         props.db,
         ec2.Port.tcp(5432),
         "allow connections from stac-fastapi-pgstac"
@@ -148,7 +148,19 @@ export interface PgStacApiLambdaRuntimeProps {
 }
 
 export class PgStacApiLambda extends Construct {
+  /**
+   * URL for the STAC API.
+   */
   readonly url: string;
+
+  /**
+   * Lambda function for the STAC API.
+   */
+  readonly lambdaFunction: lambda.Function;
+
+  /**
+   * @deprecated - use lambdaFunction instead
+   */
   public stacApiLambdaFunction: lambda.Function;
 
   constructor(scope: Construct, id: string, props: PgStacApiLambdaProps) {
@@ -163,14 +175,14 @@ export class PgStacApiLambda extends Construct {
       apiEnv: props.apiEnv,
       lambdaFunctionOptions: props.lambdaFunctionOptions,
     });
-    this.stacApiLambdaFunction = runtime.stacApiLambdaFunction;
+    this.stacApiLambdaFunction = this.lambdaFunction = runtime.lambdaFunction;
 
-    const api = new LambdaApiGateway(this, "stac-api", {
-      lambdaFunction: runtime.stacApiLambdaFunction,
-      domainName: props.stacApiDomainName,
+    const { api } = new LambdaApiGateway(this, "stac-api", {
+      lambdaFunction: runtime.lambdaFunction,
+      domainName: props.domainName ?? props.stacApiDomainName,
     });
 
-    this.url = api.url;
+    this.url = api.url!;
 
     new CfnOutput(this, "stac-api-output", {
       exportName: `${Stack.of(this).stackName}-url`,
@@ -181,8 +193,16 @@ export class PgStacApiLambda extends Construct {
 
 export interface PgStacApiLambdaProps extends PgStacApiLambdaRuntimeProps {
   /**
-   * Custom Domain Name Options for Titiler Pgstac API,
+   * Domain Name for the STAC API. If defined, will create the domain name and integrate it with the STAC API.
    *
+   * @default - undefined
+   */
+  readonly domainName?: apigatewayv2.IDomainName;
+
+  /**
+   * Custom Domain Name Options for STAC API.
+   *
+   * @deprecated Use 'domainName' instead.
    * @default - undefined.
    */
   readonly stacApiDomainName?: apigatewayv2.IDomainName;

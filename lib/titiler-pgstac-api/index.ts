@@ -32,7 +32,7 @@ let defaultTitilerPgstacEnv: Record<string, string> = {
 };
 
 export class TitilerPgstacApiLambdaRuntime extends Construct {
-  public readonly titilerPgstacLambdaFunction: lambda.Function;
+  public readonly lambdaFunction: lambda.Function;
 
   constructor(
     scope: Construct,
@@ -41,7 +41,7 @@ export class TitilerPgstacApiLambdaRuntime extends Construct {
   ) {
     super(scope, id);
 
-    this.titilerPgstacLambdaFunction = new lambda.Function(this, "lambda", {
+    this.lambdaFunction = new lambda.Function(this, "lambda", {
       // defaults
       runtime: lambda.Runtime.PYTHON_3_11,
       handler: "handler.handler",
@@ -67,7 +67,7 @@ export class TitilerPgstacApiLambdaRuntime extends Construct {
     // grant access to buckets using addToRolePolicy
     if (props.buckets) {
       props.buckets.forEach((bucket) => {
-        this.titilerPgstacLambdaFunction.addToRolePolicy(
+        this.lambdaFunction.addToRolePolicy(
           new iam.PolicyStatement({
             actions: ["s3:GetObject"],
             resources: [`arn:aws:s3:::${bucket}/*`],
@@ -76,10 +76,10 @@ export class TitilerPgstacApiLambdaRuntime extends Construct {
       });
     }
 
-    props.dbSecret.grantRead(this.titilerPgstacLambdaFunction);
+    props.dbSecret.grantRead(this.lambdaFunction);
 
     if (props.vpc) {
-      this.titilerPgstacLambdaFunction.connections.allowTo(
+      this.lambdaFunction.connections.allowTo(
         props.db,
         ec2.Port.tcp(5432),
         "allow connections from titiler"
@@ -129,7 +129,19 @@ export interface TitilerPgstacApiLambdaRuntimeProps {
 }
 
 export class TitilerPgstacApiLambda extends Construct {
+  /**
+   * URL for the Titiler Pgstac API.
+   */
   readonly url: string;
+
+  /**
+   * Lambda function for the Titiler Pgstac API.
+   */
+  readonly lambdaFunction: lambda.Function;
+
+  /**
+   * @deprecated - use lambdaFunction instead
+   */
   public titilerPgstacLambdaFunction: lambda.Function;
 
   constructor(
@@ -148,14 +160,15 @@ export class TitilerPgstacApiLambda extends Construct {
       buckets: props.buckets,
       lambdaFunctionOptions: props.lambdaFunctionOptions,
     });
-    this.titilerPgstacLambdaFunction = runtime.titilerPgstacLambdaFunction;
+    this.titilerPgstacLambdaFunction = this.lambdaFunction =
+      runtime.lambdaFunction;
 
-    const api = new LambdaApiGateway(this, "titlier-pgstac-api", {
-      lambdaFunction: runtime.titilerPgstacLambdaFunction,
-      domainName: props.titilerPgstacApiDomainName,
+    const { api } = new LambdaApiGateway(this, "titlier-pgstac-api", {
+      lambdaFunction: runtime.lambdaFunction,
+      domainName: props.domainName ?? props.titilerPgstacApiDomainName,
     });
 
-    this.url = api.url;
+    this.url = api.url!;
 
     new CfnOutput(this, "titiler-pgstac-api-output", {
       exportName: `${Stack.of(this).stackName}-titiler-pgstac-url`,
@@ -167,8 +180,16 @@ export class TitilerPgstacApiLambda extends Construct {
 export interface TitilerPgstacApiLambdaProps
   extends TitilerPgstacApiLambdaRuntimeProps {
   /**
+   * Domain Name for the Titiler Pgstac API. If defined, will create the domain name and integrate it with the Titiler Pgstac API.
+   *
+   * @default - undefined.
+   */
+  readonly domainName?: apigatewayv2.IDomainName;
+
+  /**
    * Custom Domain Name Options for Titiler Pgstac API,
    *
+   * @deprecated Use 'domainName' instead.
    * @default - undefined.
    */
   readonly titilerPgstacApiDomainName?: apigatewayv2.IDomainName;

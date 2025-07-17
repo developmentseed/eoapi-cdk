@@ -15,12 +15,12 @@ import { LambdaApiGateway } from "../lambda-api-gateway";
 import * as path from "path";
 
 export class TiPgApiLambdaRuntime extends Construct {
-  public readonly tiPgLambdaFunction: lambda.Function;
+  public readonly lambdaFunction: lambda.Function;
 
   constructor(scope: Construct, id: string, props: TiPgApiLambdaRuntimeProps) {
     super(scope, id);
 
-    this.tiPgLambdaFunction = new lambda.Function(this, "lambda", {
+    this.lambdaFunction = new lambda.Function(this, "lambda", {
       // defaults
       runtime: lambda.Runtime.PYTHON_3_11,
       handler: "handler.handler",
@@ -44,10 +44,10 @@ export class TiPgApiLambdaRuntime extends Construct {
       ...props.lambdaFunctionOptions,
     });
 
-    props.dbSecret.grantRead(this.tiPgLambdaFunction);
+    props.dbSecret.grantRead(this.lambdaFunction);
 
     if (props.vpc) {
-      this.tiPgLambdaFunction.connections.allowTo(
+      this.lambdaFunction.connections.allowTo(
         props.db,
         ec2.Port.tcp(5432),
         "allow connections from tipg"
@@ -91,7 +91,19 @@ export interface TiPgApiLambdaRuntimeProps {
 }
 
 export class TiPgApiLambda extends Construct {
+  /**
+   * URL for the TiPg API.
+   */
   readonly url: string;
+
+  /**
+   * Lambda function for the TiPg API.
+   */
+  readonly lambdaFunction: lambda.Function;
+
+  /**
+   * @deprecated - use lambdaFunction instead
+   */
   public tiPgLambdaFunction: lambda.Function;
 
   constructor(scope: Construct, id: string, props: TiPgApiLambdaProps) {
@@ -105,14 +117,14 @@ export class TiPgApiLambda extends Construct {
       apiEnv: props.apiEnv,
       lambdaFunctionOptions: props.lambdaFunctionOptions,
     });
-    this.tiPgLambdaFunction = runtime.tiPgLambdaFunction;
+    this.tiPgLambdaFunction = this.lambdaFunction = runtime.lambdaFunction;
 
-    const api = new LambdaApiGateway(this, "api", {
-      lambdaFunction: runtime.tiPgLambdaFunction,
-      domainName: props.tipgApiDomainName,
+    const { api } = new LambdaApiGateway(this, "api", {
+      lambdaFunction: runtime.lambdaFunction,
+      domainName: props.domainName ?? props.tipgApiDomainName,
     });
 
-    this.url = api.url;
+    this.url = api.url!;
 
     new CfnOutput(this, "tipg-api-output", {
       exportName: `${Stack.of(this).stackName}-tip-url`,
@@ -123,9 +135,17 @@ export class TiPgApiLambda extends Construct {
 
 export interface TiPgApiLambdaProps extends TiPgApiLambdaRuntimeProps {
   /**
+   * Domain Name for the TiPg API. If defined, will create the domain name and integrate it with the TiPg API.
+   *
+   * @default - undefined
+   */
+  readonly domainName?: apigatewayv2.IDomainName;
+
+  /**
    * Custom Domain Name for tipg API. If defined, will create the
    * domain name and integrate it with the tipg API.
    *
+   * @deprecated Use 'domainName' instead.
    * @default - undefined
    */
   readonly tipgApiDomainName?: apigatewayv2.IDomainName;

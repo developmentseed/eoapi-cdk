@@ -27,7 +27,7 @@ export interface LambdaApiGatewayProps {
 }
 
 export class LambdaApiGateway extends Construct {
-  readonly url: string;
+  readonly api: apigatewayv2.HttpApi;
 
   constructor(scope: Construct, id: string, props: LambdaApiGatewayProps) {
     super(scope, id);
@@ -55,12 +55,10 @@ export class LambdaApiGateway extends Construct {
           : undefined
       );
 
-    const api = new apigatewayv2.HttpApi(this, "api", {
+    this.api = new apigatewayv2.HttpApi(this, "api", {
       apiName,
       defaultDomainMapping,
       defaultIntegration: defaultIntegration,
     });
-
-    this.url = api.url!;
   }
 }
