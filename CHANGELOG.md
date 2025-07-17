@@ -1,3 +1,13 @@
+# [9.0.0](https://github.com/developmentseed/eoapi-cdk/compare/v8.3.3...v9.0.0) (2025-07-17)
+
+
+* feat!: expose API runtime constructs (#167) ([ce9df07](https://github.com/developmentseed/eoapi-cdk/commit/ce9df0709c2e6d7e2d5b0c474f4f991c92fa79b1)), closes [#167](https://github.com/developmentseed/eoapi-cdk/issues/167)
+
+
+### BREAKING CHANGES
+
+* This update will change the internal node IDs of the constructs. This will cause the Lambdas and API Gateways to be redeployed when upgrading eoapi-cdk. Being that both services are stateless, this should not cause issues unless a developer has made manual modifications or manual references to the deployed lambdas/api gateways.
+
 ## [8.3.3](https://github.com/developmentseed/eoapi-cdk/compare/v8.3.2...v8.3.3) (2025-07-09)
 
 
