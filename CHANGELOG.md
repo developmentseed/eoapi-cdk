@@ -1,3 +1,10 @@
+## [9.1.1](https://github.com/developmentseed/eoapi-cdk/compare/v9.1.0...v9.1.1) (2025-07-17)
+
+
+### Bug Fixes
+
+* expose api gateway utility constructs ([#169](https://github.com/developmentseed/eoapi-cdk/issues/169)) ([c2bed73](https://github.com/developmentseed/eoapi-cdk/commit/c2bed7337e9742979cefaadb74291c4adcd76dd7))
+
 # [9.1.0](https://github.com/developmentseed/eoapi-cdk/compare/v9.0.0...v9.1.0) (2025-07-17)
 
 
