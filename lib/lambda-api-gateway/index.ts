@@ -1,6 +1,5 @@
 import {
   Stack,
-  CfnOutput,
   aws_apigatewayv2 as apigatewayv2,
   aws_apigatewayv2_integrations as apigatewayv2_integrations,
   aws_lambda as lambda,
@@ -20,11 +19,6 @@ export interface LambdaApiGatewayProps {
    * @default - undefined
    */
   readonly domainName?: apigatewayv2.IDomainName;
-
-  /**
-   * Name for the CfnOutput export.
-   */
-  readonly outputName: string;
 
   /**
    * Name of the API Gateway.
@@ -64,10 +58,5 @@ export class LambdaApiGateway extends Construct {
     });
 
     this.url = api.url!;
-
-    new CfnOutput(this, "output", {
-      exportName: `${Stack.of(this).stackName}-${props.outputName}`,
-      value: this.url,
-    });
   }
 }

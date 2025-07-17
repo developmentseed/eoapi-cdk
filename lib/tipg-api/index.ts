@@ -6,6 +6,8 @@ import {
   aws_rds as rds,
   aws_secretsmanager as secretsmanager,
   Duration,
+  Stack,
+  CfnOutput,
 } from "aws-cdk-lib";
 import { Construct } from "constructs";
 import { CustomLambdaFunctionProps } from "../utils";
@@ -108,10 +110,14 @@ export class TiPgApiLambda extends Construct {
     const api = new LambdaApiGateway(this, "api", {
       lambdaFunction: runtime.tiPgLambdaFunction,
       domainName: props.tipgApiDomainName,
-      outputName: "tip-url",
     });
 
     this.url = api.url;
+
+    new CfnOutput(this, "tipg-api-output", {
+      exportName: `${Stack.of(this).stackName}-tip-url`,
+      value: this.url,
+    });
   }
 }
 

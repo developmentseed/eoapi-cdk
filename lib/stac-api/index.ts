@@ -6,6 +6,8 @@ import {
   aws_secretsmanager as secretsmanager,
   Duration,
   aws_logs,
+  CfnOutput,
+  Stack,
 } from "aws-cdk-lib";
 import { Construct } from "constructs";
 import { CustomLambdaFunctionProps } from "../utils";
@@ -166,10 +168,14 @@ export class PgStacApiLambda extends Construct {
     const api = new LambdaApiGateway(this, "stac-api", {
       lambdaFunction: runtime.stacApiLambdaFunction,
       domainName: props.stacApiDomainName,
-      outputName: "url",
     });
 
     this.url = api.url;
+
+    new CfnOutput(this, "stac-api-output", {
+      exportName: `${Stack.of(this).stackName}-url`,
+      value: this.url,
+    });
   }
 }
 

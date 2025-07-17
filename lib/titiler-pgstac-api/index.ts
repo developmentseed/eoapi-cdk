@@ -7,6 +7,8 @@ import {
   aws_secretsmanager as secretsmanager,
   Duration,
   aws_logs,
+  CfnOutput,
+  Stack,
 } from "aws-cdk-lib";
 import { Construct } from "constructs";
 import { CustomLambdaFunctionProps } from "../utils";
@@ -151,10 +153,14 @@ export class TitilerPgstacApiLambda extends Construct {
     const api = new LambdaApiGateway(this, "titlier-pgstac-api", {
       lambdaFunction: runtime.titilerPgstacLambdaFunction,
       domainName: props.titilerPgstacApiDomainName,
-      outputName: "titiler-pgstac-url",
     });
 
     this.url = api.url;
+
+    new CfnOutput(this, "titiler-pgstac-api-output", {
+      exportName: `${Stack.of(this).stackName}-titiler-pgstac-url`,
+      value: this.url,
+    });
   }
 }
 
