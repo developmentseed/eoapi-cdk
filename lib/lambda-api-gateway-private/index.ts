@@ -10,56 +10,56 @@ export interface PrivateLambdaApiGatewayProps {
   /**
    * Lambda function to integrate with the API Gateway.
    */
-  lambdaFunction: lambda.IFunction;
+  readonly lambdaFunction: lambda.IFunction;
 
   /**
    * Lambda integration options for the API Gateway.
    */
-  lambdaIntegrationOptions?: apigateway.LambdaIntegrationOptions;
+  readonly lambdaIntegrationOptions?: apigateway.LambdaIntegrationOptions;
 
   /**
    * VPC to create the API Gateway in.
    */
-  vpc: ec2.IVpc;
+  readonly vpc: ec2.IVpc;
 
   /**
    * Whether to create a VPC endpoint for the API Gateway.
    *
    * @default - true
    */
-  createVpcEndpoint?: boolean;
+  readonly createVpcEndpoint?: boolean;
 
   /**
    * The subnets in which to create a VPC endpoint network interface. At most one per availability zone.
 
    */
-  vpcEndpointSubnetSelection?: ec2.SubnetSelection;
+  readonly vpcEndpointSubnetSelection?: ec2.SubnetSelection;
 
   /**
    * Name for the API Gateway.
    *
    * @default - `${scope.node.id}-private-api`
    */
-  restApiName?: string;
+  readonly restApiName?: string;
 
   /**
    * Description for the API Gateway.
    *
    * @default - "Private REST API Gateway"
    */
-  description?: string;
+  readonly description?: string;
 
   /**
    * Deploy options for the API Gateway.
    */
-  deployOptions?: apigateway.StageOptions;
+  readonly deployOptions?: apigateway.StageOptions;
 
   /**
    * Policy for the API Gateway.
    *
    * @default - Policy that allows any principal with the same VPC to invoke the API.
    */
-  policy?: iam.PolicyDocument;
+  readonly policy?: iam.PolicyDocument;
 }
 
 export class PrivateLambdaApiGateway extends Construct {
