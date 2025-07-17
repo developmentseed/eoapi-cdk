@@ -204,6 +204,130 @@ public readonly instance: Instance;
 ---
 
 
+### LambdaApiGateway <a name="LambdaApiGateway" id="eoapi-cdk.LambdaApiGateway"></a>
+
+#### Initializers <a name="Initializers" id="eoapi-cdk.LambdaApiGateway.Initializer"></a>
+
+```typescript
+import { LambdaApiGateway } from 'eoapi-cdk'
+
+new LambdaApiGateway(scope: Construct, id: string, props: LambdaApiGatewayProps)
+```
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#eoapi-cdk.LambdaApiGateway.Initializer.parameter.scope">scope</a></code> | <code>constructs.Construct</code> | *No description.* |
+| <code><a href="#eoapi-cdk.LambdaApiGateway.Initializer.parameter.id">id</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#eoapi-cdk.LambdaApiGateway.Initializer.parameter.props">props</a></code> | <code><a href="#eoapi-cdk.LambdaApiGatewayProps">LambdaApiGatewayProps</a></code> | *No description.* |
+
+---
+
+##### `scope`<sup>Required</sup> <a name="scope" id="eoapi-cdk.LambdaApiGateway.Initializer.parameter.scope"></a>
+
+- *Type:* constructs.Construct
+
+---
+
+##### `id`<sup>Required</sup> <a name="id" id="eoapi-cdk.LambdaApiGateway.Initializer.parameter.id"></a>
+
+- *Type:* string
+
+---
+
+##### `props`<sup>Required</sup> <a name="props" id="eoapi-cdk.LambdaApiGateway.Initializer.parameter.props"></a>
+
+- *Type:* <a href="#eoapi-cdk.LambdaApiGatewayProps">LambdaApiGatewayProps</a>
+
+---
+
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#eoapi-cdk.LambdaApiGateway.toString">toString</a></code> | Returns a string representation of this construct. |
+
+---
+
+##### `toString` <a name="toString" id="eoapi-cdk.LambdaApiGateway.toString"></a>
+
+```typescript
+public toString(): string
+```
+
+Returns a string representation of this construct.
+
+#### Static Functions <a name="Static Functions" id="Static Functions"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#eoapi-cdk.LambdaApiGateway.isConstruct">isConstruct</a></code> | Checks if `x` is a construct. |
+
+---
+
+##### `isConstruct` <a name="isConstruct" id="eoapi-cdk.LambdaApiGateway.isConstruct"></a>
+
+```typescript
+import { LambdaApiGateway } from 'eoapi-cdk'
+
+LambdaApiGateway.isConstruct(x: any)
+```
+
+Checks if `x` is a construct.
+
+Use this method instead of `instanceof` to properly detect `Construct`
+instances, even when the construct library is symlinked.
+
+Explanation: in JavaScript, multiple copies of the `constructs` library on
+disk are seen as independent, completely different libraries. As a
+consequence, the class `Construct` in each copy of the `constructs` library
+is seen as a different class, and an instance of one class will not test as
+`instanceof` the other class. `npm install` will not create installations
+like this, but users may manually symlink construct libraries together or
+use a monorepo tool: in those cases, multiple copies of the `constructs`
+library can be accidentally installed, and `instanceof` will behave
+unpredictably. It is safest to avoid using `instanceof`, and using
+this type-testing method instead.
+
+###### `x`<sup>Required</sup> <a name="x" id="eoapi-cdk.LambdaApiGateway.isConstruct.parameter.x"></a>
+
+- *Type:* any
+
+Any object.
+
+---
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#eoapi-cdk.LambdaApiGateway.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
+| <code><a href="#eoapi-cdk.LambdaApiGateway.property.api">api</a></code> | <code>aws-cdk-lib.aws_apigatewayv2.HttpApi</code> | *No description.* |
+
+---
+
+##### `node`<sup>Required</sup> <a name="node" id="eoapi-cdk.LambdaApiGateway.property.node"></a>
+
+```typescript
+public readonly node: Node;
+```
+
+- *Type:* constructs.Node
+
+The tree node.
+
+---
+
+##### `api`<sup>Required</sup> <a name="api" id="eoapi-cdk.LambdaApiGateway.property.api"></a>
+
+```typescript
+public readonly api: HttpApi;
+```
+
+- *Type:* aws-cdk-lib.aws_apigatewayv2.HttpApi
+
+---
+
+
 ### PgStacApiLambda <a name="PgStacApiLambda" id="eoapi-cdk.PgStacApiLambda"></a>
 
 #### Initializers <a name="Initializers" id="eoapi-cdk.PgStacApiLambda.Initializer"></a>
@@ -680,6 +804,141 @@ public readonly pgstacSecret: ISecret;
 ```
 
 - *Type:* aws-cdk-lib.aws_secretsmanager.ISecret
+
+---
+
+
+### PrivateLambdaApiGateway <a name="PrivateLambdaApiGateway" id="eoapi-cdk.PrivateLambdaApiGateway"></a>
+
+#### Initializers <a name="Initializers" id="eoapi-cdk.PrivateLambdaApiGateway.Initializer"></a>
+
+```typescript
+import { PrivateLambdaApiGateway } from 'eoapi-cdk'
+
+new PrivateLambdaApiGateway(scope: Construct, id: string, props: PrivateLambdaApiGatewayProps)
+```
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#eoapi-cdk.PrivateLambdaApiGateway.Initializer.parameter.scope">scope</a></code> | <code>constructs.Construct</code> | *No description.* |
+| <code><a href="#eoapi-cdk.PrivateLambdaApiGateway.Initializer.parameter.id">id</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#eoapi-cdk.PrivateLambdaApiGateway.Initializer.parameter.props">props</a></code> | <code><a href="#eoapi-cdk.PrivateLambdaApiGatewayProps">PrivateLambdaApiGatewayProps</a></code> | *No description.* |
+
+---
+
+##### `scope`<sup>Required</sup> <a name="scope" id="eoapi-cdk.PrivateLambdaApiGateway.Initializer.parameter.scope"></a>
+
+- *Type:* constructs.Construct
+
+---
+
+##### `id`<sup>Required</sup> <a name="id" id="eoapi-cdk.PrivateLambdaApiGateway.Initializer.parameter.id"></a>
+
+- *Type:* string
+
+---
+
+##### `props`<sup>Required</sup> <a name="props" id="eoapi-cdk.PrivateLambdaApiGateway.Initializer.parameter.props"></a>
+
+- *Type:* <a href="#eoapi-cdk.PrivateLambdaApiGatewayProps">PrivateLambdaApiGatewayProps</a>
+
+---
+
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#eoapi-cdk.PrivateLambdaApiGateway.toString">toString</a></code> | Returns a string representation of this construct. |
+
+---
+
+##### `toString` <a name="toString" id="eoapi-cdk.PrivateLambdaApiGateway.toString"></a>
+
+```typescript
+public toString(): string
+```
+
+Returns a string representation of this construct.
+
+#### Static Functions <a name="Static Functions" id="Static Functions"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#eoapi-cdk.PrivateLambdaApiGateway.isConstruct">isConstruct</a></code> | Checks if `x` is a construct. |
+
+---
+
+##### `isConstruct` <a name="isConstruct" id="eoapi-cdk.PrivateLambdaApiGateway.isConstruct"></a>
+
+```typescript
+import { PrivateLambdaApiGateway } from 'eoapi-cdk'
+
+PrivateLambdaApiGateway.isConstruct(x: any)
+```
+
+Checks if `x` is a construct.
+
+Use this method instead of `instanceof` to properly detect `Construct`
+instances, even when the construct library is symlinked.
+
+Explanation: in JavaScript, multiple copies of the `constructs` library on
+disk are seen as independent, completely different libraries. As a
+consequence, the class `Construct` in each copy of the `constructs` library
+is seen as a different class, and an instance of one class will not test as
+`instanceof` the other class. `npm install` will not create installations
+like this, but users may manually symlink construct libraries together or
+use a monorepo tool: in those cases, multiple copies of the `constructs`
+library can be accidentally installed, and `instanceof` will behave
+unpredictably. It is safest to avoid using `instanceof`, and using
+this type-testing method instead.
+
+###### `x`<sup>Required</sup> <a name="x" id="eoapi-cdk.PrivateLambdaApiGateway.isConstruct.parameter.x"></a>
+
+- *Type:* any
+
+Any object.
+
+---
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#eoapi-cdk.PrivateLambdaApiGateway.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
+| <code><a href="#eoapi-cdk.PrivateLambdaApiGateway.property.api">api</a></code> | <code>aws-cdk-lib.aws_apigateway.RestApi</code> | *No description.* |
+| <code><a href="#eoapi-cdk.PrivateLambdaApiGateway.property.vpcEndpoint">vpcEndpoint</a></code> | <code>aws-cdk-lib.aws_ec2.InterfaceVpcEndpoint</code> | *No description.* |
+
+---
+
+##### `node`<sup>Required</sup> <a name="node" id="eoapi-cdk.PrivateLambdaApiGateway.property.node"></a>
+
+```typescript
+public readonly node: Node;
+```
+
+- *Type:* constructs.Node
+
+The tree node.
+
+---
+
+##### `api`<sup>Required</sup> <a name="api" id="eoapi-cdk.PrivateLambdaApiGateway.property.api"></a>
+
+```typescript
+public readonly api: RestApi;
+```
+
+- *Type:* aws-cdk-lib.aws_apigateway.RestApi
+
+---
+
+##### `vpcEndpoint`<sup>Optional</sup> <a name="vpcEndpoint" id="eoapi-cdk.PrivateLambdaApiGateway.property.vpcEndpoint"></a>
+
+```typescript
+public readonly vpcEndpoint: InterfaceVpcEndpoint;
+```
+
+- *Type:* aws-cdk-lib.aws_ec2.InterfaceVpcEndpoint
 
 ---
 
@@ -2593,6 +2852,66 @@ public readonly workMem: string;
 
 ---
 
+### LambdaApiGatewayProps <a name="LambdaApiGatewayProps" id="eoapi-cdk.LambdaApiGatewayProps"></a>
+
+#### Initializer <a name="Initializer" id="eoapi-cdk.LambdaApiGatewayProps.Initializer"></a>
+
+```typescript
+import { LambdaApiGatewayProps } from 'eoapi-cdk'
+
+const lambdaApiGatewayProps: LambdaApiGatewayProps = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#eoapi-cdk.LambdaApiGatewayProps.property.lambdaFunction">lambdaFunction</a></code> | <code>aws-cdk-lib.aws_lambda.Function</code> | Lambda function to integrate with the API Gateway. |
+| <code><a href="#eoapi-cdk.LambdaApiGatewayProps.property.apiName">apiName</a></code> | <code>string</code> | Name of the API Gateway. |
+| <code><a href="#eoapi-cdk.LambdaApiGatewayProps.property.domainName">domainName</a></code> | <code>aws-cdk-lib.aws_apigatewayv2.IDomainName</code> | Custom Domain Name for the API. |
+
+---
+
+##### `lambdaFunction`<sup>Required</sup> <a name="lambdaFunction" id="eoapi-cdk.LambdaApiGatewayProps.property.lambdaFunction"></a>
+
+```typescript
+public readonly lambdaFunction: Function;
+```
+
+- *Type:* aws-cdk-lib.aws_lambda.Function
+
+Lambda function to integrate with the API Gateway.
+
+---
+
+##### `apiName`<sup>Optional</sup> <a name="apiName" id="eoapi-cdk.LambdaApiGatewayProps.property.apiName"></a>
+
+```typescript
+public readonly apiName: string;
+```
+
+- *Type:* string
+
+Name of the API Gateway.
+
+---
+
+##### `domainName`<sup>Optional</sup> <a name="domainName" id="eoapi-cdk.LambdaApiGatewayProps.property.domainName"></a>
+
+```typescript
+public readonly domainName: IDomainName;
+```
+
+- *Type:* aws-cdk-lib.aws_apigatewayv2.IDomainName
+- *Default:* undefined
+
+Custom Domain Name for the API.
+
+If defined, will create the
+domain name and integrate it with the API.
+
+---
+
 ### PgStacApiLambdaProps <a name="PgStacApiLambdaProps" id="eoapi-cdk.PgStacApiLambdaProps"></a>
 
 #### Initializer <a name="Initializer" id="eoapi-cdk.PgStacApiLambdaProps.Initializer"></a>
@@ -3815,6 +4134,146 @@ public readonly secretsPrefix: string;
 - *Default:* pgstac
 
 Prefix to assign to the generated `secrets_manager.Secret`.
+
+---
+
+### PrivateLambdaApiGatewayProps <a name="PrivateLambdaApiGatewayProps" id="eoapi-cdk.PrivateLambdaApiGatewayProps"></a>
+
+#### Initializer <a name="Initializer" id="eoapi-cdk.PrivateLambdaApiGatewayProps.Initializer"></a>
+
+```typescript
+import { PrivateLambdaApiGatewayProps } from 'eoapi-cdk'
+
+const privateLambdaApiGatewayProps: PrivateLambdaApiGatewayProps = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#eoapi-cdk.PrivateLambdaApiGatewayProps.property.lambdaFunction">lambdaFunction</a></code> | <code>aws-cdk-lib.aws_lambda.IFunction</code> | Lambda function to integrate with the API Gateway. |
+| <code><a href="#eoapi-cdk.PrivateLambdaApiGatewayProps.property.vpc">vpc</a></code> | <code>aws-cdk-lib.aws_ec2.IVpc</code> | VPC to create the API Gateway in. |
+| <code><a href="#eoapi-cdk.PrivateLambdaApiGatewayProps.property.createVpcEndpoint">createVpcEndpoint</a></code> | <code>boolean</code> | Whether to create a VPC endpoint for the API Gateway. |
+| <code><a href="#eoapi-cdk.PrivateLambdaApiGatewayProps.property.deployOptions">deployOptions</a></code> | <code>aws-cdk-lib.aws_apigateway.StageOptions</code> | Deploy options for the API Gateway. |
+| <code><a href="#eoapi-cdk.PrivateLambdaApiGatewayProps.property.description">description</a></code> | <code>string</code> | Description for the API Gateway. |
+| <code><a href="#eoapi-cdk.PrivateLambdaApiGatewayProps.property.lambdaIntegrationOptions">lambdaIntegrationOptions</a></code> | <code>aws-cdk-lib.aws_apigateway.LambdaIntegrationOptions</code> | Lambda integration options for the API Gateway. |
+| <code><a href="#eoapi-cdk.PrivateLambdaApiGatewayProps.property.policy">policy</a></code> | <code>aws-cdk-lib.aws_iam.PolicyDocument</code> | Policy for the API Gateway. |
+| <code><a href="#eoapi-cdk.PrivateLambdaApiGatewayProps.property.restApiName">restApiName</a></code> | <code>string</code> | Name for the API Gateway. |
+| <code><a href="#eoapi-cdk.PrivateLambdaApiGatewayProps.property.vpcEndpointSubnetSelection">vpcEndpointSubnetSelection</a></code> | <code>aws-cdk-lib.aws_ec2.SubnetSelection</code> | The subnets in which to create a VPC endpoint network interface. |
+
+---
+
+##### `lambdaFunction`<sup>Required</sup> <a name="lambdaFunction" id="eoapi-cdk.PrivateLambdaApiGatewayProps.property.lambdaFunction"></a>
+
+```typescript
+public readonly lambdaFunction: IFunction;
+```
+
+- *Type:* aws-cdk-lib.aws_lambda.IFunction
+
+Lambda function to integrate with the API Gateway.
+
+---
+
+##### `vpc`<sup>Required</sup> <a name="vpc" id="eoapi-cdk.PrivateLambdaApiGatewayProps.property.vpc"></a>
+
+```typescript
+public readonly vpc: IVpc;
+```
+
+- *Type:* aws-cdk-lib.aws_ec2.IVpc
+
+VPC to create the API Gateway in.
+
+---
+
+##### `createVpcEndpoint`<sup>Optional</sup> <a name="createVpcEndpoint" id="eoapi-cdk.PrivateLambdaApiGatewayProps.property.createVpcEndpoint"></a>
+
+```typescript
+public readonly createVpcEndpoint: boolean;
+```
+
+- *Type:* boolean
+- *Default:* true
+
+Whether to create a VPC endpoint for the API Gateway.
+
+---
+
+##### `deployOptions`<sup>Optional</sup> <a name="deployOptions" id="eoapi-cdk.PrivateLambdaApiGatewayProps.property.deployOptions"></a>
+
+```typescript
+public readonly deployOptions: StageOptions;
+```
+
+- *Type:* aws-cdk-lib.aws_apigateway.StageOptions
+
+Deploy options for the API Gateway.
+
+---
+
+##### `description`<sup>Optional</sup> <a name="description" id="eoapi-cdk.PrivateLambdaApiGatewayProps.property.description"></a>
+
+```typescript
+public readonly description: string;
+```
+
+- *Type:* string
+- *Default:* "Private REST API Gateway"
+
+Description for the API Gateway.
+
+---
+
+##### `lambdaIntegrationOptions`<sup>Optional</sup> <a name="lambdaIntegrationOptions" id="eoapi-cdk.PrivateLambdaApiGatewayProps.property.lambdaIntegrationOptions"></a>
+
+```typescript
+public readonly lambdaIntegrationOptions: LambdaIntegrationOptions;
+```
+
+- *Type:* aws-cdk-lib.aws_apigateway.LambdaIntegrationOptions
+
+Lambda integration options for the API Gateway.
+
+---
+
+##### `policy`<sup>Optional</sup> <a name="policy" id="eoapi-cdk.PrivateLambdaApiGatewayProps.property.policy"></a>
+
+```typescript
+public readonly policy: PolicyDocument;
+```
+
+- *Type:* aws-cdk-lib.aws_iam.PolicyDocument
+- *Default:* Policy that allows any principal with the same VPC to invoke the API.
+
+Policy for the API Gateway.
+
+---
+
+##### `restApiName`<sup>Optional</sup> <a name="restApiName" id="eoapi-cdk.PrivateLambdaApiGatewayProps.property.restApiName"></a>
+
+```typescript
+public readonly restApiName: string;
+```
+
+- *Type:* string
+- *Default:* `${scope.node.id}-private-api`
+
+Name for the API Gateway.
+
+---
+
+##### `vpcEndpointSubnetSelection`<sup>Optional</sup> <a name="vpcEndpointSubnetSelection" id="eoapi-cdk.PrivateLambdaApiGatewayProps.property.vpcEndpointSubnetSelection"></a>
+
+```typescript
+public readonly vpcEndpointSubnetSelection: SubnetSelection;
+```
+
+- *Type:* aws-cdk-lib.aws_ec2.SubnetSelection
+
+The subnets in which to create a VPC endpoint network interface.
+
+At most one per availability zone.
 
 ---
 
