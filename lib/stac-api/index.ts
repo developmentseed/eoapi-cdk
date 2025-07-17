@@ -1,17 +1,18 @@
 import {
-  Stack,
   aws_apigatewayv2 as apigatewayv2,
-  aws_apigatewayv2_integrations as apigatewayv2_integrations,
   aws_ec2 as ec2,
   aws_rds as rds,
   aws_lambda as lambda,
   aws_secretsmanager as secretsmanager,
-  CfnOutput,
   Duration,
   aws_logs,
 } from "aws-cdk-lib";
 import { Construct } from "constructs";
-import { CustomLambdaFunctionProps } from "../utils";
+import {
+  CustomLambdaFunctionProps,
+  LambdaApiGateway,
+  LambdaApiGatewayProps,
+} from "../utils";
 import * as path from "path";
 
 export const EXTENSIONS = {
@@ -147,64 +148,6 @@ export interface PgStacApiLambdaRuntimeProps {
   readonly lambdaFunctionOptions?: CustomLambdaFunctionProps;
 }
 
-export class PgStacApiLambdaApiGateway extends Construct {
-  readonly url: string;
-
-  constructor(
-    scope: Construct,
-    id: string,
-    props: PgStacApiLambdaApiGatewayProps
-  ) {
-    super(scope, id);
-
-    const stacApi = new apigatewayv2.HttpApi(
-      this,
-      `${Stack.of(this).stackName}-stac-api`,
-      {
-        defaultDomainMapping: props.stacApiDomainName
-          ? {
-              domainName: props.stacApiDomainName,
-            }
-          : undefined,
-        defaultIntegration: new apigatewayv2_integrations.HttpLambdaIntegration(
-          "integration",
-          props.lambdaFunction,
-          props.stacApiDomainName
-            ? {
-                parameterMapping:
-                  new apigatewayv2.ParameterMapping().overwriteHeader(
-                    "host",
-                    apigatewayv2.MappingValue.custom(
-                      props.stacApiDomainName.name
-                    )
-                  ),
-              }
-            : undefined
-        ),
-      }
-    );
-
-    this.url = stacApi.url!;
-
-    new CfnOutput(this, "stac-api-output", {
-      exportName: `${Stack.of(this).stackName}-url`,
-      value: this.url,
-    });
-  }
-}
-
-export interface PgStacApiLambdaApiGatewayProps {
-  /**
-   * Lambda function to integrate with the API Gateway.
-   */
-  readonly lambdaFunction: lambda.Function;
-
-  /**
-   * Custom Domain Name Options for STAC API,
-   */
-  readonly stacApiDomainName?: apigatewayv2.IDomainName;
-}
-
 export class PgStacApiLambda extends Construct {
   readonly url: string;
   public stacApiLambdaFunction: lambda.Function;
@@ -223,9 +166,10 @@ export class PgStacApiLambda extends Construct {
     });
     this.stacApiLambdaFunction = runtime.stacApiLambdaFunction;
 
-    const api = new PgStacApiLambdaApiGateway(this, "api", {
+    const api = new LambdaApiGateway(this, "stac-api", {
       lambdaFunction: runtime.stacApiLambdaFunction,
-      stacApiDomainName: props.stacApiDomainName,
+      domainName: props.domainName,
+      outputName: "url",
     });
 
     this.url = api.url;
@@ -234,8 +178,4 @@ export class PgStacApiLambda extends Construct {
 
 export interface PgStacApiLambdaProps
   extends PgStacApiLambdaRuntimeProps,
-    Omit<PgStacApiLambdaApiGatewayProps, "lambdaFunction"> {
-  // This interface combines both runtime and API gateway props
-  // The lambdaFunction property from PgStacApiLambdaApiGatewayProps is excluded
-  // as it will be provided by the runtime construct
-}
+    Omit<LambdaApiGatewayProps, "lambdaFunction"> {}

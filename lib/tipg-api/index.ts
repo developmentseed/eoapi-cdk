@@ -1,18 +1,15 @@
 import {
-  Stack,
   aws_apigatewayv2 as apigatewayv2,
-  aws_apigatewayv2_integrations as apigatewayv2_integrations,
   aws_ec2 as ec2,
   aws_lambda as lambda,
   aws_logs as logs,
   aws_rds as rds,
   aws_secretsmanager as secretsmanager,
-  CfnOutput,
   Duration,
 } from "aws-cdk-lib";
 import { Construct } from "constructs";
-import { CustomLambdaFunctionProps } from "../utils";
-import * as path from 'path';
+import { CustomLambdaFunctionProps, LambdaApiGateway } from "../utils";
+import * as path from "path";
 
 export class TiPgApiLambdaRuntime extends Construct {
   public readonly tiPgLambdaFunction: lambda.Function;
@@ -90,67 +87,6 @@ export interface TiPgApiLambdaRuntimeProps {
   readonly lambdaFunctionOptions?: CustomLambdaFunctionProps;
 }
 
-export class TiPgApiLambdaApiGateway extends Construct {
-  readonly url: string;
-
-  constructor(
-    scope: Construct,
-    id: string,
-    props: TiPgApiLambdaApiGatewayProps
-  ) {
-    super(scope, id);
-
-    const tipgApi = new apigatewayv2.HttpApi(
-      this,
-      `${Stack.of(this).stackName}-tipg-api`,
-      {
-        defaultDomainMapping: props.tipgApiDomainName
-          ? {
-              domainName: props.tipgApiDomainName,
-            }
-          : undefined,
-        defaultIntegration: new apigatewayv2_integrations.HttpLambdaIntegration(
-          "integration",
-          props.lambdaFunction,
-          props.tipgApiDomainName
-            ? {
-                parameterMapping:
-                  new apigatewayv2.ParameterMapping().overwriteHeader(
-                    "host",
-                    apigatewayv2.MappingValue.custom(
-                      props.tipgApiDomainName.name
-                    )
-                  ),
-              }
-            : undefined
-        ),
-      }
-    );
-
-    this.url = tipgApi.url!;
-
-    new CfnOutput(this, "tipg-api-output", {
-      exportName: `${Stack.of(this).stackName}-tip-url`,
-      value: this.url,
-    });
-  }
-}
-
-export interface TiPgApiLambdaApiGatewayProps {
-  /**
-   * Lambda function to integrate with the API Gateway.
-   */
-  readonly lambdaFunction: lambda.Function;
-
-  /**
-   * Custom Domain Name for tipg API. If defined, will create the
-   * domain name and integrate it with the tipg API.
-   *
-   * @default - undefined
-   */
-  readonly tipgApiDomainName?: apigatewayv2.IDomainName;
-}
-
 export class TiPgApiLambda extends Construct {
   readonly url: string;
   public tiPgLambdaFunction: lambda.Function;
@@ -168,19 +104,22 @@ export class TiPgApiLambda extends Construct {
     });
     this.tiPgLambdaFunction = runtime.tiPgLambdaFunction;
 
-    const api = new TiPgApiLambdaApiGateway(this, "api", {
+    const api = new LambdaApiGateway(this, "api", {
       lambdaFunction: runtime.tiPgLambdaFunction,
-      tipgApiDomainName: props.tipgApiDomainName,
+      domainName: props.tipgApiDomainName,
+      outputName: "tip-url",
     });
 
     this.url = api.url;
   }
 }
 
-export interface TiPgApiLambdaProps
-  extends TiPgApiLambdaRuntimeProps,
-    Omit<TiPgApiLambdaApiGatewayProps, "lambdaFunction"> {
-  // This interface combines both runtime and API gateway props
-  // The lambdaFunction property from TiPgApiLambdaApiGatewayProps is excluded
-  // as it will be provided by the runtime construct
+export interface TiPgApiLambdaProps extends TiPgApiLambdaRuntimeProps {
+  /**
+   * Custom Domain Name for tipg API. If defined, will create the
+   * domain name and integrate it with the tipg API.
+   *
+   * @default - undefined
+   */
+  readonly tipgApiDomainName?: apigatewayv2.IDomainName;
 }

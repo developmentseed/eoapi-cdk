@@ -1,18 +1,15 @@
 import {
-  Stack,
   aws_apigatewayv2 as apigatewayv2,
-  aws_apigatewayv2_integrations as apigatewayv2_integrations,
   aws_iam as iam,
   aws_ec2 as ec2,
   aws_rds as rds,
   aws_lambda as lambda,
   aws_secretsmanager as secretsmanager,
-  CfnOutput,
   Duration,
   aws_logs,
 } from "aws-cdk-lib";
 import { Construct } from "constructs";
-import { CustomLambdaFunctionProps } from "../utils";
+import { CustomLambdaFunctionProps, LambdaApiGateway } from "../utils";
 import * as path from "path";
 
 // default settings that can be overridden by the user-provided environment.
@@ -128,66 +125,6 @@ export interface TitilerPgstacApiLambdaRuntimeProps {
   readonly lambdaFunctionOptions?: CustomLambdaFunctionProps;
 }
 
-export class TitilerPgstacApiLambdaApiGateway extends Construct {
-  readonly url: string;
-
-  constructor(
-    scope: Construct,
-    id: string,
-    props: TitilerPgstacApiLambdaApiGatewayProps
-  ) {
-    super(scope, id);
-
-    const stacApi = new apigatewayv2.HttpApi(
-      this,
-      `${Stack.of(this).stackName}-titiler-pgstac-api`,
-      {
-        defaultDomainMapping: props.titilerPgstacApiDomainName
-          ? {
-              domainName: props.titilerPgstacApiDomainName,
-            }
-          : undefined,
-        defaultIntegration: new apigatewayv2_integrations.HttpLambdaIntegration(
-          "integration",
-          props.lambdaFunction,
-          props.titilerPgstacApiDomainName
-            ? {
-                parameterMapping:
-                  new apigatewayv2.ParameterMapping().overwriteHeader(
-                    "host",
-                    apigatewayv2.MappingValue.custom(
-                      props.titilerPgstacApiDomainName.name
-                    )
-                  ),
-              }
-            : undefined
-        ),
-      }
-    );
-
-    this.url = stacApi.url!;
-
-    new CfnOutput(this, "titiler-pgstac-api-output", {
-      exportName: `${Stack.of(this).stackName}-titiler-pgstac-url`,
-      value: this.url,
-    });
-  }
-}
-
-export interface TitilerPgstacApiLambdaApiGatewayProps {
-  /**
-   * Lambda function to integrate with the API Gateway.
-   */
-  readonly lambdaFunction: lambda.Function;
-
-  /**
-   * Custom Domain Name Options for Titiler Pgstac API,
-   *
-   * @default - undefined.
-   */
-  readonly titilerPgstacApiDomainName?: apigatewayv2.IDomainName;
-}
-
 export class TitilerPgstacApiLambda extends Construct {
   readonly url: string;
   public titilerPgstacLambdaFunction: lambda.Function;
@@ -210,9 +147,10 @@ export class TitilerPgstacApiLambda extends Construct {
     });
     this.titilerPgstacLambdaFunction = runtime.titilerPgstacLambdaFunction;
 
-    const api = new TitilerPgstacApiLambdaApiGateway(this, "api", {
+    const api = new LambdaApiGateway(this, "titlier-pgstac-api", {
       lambdaFunction: runtime.titilerPgstacLambdaFunction,
-      titilerPgstacApiDomainName: props.titilerPgstacApiDomainName,
+      domainName: props.titilerPgstacApiDomainName,
+      outputName: "titiler-pgstac-url",
     });
 
     this.url = api.url;
@@ -220,9 +158,11 @@ export class TitilerPgstacApiLambda extends Construct {
 }
 
 export interface TitilerPgstacApiLambdaProps
-  extends TitilerPgstacApiLambdaRuntimeProps,
-    Omit<TitilerPgstacApiLambdaApiGatewayProps, "lambdaFunction"> {
-  // This interface combines both runtime and API gateway props
-  // The lambdaFunction property from TitilerPgstacApiLambdaApiGatewayProps is excluded
-  // as it will be provided by the runtime construct
+  extends TitilerPgstacApiLambdaRuntimeProps {
+  /**
+   * Custom Domain Name Options for Titiler Pgstac API,
+   *
+   * @default - undefined.
+   */
+  readonly titilerPgstacApiDomainName?: apigatewayv2.IDomainName;
 }
