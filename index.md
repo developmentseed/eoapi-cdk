@@ -301,7 +301,8 @@ Any object.
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
 | <code><a href="#eoapi-cdk.PgStacApiLambda.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
-| <code><a href="#eoapi-cdk.PgStacApiLambda.property.url">url</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#eoapi-cdk.PgStacApiLambda.property.lambdaFunction">lambdaFunction</a></code> | <code>aws-cdk-lib.aws_lambda.Function</code> | Lambda function for the STAC API. |
+| <code><a href="#eoapi-cdk.PgStacApiLambda.property.url">url</a></code> | <code>string</code> | URL for the STAC API. |
 | <code><a href="#eoapi-cdk.PgStacApiLambda.property.stacApiLambdaFunction">stacApiLambdaFunction</a></code> | <code>aws-cdk-lib.aws_lambda.Function</code> | *No description.* |
 
 ---
@@ -318,6 +319,18 @@ The tree node.
 
 ---
 
+##### `lambdaFunction`<sup>Required</sup> <a name="lambdaFunction" id="eoapi-cdk.PgStacApiLambda.property.lambdaFunction"></a>
+
+```typescript
+public readonly lambdaFunction: Function;
+```
+
+- *Type:* aws-cdk-lib.aws_lambda.Function
+
+Lambda function for the STAC API.
+
+---
+
 ##### `url`<sup>Required</sup> <a name="url" id="eoapi-cdk.PgStacApiLambda.property.url"></a>
 
 ```typescript
@@ -326,12 +339,140 @@ public readonly url: string;
 
 - *Type:* string
 
+URL for the STAC API.
+
 ---
 
-##### `stacApiLambdaFunction`<sup>Required</sup> <a name="stacApiLambdaFunction" id="eoapi-cdk.PgStacApiLambda.property.stacApiLambdaFunction"></a>
+##### ~~`stacApiLambdaFunction`~~<sup>Required</sup> <a name="stacApiLambdaFunction" id="eoapi-cdk.PgStacApiLambda.property.stacApiLambdaFunction"></a>
+
+- *Deprecated:* - use lambdaFunction instead
 
 ```typescript
 public readonly stacApiLambdaFunction: Function;
+```
+
+- *Type:* aws-cdk-lib.aws_lambda.Function
+
+---
+
+
+### PgStacApiLambdaRuntime <a name="PgStacApiLambdaRuntime" id="eoapi-cdk.PgStacApiLambdaRuntime"></a>
+
+#### Initializers <a name="Initializers" id="eoapi-cdk.PgStacApiLambdaRuntime.Initializer"></a>
+
+```typescript
+import { PgStacApiLambdaRuntime } from 'eoapi-cdk'
+
+new PgStacApiLambdaRuntime(scope: Construct, id: string, props: PgStacApiLambdaRuntimeProps)
+```
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#eoapi-cdk.PgStacApiLambdaRuntime.Initializer.parameter.scope">scope</a></code> | <code>constructs.Construct</code> | *No description.* |
+| <code><a href="#eoapi-cdk.PgStacApiLambdaRuntime.Initializer.parameter.id">id</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#eoapi-cdk.PgStacApiLambdaRuntime.Initializer.parameter.props">props</a></code> | <code><a href="#eoapi-cdk.PgStacApiLambdaRuntimeProps">PgStacApiLambdaRuntimeProps</a></code> | *No description.* |
+
+---
+
+##### `scope`<sup>Required</sup> <a name="scope" id="eoapi-cdk.PgStacApiLambdaRuntime.Initializer.parameter.scope"></a>
+
+- *Type:* constructs.Construct
+
+---
+
+##### `id`<sup>Required</sup> <a name="id" id="eoapi-cdk.PgStacApiLambdaRuntime.Initializer.parameter.id"></a>
+
+- *Type:* string
+
+---
+
+##### `props`<sup>Required</sup> <a name="props" id="eoapi-cdk.PgStacApiLambdaRuntime.Initializer.parameter.props"></a>
+
+- *Type:* <a href="#eoapi-cdk.PgStacApiLambdaRuntimeProps">PgStacApiLambdaRuntimeProps</a>
+
+---
+
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#eoapi-cdk.PgStacApiLambdaRuntime.toString">toString</a></code> | Returns a string representation of this construct. |
+
+---
+
+##### `toString` <a name="toString" id="eoapi-cdk.PgStacApiLambdaRuntime.toString"></a>
+
+```typescript
+public toString(): string
+```
+
+Returns a string representation of this construct.
+
+#### Static Functions <a name="Static Functions" id="Static Functions"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#eoapi-cdk.PgStacApiLambdaRuntime.isConstruct">isConstruct</a></code> | Checks if `x` is a construct. |
+
+---
+
+##### `isConstruct` <a name="isConstruct" id="eoapi-cdk.PgStacApiLambdaRuntime.isConstruct"></a>
+
+```typescript
+import { PgStacApiLambdaRuntime } from 'eoapi-cdk'
+
+PgStacApiLambdaRuntime.isConstruct(x: any)
+```
+
+Checks if `x` is a construct.
+
+Use this method instead of `instanceof` to properly detect `Construct`
+instances, even when the construct library is symlinked.
+
+Explanation: in JavaScript, multiple copies of the `constructs` library on
+disk are seen as independent, completely different libraries. As a
+consequence, the class `Construct` in each copy of the `constructs` library
+is seen as a different class, and an instance of one class will not test as
+`instanceof` the other class. `npm install` will not create installations
+like this, but users may manually symlink construct libraries together or
+use a monorepo tool: in those cases, multiple copies of the `constructs`
+library can be accidentally installed, and `instanceof` will behave
+unpredictably. It is safest to avoid using `instanceof`, and using
+this type-testing method instead.
+
+###### `x`<sup>Required</sup> <a name="x" id="eoapi-cdk.PgStacApiLambdaRuntime.isConstruct.parameter.x"></a>
+
+- *Type:* any
+
+Any object.
+
+---
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#eoapi-cdk.PgStacApiLambdaRuntime.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
+| <code><a href="#eoapi-cdk.PgStacApiLambdaRuntime.property.lambdaFunction">lambdaFunction</a></code> | <code>aws-cdk-lib.aws_lambda.Function</code> | *No description.* |
+
+---
+
+##### `node`<sup>Required</sup> <a name="node" id="eoapi-cdk.PgStacApiLambdaRuntime.property.node"></a>
+
+```typescript
+public readonly node: Node;
+```
+
+- *Type:* constructs.Node
+
+The tree node.
+
+---
+
+##### `lambdaFunction`<sup>Required</sup> <a name="lambdaFunction" id="eoapi-cdk.PgStacApiLambdaRuntime.property.lambdaFunction"></a>
+
+```typescript
+public readonly lambdaFunction: Function;
 ```
 
 - *Type:* aws-cdk-lib.aws_lambda.Function
@@ -1782,7 +1923,8 @@ Any object.
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
 | <code><a href="#eoapi-cdk.TiPgApiLambda.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
-| <code><a href="#eoapi-cdk.TiPgApiLambda.property.url">url</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#eoapi-cdk.TiPgApiLambda.property.lambdaFunction">lambdaFunction</a></code> | <code>aws-cdk-lib.aws_lambda.Function</code> | Lambda function for the TiPg API. |
+| <code><a href="#eoapi-cdk.TiPgApiLambda.property.url">url</a></code> | <code>string</code> | URL for the TiPg API. |
 | <code><a href="#eoapi-cdk.TiPgApiLambda.property.tiPgLambdaFunction">tiPgLambdaFunction</a></code> | <code>aws-cdk-lib.aws_lambda.Function</code> | *No description.* |
 
 ---
@@ -1799,6 +1941,18 @@ The tree node.
 
 ---
 
+##### `lambdaFunction`<sup>Required</sup> <a name="lambdaFunction" id="eoapi-cdk.TiPgApiLambda.property.lambdaFunction"></a>
+
+```typescript
+public readonly lambdaFunction: Function;
+```
+
+- *Type:* aws-cdk-lib.aws_lambda.Function
+
+Lambda function for the TiPg API.
+
+---
+
 ##### `url`<sup>Required</sup> <a name="url" id="eoapi-cdk.TiPgApiLambda.property.url"></a>
 
 ```typescript
@@ -1807,12 +1961,140 @@ public readonly url: string;
 
 - *Type:* string
 
+URL for the TiPg API.
+
 ---
 
-##### `tiPgLambdaFunction`<sup>Required</sup> <a name="tiPgLambdaFunction" id="eoapi-cdk.TiPgApiLambda.property.tiPgLambdaFunction"></a>
+##### ~~`tiPgLambdaFunction`~~<sup>Required</sup> <a name="tiPgLambdaFunction" id="eoapi-cdk.TiPgApiLambda.property.tiPgLambdaFunction"></a>
+
+- *Deprecated:* - use lambdaFunction instead
 
 ```typescript
 public readonly tiPgLambdaFunction: Function;
+```
+
+- *Type:* aws-cdk-lib.aws_lambda.Function
+
+---
+
+
+### TiPgApiLambdaRuntime <a name="TiPgApiLambdaRuntime" id="eoapi-cdk.TiPgApiLambdaRuntime"></a>
+
+#### Initializers <a name="Initializers" id="eoapi-cdk.TiPgApiLambdaRuntime.Initializer"></a>
+
+```typescript
+import { TiPgApiLambdaRuntime } from 'eoapi-cdk'
+
+new TiPgApiLambdaRuntime(scope: Construct, id: string, props: TiPgApiLambdaRuntimeProps)
+```
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#eoapi-cdk.TiPgApiLambdaRuntime.Initializer.parameter.scope">scope</a></code> | <code>constructs.Construct</code> | *No description.* |
+| <code><a href="#eoapi-cdk.TiPgApiLambdaRuntime.Initializer.parameter.id">id</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#eoapi-cdk.TiPgApiLambdaRuntime.Initializer.parameter.props">props</a></code> | <code><a href="#eoapi-cdk.TiPgApiLambdaRuntimeProps">TiPgApiLambdaRuntimeProps</a></code> | *No description.* |
+
+---
+
+##### `scope`<sup>Required</sup> <a name="scope" id="eoapi-cdk.TiPgApiLambdaRuntime.Initializer.parameter.scope"></a>
+
+- *Type:* constructs.Construct
+
+---
+
+##### `id`<sup>Required</sup> <a name="id" id="eoapi-cdk.TiPgApiLambdaRuntime.Initializer.parameter.id"></a>
+
+- *Type:* string
+
+---
+
+##### `props`<sup>Required</sup> <a name="props" id="eoapi-cdk.TiPgApiLambdaRuntime.Initializer.parameter.props"></a>
+
+- *Type:* <a href="#eoapi-cdk.TiPgApiLambdaRuntimeProps">TiPgApiLambdaRuntimeProps</a>
+
+---
+
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#eoapi-cdk.TiPgApiLambdaRuntime.toString">toString</a></code> | Returns a string representation of this construct. |
+
+---
+
+##### `toString` <a name="toString" id="eoapi-cdk.TiPgApiLambdaRuntime.toString"></a>
+
+```typescript
+public toString(): string
+```
+
+Returns a string representation of this construct.
+
+#### Static Functions <a name="Static Functions" id="Static Functions"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#eoapi-cdk.TiPgApiLambdaRuntime.isConstruct">isConstruct</a></code> | Checks if `x` is a construct. |
+
+---
+
+##### `isConstruct` <a name="isConstruct" id="eoapi-cdk.TiPgApiLambdaRuntime.isConstruct"></a>
+
+```typescript
+import { TiPgApiLambdaRuntime } from 'eoapi-cdk'
+
+TiPgApiLambdaRuntime.isConstruct(x: any)
+```
+
+Checks if `x` is a construct.
+
+Use this method instead of `instanceof` to properly detect `Construct`
+instances, even when the construct library is symlinked.
+
+Explanation: in JavaScript, multiple copies of the `constructs` library on
+disk are seen as independent, completely different libraries. As a
+consequence, the class `Construct` in each copy of the `constructs` library
+is seen as a different class, and an instance of one class will not test as
+`instanceof` the other class. `npm install` will not create installations
+like this, but users may manually symlink construct libraries together or
+use a monorepo tool: in those cases, multiple copies of the `constructs`
+library can be accidentally installed, and `instanceof` will behave
+unpredictably. It is safest to avoid using `instanceof`, and using
+this type-testing method instead.
+
+###### `x`<sup>Required</sup> <a name="x" id="eoapi-cdk.TiPgApiLambdaRuntime.isConstruct.parameter.x"></a>
+
+- *Type:* any
+
+Any object.
+
+---
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#eoapi-cdk.TiPgApiLambdaRuntime.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
+| <code><a href="#eoapi-cdk.TiPgApiLambdaRuntime.property.lambdaFunction">lambdaFunction</a></code> | <code>aws-cdk-lib.aws_lambda.Function</code> | *No description.* |
+
+---
+
+##### `node`<sup>Required</sup> <a name="node" id="eoapi-cdk.TiPgApiLambdaRuntime.property.node"></a>
+
+```typescript
+public readonly node: Node;
+```
+
+- *Type:* constructs.Node
+
+The tree node.
+
+---
+
+##### `lambdaFunction`<sup>Required</sup> <a name="lambdaFunction" id="eoapi-cdk.TiPgApiLambdaRuntime.property.lambdaFunction"></a>
+
+```typescript
+public readonly lambdaFunction: Function;
 ```
 
 - *Type:* aws-cdk-lib.aws_lambda.Function
@@ -1827,14 +2109,14 @@ public readonly tiPgLambdaFunction: Function;
 ```typescript
 import { TitilerPgstacApiLambda } from 'eoapi-cdk'
 
-new TitilerPgstacApiLambda(scope: Construct, id: string, props: TitilerPgStacApiLambdaProps)
+new TitilerPgstacApiLambda(scope: Construct, id: string, props: TitilerPgstacApiLambdaProps)
 ```
 
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
 | <code><a href="#eoapi-cdk.TitilerPgstacApiLambda.Initializer.parameter.scope">scope</a></code> | <code>constructs.Construct</code> | *No description.* |
 | <code><a href="#eoapi-cdk.TitilerPgstacApiLambda.Initializer.parameter.id">id</a></code> | <code>string</code> | *No description.* |
-| <code><a href="#eoapi-cdk.TitilerPgstacApiLambda.Initializer.parameter.props">props</a></code> | <code><a href="#eoapi-cdk.TitilerPgStacApiLambdaProps">TitilerPgStacApiLambdaProps</a></code> | *No description.* |
+| <code><a href="#eoapi-cdk.TitilerPgstacApiLambda.Initializer.parameter.props">props</a></code> | <code><a href="#eoapi-cdk.TitilerPgstacApiLambdaProps">TitilerPgstacApiLambdaProps</a></code> | *No description.* |
 
 ---
 
@@ -1852,7 +2134,7 @@ new TitilerPgstacApiLambda(scope: Construct, id: string, props: TitilerPgStacApi
 
 ##### `props`<sup>Required</sup> <a name="props" id="eoapi-cdk.TitilerPgstacApiLambda.Initializer.parameter.props"></a>
 
-- *Type:* <a href="#eoapi-cdk.TitilerPgStacApiLambdaProps">TitilerPgStacApiLambdaProps</a>
+- *Type:* <a href="#eoapi-cdk.TitilerPgstacApiLambdaProps">TitilerPgstacApiLambdaProps</a>
 
 ---
 
@@ -1917,7 +2199,8 @@ Any object.
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
 | <code><a href="#eoapi-cdk.TitilerPgstacApiLambda.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
-| <code><a href="#eoapi-cdk.TitilerPgstacApiLambda.property.url">url</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#eoapi-cdk.TitilerPgstacApiLambda.property.lambdaFunction">lambdaFunction</a></code> | <code>aws-cdk-lib.aws_lambda.Function</code> | Lambda function for the Titiler Pgstac API. |
+| <code><a href="#eoapi-cdk.TitilerPgstacApiLambda.property.url">url</a></code> | <code>string</code> | URL for the Titiler Pgstac API. |
 | <code><a href="#eoapi-cdk.TitilerPgstacApiLambda.property.titilerPgstacLambdaFunction">titilerPgstacLambdaFunction</a></code> | <code>aws-cdk-lib.aws_lambda.Function</code> | *No description.* |
 
 ---
@@ -1934,6 +2217,18 @@ The tree node.
 
 ---
 
+##### `lambdaFunction`<sup>Required</sup> <a name="lambdaFunction" id="eoapi-cdk.TitilerPgstacApiLambda.property.lambdaFunction"></a>
+
+```typescript
+public readonly lambdaFunction: Function;
+```
+
+- *Type:* aws-cdk-lib.aws_lambda.Function
+
+Lambda function for the Titiler Pgstac API.
+
+---
+
 ##### `url`<sup>Required</sup> <a name="url" id="eoapi-cdk.TitilerPgstacApiLambda.property.url"></a>
 
 ```typescript
@@ -1942,12 +2237,140 @@ public readonly url: string;
 
 - *Type:* string
 
+URL for the Titiler Pgstac API.
+
 ---
 
-##### `titilerPgstacLambdaFunction`<sup>Required</sup> <a name="titilerPgstacLambdaFunction" id="eoapi-cdk.TitilerPgstacApiLambda.property.titilerPgstacLambdaFunction"></a>
+##### ~~`titilerPgstacLambdaFunction`~~<sup>Required</sup> <a name="titilerPgstacLambdaFunction" id="eoapi-cdk.TitilerPgstacApiLambda.property.titilerPgstacLambdaFunction"></a>
+
+- *Deprecated:* - use lambdaFunction instead
 
 ```typescript
 public readonly titilerPgstacLambdaFunction: Function;
+```
+
+- *Type:* aws-cdk-lib.aws_lambda.Function
+
+---
+
+
+### TitilerPgstacApiLambdaRuntime <a name="TitilerPgstacApiLambdaRuntime" id="eoapi-cdk.TitilerPgstacApiLambdaRuntime"></a>
+
+#### Initializers <a name="Initializers" id="eoapi-cdk.TitilerPgstacApiLambdaRuntime.Initializer"></a>
+
+```typescript
+import { TitilerPgstacApiLambdaRuntime } from 'eoapi-cdk'
+
+new TitilerPgstacApiLambdaRuntime(scope: Construct, id: string, props: TitilerPgstacApiLambdaRuntimeProps)
+```
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#eoapi-cdk.TitilerPgstacApiLambdaRuntime.Initializer.parameter.scope">scope</a></code> | <code>constructs.Construct</code> | *No description.* |
+| <code><a href="#eoapi-cdk.TitilerPgstacApiLambdaRuntime.Initializer.parameter.id">id</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#eoapi-cdk.TitilerPgstacApiLambdaRuntime.Initializer.parameter.props">props</a></code> | <code><a href="#eoapi-cdk.TitilerPgstacApiLambdaRuntimeProps">TitilerPgstacApiLambdaRuntimeProps</a></code> | *No description.* |
+
+---
+
+##### `scope`<sup>Required</sup> <a name="scope" id="eoapi-cdk.TitilerPgstacApiLambdaRuntime.Initializer.parameter.scope"></a>
+
+- *Type:* constructs.Construct
+
+---
+
+##### `id`<sup>Required</sup> <a name="id" id="eoapi-cdk.TitilerPgstacApiLambdaRuntime.Initializer.parameter.id"></a>
+
+- *Type:* string
+
+---
+
+##### `props`<sup>Required</sup> <a name="props" id="eoapi-cdk.TitilerPgstacApiLambdaRuntime.Initializer.parameter.props"></a>
+
+- *Type:* <a href="#eoapi-cdk.TitilerPgstacApiLambdaRuntimeProps">TitilerPgstacApiLambdaRuntimeProps</a>
+
+---
+
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#eoapi-cdk.TitilerPgstacApiLambdaRuntime.toString">toString</a></code> | Returns a string representation of this construct. |
+
+---
+
+##### `toString` <a name="toString" id="eoapi-cdk.TitilerPgstacApiLambdaRuntime.toString"></a>
+
+```typescript
+public toString(): string
+```
+
+Returns a string representation of this construct.
+
+#### Static Functions <a name="Static Functions" id="Static Functions"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#eoapi-cdk.TitilerPgstacApiLambdaRuntime.isConstruct">isConstruct</a></code> | Checks if `x` is a construct. |
+
+---
+
+##### `isConstruct` <a name="isConstruct" id="eoapi-cdk.TitilerPgstacApiLambdaRuntime.isConstruct"></a>
+
+```typescript
+import { TitilerPgstacApiLambdaRuntime } from 'eoapi-cdk'
+
+TitilerPgstacApiLambdaRuntime.isConstruct(x: any)
+```
+
+Checks if `x` is a construct.
+
+Use this method instead of `instanceof` to properly detect `Construct`
+instances, even when the construct library is symlinked.
+
+Explanation: in JavaScript, multiple copies of the `constructs` library on
+disk are seen as independent, completely different libraries. As a
+consequence, the class `Construct` in each copy of the `constructs` library
+is seen as a different class, and an instance of one class will not test as
+`instanceof` the other class. `npm install` will not create installations
+like this, but users may manually symlink construct libraries together or
+use a monorepo tool: in those cases, multiple copies of the `constructs`
+library can be accidentally installed, and `instanceof` will behave
+unpredictably. It is safest to avoid using `instanceof`, and using
+this type-testing method instead.
+
+###### `x`<sup>Required</sup> <a name="x" id="eoapi-cdk.TitilerPgstacApiLambdaRuntime.isConstruct.parameter.x"></a>
+
+- *Type:* any
+
+Any object.
+
+---
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#eoapi-cdk.TitilerPgstacApiLambdaRuntime.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
+| <code><a href="#eoapi-cdk.TitilerPgstacApiLambdaRuntime.property.lambdaFunction">lambdaFunction</a></code> | <code>aws-cdk-lib.aws_lambda.Function</code> | *No description.* |
+
+---
+
+##### `node`<sup>Required</sup> <a name="node" id="eoapi-cdk.TitilerPgstacApiLambdaRuntime.property.node"></a>
+
+```typescript
+public readonly node: Node;
+```
+
+- *Type:* constructs.Node
+
+The tree node.
+
+---
+
+##### `lambdaFunction`<sup>Required</sup> <a name="lambdaFunction" id="eoapi-cdk.TitilerPgstacApiLambdaRuntime.property.lambdaFunction"></a>
+
+```typescript
+public readonly lambdaFunction: Function;
 ```
 
 - *Type:* aws-cdk-lib.aws_lambda.Function
@@ -2189,9 +2612,10 @@ const pgStacApiLambdaProps: PgStacApiLambdaProps = { ... }
 | <code><a href="#eoapi-cdk.PgStacApiLambdaProps.property.apiEnv">apiEnv</a></code> | <code>{[ key: string ]: string}</code> | Customized environment variables to send to fastapi-pgstac runtime. |
 | <code><a href="#eoapi-cdk.PgStacApiLambdaProps.property.enabledExtensions">enabledExtensions</a></code> | <code>string[]</code> | List of STAC API extensions to enable. |
 | <code><a href="#eoapi-cdk.PgStacApiLambdaProps.property.lambdaFunctionOptions">lambdaFunctionOptions</a></code> | <code>any</code> | Can be used to override the default lambda function properties. |
-| <code><a href="#eoapi-cdk.PgStacApiLambdaProps.property.stacApiDomainName">stacApiDomainName</a></code> | <code>aws-cdk-lib.aws_apigatewayv2.IDomainName</code> | Custom Domain Name Options for STAC API,. |
 | <code><a href="#eoapi-cdk.PgStacApiLambdaProps.property.subnetSelection">subnetSelection</a></code> | <code>aws-cdk-lib.aws_ec2.SubnetSelection</code> | Subnet into which the lambda should be deployed. |
 | <code><a href="#eoapi-cdk.PgStacApiLambdaProps.property.vpc">vpc</a></code> | <code>aws-cdk-lib.aws_ec2.IVpc</code> | VPC into which the lambda should be deployed. |
+| <code><a href="#eoapi-cdk.PgStacApiLambdaProps.property.domainName">domainName</a></code> | <code>aws-cdk-lib.aws_apigatewayv2.IDomainName</code> | Domain Name for the STAC API. |
+| <code><a href="#eoapi-cdk.PgStacApiLambdaProps.property.stacApiDomainName">stacApiDomainName</a></code> | <code>aws-cdk-lib.aws_apigatewayv2.IDomainName</code> | Custom Domain Name Options for STAC API. |
 
 ---
 
@@ -2238,7 +2662,7 @@ public readonly enabledExtensions: string[];
 ```
 
 - *Type:* string[]
-- *Default:* query, sort, fields, filter, free_text, pagniation, collection_search
+- *Default:* query, sort, fields, filter, free_text, pagination, collection_search
 
 List of STAC API extensions to enable.
 
@@ -2257,18 +2681,6 @@ Can be used to override the default lambda function properties.
 
 ---
 
-##### `stacApiDomainName`<sup>Optional</sup> <a name="stacApiDomainName" id="eoapi-cdk.PgStacApiLambdaProps.property.stacApiDomainName"></a>
-
-```typescript
-public readonly stacApiDomainName: IDomainName;
-```
-
-- *Type:* aws-cdk-lib.aws_apigatewayv2.IDomainName
-
-Custom Domain Name Options for STAC API,.
-
----
-
 ##### `subnetSelection`<sup>Optional</sup> <a name="subnetSelection" id="eoapi-cdk.PgStacApiLambdaProps.property.subnetSelection"></a>
 
 ```typescript
@@ -2282,6 +2694,146 @@ Subnet into which the lambda should be deployed.
 ---
 
 ##### `vpc`<sup>Optional</sup> <a name="vpc" id="eoapi-cdk.PgStacApiLambdaProps.property.vpc"></a>
+
+```typescript
+public readonly vpc: IVpc;
+```
+
+- *Type:* aws-cdk-lib.aws_ec2.IVpc
+
+VPC into which the lambda should be deployed.
+
+---
+
+##### `domainName`<sup>Optional</sup> <a name="domainName" id="eoapi-cdk.PgStacApiLambdaProps.property.domainName"></a>
+
+```typescript
+public readonly domainName: IDomainName;
+```
+
+- *Type:* aws-cdk-lib.aws_apigatewayv2.IDomainName
+- *Default:* undefined
+
+Domain Name for the STAC API.
+
+If defined, will create the domain name and integrate it with the STAC API.
+
+---
+
+##### ~~`stacApiDomainName`~~<sup>Optional</sup> <a name="stacApiDomainName" id="eoapi-cdk.PgStacApiLambdaProps.property.stacApiDomainName"></a>
+
+- *Deprecated:* Use 'domainName' instead.
+
+```typescript
+public readonly stacApiDomainName: IDomainName;
+```
+
+- *Type:* aws-cdk-lib.aws_apigatewayv2.IDomainName
+- *Default:* undefined.
+
+Custom Domain Name Options for STAC API.
+
+---
+
+### PgStacApiLambdaRuntimeProps <a name="PgStacApiLambdaRuntimeProps" id="eoapi-cdk.PgStacApiLambdaRuntimeProps"></a>
+
+#### Initializer <a name="Initializer" id="eoapi-cdk.PgStacApiLambdaRuntimeProps.Initializer"></a>
+
+```typescript
+import { PgStacApiLambdaRuntimeProps } from 'eoapi-cdk'
+
+const pgStacApiLambdaRuntimeProps: PgStacApiLambdaRuntimeProps = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#eoapi-cdk.PgStacApiLambdaRuntimeProps.property.db">db</a></code> | <code>aws-cdk-lib.aws_rds.IDatabaseInstance \| aws-cdk-lib.aws_ec2.IInstance</code> | RDS Instance with installed pgSTAC or pgbouncer server. |
+| <code><a href="#eoapi-cdk.PgStacApiLambdaRuntimeProps.property.dbSecret">dbSecret</a></code> | <code>aws-cdk-lib.aws_secretsmanager.ISecret</code> | Secret containing connection information for pgSTAC database. |
+| <code><a href="#eoapi-cdk.PgStacApiLambdaRuntimeProps.property.apiEnv">apiEnv</a></code> | <code>{[ key: string ]: string}</code> | Customized environment variables to send to fastapi-pgstac runtime. |
+| <code><a href="#eoapi-cdk.PgStacApiLambdaRuntimeProps.property.enabledExtensions">enabledExtensions</a></code> | <code>string[]</code> | List of STAC API extensions to enable. |
+| <code><a href="#eoapi-cdk.PgStacApiLambdaRuntimeProps.property.lambdaFunctionOptions">lambdaFunctionOptions</a></code> | <code>any</code> | Can be used to override the default lambda function properties. |
+| <code><a href="#eoapi-cdk.PgStacApiLambdaRuntimeProps.property.subnetSelection">subnetSelection</a></code> | <code>aws-cdk-lib.aws_ec2.SubnetSelection</code> | Subnet into which the lambda should be deployed. |
+| <code><a href="#eoapi-cdk.PgStacApiLambdaRuntimeProps.property.vpc">vpc</a></code> | <code>aws-cdk-lib.aws_ec2.IVpc</code> | VPC into which the lambda should be deployed. |
+
+---
+
+##### `db`<sup>Required</sup> <a name="db" id="eoapi-cdk.PgStacApiLambdaRuntimeProps.property.db"></a>
+
+```typescript
+public readonly db: IDatabaseInstance | IInstance;
+```
+
+- *Type:* aws-cdk-lib.aws_rds.IDatabaseInstance | aws-cdk-lib.aws_ec2.IInstance
+
+RDS Instance with installed pgSTAC or pgbouncer server.
+
+---
+
+##### `dbSecret`<sup>Required</sup> <a name="dbSecret" id="eoapi-cdk.PgStacApiLambdaRuntimeProps.property.dbSecret"></a>
+
+```typescript
+public readonly dbSecret: ISecret;
+```
+
+- *Type:* aws-cdk-lib.aws_secretsmanager.ISecret
+
+Secret containing connection information for pgSTAC database.
+
+---
+
+##### `apiEnv`<sup>Optional</sup> <a name="apiEnv" id="eoapi-cdk.PgStacApiLambdaRuntimeProps.property.apiEnv"></a>
+
+```typescript
+public readonly apiEnv: {[ key: string ]: string};
+```
+
+- *Type:* {[ key: string ]: string}
+
+Customized environment variables to send to fastapi-pgstac runtime.
+
+---
+
+##### `enabledExtensions`<sup>Optional</sup> <a name="enabledExtensions" id="eoapi-cdk.PgStacApiLambdaRuntimeProps.property.enabledExtensions"></a>
+
+```typescript
+public readonly enabledExtensions: string[];
+```
+
+- *Type:* string[]
+- *Default:* query, sort, fields, filter, free_text, pagination, collection_search
+
+List of STAC API extensions to enable.
+
+---
+
+##### `lambdaFunctionOptions`<sup>Optional</sup> <a name="lambdaFunctionOptions" id="eoapi-cdk.PgStacApiLambdaRuntimeProps.property.lambdaFunctionOptions"></a>
+
+```typescript
+public readonly lambdaFunctionOptions: any;
+```
+
+- *Type:* any
+- *Default:* defined in the construct.
+
+Can be used to override the default lambda function properties.
+
+---
+
+##### `subnetSelection`<sup>Optional</sup> <a name="subnetSelection" id="eoapi-cdk.PgStacApiLambdaRuntimeProps.property.subnetSelection"></a>
+
+```typescript
+public readonly subnetSelection: SubnetSelection;
+```
+
+- *Type:* aws-cdk-lib.aws_ec2.SubnetSelection
+
+Subnet into which the lambda should be deployed.
+
+---
+
+##### `vpc`<sup>Optional</sup> <a name="vpc" id="eoapi-cdk.PgStacApiLambdaRuntimeProps.property.vpc"></a>
 
 ```typescript
 public readonly vpc: IVpc;
@@ -4281,8 +4833,9 @@ const tiPgApiLambdaProps: TiPgApiLambdaProps = { ... }
 | <code><a href="#eoapi-cdk.TiPgApiLambdaProps.property.apiEnv">apiEnv</a></code> | <code>{[ key: string ]: string}</code> | Customized environment variables to send to titiler-pgstac runtime. |
 | <code><a href="#eoapi-cdk.TiPgApiLambdaProps.property.lambdaFunctionOptions">lambdaFunctionOptions</a></code> | <code>any</code> | Can be used to override the default lambda function properties. |
 | <code><a href="#eoapi-cdk.TiPgApiLambdaProps.property.subnetSelection">subnetSelection</a></code> | <code>aws-cdk-lib.aws_ec2.SubnetSelection</code> | Subnet into which the lambda should be deployed. |
-| <code><a href="#eoapi-cdk.TiPgApiLambdaProps.property.tipgApiDomainName">tipgApiDomainName</a></code> | <code>aws-cdk-lib.aws_apigatewayv2.IDomainName</code> | Custom Domain Name for tipg API. |
 | <code><a href="#eoapi-cdk.TiPgApiLambdaProps.property.vpc">vpc</a></code> | <code>aws-cdk-lib.aws_ec2.IVpc</code> | VPC into which the lambda should be deployed. |
+| <code><a href="#eoapi-cdk.TiPgApiLambdaProps.property.domainName">domainName</a></code> | <code>aws-cdk-lib.aws_apigatewayv2.IDomainName</code> | Domain Name for the TiPg API. |
+| <code><a href="#eoapi-cdk.TiPgApiLambdaProps.property.tipgApiDomainName">tipgApiDomainName</a></code> | <code>aws-cdk-lib.aws_apigatewayv2.IDomainName</code> | Custom Domain Name for tipg API. |
 
 ---
 
@@ -4347,7 +4900,36 @@ Subnet into which the lambda should be deployed.
 
 ---
 
-##### `tipgApiDomainName`<sup>Optional</sup> <a name="tipgApiDomainName" id="eoapi-cdk.TiPgApiLambdaProps.property.tipgApiDomainName"></a>
+##### `vpc`<sup>Optional</sup> <a name="vpc" id="eoapi-cdk.TiPgApiLambdaProps.property.vpc"></a>
+
+```typescript
+public readonly vpc: IVpc;
+```
+
+- *Type:* aws-cdk-lib.aws_ec2.IVpc
+
+VPC into which the lambda should be deployed.
+
+---
+
+##### `domainName`<sup>Optional</sup> <a name="domainName" id="eoapi-cdk.TiPgApiLambdaProps.property.domainName"></a>
+
+```typescript
+public readonly domainName: IDomainName;
+```
+
+- *Type:* aws-cdk-lib.aws_apigatewayv2.IDomainName
+- *Default:* undefined
+
+Domain Name for the TiPg API.
+
+If defined, will create the domain name and integrate it with the TiPg API.
+
+---
+
+##### ~~`tipgApiDomainName`~~<sup>Optional</sup> <a name="tipgApiDomainName" id="eoapi-cdk.TiPgApiLambdaProps.property.tipgApiDomainName"></a>
+
+- *Deprecated:* Use 'domainName' instead.
 
 ```typescript
 public readonly tipgApiDomainName: IDomainName;
@@ -4363,44 +4945,30 @@ domain name and integrate it with the tipg API.
 
 ---
 
-##### `vpc`<sup>Optional</sup> <a name="vpc" id="eoapi-cdk.TiPgApiLambdaProps.property.vpc"></a>
+### TiPgApiLambdaRuntimeProps <a name="TiPgApiLambdaRuntimeProps" id="eoapi-cdk.TiPgApiLambdaRuntimeProps"></a>
+
+#### Initializer <a name="Initializer" id="eoapi-cdk.TiPgApiLambdaRuntimeProps.Initializer"></a>
 
 ```typescript
-public readonly vpc: IVpc;
-```
+import { TiPgApiLambdaRuntimeProps } from 'eoapi-cdk'
 
-- *Type:* aws-cdk-lib.aws_ec2.IVpc
-
-VPC into which the lambda should be deployed.
-
----
-
-### TitilerPgStacApiLambdaProps <a name="TitilerPgStacApiLambdaProps" id="eoapi-cdk.TitilerPgStacApiLambdaProps"></a>
-
-#### Initializer <a name="Initializer" id="eoapi-cdk.TitilerPgStacApiLambdaProps.Initializer"></a>
-
-```typescript
-import { TitilerPgStacApiLambdaProps } from 'eoapi-cdk'
-
-const titilerPgStacApiLambdaProps: TitilerPgStacApiLambdaProps = { ... }
+const tiPgApiLambdaRuntimeProps: TiPgApiLambdaRuntimeProps = { ... }
 ```
 
 #### Properties <a name="Properties" id="Properties"></a>
 
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
-| <code><a href="#eoapi-cdk.TitilerPgStacApiLambdaProps.property.db">db</a></code> | <code>aws-cdk-lib.aws_rds.IDatabaseInstance \| aws-cdk-lib.aws_ec2.IInstance</code> | RDS Instance with installed pgSTAC or pgbouncer server. |
-| <code><a href="#eoapi-cdk.TitilerPgStacApiLambdaProps.property.dbSecret">dbSecret</a></code> | <code>aws-cdk-lib.aws_secretsmanager.ISecret</code> | Secret containing connection information for pgSTAC database. |
-| <code><a href="#eoapi-cdk.TitilerPgStacApiLambdaProps.property.apiEnv">apiEnv</a></code> | <code>{[ key: string ]: string}</code> | Customized environment variables to send to titiler-pgstac runtime. |
-| <code><a href="#eoapi-cdk.TitilerPgStacApiLambdaProps.property.buckets">buckets</a></code> | <code>string[]</code> | list of buckets the lambda will be granted access to. |
-| <code><a href="#eoapi-cdk.TitilerPgStacApiLambdaProps.property.lambdaFunctionOptions">lambdaFunctionOptions</a></code> | <code>any</code> | Can be used to override the default lambda function properties. |
-| <code><a href="#eoapi-cdk.TitilerPgStacApiLambdaProps.property.subnetSelection">subnetSelection</a></code> | <code>aws-cdk-lib.aws_ec2.SubnetSelection</code> | Subnet into which the lambda should be deployed. |
-| <code><a href="#eoapi-cdk.TitilerPgStacApiLambdaProps.property.titilerPgstacApiDomainName">titilerPgstacApiDomainName</a></code> | <code>aws-cdk-lib.aws_apigatewayv2.IDomainName</code> | Custom Domain Name Options for Titiler Pgstac API,. |
-| <code><a href="#eoapi-cdk.TitilerPgStacApiLambdaProps.property.vpc">vpc</a></code> | <code>aws-cdk-lib.aws_ec2.IVpc</code> | VPC into which the lambda should be deployed. |
+| <code><a href="#eoapi-cdk.TiPgApiLambdaRuntimeProps.property.db">db</a></code> | <code>aws-cdk-lib.aws_rds.IDatabaseInstance \| aws-cdk-lib.aws_ec2.IInstance</code> | RDS Instance with installed pgSTAC or pgbouncer server. |
+| <code><a href="#eoapi-cdk.TiPgApiLambdaRuntimeProps.property.dbSecret">dbSecret</a></code> | <code>aws-cdk-lib.aws_secretsmanager.ISecret</code> | Secret containing connection information for pgSTAC database. |
+| <code><a href="#eoapi-cdk.TiPgApiLambdaRuntimeProps.property.apiEnv">apiEnv</a></code> | <code>{[ key: string ]: string}</code> | Customized environment variables to send to titiler-pgstac runtime. |
+| <code><a href="#eoapi-cdk.TiPgApiLambdaRuntimeProps.property.lambdaFunctionOptions">lambdaFunctionOptions</a></code> | <code>any</code> | Can be used to override the default lambda function properties. |
+| <code><a href="#eoapi-cdk.TiPgApiLambdaRuntimeProps.property.subnetSelection">subnetSelection</a></code> | <code>aws-cdk-lib.aws_ec2.SubnetSelection</code> | Subnet into which the lambda should be deployed. |
+| <code><a href="#eoapi-cdk.TiPgApiLambdaRuntimeProps.property.vpc">vpc</a></code> | <code>aws-cdk-lib.aws_ec2.IVpc</code> | VPC into which the lambda should be deployed. |
 
 ---
 
-##### `db`<sup>Required</sup> <a name="db" id="eoapi-cdk.TitilerPgStacApiLambdaProps.property.db"></a>
+##### `db`<sup>Required</sup> <a name="db" id="eoapi-cdk.TiPgApiLambdaRuntimeProps.property.db"></a>
 
 ```typescript
 public readonly db: IDatabaseInstance | IInstance;
@@ -4412,7 +4980,7 @@ RDS Instance with installed pgSTAC or pgbouncer server.
 
 ---
 
-##### `dbSecret`<sup>Required</sup> <a name="dbSecret" id="eoapi-cdk.TitilerPgStacApiLambdaProps.property.dbSecret"></a>
+##### `dbSecret`<sup>Required</sup> <a name="dbSecret" id="eoapi-cdk.TiPgApiLambdaRuntimeProps.property.dbSecret"></a>
 
 ```typescript
 public readonly dbSecret: ISecret;
@@ -4424,7 +4992,7 @@ Secret containing connection information for pgSTAC database.
 
 ---
 
-##### `apiEnv`<sup>Optional</sup> <a name="apiEnv" id="eoapi-cdk.TitilerPgStacApiLambdaProps.property.apiEnv"></a>
+##### `apiEnv`<sup>Optional</sup> <a name="apiEnv" id="eoapi-cdk.TiPgApiLambdaRuntimeProps.property.apiEnv"></a>
 
 ```typescript
 public readonly apiEnv: {[ key: string ]: string};
@@ -4434,25 +5002,9 @@ public readonly apiEnv: {[ key: string ]: string};
 
 Customized environment variables to send to titiler-pgstac runtime.
 
-These will be merged with `defaultTitilerPgstacEnv`.
-The database secret arn is automatically added to the environment variables at deployment.
-/
-
 ---
 
-##### `buckets`<sup>Optional</sup> <a name="buckets" id="eoapi-cdk.TitilerPgStacApiLambdaProps.property.buckets"></a>
-
-```typescript
-public readonly buckets: string[];
-```
-
-- *Type:* string[]
-
-list of buckets the lambda will be granted access to.
-
----
-
-##### `lambdaFunctionOptions`<sup>Optional</sup> <a name="lambdaFunctionOptions" id="eoapi-cdk.TitilerPgStacApiLambdaProps.property.lambdaFunctionOptions"></a>
+##### `lambdaFunctionOptions`<sup>Optional</sup> <a name="lambdaFunctionOptions" id="eoapi-cdk.TiPgApiLambdaRuntimeProps.property.lambdaFunctionOptions"></a>
 
 ```typescript
 public readonly lambdaFunctionOptions: any;
@@ -4465,7 +5017,7 @@ Can be used to override the default lambda function properties.
 
 ---
 
-##### `subnetSelection`<sup>Optional</sup> <a name="subnetSelection" id="eoapi-cdk.TitilerPgStacApiLambdaProps.property.subnetSelection"></a>
+##### `subnetSelection`<sup>Optional</sup> <a name="subnetSelection" id="eoapi-cdk.TiPgApiLambdaRuntimeProps.property.subnetSelection"></a>
 
 ```typescript
 public readonly subnetSelection: SubnetSelection;
@@ -4477,7 +5029,150 @@ Subnet into which the lambda should be deployed.
 
 ---
 
-##### `titilerPgstacApiDomainName`<sup>Optional</sup> <a name="titilerPgstacApiDomainName" id="eoapi-cdk.TitilerPgStacApiLambdaProps.property.titilerPgstacApiDomainName"></a>
+##### `vpc`<sup>Optional</sup> <a name="vpc" id="eoapi-cdk.TiPgApiLambdaRuntimeProps.property.vpc"></a>
+
+```typescript
+public readonly vpc: IVpc;
+```
+
+- *Type:* aws-cdk-lib.aws_ec2.IVpc
+
+VPC into which the lambda should be deployed.
+
+---
+
+### TitilerPgstacApiLambdaProps <a name="TitilerPgstacApiLambdaProps" id="eoapi-cdk.TitilerPgstacApiLambdaProps"></a>
+
+#### Initializer <a name="Initializer" id="eoapi-cdk.TitilerPgstacApiLambdaProps.Initializer"></a>
+
+```typescript
+import { TitilerPgstacApiLambdaProps } from 'eoapi-cdk'
+
+const titilerPgstacApiLambdaProps: TitilerPgstacApiLambdaProps = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#eoapi-cdk.TitilerPgstacApiLambdaProps.property.db">db</a></code> | <code>aws-cdk-lib.aws_rds.IDatabaseInstance \| aws-cdk-lib.aws_ec2.IInstance</code> | RDS Instance with installed pgSTAC or pgbouncer server. |
+| <code><a href="#eoapi-cdk.TitilerPgstacApiLambdaProps.property.dbSecret">dbSecret</a></code> | <code>aws-cdk-lib.aws_secretsmanager.ISecret</code> | Secret containing connection information for pgSTAC database. |
+| <code><a href="#eoapi-cdk.TitilerPgstacApiLambdaProps.property.apiEnv">apiEnv</a></code> | <code>{[ key: string ]: string}</code> | Customized environment variables to send to titiler-pgstac runtime. |
+| <code><a href="#eoapi-cdk.TitilerPgstacApiLambdaProps.property.buckets">buckets</a></code> | <code>string[]</code> | list of buckets the lambda will be granted access to. |
+| <code><a href="#eoapi-cdk.TitilerPgstacApiLambdaProps.property.lambdaFunctionOptions">lambdaFunctionOptions</a></code> | <code>any</code> | Can be used to override the default lambda function properties. |
+| <code><a href="#eoapi-cdk.TitilerPgstacApiLambdaProps.property.subnetSelection">subnetSelection</a></code> | <code>aws-cdk-lib.aws_ec2.SubnetSelection</code> | Subnet into which the lambda should be deployed. |
+| <code><a href="#eoapi-cdk.TitilerPgstacApiLambdaProps.property.vpc">vpc</a></code> | <code>aws-cdk-lib.aws_ec2.IVpc</code> | VPC into which the lambda should be deployed. |
+| <code><a href="#eoapi-cdk.TitilerPgstacApiLambdaProps.property.domainName">domainName</a></code> | <code>aws-cdk-lib.aws_apigatewayv2.IDomainName</code> | Domain Name for the Titiler Pgstac API. |
+| <code><a href="#eoapi-cdk.TitilerPgstacApiLambdaProps.property.titilerPgstacApiDomainName">titilerPgstacApiDomainName</a></code> | <code>aws-cdk-lib.aws_apigatewayv2.IDomainName</code> | Custom Domain Name Options for Titiler Pgstac API,. |
+
+---
+
+##### `db`<sup>Required</sup> <a name="db" id="eoapi-cdk.TitilerPgstacApiLambdaProps.property.db"></a>
+
+```typescript
+public readonly db: IDatabaseInstance | IInstance;
+```
+
+- *Type:* aws-cdk-lib.aws_rds.IDatabaseInstance | aws-cdk-lib.aws_ec2.IInstance
+
+RDS Instance with installed pgSTAC or pgbouncer server.
+
+---
+
+##### `dbSecret`<sup>Required</sup> <a name="dbSecret" id="eoapi-cdk.TitilerPgstacApiLambdaProps.property.dbSecret"></a>
+
+```typescript
+public readonly dbSecret: ISecret;
+```
+
+- *Type:* aws-cdk-lib.aws_secretsmanager.ISecret
+
+Secret containing connection information for pgSTAC database.
+
+---
+
+##### `apiEnv`<sup>Optional</sup> <a name="apiEnv" id="eoapi-cdk.TitilerPgstacApiLambdaProps.property.apiEnv"></a>
+
+```typescript
+public readonly apiEnv: {[ key: string ]: string};
+```
+
+- *Type:* {[ key: string ]: string}
+
+Customized environment variables to send to titiler-pgstac runtime.
+
+These will be merged with `defaultTitilerPgstacEnv`.
+The database secret arn is automatically added to the environment variables at deployment.
+
+---
+
+##### `buckets`<sup>Optional</sup> <a name="buckets" id="eoapi-cdk.TitilerPgstacApiLambdaProps.property.buckets"></a>
+
+```typescript
+public readonly buckets: string[];
+```
+
+- *Type:* string[]
+
+list of buckets the lambda will be granted access to.
+
+---
+
+##### `lambdaFunctionOptions`<sup>Optional</sup> <a name="lambdaFunctionOptions" id="eoapi-cdk.TitilerPgstacApiLambdaProps.property.lambdaFunctionOptions"></a>
+
+```typescript
+public readonly lambdaFunctionOptions: any;
+```
+
+- *Type:* any
+- *Default:* defined in the construct.
+
+Can be used to override the default lambda function properties.
+
+---
+
+##### `subnetSelection`<sup>Optional</sup> <a name="subnetSelection" id="eoapi-cdk.TitilerPgstacApiLambdaProps.property.subnetSelection"></a>
+
+```typescript
+public readonly subnetSelection: SubnetSelection;
+```
+
+- *Type:* aws-cdk-lib.aws_ec2.SubnetSelection
+
+Subnet into which the lambda should be deployed.
+
+---
+
+##### `vpc`<sup>Optional</sup> <a name="vpc" id="eoapi-cdk.TitilerPgstacApiLambdaProps.property.vpc"></a>
+
+```typescript
+public readonly vpc: IVpc;
+```
+
+- *Type:* aws-cdk-lib.aws_ec2.IVpc
+
+VPC into which the lambda should be deployed.
+
+---
+
+##### `domainName`<sup>Optional</sup> <a name="domainName" id="eoapi-cdk.TitilerPgstacApiLambdaProps.property.domainName"></a>
+
+```typescript
+public readonly domainName: IDomainName;
+```
+
+- *Type:* aws-cdk-lib.aws_apigatewayv2.IDomainName
+- *Default:* undefined.
+
+Domain Name for the Titiler Pgstac API.
+
+If defined, will create the domain name and integrate it with the Titiler Pgstac API.
+
+---
+
+##### ~~`titilerPgstacApiDomainName`~~<sup>Optional</sup> <a name="titilerPgstacApiDomainName" id="eoapi-cdk.TitilerPgstacApiLambdaProps.property.titilerPgstacApiDomainName"></a>
+
+- *Deprecated:* Use 'domainName' instead.
 
 ```typescript
 public readonly titilerPgstacApiDomainName: IDomainName;
@@ -4490,7 +5185,107 @@ Custom Domain Name Options for Titiler Pgstac API,.
 
 ---
 
-##### `vpc`<sup>Optional</sup> <a name="vpc" id="eoapi-cdk.TitilerPgStacApiLambdaProps.property.vpc"></a>
+### TitilerPgstacApiLambdaRuntimeProps <a name="TitilerPgstacApiLambdaRuntimeProps" id="eoapi-cdk.TitilerPgstacApiLambdaRuntimeProps"></a>
+
+#### Initializer <a name="Initializer" id="eoapi-cdk.TitilerPgstacApiLambdaRuntimeProps.Initializer"></a>
+
+```typescript
+import { TitilerPgstacApiLambdaRuntimeProps } from 'eoapi-cdk'
+
+const titilerPgstacApiLambdaRuntimeProps: TitilerPgstacApiLambdaRuntimeProps = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#eoapi-cdk.TitilerPgstacApiLambdaRuntimeProps.property.db">db</a></code> | <code>aws-cdk-lib.aws_rds.IDatabaseInstance \| aws-cdk-lib.aws_ec2.IInstance</code> | RDS Instance with installed pgSTAC or pgbouncer server. |
+| <code><a href="#eoapi-cdk.TitilerPgstacApiLambdaRuntimeProps.property.dbSecret">dbSecret</a></code> | <code>aws-cdk-lib.aws_secretsmanager.ISecret</code> | Secret containing connection information for pgSTAC database. |
+| <code><a href="#eoapi-cdk.TitilerPgstacApiLambdaRuntimeProps.property.apiEnv">apiEnv</a></code> | <code>{[ key: string ]: string}</code> | Customized environment variables to send to titiler-pgstac runtime. |
+| <code><a href="#eoapi-cdk.TitilerPgstacApiLambdaRuntimeProps.property.buckets">buckets</a></code> | <code>string[]</code> | list of buckets the lambda will be granted access to. |
+| <code><a href="#eoapi-cdk.TitilerPgstacApiLambdaRuntimeProps.property.lambdaFunctionOptions">lambdaFunctionOptions</a></code> | <code>any</code> | Can be used to override the default lambda function properties. |
+| <code><a href="#eoapi-cdk.TitilerPgstacApiLambdaRuntimeProps.property.subnetSelection">subnetSelection</a></code> | <code>aws-cdk-lib.aws_ec2.SubnetSelection</code> | Subnet into which the lambda should be deployed. |
+| <code><a href="#eoapi-cdk.TitilerPgstacApiLambdaRuntimeProps.property.vpc">vpc</a></code> | <code>aws-cdk-lib.aws_ec2.IVpc</code> | VPC into which the lambda should be deployed. |
+
+---
+
+##### `db`<sup>Required</sup> <a name="db" id="eoapi-cdk.TitilerPgstacApiLambdaRuntimeProps.property.db"></a>
+
+```typescript
+public readonly db: IDatabaseInstance | IInstance;
+```
+
+- *Type:* aws-cdk-lib.aws_rds.IDatabaseInstance | aws-cdk-lib.aws_ec2.IInstance
+
+RDS Instance with installed pgSTAC or pgbouncer server.
+
+---
+
+##### `dbSecret`<sup>Required</sup> <a name="dbSecret" id="eoapi-cdk.TitilerPgstacApiLambdaRuntimeProps.property.dbSecret"></a>
+
+```typescript
+public readonly dbSecret: ISecret;
+```
+
+- *Type:* aws-cdk-lib.aws_secretsmanager.ISecret
+
+Secret containing connection information for pgSTAC database.
+
+---
+
+##### `apiEnv`<sup>Optional</sup> <a name="apiEnv" id="eoapi-cdk.TitilerPgstacApiLambdaRuntimeProps.property.apiEnv"></a>
+
+```typescript
+public readonly apiEnv: {[ key: string ]: string};
+```
+
+- *Type:* {[ key: string ]: string}
+
+Customized environment variables to send to titiler-pgstac runtime.
+
+These will be merged with `defaultTitilerPgstacEnv`.
+The database secret arn is automatically added to the environment variables at deployment.
+
+---
+
+##### `buckets`<sup>Optional</sup> <a name="buckets" id="eoapi-cdk.TitilerPgstacApiLambdaRuntimeProps.property.buckets"></a>
+
+```typescript
+public readonly buckets: string[];
+```
+
+- *Type:* string[]
+
+list of buckets the lambda will be granted access to.
+
+---
+
+##### `lambdaFunctionOptions`<sup>Optional</sup> <a name="lambdaFunctionOptions" id="eoapi-cdk.TitilerPgstacApiLambdaRuntimeProps.property.lambdaFunctionOptions"></a>
+
+```typescript
+public readonly lambdaFunctionOptions: any;
+```
+
+- *Type:* any
+- *Default:* defined in the construct.
+
+Can be used to override the default lambda function properties.
+
+---
+
+##### `subnetSelection`<sup>Optional</sup> <a name="subnetSelection" id="eoapi-cdk.TitilerPgstacApiLambdaRuntimeProps.property.subnetSelection"></a>
+
+```typescript
+public readonly subnetSelection: SubnetSelection;
+```
+
+- *Type:* aws-cdk-lib.aws_ec2.SubnetSelection
+
+Subnet into which the lambda should be deployed.
+
+---
+
+##### `vpc`<sup>Optional</sup> <a name="vpc" id="eoapi-cdk.TitilerPgstacApiLambdaRuntimeProps.property.vpc"></a>
 
 ```typescript
 public readonly vpc: IVpc;
