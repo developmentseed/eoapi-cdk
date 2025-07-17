@@ -8,11 +8,7 @@ import {
   aws_logs,
 } from "aws-cdk-lib";
 import { Construct } from "constructs";
-import {
-  CustomLambdaFunctionProps,
-  LambdaApiGateway,
-  LambdaApiGatewayProps,
-} from "../utils";
+import { CustomLambdaFunctionProps, LambdaApiGateway } from "../utils";
 import * as path from "path";
 
 export const EXTENSIONS = {
@@ -168,7 +164,7 @@ export class PgStacApiLambda extends Construct {
 
     const api = new LambdaApiGateway(this, "stac-api", {
       lambdaFunction: runtime.stacApiLambdaFunction,
-      domainName: props.domainName,
+      domainName: props.stacApiDomainName,
       outputName: "url",
     });
 
@@ -176,6 +172,11 @@ export class PgStacApiLambda extends Construct {
   }
 }
 
-export interface PgStacApiLambdaProps
-  extends PgStacApiLambdaRuntimeProps,
-    Omit<LambdaApiGatewayProps, "lambdaFunction"> {}
+export interface PgStacApiLambdaProps extends PgStacApiLambdaRuntimeProps {
+  /**
+   * Custom Domain Name Options for Titiler Pgstac API,
+   *
+   * @default - undefined.
+   */
+  readonly stacApiDomainName?: apigatewayv2.IDomainName;
+}
