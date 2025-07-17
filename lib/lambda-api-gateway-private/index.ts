@@ -74,8 +74,8 @@ export class PrivateLambdaApiGateway extends Construct {
     super(scope, id);
 
     const {
-      restApiName = `${scope.node.id}-private-api`,
-      description = "Private REST API Gateway",
+      restApiName,
+      description,
       lambdaFunction,
       vpc,
       vpcEndpointSubnetSelection,
@@ -101,8 +101,8 @@ export class PrivateLambdaApiGateway extends Construct {
 
     // Create Private REST API Gateway
     this.api = new apigateway.RestApi(this, "rest-api", {
-      restApiName,
-      description,
+      restApiName: restApiName ?? `${scope.node.id}-private-api`,
+      description: description ?? "Private REST API Gateway",
       endpointTypes: [apigateway.EndpointType.PRIVATE],
       policy:
         policy ??
