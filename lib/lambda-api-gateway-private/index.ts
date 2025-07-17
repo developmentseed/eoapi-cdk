@@ -45,7 +45,7 @@ export interface PrivateLambdaApiGatewayProps {
   /**
    * Description for the API Gateway.
    *
-   * @default - "Private REST API Gateway for STAC API"
+   * @default - "Private REST API Gateway"
    */
   description?: string;
 
@@ -75,7 +75,7 @@ export class PrivateLambdaApiGateway extends Construct {
 
     const {
       restApiName = `${scope.node.id}-private-api`,
-      description = "Private REST API Gateway for STAC API",
+      description = "Private REST API Gateway",
       lambdaFunction,
       vpc,
       vpcEndpointSubnetSelection,
