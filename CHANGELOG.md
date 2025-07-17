@@ -1,3 +1,10 @@
+# [9.1.0](https://github.com/developmentseed/eoapi-cdk/compare/v9.0.0...v9.1.0) (2025-07-17)
+
+
+### Features
+
+* add PrivateLambdaApiGateway construct for VPC-integrated API Gateway ([#168](https://github.com/developmentseed/eoapi-cdk/issues/168)) ([5d6c2b3](https://github.com/developmentseed/eoapi-cdk/commit/5d6c2b33cbb06b28ac226142717c431500739b51))
+
 # [9.0.0](https://github.com/developmentseed/eoapi-cdk/compare/v8.3.3...v9.0.0) (2025-07-17)
 
 
