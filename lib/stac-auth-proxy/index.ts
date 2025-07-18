@@ -1,31 +1,35 @@
 import * as cdk from "aws-cdk-lib";
-import * as certificatemanager from "aws-cdk-lib/aws-certificatemanager";
 import * as ec2 from "aws-cdk-lib/aws-ec2";
-import * as ecs from "aws-cdk-lib/aws-ecs";
-import * as ecs_patterns from "aws-cdk-lib/aws-ecs-patterns";
-import * as elbv2 from "aws-cdk-lib/aws-elasticloadbalancingv2";
+import * as lambda from "aws-cdk-lib/aws-lambda";
+import * as apigatewayv2 from "aws-cdk-lib/aws-apigatewayv2";
 import { Construct } from "constructs";
+import { LambdaApiGateway } from "../lambda-api-gateway";
+import { CustomLambdaFunctionProps } from "../utils";
+import * as path from "path";
 
-export interface StacAuthProxyProps {
-  vpc: ec2.IVpc;
-  upstreamUrl: string;
-  oidcDiscoveryUrl: string;
-  stacApiClientId: string;
-  subnetSelection: ec2.SubnetSelection;
-  certificateArn?: string;
-}
+export class StacAuthProxyLambdaRuntime extends Construct {
+  public readonly lambdaFunction: lambda.Function;
 
-export class StacAuthProxy extends Construct {
-  public readonly service: ecs_patterns.ApplicationLoadBalancedFargateService;
-
-  constructor(scope: Construct, id: string, props: StacAuthProxyProps) {
+  constructor(
+    scope: Construct,
+    id: string,
+    props: StacAuthProxyLambdaRuntimeProps
+  ) {
     super(scope, id);
 
-    const taskOptions: ecs_patterns.ApplicationLoadBalancedTaskImageOptions = {
-      image: ecs.ContainerImage.fromRegistry(
-        "ghcr.io/developmentseed/stac-auth-proxy:0.5.0"
-      ),
-      containerPort: 8000,
+    this.lambdaFunction = new lambda.Function(this, "lambda", {
+      runtime: lambda.Runtime.PYTHON_3_13,
+      handler: "handler.handler",
+      memorySize: 8192,
+      logRetention: cdk.aws_logs.RetentionDays.ONE_WEEK,
+      timeout: cdk.Duration.seconds(30),
+      code: lambda.Code.fromDockerBuild(path.join(__dirname, ".."), {
+        file: "stac-auth-proxy/runtime/Dockerfile",
+        buildArgs: { PYTHON_VERSION: "3.13" },
+      }),
+      vpc: props.vpc,
+      vpcSubnets: props.subnetSelection,
+      allowPublicSubnet: true,
       environment: {
         // stac-auth-proxy config
         UPSTREAM_URL: props.upstreamUrl,
@@ -38,38 +42,97 @@ export class StacAuthProxy extends Construct {
           clientId: props.stacApiClientId,
           usePkceWithAuthorizationCodeGrant: true,
         }),
+        ...props.apiEnv,
       },
-    };
-
-    const albCertificate = props.certificateArn
-      ? certificatemanager.Certificate.fromCertificateArn(
-          this,
-          "cert",
-          props.certificateArn
-        )
-      : undefined;
-
-    this.service = new ecs_patterns.ApplicationLoadBalancedFargateService(
-      this,
-      "service",
-      {
-        vpc: props.vpc,
-        desiredCount: 1,
-        taskImageOptions: taskOptions,
-        minHealthyPercent: 100,
-        taskSubnets: props.subnetSelection,
-        assignPublicIp: true,
-        healthCheckGracePeriod: cdk.Duration.seconds(60),
-        protocol: elbv2.ApplicationProtocol.HTTPS,
-        targetProtocol: elbv2.ApplicationProtocol.HTTP,
-        circuitBreaker: { rollback: true },
-        certificate: albCertificate,
-        redirectHTTP: true,
-      }
-    );
-
-    this.service.targetGroup.configureHealthCheck({
-      path: "/healthz",
+      // overwrites defaults with user-provided configurable properties
+      ...props.lambdaFunctionOptions,
     });
   }
+}
+
+export interface StacAuthProxyLambdaRuntimeProps {
+  /**
+   * URL to upstream STAC API.
+   */
+  readonly upstreamUrl: string;
+
+  /**
+   * URL to OIDC Discovery Endpoint.
+   */
+  readonly oidcDiscoveryUrl: string;
+
+  /**
+   * OAuth Client ID for Swagger UI.
+   */
+  readonly stacApiClientId?: string;
+
+  /**
+   * VPC into which the lambda should be deployed.
+   */
+  readonly vpc?: ec2.IVpc;
+
+  /**
+   * Subnet into which the lambda should be deployed.
+   */
+  readonly subnetSelection?: ec2.SubnetSelection;
+
+  /**
+   * Customized environment variables to send to fastapi-pgstac runtime.
+   */
+  readonly apiEnv?: Record<string, string>;
+
+  /**
+   * Can be used to override the default lambda function properties.
+   *
+   * @default - defined in the construct.
+   */
+  readonly lambdaFunctionOptions?: CustomLambdaFunctionProps;
+}
+
+export class StacAuthProxyLambda extends Construct {
+  /**
+   * URL for the STAC API.
+   */
+  readonly url: string;
+
+  /**
+   * Lambda function for the STAC API.
+   */
+  readonly lambdaFunction: lambda.Function;
+
+  constructor(scope: Construct, id: string, props: StacAuthProxyLambdaProps) {
+    super(scope, id);
+
+    const runtime = new StacAuthProxyLambdaRuntime(this, "runtime", {
+      vpc: props.vpc,
+      subnetSelection: props.subnetSelection,
+      apiEnv: props.apiEnv,
+      upstreamUrl: props.upstreamUrl,
+      oidcDiscoveryUrl: props.oidcDiscoveryUrl,
+      lambdaFunctionOptions: props.lambdaFunctionOptions,
+    });
+    this.lambdaFunction = runtime.lambdaFunction;
+
+    const { api } = new LambdaApiGateway(this, "stac-auth-proxy", {
+      lambdaFunction: runtime.lambdaFunction,
+      domainName: props.domainName,
+    });
+
+    this.url = api.url!;
+
+    new cdk.CfnOutput(this, "stac-auth-proxy-output", {
+      exportName: `${cdk.Stack.of(this).stackName}-stac-auth-proxy-url`,
+      value: this.url,
+    });
+  }
+}
+
+export interface StacAuthProxyLambdaProps
+  extends StacAuthProxyLambdaRuntimeProps {
+  /**
+   * Domain Name for the STAC API. If defined, will create the domain name and integrate it with the STAC API.
+   *
+   * @default - undefined
+   */
+  readonly domainName?: apigatewayv2.IDomainName;
 }
