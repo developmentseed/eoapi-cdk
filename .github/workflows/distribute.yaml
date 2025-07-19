@@ -3,7 +3,8 @@ name: Distribute
 on:
   release:
     types:
-      - published
+      - released
+      - prereleased
 
 jobs:
   package:
