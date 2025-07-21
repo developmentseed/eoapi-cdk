@@ -34,14 +34,16 @@ export class StacAuthProxyLambdaRuntime extends Construct {
         // stac-auth-proxy config
         UPSTREAM_URL: props.upstreamUrl,
         OIDC_DISCOVERY_URL: props.oidcDiscoveryUrl,
-        DEFAULT_PUBLIC: "false",
-        OPENAPI_SPEC_ENDPOINT: "/api",
+
         // swagger-ui config
+        OPENAPI_SPEC_ENDPOINT: "/api",
         SWAGGER_UI_ENDPOINT: "/api.html",
-        SWAGGER_UI_INIT_OAUTH: JSON.stringify({
+        SWAGGER_UI_INIT_OAUTH: props.stacApiClientId && JSON.stringify({
           clientId: props.stacApiClientId,
           usePkceWithAuthorizationCodeGrant: true,
         }),
+
+        // customized settings
         ...props.apiEnv,
       },
       // overwrites defaults with user-provided configurable properties
@@ -77,7 +79,8 @@ export interface StacAuthProxyLambdaRuntimeProps {
   readonly subnetSelection?: ec2.SubnetSelection;
 
   /**
-   * Customized environment variables to send to fastapi-pgstac runtime.
+   * Customized environment variables to send to stac-auth-proxy runtime.
+   * https://github.com/developmentseed/stac-auth-proxy/?tab=readme-ov-file#configuration
    */
   readonly apiEnv?: Record<string, string>;
 
