@@ -38,12 +38,10 @@ export class StacAuthProxyLambdaRuntime extends Construct {
         // swagger-ui config
         OPENAPI_SPEC_ENDPOINT: "/api",
         SWAGGER_UI_ENDPOINT: "/api.html",
-        SWAGGER_UI_INIT_OAUTH:
-          props.stacApiClientId &&
-          cdk.Stack.of(this).toJsonString({
-            clientId: props.stacApiClientId,
-            usePkceWithAuthorizationCodeGrant: true,
-          }),
+        SWAGGER_UI_INIT_OAUTH: cdk.Stack.of(this).toJsonString({
+          clientId: props.stacApiClientId,
+          usePkceWithAuthorizationCodeGrant: true,
+        }),
 
         // customized settings
         ...props.apiEnv,
