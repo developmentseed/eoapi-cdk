@@ -9,5 +9,3 @@ RUN python -m pip install -r requirements.txt "mangum>=0.14,<0.15" -t /asset
 
 RUN mkdir -p /asset/src
 COPY stac-auth-proxy/runtime/src/*.py /asset/
-
-CMD ["echo", "hello world"]
