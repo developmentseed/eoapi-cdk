@@ -4,6 +4,7 @@ export * from "./ingestor-api";
 export * from "./lambda-api-gateway-private";
 export * from "./lambda-api-gateway";
 export * from "./stac-api";
+export * from "./stac-auth-proxy";
 export * from "./stac-browser";
 export * from "./stac-loader";
 export * from "./stactools-item-generator";
