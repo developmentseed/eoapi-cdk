@@ -106,19 +106,18 @@ export class StacAuthProxyLambda extends Construct {
   constructor(scope: Construct, id: string, props: StacAuthProxyLambdaProps) {
     super(scope, id);
 
-    const runtime = new StacAuthProxyLambdaRuntime(this, "runtime", {
-      vpc: props.vpc,
-      subnetSelection: props.subnetSelection,
-      apiEnv: props.apiEnv,
-      upstreamUrl: props.upstreamUrl,
-      oidcDiscoveryUrl: props.oidcDiscoveryUrl,
-      lambdaFunctionOptions: props.lambdaFunctionOptions,
-    });
+    const { domainName, ...runtimeProps } = props;
+
+    const runtime = new StacAuthProxyLambdaRuntime(
+      this,
+      "runtime",
+      runtimeProps
+    );
     this.lambdaFunction = runtime.lambdaFunction;
 
     const { api } = new LambdaApiGateway(this, "stac-auth-proxy", {
       lambdaFunction: runtime.lambdaFunction,
-      domainName: props.domainName,
+      domainName,
     });
 
     this.url = api.url!;
