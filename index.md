@@ -943,6 +943,269 @@ public readonly vpcEndpoint: InterfaceVpcEndpoint;
 ---
 
 
+### StacAuthProxyLambda <a name="StacAuthProxyLambda" id="eoapi-cdk.StacAuthProxyLambda"></a>
+
+#### Initializers <a name="Initializers" id="eoapi-cdk.StacAuthProxyLambda.Initializer"></a>
+
+```typescript
+import { StacAuthProxyLambda } from 'eoapi-cdk'
+
+new StacAuthProxyLambda(scope: Construct, id: string, props: StacAuthProxyLambdaProps)
+```
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#eoapi-cdk.StacAuthProxyLambda.Initializer.parameter.scope">scope</a></code> | <code>constructs.Construct</code> | *No description.* |
+| <code><a href="#eoapi-cdk.StacAuthProxyLambda.Initializer.parameter.id">id</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#eoapi-cdk.StacAuthProxyLambda.Initializer.parameter.props">props</a></code> | <code><a href="#eoapi-cdk.StacAuthProxyLambdaProps">StacAuthProxyLambdaProps</a></code> | *No description.* |
+
+---
+
+##### `scope`<sup>Required</sup> <a name="scope" id="eoapi-cdk.StacAuthProxyLambda.Initializer.parameter.scope"></a>
+
+- *Type:* constructs.Construct
+
+---
+
+##### `id`<sup>Required</sup> <a name="id" id="eoapi-cdk.StacAuthProxyLambda.Initializer.parameter.id"></a>
+
+- *Type:* string
+
+---
+
+##### `props`<sup>Required</sup> <a name="props" id="eoapi-cdk.StacAuthProxyLambda.Initializer.parameter.props"></a>
+
+- *Type:* <a href="#eoapi-cdk.StacAuthProxyLambdaProps">StacAuthProxyLambdaProps</a>
+
+---
+
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#eoapi-cdk.StacAuthProxyLambda.toString">toString</a></code> | Returns a string representation of this construct. |
+
+---
+
+##### `toString` <a name="toString" id="eoapi-cdk.StacAuthProxyLambda.toString"></a>
+
+```typescript
+public toString(): string
+```
+
+Returns a string representation of this construct.
+
+#### Static Functions <a name="Static Functions" id="Static Functions"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#eoapi-cdk.StacAuthProxyLambda.isConstruct">isConstruct</a></code> | Checks if `x` is a construct. |
+
+---
+
+##### `isConstruct` <a name="isConstruct" id="eoapi-cdk.StacAuthProxyLambda.isConstruct"></a>
+
+```typescript
+import { StacAuthProxyLambda } from 'eoapi-cdk'
+
+StacAuthProxyLambda.isConstruct(x: any)
+```
+
+Checks if `x` is a construct.
+
+Use this method instead of `instanceof` to properly detect `Construct`
+instances, even when the construct library is symlinked.
+
+Explanation: in JavaScript, multiple copies of the `constructs` library on
+disk are seen as independent, completely different libraries. As a
+consequence, the class `Construct` in each copy of the `constructs` library
+is seen as a different class, and an instance of one class will not test as
+`instanceof` the other class. `npm install` will not create installations
+like this, but users may manually symlink construct libraries together or
+use a monorepo tool: in those cases, multiple copies of the `constructs`
+library can be accidentally installed, and `instanceof` will behave
+unpredictably. It is safest to avoid using `instanceof`, and using
+this type-testing method instead.
+
+###### `x`<sup>Required</sup> <a name="x" id="eoapi-cdk.StacAuthProxyLambda.isConstruct.parameter.x"></a>
+
+- *Type:* any
+
+Any object.
+
+---
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#eoapi-cdk.StacAuthProxyLambda.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
+| <code><a href="#eoapi-cdk.StacAuthProxyLambda.property.lambdaFunction">lambdaFunction</a></code> | <code>aws-cdk-lib.aws_lambda.Function</code> | Lambda function for the STAC API. |
+| <code><a href="#eoapi-cdk.StacAuthProxyLambda.property.url">url</a></code> | <code>string</code> | URL for the STAC API. |
+
+---
+
+##### `node`<sup>Required</sup> <a name="node" id="eoapi-cdk.StacAuthProxyLambda.property.node"></a>
+
+```typescript
+public readonly node: Node;
+```
+
+- *Type:* constructs.Node
+
+The tree node.
+
+---
+
+##### `lambdaFunction`<sup>Required</sup> <a name="lambdaFunction" id="eoapi-cdk.StacAuthProxyLambda.property.lambdaFunction"></a>
+
+```typescript
+public readonly lambdaFunction: Function;
+```
+
+- *Type:* aws-cdk-lib.aws_lambda.Function
+
+Lambda function for the STAC API.
+
+---
+
+##### `url`<sup>Required</sup> <a name="url" id="eoapi-cdk.StacAuthProxyLambda.property.url"></a>
+
+```typescript
+public readonly url: string;
+```
+
+- *Type:* string
+
+URL for the STAC API.
+
+---
+
+
+### StacAuthProxyLambdaRuntime <a name="StacAuthProxyLambdaRuntime" id="eoapi-cdk.StacAuthProxyLambdaRuntime"></a>
+
+#### Initializers <a name="Initializers" id="eoapi-cdk.StacAuthProxyLambdaRuntime.Initializer"></a>
+
+```typescript
+import { StacAuthProxyLambdaRuntime } from 'eoapi-cdk'
+
+new StacAuthProxyLambdaRuntime(scope: Construct, id: string, props: StacAuthProxyLambdaRuntimeProps)
+```
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#eoapi-cdk.StacAuthProxyLambdaRuntime.Initializer.parameter.scope">scope</a></code> | <code>constructs.Construct</code> | *No description.* |
+| <code><a href="#eoapi-cdk.StacAuthProxyLambdaRuntime.Initializer.parameter.id">id</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#eoapi-cdk.StacAuthProxyLambdaRuntime.Initializer.parameter.props">props</a></code> | <code><a href="#eoapi-cdk.StacAuthProxyLambdaRuntimeProps">StacAuthProxyLambdaRuntimeProps</a></code> | *No description.* |
+
+---
+
+##### `scope`<sup>Required</sup> <a name="scope" id="eoapi-cdk.StacAuthProxyLambdaRuntime.Initializer.parameter.scope"></a>
+
+- *Type:* constructs.Construct
+
+---
+
+##### `id`<sup>Required</sup> <a name="id" id="eoapi-cdk.StacAuthProxyLambdaRuntime.Initializer.parameter.id"></a>
+
+- *Type:* string
+
+---
+
+##### `props`<sup>Required</sup> <a name="props" id="eoapi-cdk.StacAuthProxyLambdaRuntime.Initializer.parameter.props"></a>
+
+- *Type:* <a href="#eoapi-cdk.StacAuthProxyLambdaRuntimeProps">StacAuthProxyLambdaRuntimeProps</a>
+
+---
+
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#eoapi-cdk.StacAuthProxyLambdaRuntime.toString">toString</a></code> | Returns a string representation of this construct. |
+
+---
+
+##### `toString` <a name="toString" id="eoapi-cdk.StacAuthProxyLambdaRuntime.toString"></a>
+
+```typescript
+public toString(): string
+```
+
+Returns a string representation of this construct.
+
+#### Static Functions <a name="Static Functions" id="Static Functions"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#eoapi-cdk.StacAuthProxyLambdaRuntime.isConstruct">isConstruct</a></code> | Checks if `x` is a construct. |
+
+---
+
+##### `isConstruct` <a name="isConstruct" id="eoapi-cdk.StacAuthProxyLambdaRuntime.isConstruct"></a>
+
+```typescript
+import { StacAuthProxyLambdaRuntime } from 'eoapi-cdk'
+
+StacAuthProxyLambdaRuntime.isConstruct(x: any)
+```
+
+Checks if `x` is a construct.
+
+Use this method instead of `instanceof` to properly detect `Construct`
+instances, even when the construct library is symlinked.
+
+Explanation: in JavaScript, multiple copies of the `constructs` library on
+disk are seen as independent, completely different libraries. As a
+consequence, the class `Construct` in each copy of the `constructs` library
+is seen as a different class, and an instance of one class will not test as
+`instanceof` the other class. `npm install` will not create installations
+like this, but users may manually symlink construct libraries together or
+use a monorepo tool: in those cases, multiple copies of the `constructs`
+library can be accidentally installed, and `instanceof` will behave
+unpredictably. It is safest to avoid using `instanceof`, and using
+this type-testing method instead.
+
+###### `x`<sup>Required</sup> <a name="x" id="eoapi-cdk.StacAuthProxyLambdaRuntime.isConstruct.parameter.x"></a>
+
+- *Type:* any
+
+Any object.
+
+---
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#eoapi-cdk.StacAuthProxyLambdaRuntime.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
+| <code><a href="#eoapi-cdk.StacAuthProxyLambdaRuntime.property.lambdaFunction">lambdaFunction</a></code> | <code>aws-cdk-lib.aws_lambda.Function</code> | *No description.* |
+
+---
+
+##### `node`<sup>Required</sup> <a name="node" id="eoapi-cdk.StacAuthProxyLambdaRuntime.property.node"></a>
+
+```typescript
+public readonly node: Node;
+```
+
+- *Type:* constructs.Node
+
+The tree node.
+
+---
+
+##### `lambdaFunction`<sup>Required</sup> <a name="lambdaFunction" id="eoapi-cdk.StacAuthProxyLambdaRuntime.property.lambdaFunction"></a>
+
+```typescript
+public readonly lambdaFunction: Function;
+```
+
+- *Type:* aws-cdk-lib.aws_lambda.Function
+
+---
+
+
 ### StacBrowser <a name="StacBrowser" id="eoapi-cdk.StacBrowser"></a>
 
 #### Initializers <a name="Initializers" id="eoapi-cdk.StacBrowser.Initializer"></a>
@@ -4274,6 +4537,244 @@ public readonly vpcEndpointSubnetSelection: SubnetSelection;
 The subnets in which to create a VPC endpoint network interface.
 
 At most one per availability zone.
+
+---
+
+### StacAuthProxyLambdaProps <a name="StacAuthProxyLambdaProps" id="eoapi-cdk.StacAuthProxyLambdaProps"></a>
+
+#### Initializer <a name="Initializer" id="eoapi-cdk.StacAuthProxyLambdaProps.Initializer"></a>
+
+```typescript
+import { StacAuthProxyLambdaProps } from 'eoapi-cdk'
+
+const stacAuthProxyLambdaProps: StacAuthProxyLambdaProps = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#eoapi-cdk.StacAuthProxyLambdaProps.property.oidcDiscoveryUrl">oidcDiscoveryUrl</a></code> | <code>string</code> | URL to OIDC Discovery Endpoint. |
+| <code><a href="#eoapi-cdk.StacAuthProxyLambdaProps.property.upstreamUrl">upstreamUrl</a></code> | <code>string</code> | URL to upstream STAC API. |
+| <code><a href="#eoapi-cdk.StacAuthProxyLambdaProps.property.apiEnv">apiEnv</a></code> | <code>{[ key: string ]: string}</code> | Customized environment variables to send to stac-auth-proxy runtime. |
+| <code><a href="#eoapi-cdk.StacAuthProxyLambdaProps.property.lambdaFunctionOptions">lambdaFunctionOptions</a></code> | <code>any</code> | Can be used to override the default lambda function properties. |
+| <code><a href="#eoapi-cdk.StacAuthProxyLambdaProps.property.stacApiClientId">stacApiClientId</a></code> | <code>string</code> | OAuth Client ID for Swagger UI. |
+| <code><a href="#eoapi-cdk.StacAuthProxyLambdaProps.property.subnetSelection">subnetSelection</a></code> | <code>aws-cdk-lib.aws_ec2.SubnetSelection</code> | Subnet into which the lambda should be deployed. |
+| <code><a href="#eoapi-cdk.StacAuthProxyLambdaProps.property.vpc">vpc</a></code> | <code>aws-cdk-lib.aws_ec2.IVpc</code> | VPC into which the lambda should be deployed. |
+| <code><a href="#eoapi-cdk.StacAuthProxyLambdaProps.property.domainName">domainName</a></code> | <code>aws-cdk-lib.aws_apigatewayv2.IDomainName</code> | Domain Name for the STAC API. |
+
+---
+
+##### `oidcDiscoveryUrl`<sup>Required</sup> <a name="oidcDiscoveryUrl" id="eoapi-cdk.StacAuthProxyLambdaProps.property.oidcDiscoveryUrl"></a>
+
+```typescript
+public readonly oidcDiscoveryUrl: string;
+```
+
+- *Type:* string
+
+URL to OIDC Discovery Endpoint.
+
+---
+
+##### `upstreamUrl`<sup>Required</sup> <a name="upstreamUrl" id="eoapi-cdk.StacAuthProxyLambdaProps.property.upstreamUrl"></a>
+
+```typescript
+public readonly upstreamUrl: string;
+```
+
+- *Type:* string
+
+URL to upstream STAC API.
+
+---
+
+##### `apiEnv`<sup>Optional</sup> <a name="apiEnv" id="eoapi-cdk.StacAuthProxyLambdaProps.property.apiEnv"></a>
+
+```typescript
+public readonly apiEnv: {[ key: string ]: string};
+```
+
+- *Type:* {[ key: string ]: string}
+
+Customized environment variables to send to stac-auth-proxy runtime.
+
+https://github.com/developmentseed/stac-auth-proxy/?tab=readme-ov-file#configuration
+
+---
+
+##### `lambdaFunctionOptions`<sup>Optional</sup> <a name="lambdaFunctionOptions" id="eoapi-cdk.StacAuthProxyLambdaProps.property.lambdaFunctionOptions"></a>
+
+```typescript
+public readonly lambdaFunctionOptions: any;
+```
+
+- *Type:* any
+- *Default:* defined in the construct.
+
+Can be used to override the default lambda function properties.
+
+---
+
+##### `stacApiClientId`<sup>Optional</sup> <a name="stacApiClientId" id="eoapi-cdk.StacAuthProxyLambdaProps.property.stacApiClientId"></a>
+
+```typescript
+public readonly stacApiClientId: string;
+```
+
+- *Type:* string
+
+OAuth Client ID for Swagger UI.
+
+---
+
+##### `subnetSelection`<sup>Optional</sup> <a name="subnetSelection" id="eoapi-cdk.StacAuthProxyLambdaProps.property.subnetSelection"></a>
+
+```typescript
+public readonly subnetSelection: SubnetSelection;
+```
+
+- *Type:* aws-cdk-lib.aws_ec2.SubnetSelection
+
+Subnet into which the lambda should be deployed.
+
+---
+
+##### `vpc`<sup>Optional</sup> <a name="vpc" id="eoapi-cdk.StacAuthProxyLambdaProps.property.vpc"></a>
+
+```typescript
+public readonly vpc: IVpc;
+```
+
+- *Type:* aws-cdk-lib.aws_ec2.IVpc
+
+VPC into which the lambda should be deployed.
+
+---
+
+##### `domainName`<sup>Optional</sup> <a name="domainName" id="eoapi-cdk.StacAuthProxyLambdaProps.property.domainName"></a>
+
+```typescript
+public readonly domainName: IDomainName;
+```
+
+- *Type:* aws-cdk-lib.aws_apigatewayv2.IDomainName
+- *Default:* undefined
+
+Domain Name for the STAC API.
+
+If defined, will create the domain name and integrate it with the STAC API.
+
+---
+
+### StacAuthProxyLambdaRuntimeProps <a name="StacAuthProxyLambdaRuntimeProps" id="eoapi-cdk.StacAuthProxyLambdaRuntimeProps"></a>
+
+#### Initializer <a name="Initializer" id="eoapi-cdk.StacAuthProxyLambdaRuntimeProps.Initializer"></a>
+
+```typescript
+import { StacAuthProxyLambdaRuntimeProps } from 'eoapi-cdk'
+
+const stacAuthProxyLambdaRuntimeProps: StacAuthProxyLambdaRuntimeProps = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#eoapi-cdk.StacAuthProxyLambdaRuntimeProps.property.oidcDiscoveryUrl">oidcDiscoveryUrl</a></code> | <code>string</code> | URL to OIDC Discovery Endpoint. |
+| <code><a href="#eoapi-cdk.StacAuthProxyLambdaRuntimeProps.property.upstreamUrl">upstreamUrl</a></code> | <code>string</code> | URL to upstream STAC API. |
+| <code><a href="#eoapi-cdk.StacAuthProxyLambdaRuntimeProps.property.apiEnv">apiEnv</a></code> | <code>{[ key: string ]: string}</code> | Customized environment variables to send to stac-auth-proxy runtime. |
+| <code><a href="#eoapi-cdk.StacAuthProxyLambdaRuntimeProps.property.lambdaFunctionOptions">lambdaFunctionOptions</a></code> | <code>any</code> | Can be used to override the default lambda function properties. |
+| <code><a href="#eoapi-cdk.StacAuthProxyLambdaRuntimeProps.property.stacApiClientId">stacApiClientId</a></code> | <code>string</code> | OAuth Client ID for Swagger UI. |
+| <code><a href="#eoapi-cdk.StacAuthProxyLambdaRuntimeProps.property.subnetSelection">subnetSelection</a></code> | <code>aws-cdk-lib.aws_ec2.SubnetSelection</code> | Subnet into which the lambda should be deployed. |
+| <code><a href="#eoapi-cdk.StacAuthProxyLambdaRuntimeProps.property.vpc">vpc</a></code> | <code>aws-cdk-lib.aws_ec2.IVpc</code> | VPC into which the lambda should be deployed. |
+
+---
+
+##### `oidcDiscoveryUrl`<sup>Required</sup> <a name="oidcDiscoveryUrl" id="eoapi-cdk.StacAuthProxyLambdaRuntimeProps.property.oidcDiscoveryUrl"></a>
+
+```typescript
+public readonly oidcDiscoveryUrl: string;
+```
+
+- *Type:* string
+
+URL to OIDC Discovery Endpoint.
+
+---
+
+##### `upstreamUrl`<sup>Required</sup> <a name="upstreamUrl" id="eoapi-cdk.StacAuthProxyLambdaRuntimeProps.property.upstreamUrl"></a>
+
+```typescript
+public readonly upstreamUrl: string;
+```
+
+- *Type:* string
+
+URL to upstream STAC API.
+
+---
+
+##### `apiEnv`<sup>Optional</sup> <a name="apiEnv" id="eoapi-cdk.StacAuthProxyLambdaRuntimeProps.property.apiEnv"></a>
+
+```typescript
+public readonly apiEnv: {[ key: string ]: string};
+```
+
+- *Type:* {[ key: string ]: string}
+
+Customized environment variables to send to stac-auth-proxy runtime.
+
+https://github.com/developmentseed/stac-auth-proxy/?tab=readme-ov-file#configuration
+
+---
+
+##### `lambdaFunctionOptions`<sup>Optional</sup> <a name="lambdaFunctionOptions" id="eoapi-cdk.StacAuthProxyLambdaRuntimeProps.property.lambdaFunctionOptions"></a>
+
+```typescript
+public readonly lambdaFunctionOptions: any;
+```
+
+- *Type:* any
+- *Default:* defined in the construct.
+
+Can be used to override the default lambda function properties.
+
+---
+
+##### `stacApiClientId`<sup>Optional</sup> <a name="stacApiClientId" id="eoapi-cdk.StacAuthProxyLambdaRuntimeProps.property.stacApiClientId"></a>
+
+```typescript
+public readonly stacApiClientId: string;
+```
+
+- *Type:* string
+
+OAuth Client ID for Swagger UI.
+
+---
+
+##### `subnetSelection`<sup>Optional</sup> <a name="subnetSelection" id="eoapi-cdk.StacAuthProxyLambdaRuntimeProps.property.subnetSelection"></a>
+
+```typescript
+public readonly subnetSelection: SubnetSelection;
+```
+
+- *Type:* aws-cdk-lib.aws_ec2.SubnetSelection
+
+Subnet into which the lambda should be deployed.
+
+---
+
+##### `vpc`<sup>Optional</sup> <a name="vpc" id="eoapi-cdk.StacAuthProxyLambdaRuntimeProps.property.vpc"></a>
+
+```typescript
+public readonly vpc: IVpc;
+```
+
+- *Type:* aws-cdk-lib.aws_ec2.IVpc
+
+VPC into which the lambda should be deployed.
 
 ---
 
