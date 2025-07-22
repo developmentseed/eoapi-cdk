@@ -1,3 +1,10 @@
+# [9.2.0](https://github.com/developmentseed/eoapi-cdk/compare/v9.1.1...v9.2.0) (2025-07-22)
+
+
+### Features
+
+* add stac-auth-proxy construct ([#171](https://github.com/developmentseed/eoapi-cdk/issues/171)) ([f36ebaa](https://github.com/developmentseed/eoapi-cdk/commit/f36ebaa93395d5d80b5db795f09746b17c0ed58b))
+
 ## [9.1.1](https://github.com/developmentseed/eoapi-cdk/compare/v9.1.0...v9.1.1) (2025-07-17)
 
 
