@@ -39,8 +39,8 @@ async def shutdown_event():
 
 
 handler = Mangum(
-    app, 
-    lifespan="off", 
+    app,
+    lifespan="off",
     text_mime_types=[
         # Avoid base64 encoding any text/* or application/* mime-types
         "text/",
