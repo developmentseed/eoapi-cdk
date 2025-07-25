@@ -38,7 +38,15 @@ async def shutdown_event():
     print("DB connection closed.")
 
 
-handler = Mangum(app, lifespan="off")
+handler = Mangum(
+    app, 
+    lifespan="off", 
+    text_mime_types=[
+        # Avoid base64 encoding any text/* or application/* mime-types
+        "text/",
+        "application/"
+    ],
+)
 
 
 if "AWS_EXECUTION_ENV" in os.environ:
