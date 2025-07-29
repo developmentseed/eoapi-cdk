@@ -44,7 +44,7 @@ handler = Mangum(
     text_mime_types=[
         # Avoid base64 encoding any text/* or application/* mime-types
         "text/",
-        "application/"
+        "application/",
     ],
 )
 
