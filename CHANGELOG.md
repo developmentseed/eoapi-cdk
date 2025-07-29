@@ -1,3 +1,10 @@
+## [9.2.1](https://github.com/developmentseed/eoapi-cdk/compare/v9.2.0...v9.2.1) (2025-07-29)
+
+
+### Bug Fixes
+
+* **stac-api:** avoid base64 encoding application/geo+json data ([#172](https://github.com/developmentseed/eoapi-cdk/issues/172)) ([51a1df0](https://github.com/developmentseed/eoapi-cdk/commit/51a1df03388b4d3715a58445126b7fd34bfefc13))
+
 # [9.2.0](https://github.com/developmentseed/eoapi-cdk/compare/v9.1.1...v9.2.0) (2025-07-22)
 
 
