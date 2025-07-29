@@ -76,7 +76,7 @@ def cancel_ingestion(
         raise HTTPException(
             status_code=400,
             detail=(
-                "Unable to delete ingestion if status is not " f"{schemas.Status.queued}"
+                f"Unable to delete ingestion if status is not {schemas.Status.queued}"
             ),
         )
     return ingestion.cancel(db)

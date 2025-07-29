@@ -95,9 +95,9 @@ def test_handler_with_valid_item(mock_aws_context, mock_pgstac_dsn, database_url
     assert result is None
 
     # Verify the item was added to the database
-    assert check_item_exists(
-        database_url, collection_id, item_id
-    ), "Item was not found in the database"
+    assert check_item_exists(database_url, collection_id, item_id), (
+        "Item was not found in the database"
+    )
 
 
 def test_handler_with_valid_items_multiple_collections(
@@ -135,9 +135,9 @@ def test_handler_with_valid_items_multiple_collections(
 
     # Verify all items were added to their respective collections
     for collection_id, item_id, _ in items:
-        assert check_item_exists(
-            database_url, collection_id, item_id
-        ), f"Item {item_id} was not found in collection {collection_id}"
+        assert check_item_exists(database_url, collection_id, item_id), (
+            f"Item {item_id} was not found in collection {collection_id}"
+        )
 
 
 def test_handler_with_invalid_item(mock_aws_context, mock_pgstac_dsn):
@@ -191,15 +191,15 @@ def test_handler_with_multiple_items(mock_aws_context, mock_pgstac_dsn, database
 
     # Verify all items were added
     for item_id in item_ids:
-        assert check_item_exists(
-            database_url, collection_id, item_id
-        ), f"Item {item_id} was not found in the database"
+        assert check_item_exists(database_url, collection_id, item_id), (
+            f"Item {item_id} was not found in the database"
+        )
 
     # Verify the count increased by the expected amount
     new_count = count_collection_items(database_url, collection_id)
-    assert new_count == initial_count + len(
-        items
-    ), f"Expected {initial_count + len(items)} items, but found {new_count}"
+    assert new_count == initial_count + len(items), (
+        f"Expected {initial_count + len(items)} items, but found {new_count}"
+    )
 
 
 def test_handler_with_mixed_items(mock_aws_context, mock_pgstac_dsn, database_url):
@@ -240,15 +240,15 @@ def test_handler_with_mixed_items(mock_aws_context, mock_pgstac_dsn, database_ur
     assert valid_message_id not in failures
 
     # Verify only the valid item was added
-    assert check_item_exists(
-        database_url, collection_id, valid_item_id
-    ), "Valid item was not found in the database"
+    assert check_item_exists(database_url, collection_id, valid_item_id), (
+        "Valid item was not found in the database"
+    )
 
     # Verify count increased by exactly 1
     new_count = count_collection_items(database_url, collection_id)
-    assert (
-        new_count == initial_count + 1
-    ), f"Expected {initial_count + 1} items, but found {new_count}"
+    assert new_count == initial_count + 1, (
+        f"Expected {initial_count + 1} items, but found {new_count}"
+    )
 
 
 def test_handler_with_empty_event(mock_aws_context, mock_pgstac_dsn):
@@ -406,9 +406,9 @@ def test_handler_upsert_existing_item(mock_aws_context, mock_pgstac_dsn, databas
     items = get_all_collection_items(database_url, collection_id)
     updated_db_item = next((item for item in items if item["id"] == item_id), None)
     assert updated_db_item is not None
-    assert (
-        updated_db_item["content"]["properties"]["version"] == "2.0"
-    ), "Item was not properly updated with new version"
+    assert updated_db_item["content"]["properties"]["version"] == "2.0", (
+        "Item was not properly updated with new version"
+    )
 
     # Count should remain the same (1 item was updated, not added)
     count = count_collection_items(database_url, collection_id)
@@ -480,9 +480,9 @@ def test_handler_with_s3_event(mock_aws_context, mock_pgstac_dsn, database_url):
         )
 
         # Verify the item was added to the database
-        assert check_item_exists(
-            database_url, collection_id, item_id
-        ), "Item from S3 was not found in the database"
+        assert check_item_exists(database_url, collection_id, item_id), (
+            "Item from S3 was not found in the database"
+        )
 
 
 def test_handler_with_s3_event_invalid_extension(mock_aws_context, mock_pgstac_dsn):
@@ -632,12 +632,12 @@ def test_handler_with_mixed_s3_and_sqs_events(
         assert result is None
 
         # Verify both items were added to the database
-        assert check_item_exists(
-            database_url, collection_id, sqs_item_id
-        ), "SQS item was not found in the database"
-        assert check_item_exists(
-            database_url, collection_id, s3_item_id
-        ), "S3 item was not found in the database"
+        assert check_item_exists(database_url, collection_id, sqs_item_id), (
+            "SQS item was not found in the database"
+        )
+        assert check_item_exists(database_url, collection_id, s3_item_id), (
+            "S3 item was not found in the database"
+        )
 
 
 def test_handler_with_s3_event_binary_content(mock_aws_context, mock_pgstac_dsn):
@@ -690,9 +690,9 @@ def test_handler_with_valid_collection(mock_aws_context, mock_pgstac_dsn, databa
     assert result is None
 
     # Verify the collection was added to the database
-    assert check_collection_exists(
-        database_url, collection_id
-    ), "Collection was not found in the database"
+    assert check_collection_exists(database_url, collection_id), (
+        "Collection was not found in the database"
+    )
 
 
 def test_handler_with_multiple_collections(
@@ -724,15 +724,15 @@ def test_handler_with_multiple_collections(
 
     # Verify all collections were added
     for collection_id in collection_ids:
-        assert check_collection_exists(
-            database_url, collection_id
-        ), f"Collection {collection_id} was not found in the database"
+        assert check_collection_exists(database_url, collection_id), (
+            f"Collection {collection_id} was not found in the database"
+        )
 
     # Verify the count increased by the expected amount
     new_count = count_collections(database_url)
-    assert new_count == initial_count + len(
-        collections
-    ), f"Expected {initial_count + len(collections)} collections, but found {new_count}"
+    assert new_count == initial_count + len(collections), (
+        f"Expected {initial_count + len(collections)} collections, but found {new_count}"
+    )
 
 
 def test_handler_with_invalid_collection(mock_aws_context, mock_pgstac_dsn):
@@ -790,14 +790,14 @@ def test_handler_with_mixed_collections_and_items(
     assert result is None
 
     # Verify the collection was added
-    assert check_collection_exists(
-        database_url, collection_id
-    ), "Collection was not found in the database"
+    assert check_collection_exists(database_url, collection_id), (
+        "Collection was not found in the database"
+    )
 
     # Verify the item was added
-    assert check_item_exists(
-        database_url, existing_collection_id, item_id
-    ), "Item was not found in the database"
+    assert check_item_exists(database_url, existing_collection_id, item_id), (
+        "Item was not found in the database"
+    )
 
     # Verify counts increased correctly
     new_collection_count = count_collections(database_url)
@@ -846,9 +846,9 @@ def test_handler_with_collection_from_s3(mock_aws_context, mock_pgstac_dsn, data
         )
 
         # Verify the collection was added to the database
-        assert check_collection_exists(
-            database_url, collection_id
-        ), "Collection from S3 was not found in the database"
+        assert check_collection_exists(database_url, collection_id), (
+            "Collection from S3 was not found in the database"
+        )
 
 
 def test_handler_upsert_existing_collection(
@@ -895,9 +895,9 @@ def test_handler_upsert_existing_collection(
     # Verify the collection was updated
     updated_db_collection = get_collection(database_url, collection_id)
     assert updated_db_collection is not None
-    assert (
-        updated_db_collection["content"]["title"] == "Updated Title"
-    ), "Collection was not properly updated with new title"
+    assert updated_db_collection["content"]["title"] == "Updated Title", (
+        "Collection was not properly updated with new title"
+    )
 
     # Count should remain the same (1 collection was updated, not added)
     # We can't easily check this without knowing the exact initial count
@@ -1007,15 +1007,15 @@ def test_handler_with_mixed_valid_invalid_collections(
     assert valid_message_id not in failures
 
     # Verify only the valid collection was added
-    assert check_collection_exists(
-        database_url, valid_collection_id
-    ), "Valid collection was not found in the database"
+    assert check_collection_exists(database_url, valid_collection_id), (
+        "Valid collection was not found in the database"
+    )
 
     # Verify count increased by exactly 1
     new_count = count_collections(database_url)
-    assert (
-        new_count == initial_count + 1
-    ), f"Expected {initial_count + 1} collections, but found {new_count}"
+    assert new_count == initial_count + 1, (
+        f"Expected {initial_count + 1} collections, but found {new_count}"
+    )
 
 
 def test_handler_with_malformed_sns_message(mock_aws_context, mock_pgstac_dsn):
@@ -1181,9 +1181,9 @@ def test_handler_creates_missing_collection(
         )
         assert result == 1, "Collection should have been created"
 
-    assert check_item_exists(
-        database_url, missing_collection_id, item_id
-    ), "Item was not found in the database"
+    assert check_item_exists(database_url, missing_collection_id, item_id), (
+        "Item was not found in the database"
+    )
 
 
 def test_handler_does_not_create_collection_without_env_var(
@@ -1222,9 +1222,9 @@ def test_handler_does_not_create_collection_without_env_var(
         )
         assert result == 0, "Collection should not have been created"
 
-    assert not check_item_exists(
-        database_url, missing_collection_id, item_id
-    ), "Item should not have been added to the database"
+    assert not check_item_exists(database_url, missing_collection_id, item_id), (
+        "Item should not have been added to the database"
+    )
 
 
 @patch.dict(os.environ, {"CREATE_COLLECTIONS_IF_MISSING": "true"})
@@ -1254,13 +1254,13 @@ def test_handler_does_not_recreate_existing_collection(
         current_collection = db.query_one(
             f"SELECT * from collections where id = '{existing_collection_id}'"
         )
-        assert (
-            current_collection == original_collection
-        ), "Existing collection should not have been modified"
+        assert current_collection == original_collection, (
+            "Existing collection should not have been modified"
+        )
 
-    assert check_item_exists(
-        database_url, existing_collection_id, item_id
-    ), "Item was not found in the database"
+    assert check_item_exists(database_url, existing_collection_id, item_id), (
+        "Item was not found in the database"
+    )
 
 
 @patch.dict(os.environ, {"CREATE_COLLECTIONS_IF_MISSING": "true"})
@@ -1300,9 +1300,9 @@ def test_handler_creates_collection_with_multiple_items(
         assert result == 1, "Collection should have been created exactly once"
 
     for item_id in item_ids:
-        assert check_item_exists(
-            database_url, missing_collection_id, item_id
-        ), f"Item {item_id} was not found in the database"
+        assert check_item_exists(database_url, missing_collection_id, item_id), (
+            f"Item {item_id} was not found in the database"
+        )
 
 
 @patch.dict(os.environ, {"CREATE_COLLECTIONS_IF_MISSING": "true"})
@@ -1342,6 +1342,6 @@ def test_handler_collection_creation_failure(
         )
         assert result == 0, "Collection should not have been created due to failure"
 
-    assert not check_item_exists(
-        database_url, missing_collection_id, item_id
-    ), "Item should not have been added to the database"
+    assert not check_item_exists(database_url, missing_collection_id, item_id), (
+        "Item should not have been added to the database"
+    )
