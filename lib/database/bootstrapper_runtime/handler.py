@@ -80,7 +80,7 @@ def get_secret(secret_name):
 def create_db(cursor, db_name: str) -> None:
     """Create DB."""
     cursor.execute(
-        sql.SQL("SELECT 1 FROM pg_catalog.pg_database " "WHERE datname = %s"), [db_name]
+        sql.SQL("SELECT 1 FROM pg_catalog.pg_database WHERE datname = %s"), [db_name]
     )
     if cursor.fetchone():
         print(f"    database {db_name} exists, not creating DB")

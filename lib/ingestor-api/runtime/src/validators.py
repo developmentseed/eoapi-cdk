@@ -60,7 +60,7 @@ def collection_exists(collection_id: str) -> bool:
     from .config import settings
 
     url = "/".join(
-        f'{url.strip("/")}' for url in [settings.stac_url, "collections", collection_id]
+        f"{url.strip('/')}" for url in [settings.stac_url, "collections", collection_id]
     )
 
     if (response := requests.get(url)).ok:
