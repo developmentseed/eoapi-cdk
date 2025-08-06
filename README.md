@@ -2,6 +2,12 @@
 
 eoapi-cdk is a package of [AWS CDK constructs](https://docs.aws.amazon.com/prescriptive-guidance/latest/best-practices-cdk-typescript-iac/constructs-best-practices.html) designed to encapsulate eoAPI services and best practices as simple reusable components.
 
+> [!IMPORTANT]
+>
+> **We would :heart: to hear from you!**
+> Please [join the discussion](https://github.com/developmentseed/eoAPI/discussions/209) and let us know how you're using eoAPI! This helps us improve the project for you and others.
+> If you prefer to remain anonymous, you can email us at eoapi@developmentseed.org, and we'll be happy to post a summary on your behalf.
+
 
 For more background on the included services see [The Earth Observation API](https://eoapi.dev/)
 
@@ -55,5 +61,6 @@ _Warning_: If you rebase `main`, you must ensure that the commits referenced by 
 
 
 ## Tests
+
 
 Each pull request to `main` is added to a [merge queue](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/configuring-pull-request-merges/managing-a-merge-queue#triggering-merge-group-checks-with-github-actions) so that a "deployment test" workflow can run before the merge actually happens. If the deployment fails, the merge is cancelled. Here is [the definition of this workflow](https://github.com/developmentseed/eoapi-cdk/blob/main/.github/workflows/deploy.yaml) and the [tests definition](https://github.com/developmentseed/eoapi-cdk/blob/main/tests).
