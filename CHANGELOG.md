@@ -1,3 +1,15 @@
+# [10.0.0](https://github.com/developmentseed/eoapi-cdk/compare/v9.2.1...v10.0.0) (2025-08-08)
+
+
+### Features
+
+* **stac-api:** retry the stac-fastapi-pgstac version bump release ([#175](https://github.com/developmentseed/eoapi-cdk/issues/175)) ([151c6b8](https://github.com/developmentseed/eoapi-cdk/commit/151c6b8773a3cfdbc6811dd5400ae208b2539761))
+
+
+### BREAKING CHANGES
+
+* **stac-api:** pgstac envvar names changed
+
 ## [9.2.1](https://github.com/developmentseed/eoapi-cdk/compare/v9.2.0...v9.2.1) (2025-07-29)
 
 
