@@ -1,2 +1,2 @@
-stac-fastapi-pgstac[awslambda]>=5.0,<5.1
+stac-fastapi-pgstac[awslambda]>=6.0,<6.1
 starlette-cramjam>=0.4,<0.5
