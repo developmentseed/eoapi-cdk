@@ -1,17 +1,17 @@
 import {
+  CfnOutput,
+  Duration,
   aws_ec2 as ec2,
   aws_lambda as lambda,
-  aws_sqs as sqs,
-  aws_sns as sns,
-  aws_sns_subscriptions as snsSubscriptions,
   aws_lambda_event_sources as lambdaEventSources,
   aws_logs as logs,
-  Duration,
-  CfnOutput,
+  aws_sns as sns,
+  aws_sns_subscriptions as snsSubscriptions,
+  aws_sqs as sqs,
   Stack,
 } from "aws-cdk-lib";
-import { Construct } from "constructs";
 import { Platform } from "aws-cdk-lib/aws-ecr-assets";
+import { Construct } from "constructs";
 import * as path from "path";
 import { CustomLambdaFunctionProps } from "../utils";
 
@@ -39,7 +39,7 @@ export interface StactoolsItemGeneratorProps {
    * stactools packages. The runtime version should be compatible with the
    * packages you plan to use for STAC item generation.
    *
-   * @default lambda.Runtime.PYTHON_3_11
+   * @default lambda.Runtime.PYTHON_3_12
    */
   readonly lambdaRuntime?: lambda.Runtime;
 
@@ -288,7 +288,7 @@ export class StactoolsItemGenerator extends Construct {
     super(scope, id);
 
     const timeoutSeconds = props.lambdaTimeoutSeconds ?? 120;
-    const lambdaRuntime = props.lambdaRuntime ?? lambda.Runtime.PYTHON_3_11;
+    const lambdaRuntime = props.lambdaRuntime ?? lambda.Runtime.PYTHON_3_12;
 
     // Create dead letter queue
     this.deadLetterQueue = new sqs.Queue(this, "DeadLetterQueue", {

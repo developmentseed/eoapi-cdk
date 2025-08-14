@@ -1,15 +1,15 @@
 import {
   aws_apigateway as apigateway,
+  aws_logs,
+  Duration,
   aws_dynamodb as dynamodb,
   aws_ec2 as ec2,
+  aws_lambda_event_sources as events,
   aws_iam as iam,
   aws_lambda as lambda,
-  aws_logs,
-  aws_lambda_event_sources as events,
+  RemovalPolicy,
   aws_secretsmanager as secretsmanager,
   aws_ssm as ssm,
-  Duration,
-  RemovalPolicy,
   Stack,
 } from "aws-cdk-lib";
 import { Construct } from "constructs";
@@ -118,7 +118,7 @@ export class StacIngestor extends Construct {
   }): lambda.Function {
     const handler = new lambda.Function(this, "api-handler", {
       // defaults
-      runtime: lambda.Runtime.PYTHON_3_11,
+      runtime: lambda.Runtime.PYTHON_3_12,
       handler: "src.handler.handler",
       memorySize: 2048,
       logRetention: aws_logs.RetentionDays.ONE_WEEK,
@@ -126,7 +126,7 @@ export class StacIngestor extends Construct {
       code: lambda.Code.fromDockerBuild(__dirname, {
         file: "runtime/Dockerfile",
         buildArgs: {
-          PYTHON_VERSION: "3.11",
+          PYTHON_VERSION: "3.12",
           PGSTAC_VERSION: props.pgstacVersion || DEFAULT_PGSTAC_VERSION,
         },
       }),
@@ -169,7 +169,7 @@ export class StacIngestor extends Construct {
   }): lambda.Function {
     const handler = new lambda.Function(this, "stac-ingestor", {
       // defaults
-      runtime: lambda.Runtime.PYTHON_3_11,
+      runtime: lambda.Runtime.PYTHON_3_12,
       handler: "src.ingestor.handler",
       memorySize: 2048,
       logRetention: aws_logs.RetentionDays.ONE_WEEK,
@@ -177,7 +177,7 @@ export class StacIngestor extends Construct {
       code: lambda.Code.fromDockerBuild(__dirname, {
         file: "runtime/Dockerfile",
         buildArgs: {
-          PYTHON_VERSION: "3.11",
+          PYTHON_VERSION: "3.12",
           PGSTAC_VERSION: props.pgstacVersion || DEFAULT_PGSTAC_VERSION,
         },
       }),

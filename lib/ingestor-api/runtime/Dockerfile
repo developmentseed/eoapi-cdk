@@ -4,7 +4,7 @@ FROM --platform=linux/amd64 public.ecr.aws/lambda/python:${PYTHON_VERSION}
 
 WORKDIR /tmp
 
-RUN yum install -y git
+RUN dnf install -y git
 
 RUN python -m pip install pip -U
 
