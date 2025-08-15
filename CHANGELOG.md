@@ -1,3 +1,10 @@
+# [10.1.0](https://github.com/developmentseed/eoapi-cdk/compare/v10.0.0...v10.1.0) (2025-08-15)
+
+
+### Features
+
+* **python:** bump to 3.12 ([#178](https://github.com/developmentseed/eoapi-cdk/issues/178)) ([2a62011](https://github.com/developmentseed/eoapi-cdk/commit/2a62011a99bbef92ceb125496c7405e3516caed8))
+
 # [10.0.0](https://github.com/developmentseed/eoapi-cdk/compare/v9.2.1...v10.0.0) (2025-08-08)
 
 
