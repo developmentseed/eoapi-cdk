@@ -5218,7 +5218,7 @@ public readonly lambdaRuntime: Runtime;
 ```
 
 - *Type:* aws-cdk-lib.aws_lambda.Runtime
-- *Default:* lambda.Runtime.PYTHON_3_11
+- *Default:* lambda.Runtime.PYTHON_3_12
 
 The lambda runtime to use for the item loading function.
 
@@ -5464,7 +5464,7 @@ public readonly lambdaRuntime: Runtime;
 ```
 
 - *Type:* aws-cdk-lib.aws_lambda.Runtime
-- *Default:* lambda.Runtime.PYTHON_3_11
+- *Default:* lambda.Runtime.PYTHON_3_12
 
 The lambda runtime to use for the item loading function.
 
@@ -5685,7 +5685,7 @@ public readonly lambdaRuntime: Runtime;
 ```
 
 - *Type:* aws-cdk-lib.aws_lambda.Runtime
-- *Default:* lambda.Runtime.PYTHON_3_11
+- *Default:* lambda.Runtime.PYTHON_3_12
 
 The lambda runtime to use for the item generation function.
 
