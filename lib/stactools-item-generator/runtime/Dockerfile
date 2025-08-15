@@ -1,4 +1,4 @@
-ARG PYTHON_VERSION=3.11
+ARG PYTHON_VERSION=3.12
 FROM public.ecr.aws/lambda/python:${PYTHON_VERSION}
 COPY --from=ghcr.io/astral-sh/uv:0.7.8 /uv /uvx /bin/
 
@@ -13,7 +13,7 @@ WORKDIR ${LAMBDA_TASK_ROOT}
 COPY stactools-item-generator/runtime/pyproject.toml pyproject.toml
 COPY stactools-item-generator/runtime/src/stactools_item_generator/ ${LAMBDA_TASK_ROOT}/stactools_item_generator/
 
-RUN yum install -y git && yum clean all && rm -rf /var/cache/yum && \
+RUN dnf install -y git && dnf clean all && rm -rf /var/cache/dnf && \
   uv export --no-dev --no-editable -o requirements.txt && \
   uv pip install --target ${LAMBDA_TASK_ROOT} -r requirements.txt && \
   uv tool install --with "numpy<2.3.0",requests stactools;

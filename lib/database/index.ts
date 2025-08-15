@@ -1,13 +1,13 @@
 import {
-  Stack,
-  aws_rds as rds,
-  aws_ec2 as ec2,
-  aws_secretsmanager as secretsmanager,
-  aws_lambda,
   CustomResource,
-  RemovalPolicy,
   Duration,
+  RemovalPolicy,
+  Stack,
+  aws_lambda,
   aws_logs,
+  aws_ec2 as ec2,
+  aws_rds as rds,
+  aws_secretsmanager as secretsmanager,
 } from "aws-cdk-lib";
 import { Construct } from "constructs";
 import { CustomLambdaFunctionProps, DEFAULT_PGSTAC_VERSION } from "../utils";
@@ -74,7 +74,7 @@ export class PgStacDatabase extends Construct {
 
     const handler = new aws_lambda.Function(this, "lambda", {
       // defaults
-      runtime: aws_lambda.Runtime.PYTHON_3_11,
+      runtime: aws_lambda.Runtime.PYTHON_3_12,
       handler: "handler.handler",
       memorySize: 128,
       logRetention: aws_logs.RetentionDays.ONE_WEEK,
@@ -82,7 +82,7 @@ export class PgStacDatabase extends Construct {
       code: aws_lambda.Code.fromDockerBuild(__dirname, {
         file: "bootstrapper_runtime/Dockerfile",
         buildArgs: {
-          PYTHON_VERSION: "3.11",
+          PYTHON_VERSION: "3.12",
           PGSTAC_VERSION: this.pgstacVersion,
         },
       }),

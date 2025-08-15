@@ -1,11 +1,8 @@
 [project]
 name = "eoapi-cdk"
 version = "0.0"
-requires-python = ">=3.11"
-dependencies = [
-  "stactools-item-generator",
-  "stac-loader",
-]
+requires-python = ">=3.12"
+dependencies = ["stactools-item-generator", "stac-loader"]
 
 [tool.uv.sources]
 stactools-item-generator = { workspace = true }

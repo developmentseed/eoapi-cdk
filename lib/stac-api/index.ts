@@ -1,18 +1,18 @@
 import {
   aws_apigatewayv2 as apigatewayv2,
-  aws_ec2 as ec2,
-  aws_rds as rds,
-  aws_lambda as lambda,
-  aws_secretsmanager as secretsmanager,
-  Duration,
   aws_logs,
   CfnOutput,
+  Duration,
+  aws_ec2 as ec2,
+  aws_lambda as lambda,
+  aws_rds as rds,
+  aws_secretsmanager as secretsmanager,
   Stack,
 } from "aws-cdk-lib";
 import { Construct } from "constructs";
-import { CustomLambdaFunctionProps } from "../utils";
-import { LambdaApiGateway } from "../lambda-api-gateway";
 import * as path from "path";
+import { LambdaApiGateway } from "../lambda-api-gateway";
+import { CustomLambdaFunctionProps } from "../utils";
 
 export const EXTENSIONS = {
   QUERY: "query",
@@ -71,14 +71,14 @@ export class PgStacApiLambdaRuntime extends Construct {
 
     this.lambdaFunction = new lambda.Function(this, "lambda", {
       // defaults
-      runtime: lambda.Runtime.PYTHON_3_11,
+      runtime: lambda.Runtime.PYTHON_3_12,
       handler: "handler.handler",
       memorySize: 8192,
       logRetention: aws_logs.RetentionDays.ONE_WEEK,
       timeout: Duration.seconds(30),
       code: lambda.Code.fromDockerBuild(path.join(__dirname, ".."), {
         file: "stac-api/runtime/Dockerfile",
-        buildArgs: { PYTHON_VERSION: "3.11" },
+        buildArgs: { PYTHON_VERSION: "3.12" },
       }),
       vpc: props.vpc,
       vpcSubnets: props.subnetSelection,

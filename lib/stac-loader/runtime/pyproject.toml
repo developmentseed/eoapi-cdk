@@ -2,15 +2,9 @@
 name = "stac-loader"
 version = "0.1.0"
 description = "An application for loading STAC collections and items into a pgstac database"
-authors = [
-    { name = "hrodmn", email = "henry@developmentseed.org" }
-]
-requires-python = ">=3.11"
-dependencies = [
-    "boto3",
-    "pypgstac[psycopg]",
-    "stac-pydantic>=3.2.0",
-]
+authors = [{ name = "hrodmn", email = "henry@developmentseed.org" }]
+requires-python = ">=3.12"
+dependencies = ["boto3", "pypgstac[psycopg]", "stac-pydantic>=3.2.0"]
 
 [build-system]
 requires = ["hatchling"]
