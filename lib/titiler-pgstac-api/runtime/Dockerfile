@@ -10,6 +10,10 @@ RUN dnf install -y gcc-c++ findutils
 COPY titiler-pgstac-api/runtime/requirements.txt requirements.txt
 RUN python -m pip install -r requirements.txt "mangum>=0.14,<0.15" -t /asset
 
+# copy libexpat.so.1 into a location included in LD_LIBRARY_PATH in the Lambda runtime environment
+# (/usr/lib64 is not available in the Lambda runtime, just the build environment)
+RUN cp /usr/lib64/libexpat.so.1 /asset/
+
 # Remove system dependencies
 RUN dnf remove -y gcc-c++
 
