@@ -1,3 +1,10 @@
+## [10.1.1](https://github.com/developmentseed/eoapi-cdk/compare/v10.1.0...v10.1.1) (2025-08-21)
+
+
+### Bug Fixes
+
+* include libexpat.so.1 in the titiler code package ([#182](https://github.com/developmentseed/eoapi-cdk/issues/182)) ([b461ec0](https://github.com/developmentseed/eoapi-cdk/commit/b461ec0dfa57e9ef6316e17ca8e79cd1cbc58459))
+
 # [10.1.0](https://github.com/developmentseed/eoapi-cdk/compare/v10.0.0...v10.1.0) (2025-08-15)
 
 
