@@ -65,6 +65,110 @@ jobs:
           uv run npx cdk deploy --ci --all --require-approval never
           cd -
 
+      - name: Get stack outputs and run operational checks
+        id: operational_checks
+        env:
+          PROJECT_ID: ${{ steps.short-sha.outputs.sha }}
+        run: |
+          cd integration_tests/cdk
+
+          echo "=== Retrieving Stack Outputs ==="
+
+          # Get list of deployed stacks
+          DEPLOYED_STACKS=$(uv run npx cdk list)
+          echo "Deployed stacks: $DEPLOYED_STACKS"
+
+          # Create outputs file
+          echo "{}" > stack_outputs.json
+
+          # Get outputs from each stack
+          for STACK_NAME in $DEPLOYED_STACKS; do
+            echo "Processing stack: $STACK_NAME"
+
+            # Try to get outputs using AWS CLI
+            STACK_OUTPUTS=$(aws cloudformation describe-stacks \
+              --stack-name "$STACK_NAME" \
+              --query 'Stacks[0].Outputs' \
+              --output json 2>/dev/null || echo "[]")
+
+            if [ "$STACK_OUTPUTS" != "[]" ] && [ "$STACK_OUTPUTS" != "null" ]; then
+              echo "Found outputs for $STACK_NAME:"
+              echo "$STACK_OUTPUTS" | jq .
+
+              # Convert to key-value format and merge with existing outputs
+              TEMP_OUTPUTS=$(echo "$STACK_OUTPUTS" | jq -r 'if . then [.[] | select(.OutputKey and .OutputValue) | {(.OutputKey): .OutputValue}] | add // {} else {} end')
+              echo "$TEMP_OUTPUTS" > temp_stack_outputs.json
+
+              # Merge with existing outputs
+              jq -s '.[0] * .[1]' stack_outputs.json temp_stack_outputs.json > merged.json
+              mv merged.json stack_outputs.json
+            else
+              echo "No outputs found for $STACK_NAME"
+            fi
+          done
+
+          echo "=== Final Combined Outputs ==="
+          cat stack_outputs.json | jq .
+
+          echo "=== Running Operational Checks ==="
+
+          echo "Available CloudFormation output keys:"
+          cat stack_outputs.json | jq -r 'keys[]'
+
+          STAC_API_URL=$(cat stack_outputs.json | jq -r '
+            to_entries[] |
+            select(.key | test("pgstacapistacapioutput"; "i")) |
+            .value' | head -1)
+
+          TITILER_PGSTAC_API_URL=$(cat stack_outputs.json | jq -r '
+            to_entries[] |
+            select(.key | test("titilerpgstacapioutput"; "i")) |
+            .value' | head -1)
+
+          TIPG_API_URL=$(cat stack_outputs.json | jq -r '
+            to_entries[] |
+            select(.key | test("tipgapioutput"; "i")) |
+            .value' | head -1)
+
+          echo "Extracted URLs:"
+          echo "STAC_API_URL: $STAC_API_URL"
+          echo "TITILER_PGSTAC_API_URL: $TITILER_PGSTAC_API_URL"
+          echo "TIPG_API_URL: $TIPG_API_URL"
+
+          # Array of API URLs to check
+          declare -a API_HEALTH_ENDPOINTS=(
+            "STAC_API_URL:${STAC_API_URL}_mgmt/health"
+            "TITILER_PGSTAC_API_URL:${TITILER_PGSTAC_API_URL}healthz"
+            "TIPG_API_URL:${TIPG_API_URL}healthz"
+          )
+
+          # Check each API
+          echo "=== Sleeping for 5 minutes to ensure everything is running ==="
+          sleep 300
+
+          for API_INFO in "${API_HEALTH_ENDPOINTS[@]}"; do
+            API_NAME=$(echo "$API_INFO" | cut -d: -f1)
+            API_URL=$(echo "$API_INFO" | cut -d: -f2-)
+
+            if [ -n "$API_URL" ] && [ "$API_URL" != "null" ]; then
+              echo "Checking $API_NAME at: $API_URL"
+
+              HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" --max-time 30 "$API_URL" || echo "000")
+
+              if [ "$HTTP_STATUS" = "200" ]; then
+                echo "✅ $API_NAME returned 200"
+              else
+                echo "❌ $API_NAME returned $HTTP_STATUS"
+                exit 1
+              fi
+            else
+              echo "⚠️ $API_NAME URL not found in stack outputs"
+            fi
+          done
+
+          echo "=== Operational Checks Complete ==="
+          cd -
+
       - name: Tear down any infrastructure
         if: always()
         env:

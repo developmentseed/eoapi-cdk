@@ -12,3 +12,5 @@ tests/*.egg*
 tests/*venv*
 tests/__pycache__
 integration_tests/cdk/cdk.out
+integration_tests/cdk/stack_outputs.json
+integration_tests/cdk/temp_stack_outputs.json
