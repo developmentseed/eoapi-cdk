@@ -306,10 +306,6 @@ Unattended-Upgrade::Package-Blacklist {
 Unattended-Upgrade::Automatic-Reboot "true";
 Unattended-Upgrade::Automatic-Reboot-Time "02:00";
 
-// Send email on errors (configure your email if needed)
-//Unattended-Upgrade::Mail "your-email@domain.com";
-Unattended-Upgrade::MailReport "on-change";
-
 // Remove unused automatically installed kernel-related packages
 Unattended-Upgrade::Remove-Unused-Kernel-Packages "true";
 
