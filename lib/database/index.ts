@@ -27,9 +27,47 @@ function hasVpc(
 }
 
 /**
- * An RDS instance with pgSTAC installed. This is a wrapper around the
- * `rds.DatabaseInstance` higher-level construct making use
- * of the BootstrapPgStac construct.
+ * An RDS instance with pgSTAC installed and PgBouncer connection pooling.
+ *
+ * This construct creates an optimized pgSTAC database setup that includes:
+ * - RDS PostgreSQL instance with pgSTAC extension
+ * - PgBouncer connection pooler (enabled by default)
+ * - Automated health monitoring system
+ * - Optimized database parameters for the selected instance type
+ *
+ * ## Connection Pooling with PgBouncer
+ *
+ * By default, this construct deploys PgBouncer as a connection pooler running on
+ * a dedicated EC2 instance. PgBouncer provides several benefits:
+ *
+ * - **Connection Management**: Pools and reuses database connections to reduce overhead
+ * - **Performance**: Optimizes connection handling for high-traffic applications
+ * - **Scalability**: Allows more concurrent connections than the RDS instance alone
+ * - **Health Monitoring**: Includes comprehensive health checks to ensure availability
+ *
+ * ### PgBouncer Configuration
+ * - Pool mode: Transaction-level pooling (default)
+ * - Maximum client connections: 1000
+ * - Default pool size: 20 connections per database/user combination
+ * - Instance type: t3.micro EC2 instance
+ *
+ * ### Health Check System
+ * The construct includes an automated health check system that validates:
+ * - PgBouncer service is running and listening on port 5432
+ * - Connection tests to ensure accessibility
+ * - Cloud-init setup completion before validation
+ * - Detailed diagnostics for troubleshooting
+ *
+ * ### Connection Details
+ * When PgBouncer is enabled, applications connect through the PgBouncer instance
+ * rather than directly to RDS. The `pgstacSecret` contains connection information
+ * pointing to PgBouncer, and the `connectionTarget` property refers to the
+ * PgBouncer EC2 instance.
+ *
+ * To disable PgBouncer and connect directly to RDS, set `addPgbouncer: false`.
+ *
+ * This is a wrapper around the `rds.DatabaseInstance` higher-level construct
+ * making use of the BootstrapPgStac construct.
  */
 export class PgStacDatabase extends Construct {
   db: rds.DatabaseInstance;
@@ -40,6 +78,7 @@ export class PgStacDatabase extends Construct {
   public readonly connectionTarget: rds.IDatabaseInstance | ec2.Instance;
   public readonly securityGroup?: ec2.SecurityGroup;
   public readonly secretBootstrapper?: CustomResource;
+  public readonly pgbouncerHealthCheck?: CustomResource;
 
   constructor(scope: Construct, id: string, props: PgStacDatabaseProps) {
     super(scope, id);
@@ -186,6 +225,7 @@ export class PgStacDatabase extends Construct {
       this.connectionTarget = this._pgBouncerServer.instance;
       this.securityGroup = this._pgBouncerServer.securityGroup;
       this.secretBootstrapper = this._pgBouncerServer.secretUpdateComplete;
+      this.pgbouncerHealthCheck = this._pgBouncerServer.healthCheck;
     } else {
       this.connectionTarget = this.db;
     }

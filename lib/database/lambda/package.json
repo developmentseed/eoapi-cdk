@@ -2,7 +2,8 @@
   "name": "pgbouncer-secret-updater",
   "version": "1.0.0",
   "dependencies": {
-    "@aws-sdk/client-secrets-manager": "^3.0.0"
+    "@aws-sdk/client-secrets-manager": "^3.0.0",
+    "@aws-sdk/client-ssm": "^3.0.0"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.0",

@@ -4,6 +4,7 @@ import {
   aws_lambda as lambda,
   aws_secretsmanager as secretsmanager,
   CustomResource,
+  Duration,
   Stack,
 } from "aws-cdk-lib";
 import { Construct } from "constructs";
@@ -66,6 +67,7 @@ export class PgBouncer extends Construct {
   public readonly pgbouncerSecret: secretsmanager.Secret;
   public readonly securityGroup: ec2.SecurityGroup;
   public readonly secretUpdateComplete: CustomResource;
+  public readonly healthCheck: CustomResource;
 
   // The max_connections parameter in PgBouncer determines the maximum number of
   // connections to open on the actual database instance. We want that number to
@@ -220,6 +222,47 @@ export class PgBouncer extends Construct {
         },
       }
     );
+
+    // Add health check custom resource
+    const healthCheckFunction = new lambda.Function(
+      this,
+      "HealthCheckFunction",
+      {
+        runtime: lambda.Runtime.NODEJS_20_X,
+        handler: "index.handler",
+        timeout: Duration.minutes(10),
+        code: lambda.Code.fromAsset(
+          path.join(__dirname, "lambda/pgbouncer-health-check")
+        ),
+        description: "PgBouncer health check function",
+      }
+    );
+
+    // Grant SSM permissions for health check
+    healthCheckFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        actions: [
+          "ssm:SendCommand",
+          "ssm:GetCommandInvocation",
+          "ssm:DescribeInstanceInformation",
+          "ssm:ListCommandInvocations",
+        ],
+        resources: ["*"],
+      })
+    );
+
+    this.healthCheck = new CustomResource(this, "PgBouncerHealthCheck", {
+      serviceToken: healthCheckFunction.functionArn,
+      properties: {
+        InstanceId: this.instance.instanceId,
+        // Add timestamp to force re-execution on stack updates
+        Timestamp: new Date().toISOString(),
+      },
+    });
+
+    // Ensure health check runs after instance is created but before secret update
+    this.healthCheck.node.addDependency(this.instance);
+    this.secretUpdateComplete.node.addDependency(this.healthCheck);
   }
 
   private loadUserDataScript(
