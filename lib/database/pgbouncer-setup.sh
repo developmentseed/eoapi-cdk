@@ -14,26 +14,46 @@ MAX_DB_CONNECTIONS=${MAX_DB_CONNECTIONS}
 MAX_USER_CONNECTIONS=${MAX_USER_CONNECTIONS}
 CLOUDWATCH_CONFIG="/opt/aws/amazon-cloudwatch-agent/bin/config.json"
 
-# Add the postgres repository
-curl https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
-sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
-
-# Install required packages
-
-# Function that makes sure we don't hit a dpkg lock error
 wait_for_dpkg_lock() {
-  while fuser /var/lib/dpkg/lock-frontend /var/lib/dpkg/lock >/dev/null 2>&1; do
-    echo "Waiting for dpkg lock to be released..."
-    sleep 2
-  done
+    local max_wait=300
+    local elapsed=0
+
+    while [ $elapsed -lt $max_wait ]; do
+        if ! fuser /var/lib/dpkg/lock-frontend /var/lib/dpkg/lock 2>/dev/null; then
+            echo "dpkg locks are free, proceeding..."
+            return 0
+        fi
+
+        echo "Waiting for dpkg locks... (${elapsed}s elapsed)"
+        fuser -v /var/lib/dpkg/lock-frontend /var/lib/dpkg/lock 2>/dev/null || true
+
+        sleep 5
+        elapsed=$((elapsed + 5))
+    done
+
+    echo "ERROR: Timeout waiting for dpkg locks after ${max_wait} seconds"
+    return 1
 }
 
-wait_for_dpkg_lock
+if systemctl is-active --quiet unattended-upgrades 2>/dev/null; then
+    echo "Stopping unattended-upgrades service temporarily..."
+    systemctl stop unattended-upgrades
+fi
+
 export DEBIAN_FRONTEND=noninteractive
 
+curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor -o /etc/apt/trusted.gpg.d/postgresql.gpg
+echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list
+
+wait_for_dpkg_lock
 apt-get update
+
+wait_for_dpkg_lock
 apt-get upgrade -y
+
+wait_for_dpkg_lock
 apt-get install -y pgbouncer jq
+
 snap install aws-cli --classic
 
 echo "Fetching secret from ARN: ${SECRET_ARN}"
@@ -112,7 +132,6 @@ chmod 640 /var/log/pgbouncer/pgbouncer.log
 systemctl enable pgbouncer
 systemctl restart pgbouncer
 
-
 cat <<EOC > /etc/logrotate.d/pgbouncer
 /var/log/pgbouncer/pgbouncer.log {
     daily
@@ -172,6 +191,7 @@ if ! wget -q https://s3.amazonaws.com/amazoncloudwatch-agent/ubuntu/amd64/latest
   exit 1
 fi
 
+wait_for_dpkg_lock
 if ! dpkg -i amazon-cloudwatch-agent.deb; then
   echo 'Failed to install CloudWatch agent' | logger -t pgbouncer-setup
   exit 1
@@ -259,3 +279,102 @@ if ! systemctl is-active amazon-cloudwatch-agent; then
   echo 'CloudWatch agent failed to start' | logger -t pgbouncer-setup
   exit 1
 fi
+
+# Configure unattended-upgrades for security updates on this long-lived instance
+echo "Configuring unattended-upgrades for security updates..."
+
+# Create optimized unattended-upgrades configuration
+cat > /etc/apt/apt.conf.d/50unattended-upgrades << 'EOF'
+// Automatically upgrade packages from these origins
+Unattended-Upgrade::Allowed-Origins {
+    "${distro_id}:${distro_codename}-security";
+    "${distro_id}ESMApps:${distro_codename}-apps-security";
+    "${distro_id}ESM:${distro_codename}-infra-security";
+    // Add PostgreSQL security updates
+    "apt.postgresql.org:${distro_codename}-pgdg main";
+};
+
+// Do not automatically upgrade these packages - keep manual control
+Unattended-Upgrade::Package-Blacklist {
+    "pgbouncer";
+    "postgresql*";
+    "libpq*";
+};
+
+// Automatically reboot if required after security updates
+// Only during maintenance window
+Unattended-Upgrade::Automatic-Reboot "true";
+Unattended-Upgrade::Automatic-Reboot-Time "02:00";
+
+// Send email on errors (configure your email if needed)
+//Unattended-Upgrade::Mail "your-email@domain.com";
+Unattended-Upgrade::MailReport "on-change";
+
+// Remove unused automatically installed kernel-related packages
+Unattended-Upgrade::Remove-Unused-Kernel-Packages "true";
+
+// Remove unused dependencies
+Unattended-Upgrade::Remove-Unused-Dependencies "true";
+
+// Automatically remove new unused dependencies after the upgrade
+Unattended-Upgrade::Remove-New-Unused-Dependencies "true";
+
+// Split the upgrade into the smallest possible chunks
+Unattended-Upgrade::MinimalSteps "true";
+
+// Install updates in the background
+Unattended-Upgrade::InstallOnShutdown "false";
+EOF
+
+# Configure automatic update schedule
+cat > /etc/apt/apt.conf.d/20auto-upgrades << 'EOF'
+// Enable automatic updates
+APT::Periodic::Update-Package-Lists "1";
+APT::Periodic::Unattended-Upgrade "1";
+
+// Download upgradeable packages
+APT::Periodic::Download-Upgradeable-Packages "1";
+
+// Clean local download archive
+APT::Periodic::AutocleanInterval "7";
+
+// Verbose logging for debugging
+APT::Periodic::Verbose "2";
+EOF
+
+# Configure systemd timer for predictable timing
+mkdir -p /etc/systemd/system/apt-daily.timer.d/
+mkdir -p /etc/systemd/system/apt-daily-upgrade.timer.d/
+
+cat > /etc/systemd/system/apt-daily.timer.d/override.conf << 'EOF'
+[Timer]
+# Run at 1 AM daily instead of random times
+OnCalendar=
+OnCalendar=01:00
+RandomizedDelaySec=0
+EOF
+
+cat > /etc/systemd/system/apt-daily-upgrade.timer.d/override.conf << 'EOF'
+[Timer]
+# Run upgrades at 1:30 AM, after the update check
+OnCalendar=
+OnCalendar=01:30
+RandomizedDelaySec=0
+EOF
+
+# Reload systemd and re-enable unattended-upgrades
+systemctl daemon-reload
+systemctl enable unattended-upgrades
+systemctl start unattended-upgrades
+
+# Enable and configure the timers
+systemctl enable apt-daily.timer
+systemctl enable apt-daily-upgrade.timer
+
+echo "Setup complete!"
+echo "- PgBouncer: configured and running"
+echo "- CloudWatch: monitoring enabled"
+echo "- Security updates: enabled (daily at 1:00-1:30 AM)"
+echo "- Auto-reboot: enabled at 2:00 AM if required"
+echo "- PgBouncer packages: protected from auto-updates"
+echo "- Health monitoring: running every minute via cron"
