@@ -1,3 +1,10 @@
+## [10.2.2](https://github.com/developmentseed/eoapi-cdk/compare/v10.2.1...v10.2.2) (2025-09-15)
+
+
+### Bug Fixes
+
+* fix upload path for npmjs ([#185](https://github.com/developmentseed/eoapi-cdk/issues/185)) ([f6d59b8](https://github.com/developmentseed/eoapi-cdk/commit/f6d59b81138c1bf7e5ecbc0c75b90629ce8062c5))
+
 ## [10.2.1](https://github.com/developmentseed/eoapi-cdk/compare/v10.2.0...v10.2.1) (2025-09-15)
 
 
