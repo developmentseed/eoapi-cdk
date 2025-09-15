@@ -1,3 +1,10 @@
+## [10.2.1](https://github.com/developmentseed/eoapi-cdk/compare/v10.2.0...v10.2.1) (2025-09-15)
+
+
+### Bug Fixes
+
+* add token permissions for OIDC publishing ([#184](https://github.com/developmentseed/eoapi-cdk/issues/184)) ([6641cfa](https://github.com/developmentseed/eoapi-cdk/commit/6641cfab582725625057ebc3292750d3a65d37d3))
+
 # [10.2.0](https://github.com/developmentseed/eoapi-cdk/compare/v10.1.1...v10.2.0) (2025-09-15)
 
 
