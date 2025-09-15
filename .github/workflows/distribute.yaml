@@ -42,4 +42,4 @@ jobs:
           node-version: 20
           registry-url: "https://registry.npmjs.org"
 
-      - run: npm publish dist/ --provenance --access public
+      - run: npm publish dist/* --provenance --access public
