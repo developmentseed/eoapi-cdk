@@ -606,11 +606,47 @@ public readonly lambdaFunction: Function;
 
 ### PgStacDatabase <a name="PgStacDatabase" id="eoapi-cdk.PgStacDatabase"></a>
 
-An RDS instance with pgSTAC installed.
+An RDS instance with pgSTAC installed and PgBouncer connection pooling.
 
-This is a wrapper around the
-`rds.DatabaseInstance` higher-level construct making use
-of the BootstrapPgStac construct.
+This construct creates an optimized pgSTAC database setup that includes:
+- RDS PostgreSQL instance with pgSTAC extension
+- PgBouncer connection pooler (enabled by default)
+- Automated health monitoring system
+- Optimized database parameters for the selected instance type
+
+## Connection Pooling with PgBouncer
+
+By default, this construct deploys PgBouncer as a connection pooler running on
+a dedicated EC2 instance. PgBouncer provides several benefits:
+
+- **Connection Management**: Pools and reuses database connections to reduce overhead
+- **Performance**: Optimizes connection handling for high-traffic applications
+- **Scalability**: Allows more concurrent connections than the RDS instance alone
+- **Health Monitoring**: Includes comprehensive health checks to ensure availability
+
+### PgBouncer Configuration
+- Pool mode: Transaction-level pooling (default)
+- Maximum client connections: 1000
+- Default pool size: 20 connections per database/user combination
+- Instance type: t3.micro EC2 instance
+
+### Health Check System
+The construct includes an automated health check system that validates:
+- PgBouncer service is running and listening on port 5432
+- Connection tests to ensure accessibility
+- Cloud-init setup completion before validation
+- Detailed diagnostics for troubleshooting
+
+### Connection Details
+When PgBouncer is enabled, applications connect through the PgBouncer instance
+rather than directly to RDS. The `pgstacSecret` contains connection information
+pointing to PgBouncer, and the `connectionTarget` property refers to the
+PgBouncer EC2 instance.
+
+To disable PgBouncer and connect directly to RDS, set `addPgbouncer: false`.
+
+This is a wrapper around the `rds.DatabaseInstance` higher-level construct
+making use of the BootstrapPgStac construct.
 
 #### Initializers <a name="Initializers" id="eoapi-cdk.PgStacDatabase.Initializer"></a>
 
@@ -728,6 +764,7 @@ Any object.
 | <code><a href="#eoapi-cdk.PgStacDatabase.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
 | <code><a href="#eoapi-cdk.PgStacDatabase.property.connectionTarget">connectionTarget</a></code> | <code>aws-cdk-lib.aws_ec2.Instance \| aws-cdk-lib.aws_rds.IDatabaseInstance</code> | *No description.* |
 | <code><a href="#eoapi-cdk.PgStacDatabase.property.pgstacVersion">pgstacVersion</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#eoapi-cdk.PgStacDatabase.property.pgbouncerHealthCheck">pgbouncerHealthCheck</a></code> | <code>aws-cdk-lib.CustomResource</code> | *No description.* |
 | <code><a href="#eoapi-cdk.PgStacDatabase.property.secretBootstrapper">secretBootstrapper</a></code> | <code>aws-cdk-lib.CustomResource</code> | *No description.* |
 | <code><a href="#eoapi-cdk.PgStacDatabase.property.securityGroup">securityGroup</a></code> | <code>aws-cdk-lib.aws_ec2.SecurityGroup</code> | *No description.* |
 | <code><a href="#eoapi-cdk.PgStacDatabase.property.db">db</a></code> | <code>aws-cdk-lib.aws_rds.DatabaseInstance</code> | *No description.* |
@@ -764,6 +801,16 @@ public readonly pgstacVersion: string;
 ```
 
 - *Type:* string
+
+---
+
+##### `pgbouncerHealthCheck`<sup>Optional</sup> <a name="pgbouncerHealthCheck" id="eoapi-cdk.PgStacDatabase.property.pgbouncerHealthCheck"></a>
+
+```typescript
+public readonly pgbouncerHealthCheck: CustomResource;
+```
+
+- *Type:* aws-cdk-lib.CustomResource
 
 ---
 
