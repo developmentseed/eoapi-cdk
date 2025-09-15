@@ -1,3 +1,10 @@
+# [10.2.0](https://github.com/developmentseed/eoapi-cdk/compare/v10.1.1...v10.2.0) (2025-09-15)
+
+
+### Features
+
+* pgbouncer health check ([#183](https://github.com/developmentseed/eoapi-cdk/issues/183)) ([d560291](https://github.com/developmentseed/eoapi-cdk/commit/d560291aaa2e43b4f5327d26ed1e7db69bc71362))
+
 ## [10.1.1](https://github.com/developmentseed/eoapi-cdk/compare/v10.1.0...v10.1.1) (2025-08-21)
 
 
