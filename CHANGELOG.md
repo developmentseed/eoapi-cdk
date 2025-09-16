@@ -1,3 +1,10 @@
+## [10.2.3](https://github.com/developmentseed/eoapi-cdk/compare/v10.2.2...v10.2.3) (2025-09-16)
+
+
+### Bug Fixes
+
+* upgrade node-version ([ca58ef9](https://github.com/developmentseed/eoapi-cdk/commit/ca58ef9a580c66224945a0f82225e8535dde34e6))
+
 ## [10.2.2](https://github.com/developmentseed/eoapi-cdk/compare/v10.2.1...v10.2.2) (2025-09-15)
 
 
