@@ -49,4 +49,4 @@ jobs:
         run: npm -v
 
       - name: Publish to npm
-      - run: npm publish dist/* --provenance --access public
+        run: npm publish dist/* --provenance --access public
