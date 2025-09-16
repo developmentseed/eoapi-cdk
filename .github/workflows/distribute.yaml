@@ -37,9 +37,16 @@ jobs:
           name: js
           path: dist
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: 20
           registry-url: "https://registry.npmjs.org"
 
+      - name: Update npm to the latest version
+        run: npm install -g npm@latest
+
+      - name: Check npm version
+        run: npm -v
+
+      - name: Publish to npm
       - run: npm publish dist/* --provenance --access public
