@@ -13,7 +13,11 @@ import {
   Stack,
 } from "aws-cdk-lib";
 import { Construct } from "constructs";
-import { CustomLambdaFunctionProps, DEFAULT_PGSTAC_VERSION } from "../utils";
+import {
+  CustomLambdaFunctionProps,
+  DEFAULT_PGSTAC_VERSION,
+  resolveLambdaCode,
+} from "../utils";
 
 export class StacIngestor extends Construct {
   table: dynamodb.Table;
@@ -116,6 +120,9 @@ export class StacIngestor extends Construct {
     lambdaFunctionOptions?: CustomLambdaFunctionProps;
     pgstacVersion?: string;
   }): lambda.Function {
+    const { code: userCode, ...otherLambdaOptions } =
+      props.lambdaFunctionOptions || {};
+
     const handler = new lambda.Function(this, "api-handler", {
       // defaults
       runtime: lambda.Runtime.PYTHON_3_12,
@@ -123,7 +130,7 @@ export class StacIngestor extends Construct {
       memorySize: 2048,
       logRetention: aws_logs.RetentionDays.ONE_WEEK,
       timeout: Duration.seconds(30),
-      code: lambda.Code.fromDockerBuild(__dirname, {
+      code: resolveLambdaCode(userCode, __dirname, {
         file: "runtime/Dockerfile",
         buildArgs: {
           PYTHON_VERSION: "3.12",
@@ -136,7 +143,7 @@ export class StacIngestor extends Construct {
       environment: { DB_SECRET_ARN: props.dbSecret.secretArn, ...props.env },
       role: this.handlerRole,
       // overwrites defaults with user-provided configurable properties
-      ...props.lambdaFunctionOptions,
+      ...otherLambdaOptions,
     });
 
     // Allow handler to read DB secret
@@ -167,6 +174,8 @@ export class StacIngestor extends Construct {
     lambdaFunctionOptions?: CustomLambdaFunctionProps;
     pgstacVersion?: string;
   }): lambda.Function {
+    const { code: userCode, ...otherLambdaOptions } =
+      props.lambdaFunctionOptions || {};
     const handler = new lambda.Function(this, "stac-ingestor", {
       // defaults
       runtime: lambda.Runtime.PYTHON_3_12,
@@ -174,7 +183,7 @@ export class StacIngestor extends Construct {
       memorySize: 2048,
       logRetention: aws_logs.RetentionDays.ONE_WEEK,
       timeout: Duration.seconds(180),
-      code: lambda.Code.fromDockerBuild(__dirname, {
+      code: resolveLambdaCode(userCode, __dirname, {
         file: "runtime/Dockerfile",
         buildArgs: {
           PYTHON_VERSION: "3.12",
@@ -187,7 +196,7 @@ export class StacIngestor extends Construct {
       environment: { DB_SECRET_ARN: props.dbSecret.secretArn, ...props.env },
       role: this.handlerRole,
       // overwrites defaults with user-provided configurable properties
-      ...props.lambdaFunctionOptions,
+      ...otherLambdaOptions,
     });
 
     // Allow handler to read DB secret

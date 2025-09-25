@@ -12,13 +12,15 @@ import {
 import { Construct } from "constructs";
 import * as path from "path";
 import { LambdaApiGateway } from "../lambda-api-gateway";
-import { CustomLambdaFunctionProps } from "../utils";
+import { CustomLambdaFunctionProps, resolveLambdaCode } from "../utils";
 
 export class TiPgApiLambdaRuntime extends Construct {
   public readonly lambdaFunction: lambda.Function;
 
   constructor(scope: Construct, id: string, props: TiPgApiLambdaRuntimeProps) {
     super(scope, id);
+
+    const { code: userCode, ...otherLambdaOptions } = props.lambdaFunctionOptions || {};
 
     this.lambdaFunction = new lambda.Function(this, "lambda", {
       // defaults
@@ -27,10 +29,14 @@ export class TiPgApiLambdaRuntime extends Construct {
       memorySize: 1024,
       logRetention: logs.RetentionDays.ONE_WEEK,
       timeout: Duration.seconds(30),
-      code: lambda.Code.fromDockerBuild(path.join(__dirname, ".."), {
-        file: "tipg-api/runtime/Dockerfile",
-        buildArgs: { PYTHON_VERSION: "3.12" },
-      }),
+      code: resolveLambdaCode(
+        userCode,
+        path.join(__dirname, ".."),
+        {
+          file: "tipg-api/runtime/Dockerfile",
+          buildArgs: { PYTHON_VERSION: "3.12" },
+        }
+      ),
       vpc: props.vpc,
       vpcSubnets: props.subnetSelection,
       allowPublicSubnet: true,
@@ -40,8 +46,8 @@ export class TiPgApiLambdaRuntime extends Construct {
         DB_MAX_CONN_SIZE: "1",
         ...props.apiEnv,
       },
-      // overwrites defaults with user-provided configurable properties
-      ...props.lambdaFunctionOptions,
+      // overwrites defaults with user-provided configurable properties (excluding code)
+      ...otherLambdaOptions,
     });
 
     props.dbSecret.grantRead(this.lambdaFunction);

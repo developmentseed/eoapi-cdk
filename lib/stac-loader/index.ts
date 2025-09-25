@@ -13,7 +13,7 @@ import {
 import { Construct } from "constructs";
 import * as path from "path";
 import { PgStacDatabase } from "../database";
-import { CustomLambdaFunctionProps } from "../utils";
+import { CustomLambdaFunctionProps, resolveLambdaCode } from "../utils";
 
 /**
  * Configuration properties for the StacLoader construct.
@@ -412,12 +412,15 @@ export class StacLoader extends Construct {
     );
 
     // Create the lambda function
+    const { code: userCode, ...otherLambdaOptions } =
+      props.lambdaFunctionOptions || {};
+
     this.lambdaFunction = new lambda.Function(this, "Function", {
       runtime: lambdaRuntime,
       handler: "stac_loader.handler.handler",
       vpc: props.vpc,
       vpcSubnets: props.subnetSelection,
-      code: lambda.Code.fromDockerBuild(path.join(__dirname, ".."), {
+      code: resolveLambdaCode(userCode, path.join(__dirname, ".."), {
         file: "stac-loader/runtime/Dockerfile",
         platform: "linux/amd64",
         buildArgs: {
@@ -434,7 +437,7 @@ export class StacLoader extends Construct {
         ...props.environment,
       },
       // overwrites defaults with user-provided configurable properties
-      ...props.lambdaFunctionOptions,
+      ...otherLambdaOptions,
     });
 
     // Grant permissions to read the database secret

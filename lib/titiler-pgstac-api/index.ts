@@ -13,7 +13,7 @@ import {
 import { Construct } from "constructs";
 import * as path from "path";
 import { LambdaApiGateway } from "../lambda-api-gateway";
-import { CustomLambdaFunctionProps } from "../utils";
+import { CustomLambdaFunctionProps, resolveLambdaCode } from "../utils";
 
 // default settings that can be overridden by the user-provided environment.
 let defaultTitilerPgstacEnv: Record<string, string> = {
@@ -41,6 +41,8 @@ export class TitilerPgstacApiLambdaRuntime extends Construct {
   ) {
     super(scope, id);
 
+    const { code: userCode, ...otherLambdaOptions } = props.lambdaFunctionOptions || {};
+
     this.lambdaFunction = new lambda.Function(this, "lambda", {
       // defaults
       runtime: lambda.Runtime.PYTHON_3_12,
@@ -48,10 +50,14 @@ export class TitilerPgstacApiLambdaRuntime extends Construct {
       memorySize: 3008,
       logRetention: aws_logs.RetentionDays.ONE_WEEK,
       timeout: Duration.seconds(30),
-      code: lambda.Code.fromDockerBuild(path.join(__dirname, ".."), {
-        file: "titiler-pgstac-api/runtime/Dockerfile",
-        buildArgs: { PYTHON_VERSION: "3.12" },
-      }),
+      code: resolveLambdaCode(
+        userCode,
+        path.join(__dirname, ".."),
+        {
+          file: "titiler-pgstac-api/runtime/Dockerfile",
+          buildArgs: { PYTHON_VERSION: "3.12" },
+        }
+      ),
       vpc: props.vpc,
       vpcSubnets: props.subnetSelection,
       allowPublicSubnet: true,
@@ -60,8 +66,8 @@ export class TitilerPgstacApiLambdaRuntime extends Construct {
         ...props.apiEnv, // if user provided environment variables, merge them with the defaults.
         PGSTAC_SECRET_ARN: props.dbSecret.secretArn,
       },
-      // overwrites defaults with user-provided configurable properties
-      ...props.lambdaFunctionOptions,
+      // overwrites defaults with user-provided configurable properties (excluding code)
+      ...otherLambdaOptions,
     });
 
     // grant access to buckets using addToRolePolicy
