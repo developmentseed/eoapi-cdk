@@ -1,3 +1,10 @@
+## [10.2.5](https://github.com/developmentseed/eoapi-cdk/compare/v10.2.4...v10.2.5) (2025-09-26)
+
+
+### Bug Fixes
+
+* refactor Lambda constructs to only build custom image if provided ([#187](https://github.com/developmentseed/eoapi-cdk/issues/187)) ([31d0ec0](https://github.com/developmentseed/eoapi-cdk/commit/31d0ec0f786a5ac00ffbbacfc2215828d5922fd4))
+
 ## [10.2.4](https://github.com/developmentseed/eoapi-cdk/compare/v10.2.3...v10.2.4) (2025-09-16)
 
 
