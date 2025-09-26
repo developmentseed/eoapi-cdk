@@ -59,14 +59,14 @@ jobs:
 
       - name: Get Release Bot Token
         id: get-token
-        if: ${{ inputs.release }}
+        if: ${{ inputs.release && github.actor != 'dependabot[bot]' }}
         uses: getsentry/action-github-app-token@v1
         with:
           app_id: ${{ secrets.DS_RELEASE_BOT_ID }}
           private_key: ${{ secrets.DS_RELEASE_BOT_PRIVATE_KEY }}
 
       - name: Maybe Release 🚀
-        if: "${{ inputs.release }}"
+        if: ${{ inputs.release && github.actor != 'dependabot[bot]' }}
         run: |
           npm run semantic-release
         env:
