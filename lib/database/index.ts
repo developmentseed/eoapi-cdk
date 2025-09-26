@@ -10,7 +10,11 @@ import {
   aws_secretsmanager as secretsmanager,
 } from "aws-cdk-lib";
 import { Construct } from "constructs";
-import { CustomLambdaFunctionProps, DEFAULT_PGSTAC_VERSION } from "../utils";
+import {
+  CustomLambdaFunctionProps,
+  DEFAULT_PGSTAC_VERSION,
+  resolveLambdaCode,
+} from "../utils";
 import { PgBouncer } from "./PgBouncer";
 
 const instanceSizes: Record<string, number> = require("./instance-memory.json");
@@ -111,6 +115,9 @@ export class PgStacDatabase extends Construct {
 
     this.pgstacVersion = props.pgstacVersion || DEFAULT_PGSTAC_VERSION;
 
+    const { code: userCode, ...otherLambdaOptions } =
+      props.bootstrapperLambdaFunctionOptions || {};
+
     const handler = new aws_lambda.Function(this, "lambda", {
       // defaults
       runtime: aws_lambda.Runtime.PYTHON_3_12,
@@ -118,7 +125,7 @@ export class PgStacDatabase extends Construct {
       memorySize: 128,
       logRetention: aws_logs.RetentionDays.ONE_WEEK,
       timeout: Duration.minutes(2),
-      code: aws_lambda.Code.fromDockerBuild(__dirname, {
+      code: resolveLambdaCode(userCode, __dirname, {
         file: "bootstrapper_runtime/Dockerfile",
         buildArgs: {
           PYTHON_VERSION: "3.12",
@@ -128,7 +135,7 @@ export class PgStacDatabase extends Construct {
       vpc: hasVpc(this.db) ? this.db.vpc : props.vpc,
       allowPublicSubnet: true,
       // overwrites defaults with user-provided configurable properties,
-      ...props.bootstrapperLambdaFunctionOptions,
+      ...otherLambdaOptions,
     });
 
     this.pgstacSecret = new secretsmanager.Secret(this, "bootstrappersecret", {
@@ -172,7 +179,7 @@ export class PgStacDatabase extends Construct {
       this.pgstacSecret.secretArn;
 
     // if props.lambdaFunctionOptions doesn't have 'code' defined, update pgstac_version (needed for default runtime)
-    if (!props.bootstrapperLambdaFunctionOptions?.code) {
+    if (!userCode) {
       customResourceProperties["pgstac_version"] = this.pgstacVersion;
     }
 
