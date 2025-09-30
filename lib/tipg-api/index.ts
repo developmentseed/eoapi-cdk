@@ -20,7 +20,8 @@ export class TiPgApiLambdaRuntime extends Construct {
   constructor(scope: Construct, id: string, props: TiPgApiLambdaRuntimeProps) {
     super(scope, id);
 
-    const { code: userCode, ...otherLambdaOptions } = props.lambdaFunctionOptions || {};
+    const { code: userCode, ...otherLambdaOptions } =
+      props.lambdaFunctionOptions || {};
 
     this.lambdaFunction = new lambda.Function(this, "lambda", {
       // defaults
@@ -29,14 +30,10 @@ export class TiPgApiLambdaRuntime extends Construct {
       memorySize: 1024,
       logRetention: logs.RetentionDays.ONE_WEEK,
       timeout: Duration.seconds(30),
-      code: resolveLambdaCode(
-        userCode,
-        path.join(__dirname, ".."),
-        {
-          file: "tipg-api/runtime/Dockerfile",
-          buildArgs: { PYTHON_VERSION: "3.12" },
-        }
-      ),
+      code: resolveLambdaCode(userCode, path.join(__dirname, ".."), {
+        file: "tipg-api/runtime/Dockerfile",
+        buildArgs: { PYTHON_VERSION: "3.12" },
+      }),
       vpc: props.vpc,
       vpcSubnets: props.subnetSelection,
       allowPublicSubnet: true,
@@ -46,6 +43,9 @@ export class TiPgApiLambdaRuntime extends Construct {
         DB_MAX_CONN_SIZE: "1",
         ...props.apiEnv,
       },
+      snapStart: props.enableSnapStart
+        ? lambda.SnapStartConf.ON_PUBLISHED_VERSIONS
+        : undefined,
       // overwrites defaults with user-provided configurable properties (excluding code)
       ...otherLambdaOptions,
     });
@@ -89,6 +89,26 @@ export interface TiPgApiLambdaRuntimeProps {
   readonly apiEnv?: Record<string, string>;
 
   /**
+   * Enable SnapStart to reduce cold start latency.
+   *
+   * SnapStart creates a snapshot of the initialized Lambda function, allowing new instances
+   * to start from this pre-initialized state instead of starting from scratch.
+   *
+   * Benefits:
+   * - Significantly reduces cold start times (typically 10x faster)
+   * - Improves API response time for infrequent requests
+   *
+   * Considerations:
+   * - Additional cost: charges for snapshot storage and restore operations
+   * - Requires Lambda versioning (automatically configured by this construct)
+   * - Database connections are recreated on restore using snapshot lifecycle hooks
+   *
+   * @see https://docs.aws.amazon.com/lambda/latest/dg/snapstart.html
+   * @default false
+   */
+  readonly enableSnapStart?: boolean;
+
+  /**
    * Can be used to override the default lambda function properties.
    *
    * @default - defined in the construct.
@@ -121,12 +141,15 @@ export class TiPgApiLambda extends Construct {
       db: props.db,
       dbSecret: props.dbSecret,
       apiEnv: props.apiEnv,
+      enableSnapStart: props.enableSnapStart,
       lambdaFunctionOptions: props.lambdaFunctionOptions,
     });
     this.tiPgLambdaFunction = this.lambdaFunction = runtime.lambdaFunction;
 
     const { api } = new LambdaApiGateway(this, "api", {
-      lambdaFunction: runtime.lambdaFunction,
+      lambdaFunction: props.enableSnapStart!
+        ? runtime.lambdaFunction.currentVersion
+        : runtime.lambdaFunction,
       domainName: props.domainName ?? props.tipgApiDomainName,
     });
 

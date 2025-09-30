@@ -69,7 +69,8 @@ export class PgStacApiLambdaRuntime extends Construct {
 
     const enabledExtensions = props.enabledExtensions || defaultExtensions;
 
-    const { code: userCode, ...otherLambdaOptions } = props.lambdaFunctionOptions || {};
+    const { code: userCode, ...otherLambdaOptions } =
+      props.lambdaFunctionOptions || {};
 
     this.lambdaFunction = new lambda.Function(this, "lambda", {
       // defaults
@@ -78,14 +79,10 @@ export class PgStacApiLambdaRuntime extends Construct {
       memorySize: 8192,
       logRetention: aws_logs.RetentionDays.ONE_WEEK,
       timeout: Duration.seconds(30),
-      code: resolveLambdaCode(
-        userCode,
-        path.join(__dirname, ".."),
-        {
-          file: "stac-api/runtime/Dockerfile",
-          buildArgs: { PYTHON_VERSION: "3.12" },
-        }
-      ),
+      code: resolveLambdaCode(userCode, path.join(__dirname, ".."), {
+        file: "stac-api/runtime/Dockerfile",
+        buildArgs: { PYTHON_VERSION: "3.12" },
+      }),
       vpc: props.vpc,
       vpcSubnets: props.subnetSelection,
       allowPublicSubnet: true,
@@ -96,6 +93,9 @@ export class PgStacApiLambdaRuntime extends Construct {
         ENABLED_EXTENSIONS: enabledExtensions.join(","),
         ...props.apiEnv,
       },
+      snapStart: props.enableSnapStart
+        ? lambda.SnapStartConf.ON_PUBLISHED_VERSIONS
+        : undefined,
       // overwrites defaults with user-provided configurable properties (excluding code)
       ...otherLambdaOptions,
     });
@@ -146,6 +146,26 @@ export interface PgStacApiLambdaRuntimeProps {
   readonly enabledExtensions?: ExtensionType[];
 
   /**
+   * Enable SnapStart to reduce cold start latency.
+   *
+   * SnapStart creates a snapshot of the initialized Lambda function, allowing new instances
+   * to start from this pre-initialized state instead of starting from scratch.
+   *
+   * Benefits:
+   * - Significantly reduces cold start times (typically 10x faster)
+   * - Improves API response time for infrequent requests
+   *
+   * Considerations:
+   * - Additional cost: charges for snapshot storage and restore operations
+   * - Requires Lambda versioning (automatically configured by this construct)
+   * - Database connections are recreated on restore using snapshot lifecycle hooks
+   *
+   * @see https://docs.aws.amazon.com/lambda/latest/dg/snapstart.html
+   * @default false
+   */
+  readonly enableSnapStart?: boolean;
+
+  /**
    * Can be used to override the default lambda function properties.
    *
    * @default - defined in the construct.
@@ -179,12 +199,15 @@ export class PgStacApiLambda extends Construct {
       dbSecret: props.dbSecret,
       enabledExtensions: props.enabledExtensions,
       apiEnv: props.apiEnv,
+      enableSnapStart: props.enableSnapStart,
       lambdaFunctionOptions: props.lambdaFunctionOptions,
     });
     this.stacApiLambdaFunction = this.lambdaFunction = runtime.lambdaFunction;
 
     const { api } = new LambdaApiGateway(this, "stac-api", {
-      lambdaFunction: runtime.lambdaFunction,
+      lambdaFunction: props.enableSnapStart!
+        ? runtime.lambdaFunction.currentVersion
+        : runtime.lambdaFunction,
       domainName: props.domainName ?? props.stacApiDomainName,
     });
 

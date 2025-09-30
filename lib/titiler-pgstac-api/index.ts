@@ -41,7 +41,8 @@ export class TitilerPgstacApiLambdaRuntime extends Construct {
   ) {
     super(scope, id);
 
-    const { code: userCode, ...otherLambdaOptions } = props.lambdaFunctionOptions || {};
+    const { code: userCode, ...otherLambdaOptions } =
+      props.lambdaFunctionOptions || {};
 
     this.lambdaFunction = new lambda.Function(this, "lambda", {
       // defaults
@@ -50,14 +51,10 @@ export class TitilerPgstacApiLambdaRuntime extends Construct {
       memorySize: 3008,
       logRetention: aws_logs.RetentionDays.ONE_WEEK,
       timeout: Duration.seconds(30),
-      code: resolveLambdaCode(
-        userCode,
-        path.join(__dirname, ".."),
-        {
-          file: "titiler-pgstac-api/runtime/Dockerfile",
-          buildArgs: { PYTHON_VERSION: "3.12" },
-        }
-      ),
+      code: resolveLambdaCode(userCode, path.join(__dirname, ".."), {
+        file: "titiler-pgstac-api/runtime/Dockerfile",
+        buildArgs: { PYTHON_VERSION: "3.12" },
+      }),
       vpc: props.vpc,
       vpcSubnets: props.subnetSelection,
       allowPublicSubnet: true,
@@ -66,6 +63,9 @@ export class TitilerPgstacApiLambdaRuntime extends Construct {
         ...props.apiEnv, // if user provided environment variables, merge them with the defaults.
         PGSTAC_SECRET_ARN: props.dbSecret.secretArn,
       },
+      snapStart: props.enableSnapStart
+        ? lambda.SnapStartConf.ON_PUBLISHED_VERSIONS
+        : undefined,
       // overwrites defaults with user-provided configurable properties (excluding code)
       ...otherLambdaOptions,
     });
@@ -127,6 +127,26 @@ export interface TitilerPgstacApiLambdaRuntimeProps {
   readonly buckets?: string[];
 
   /**
+   * Enable SnapStart to reduce cold start latency.
+   *
+   * SnapStart creates a snapshot of the initialized Lambda function, allowing new instances
+   * to start from this pre-initialized state instead of starting from scratch.
+   *
+   * Benefits:
+   * - Significantly reduces cold start times (typically 10x faster)
+   * - Improves API response time for infrequent requests
+   *
+   * Considerations:
+   * - Additional cost: charges for snapshot storage and restore operations
+   * - Requires Lambda versioning (automatically configured by this construct)
+   * - Database connections are recreated on restore using snapshot lifecycle hooks
+   *
+   * @see https://docs.aws.amazon.com/lambda/latest/dg/snapstart.html
+   * @default false
+   */
+  readonly enableSnapStart?: boolean;
+
+  /**
    * Can be used to override the default lambda function properties.
    *
    * @default - defined in the construct.
@@ -164,13 +184,16 @@ export class TitilerPgstacApiLambda extends Construct {
       dbSecret: props.dbSecret,
       apiEnv: props.apiEnv,
       buckets: props.buckets,
+      enableSnapStart: props.enableSnapStart,
       lambdaFunctionOptions: props.lambdaFunctionOptions,
     });
     this.titilerPgstacLambdaFunction = this.lambdaFunction =
       runtime.lambdaFunction;
 
     const { api } = new LambdaApiGateway(this, "titlier-pgstac-api", {
-      lambdaFunction: runtime.lambdaFunction,
+      lambdaFunction: props.enableSnapStart
+        ? runtime.lambdaFunction.currentVersion
+        : runtime.lambdaFunction,
       domainName: props.domainName ?? props.titilerPgstacApiDomainName,
     });
 

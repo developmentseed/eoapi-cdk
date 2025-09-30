@@ -10,7 +10,7 @@ export interface LambdaApiGatewayProps {
   /**
    * Lambda function to integrate with the API Gateway.
    */
-  readonly lambdaFunction: lambda.Function;
+  readonly lambdaFunction: lambda.Function | lambda.Version;
 
   /**
    * Custom Domain Name for the API. If defined, will create the
