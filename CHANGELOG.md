@@ -1,3 +1,10 @@
+# [10.3.0](https://github.com/developmentseed/eoapi-cdk/compare/v10.2.5...v10.3.0) (2025-09-30)
+
+
+### Features
+
+* add option to enable SnapStart for Lambda functions ([#198](https://github.com/developmentseed/eoapi-cdk/issues/198)) ([b377a56](https://github.com/developmentseed/eoapi-cdk/commit/b377a5624781bf66aa677cbf40aee80352886851))
+
 ## [10.2.5](https://github.com/developmentseed/eoapi-cdk/compare/v10.2.4...v10.2.5) (2025-09-26)
 
 
