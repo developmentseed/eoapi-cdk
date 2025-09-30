@@ -3176,7 +3176,7 @@ const lambdaApiGatewayProps: LambdaApiGatewayProps = { ... }
 
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
-| <code><a href="#eoapi-cdk.LambdaApiGatewayProps.property.lambdaFunction">lambdaFunction</a></code> | <code>aws-cdk-lib.aws_lambda.Function</code> | Lambda function to integrate with the API Gateway. |
+| <code><a href="#eoapi-cdk.LambdaApiGatewayProps.property.lambdaFunction">lambdaFunction</a></code> | <code>aws-cdk-lib.aws_lambda.Function \| aws-cdk-lib.aws_lambda.Version</code> | Lambda function to integrate with the API Gateway. |
 | <code><a href="#eoapi-cdk.LambdaApiGatewayProps.property.apiName">apiName</a></code> | <code>string</code> | Name of the API Gateway. |
 | <code><a href="#eoapi-cdk.LambdaApiGatewayProps.property.domainName">domainName</a></code> | <code>aws-cdk-lib.aws_apigatewayv2.IDomainName</code> | Custom Domain Name for the API. |
 
@@ -3185,10 +3185,10 @@ const lambdaApiGatewayProps: LambdaApiGatewayProps = { ... }
 ##### `lambdaFunction`<sup>Required</sup> <a name="lambdaFunction" id="eoapi-cdk.LambdaApiGatewayProps.property.lambdaFunction"></a>
 
 ```typescript
-public readonly lambdaFunction: Function;
+public readonly lambdaFunction: Function | Version;
 ```
 
-- *Type:* aws-cdk-lib.aws_lambda.Function
+- *Type:* aws-cdk-lib.aws_lambda.Function | aws-cdk-lib.aws_lambda.Version
 
 Lambda function to integrate with the API Gateway.
 
@@ -3240,6 +3240,7 @@ const pgStacApiLambdaProps: PgStacApiLambdaProps = { ... }
 | <code><a href="#eoapi-cdk.PgStacApiLambdaProps.property.dbSecret">dbSecret</a></code> | <code>aws-cdk-lib.aws_secretsmanager.ISecret</code> | Secret containing connection information for pgSTAC database. |
 | <code><a href="#eoapi-cdk.PgStacApiLambdaProps.property.apiEnv">apiEnv</a></code> | <code>{[ key: string ]: string}</code> | Customized environment variables to send to fastapi-pgstac runtime. |
 | <code><a href="#eoapi-cdk.PgStacApiLambdaProps.property.enabledExtensions">enabledExtensions</a></code> | <code>string[]</code> | List of STAC API extensions to enable. |
+| <code><a href="#eoapi-cdk.PgStacApiLambdaProps.property.enableSnapStart">enableSnapStart</a></code> | <code>boolean</code> | Enable SnapStart to reduce cold start latency. |
 | <code><a href="#eoapi-cdk.PgStacApiLambdaProps.property.lambdaFunctionOptions">lambdaFunctionOptions</a></code> | <code>any</code> | Can be used to override the default lambda function properties. |
 | <code><a href="#eoapi-cdk.PgStacApiLambdaProps.property.subnetSelection">subnetSelection</a></code> | <code>aws-cdk-lib.aws_ec2.SubnetSelection</code> | Subnet into which the lambda should be deployed. |
 | <code><a href="#eoapi-cdk.PgStacApiLambdaProps.property.vpc">vpc</a></code> | <code>aws-cdk-lib.aws_ec2.IVpc</code> | VPC into which the lambda should be deployed. |
@@ -3294,6 +3295,33 @@ public readonly enabledExtensions: string[];
 - *Default:* query, sort, fields, filter, free_text, pagination, collection_search
 
 List of STAC API extensions to enable.
+
+---
+
+##### `enableSnapStart`<sup>Optional</sup> <a name="enableSnapStart" id="eoapi-cdk.PgStacApiLambdaProps.property.enableSnapStart"></a>
+
+```typescript
+public readonly enableSnapStart: boolean;
+```
+
+- *Type:* boolean
+- *Default:* false
+
+Enable SnapStart to reduce cold start latency.
+
+SnapStart creates a snapshot of the initialized Lambda function, allowing new instances
+to start from this pre-initialized state instead of starting from scratch.
+
+Benefits:
+- Significantly reduces cold start times (typically 10x faster)
+- Improves API response time for infrequent requests
+
+Considerations:
+- Additional cost: charges for snapshot storage and restore operations
+- Requires Lambda versioning (automatically configured by this construct)
+- Database connections are recreated on restore using snapshot lifecycle hooks
+
+> [https://docs.aws.amazon.com/lambda/latest/dg/snapstart.html](https://docs.aws.amazon.com/lambda/latest/dg/snapstart.html)
 
 ---
 
@@ -3382,6 +3410,7 @@ const pgStacApiLambdaRuntimeProps: PgStacApiLambdaRuntimeProps = { ... }
 | <code><a href="#eoapi-cdk.PgStacApiLambdaRuntimeProps.property.dbSecret">dbSecret</a></code> | <code>aws-cdk-lib.aws_secretsmanager.ISecret</code> | Secret containing connection information for pgSTAC database. |
 | <code><a href="#eoapi-cdk.PgStacApiLambdaRuntimeProps.property.apiEnv">apiEnv</a></code> | <code>{[ key: string ]: string}</code> | Customized environment variables to send to fastapi-pgstac runtime. |
 | <code><a href="#eoapi-cdk.PgStacApiLambdaRuntimeProps.property.enabledExtensions">enabledExtensions</a></code> | <code>string[]</code> | List of STAC API extensions to enable. |
+| <code><a href="#eoapi-cdk.PgStacApiLambdaRuntimeProps.property.enableSnapStart">enableSnapStart</a></code> | <code>boolean</code> | Enable SnapStart to reduce cold start latency. |
 | <code><a href="#eoapi-cdk.PgStacApiLambdaRuntimeProps.property.lambdaFunctionOptions">lambdaFunctionOptions</a></code> | <code>any</code> | Can be used to override the default lambda function properties. |
 | <code><a href="#eoapi-cdk.PgStacApiLambdaRuntimeProps.property.subnetSelection">subnetSelection</a></code> | <code>aws-cdk-lib.aws_ec2.SubnetSelection</code> | Subnet into which the lambda should be deployed. |
 | <code><a href="#eoapi-cdk.PgStacApiLambdaRuntimeProps.property.vpc">vpc</a></code> | <code>aws-cdk-lib.aws_ec2.IVpc</code> | VPC into which the lambda should be deployed. |
@@ -3434,6 +3463,33 @@ public readonly enabledExtensions: string[];
 - *Default:* query, sort, fields, filter, free_text, pagination, collection_search
 
 List of STAC API extensions to enable.
+
+---
+
+##### `enableSnapStart`<sup>Optional</sup> <a name="enableSnapStart" id="eoapi-cdk.PgStacApiLambdaRuntimeProps.property.enableSnapStart"></a>
+
+```typescript
+public readonly enableSnapStart: boolean;
+```
+
+- *Type:* boolean
+- *Default:* false
+
+Enable SnapStart to reduce cold start latency.
+
+SnapStart creates a snapshot of the initialized Lambda function, allowing new instances
+to start from this pre-initialized state instead of starting from scratch.
+
+Benefits:
+- Significantly reduces cold start times (typically 10x faster)
+- Improves API response time for infrequent requests
+
+Considerations:
+- Additional cost: charges for snapshot storage and restore operations
+- Requires Lambda versioning (automatically configured by this construct)
+- Database connections are recreated on restore using snapshot lifecycle hooks
+
+> [https://docs.aws.amazon.com/lambda/latest/dg/snapstart.html](https://docs.aws.amazon.com/lambda/latest/dg/snapstart.html)
 
 ---
 
@@ -5838,6 +5894,7 @@ const tiPgApiLambdaProps: TiPgApiLambdaProps = { ... }
 | <code><a href="#eoapi-cdk.TiPgApiLambdaProps.property.db">db</a></code> | <code>aws-cdk-lib.aws_rds.IDatabaseInstance \| aws-cdk-lib.aws_ec2.IInstance</code> | RDS Instance with installed pgSTAC or pgbouncer server. |
 | <code><a href="#eoapi-cdk.TiPgApiLambdaProps.property.dbSecret">dbSecret</a></code> | <code>aws-cdk-lib.aws_secretsmanager.ISecret</code> | Secret containing connection information for pgSTAC database. |
 | <code><a href="#eoapi-cdk.TiPgApiLambdaProps.property.apiEnv">apiEnv</a></code> | <code>{[ key: string ]: string}</code> | Customized environment variables to send to titiler-pgstac runtime. |
+| <code><a href="#eoapi-cdk.TiPgApiLambdaProps.property.enableSnapStart">enableSnapStart</a></code> | <code>boolean</code> | Enable SnapStart to reduce cold start latency. |
 | <code><a href="#eoapi-cdk.TiPgApiLambdaProps.property.lambdaFunctionOptions">lambdaFunctionOptions</a></code> | <code>any</code> | Can be used to override the default lambda function properties. |
 | <code><a href="#eoapi-cdk.TiPgApiLambdaProps.property.subnetSelection">subnetSelection</a></code> | <code>aws-cdk-lib.aws_ec2.SubnetSelection</code> | Subnet into which the lambda should be deployed. |
 | <code><a href="#eoapi-cdk.TiPgApiLambdaProps.property.vpc">vpc</a></code> | <code>aws-cdk-lib.aws_ec2.IVpc</code> | VPC into which the lambda should be deployed. |
@@ -5879,6 +5936,33 @@ public readonly apiEnv: {[ key: string ]: string};
 - *Type:* {[ key: string ]: string}
 
 Customized environment variables to send to titiler-pgstac runtime.
+
+---
+
+##### `enableSnapStart`<sup>Optional</sup> <a name="enableSnapStart" id="eoapi-cdk.TiPgApiLambdaProps.property.enableSnapStart"></a>
+
+```typescript
+public readonly enableSnapStart: boolean;
+```
+
+- *Type:* boolean
+- *Default:* false
+
+Enable SnapStart to reduce cold start latency.
+
+SnapStart creates a snapshot of the initialized Lambda function, allowing new instances
+to start from this pre-initialized state instead of starting from scratch.
+
+Benefits:
+- Significantly reduces cold start times (typically 10x faster)
+- Improves API response time for infrequent requests
+
+Considerations:
+- Additional cost: charges for snapshot storage and restore operations
+- Requires Lambda versioning (automatically configured by this construct)
+- Database connections are recreated on restore using snapshot lifecycle hooks
+
+> [https://docs.aws.amazon.com/lambda/latest/dg/snapstart.html](https://docs.aws.amazon.com/lambda/latest/dg/snapstart.html)
 
 ---
 
@@ -5969,6 +6053,7 @@ const tiPgApiLambdaRuntimeProps: TiPgApiLambdaRuntimeProps = { ... }
 | <code><a href="#eoapi-cdk.TiPgApiLambdaRuntimeProps.property.db">db</a></code> | <code>aws-cdk-lib.aws_rds.IDatabaseInstance \| aws-cdk-lib.aws_ec2.IInstance</code> | RDS Instance with installed pgSTAC or pgbouncer server. |
 | <code><a href="#eoapi-cdk.TiPgApiLambdaRuntimeProps.property.dbSecret">dbSecret</a></code> | <code>aws-cdk-lib.aws_secretsmanager.ISecret</code> | Secret containing connection information for pgSTAC database. |
 | <code><a href="#eoapi-cdk.TiPgApiLambdaRuntimeProps.property.apiEnv">apiEnv</a></code> | <code>{[ key: string ]: string}</code> | Customized environment variables to send to titiler-pgstac runtime. |
+| <code><a href="#eoapi-cdk.TiPgApiLambdaRuntimeProps.property.enableSnapStart">enableSnapStart</a></code> | <code>boolean</code> | Enable SnapStart to reduce cold start latency. |
 | <code><a href="#eoapi-cdk.TiPgApiLambdaRuntimeProps.property.lambdaFunctionOptions">lambdaFunctionOptions</a></code> | <code>any</code> | Can be used to override the default lambda function properties. |
 | <code><a href="#eoapi-cdk.TiPgApiLambdaRuntimeProps.property.subnetSelection">subnetSelection</a></code> | <code>aws-cdk-lib.aws_ec2.SubnetSelection</code> | Subnet into which the lambda should be deployed. |
 | <code><a href="#eoapi-cdk.TiPgApiLambdaRuntimeProps.property.vpc">vpc</a></code> | <code>aws-cdk-lib.aws_ec2.IVpc</code> | VPC into which the lambda should be deployed. |
@@ -6008,6 +6093,33 @@ public readonly apiEnv: {[ key: string ]: string};
 - *Type:* {[ key: string ]: string}
 
 Customized environment variables to send to titiler-pgstac runtime.
+
+---
+
+##### `enableSnapStart`<sup>Optional</sup> <a name="enableSnapStart" id="eoapi-cdk.TiPgApiLambdaRuntimeProps.property.enableSnapStart"></a>
+
+```typescript
+public readonly enableSnapStart: boolean;
+```
+
+- *Type:* boolean
+- *Default:* false
+
+Enable SnapStart to reduce cold start latency.
+
+SnapStart creates a snapshot of the initialized Lambda function, allowing new instances
+to start from this pre-initialized state instead of starting from scratch.
+
+Benefits:
+- Significantly reduces cold start times (typically 10x faster)
+- Improves API response time for infrequent requests
+
+Considerations:
+- Additional cost: charges for snapshot storage and restore operations
+- Requires Lambda versioning (automatically configured by this construct)
+- Database connections are recreated on restore using snapshot lifecycle hooks
+
+> [https://docs.aws.amazon.com/lambda/latest/dg/snapstart.html](https://docs.aws.amazon.com/lambda/latest/dg/snapstart.html)
 
 ---
 
@@ -6066,6 +6178,7 @@ const titilerPgstacApiLambdaProps: TitilerPgstacApiLambdaProps = { ... }
 | <code><a href="#eoapi-cdk.TitilerPgstacApiLambdaProps.property.dbSecret">dbSecret</a></code> | <code>aws-cdk-lib.aws_secretsmanager.ISecret</code> | Secret containing connection information for pgSTAC database. |
 | <code><a href="#eoapi-cdk.TitilerPgstacApiLambdaProps.property.apiEnv">apiEnv</a></code> | <code>{[ key: string ]: string}</code> | Customized environment variables to send to titiler-pgstac runtime. |
 | <code><a href="#eoapi-cdk.TitilerPgstacApiLambdaProps.property.buckets">buckets</a></code> | <code>string[]</code> | list of buckets the lambda will be granted access to. |
+| <code><a href="#eoapi-cdk.TitilerPgstacApiLambdaProps.property.enableSnapStart">enableSnapStart</a></code> | <code>boolean</code> | Enable SnapStart to reduce cold start latency. |
 | <code><a href="#eoapi-cdk.TitilerPgstacApiLambdaProps.property.lambdaFunctionOptions">lambdaFunctionOptions</a></code> | <code>any</code> | Can be used to override the default lambda function properties. |
 | <code><a href="#eoapi-cdk.TitilerPgstacApiLambdaProps.property.subnetSelection">subnetSelection</a></code> | <code>aws-cdk-lib.aws_ec2.SubnetSelection</code> | Subnet into which the lambda should be deployed. |
 | <code><a href="#eoapi-cdk.TitilerPgstacApiLambdaProps.property.vpc">vpc</a></code> | <code>aws-cdk-lib.aws_ec2.IVpc</code> | VPC into which the lambda should be deployed. |
@@ -6122,6 +6235,33 @@ public readonly buckets: string[];
 - *Type:* string[]
 
 list of buckets the lambda will be granted access to.
+
+---
+
+##### `enableSnapStart`<sup>Optional</sup> <a name="enableSnapStart" id="eoapi-cdk.TitilerPgstacApiLambdaProps.property.enableSnapStart"></a>
+
+```typescript
+public readonly enableSnapStart: boolean;
+```
+
+- *Type:* boolean
+- *Default:* false
+
+Enable SnapStart to reduce cold start latency.
+
+SnapStart creates a snapshot of the initialized Lambda function, allowing new instances
+to start from this pre-initialized state instead of starting from scratch.
+
+Benefits:
+- Significantly reduces cold start times (typically 10x faster)
+- Improves API response time for infrequent requests
+
+Considerations:
+- Additional cost: charges for snapshot storage and restore operations
+- Requires Lambda versioning (automatically configured by this construct)
+- Database connections are recreated on restore using snapshot lifecycle hooks
+
+> [https://docs.aws.amazon.com/lambda/latest/dg/snapstart.html](https://docs.aws.amazon.com/lambda/latest/dg/snapstart.html)
 
 ---
 
@@ -6210,6 +6350,7 @@ const titilerPgstacApiLambdaRuntimeProps: TitilerPgstacApiLambdaRuntimeProps = {
 | <code><a href="#eoapi-cdk.TitilerPgstacApiLambdaRuntimeProps.property.dbSecret">dbSecret</a></code> | <code>aws-cdk-lib.aws_secretsmanager.ISecret</code> | Secret containing connection information for pgSTAC database. |
 | <code><a href="#eoapi-cdk.TitilerPgstacApiLambdaRuntimeProps.property.apiEnv">apiEnv</a></code> | <code>{[ key: string ]: string}</code> | Customized environment variables to send to titiler-pgstac runtime. |
 | <code><a href="#eoapi-cdk.TitilerPgstacApiLambdaRuntimeProps.property.buckets">buckets</a></code> | <code>string[]</code> | list of buckets the lambda will be granted access to. |
+| <code><a href="#eoapi-cdk.TitilerPgstacApiLambdaRuntimeProps.property.enableSnapStart">enableSnapStart</a></code> | <code>boolean</code> | Enable SnapStart to reduce cold start latency. |
 | <code><a href="#eoapi-cdk.TitilerPgstacApiLambdaRuntimeProps.property.lambdaFunctionOptions">lambdaFunctionOptions</a></code> | <code>any</code> | Can be used to override the default lambda function properties. |
 | <code><a href="#eoapi-cdk.TitilerPgstacApiLambdaRuntimeProps.property.subnetSelection">subnetSelection</a></code> | <code>aws-cdk-lib.aws_ec2.SubnetSelection</code> | Subnet into which the lambda should be deployed. |
 | <code><a href="#eoapi-cdk.TitilerPgstacApiLambdaRuntimeProps.property.vpc">vpc</a></code> | <code>aws-cdk-lib.aws_ec2.IVpc</code> | VPC into which the lambda should be deployed. |
@@ -6264,6 +6405,33 @@ public readonly buckets: string[];
 - *Type:* string[]
 
 list of buckets the lambda will be granted access to.
+
+---
+
+##### `enableSnapStart`<sup>Optional</sup> <a name="enableSnapStart" id="eoapi-cdk.TitilerPgstacApiLambdaRuntimeProps.property.enableSnapStart"></a>
+
+```typescript
+public readonly enableSnapStart: boolean;
+```
+
+- *Type:* boolean
+- *Default:* false
+
+Enable SnapStart to reduce cold start latency.
+
+SnapStart creates a snapshot of the initialized Lambda function, allowing new instances
+to start from this pre-initialized state instead of starting from scratch.
+
+Benefits:
+- Significantly reduces cold start times (typically 10x faster)
+- Improves API response time for infrequent requests
+
+Considerations:
+- Additional cost: charges for snapshot storage and restore operations
+- Requires Lambda versioning (automatically configured by this construct)
+- Database connections are recreated on restore using snapshot lifecycle hooks
+
+> [https://docs.aws.amazon.com/lambda/latest/dg/snapstart.html](https://docs.aws.amazon.com/lambda/latest/dg/snapstart.html)
 
 ---
 
