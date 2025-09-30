@@ -127,9 +127,22 @@ export interface TitilerPgstacApiLambdaRuntimeProps {
   readonly buckets?: string[];
 
   /**
-   * Enable SnapStart.
+   * Enable SnapStart to reduce cold start latency.
    *
-   * @default - false
+   * SnapStart creates a snapshot of the initialized Lambda function, allowing new instances
+   * to start from this pre-initialized state instead of starting from scratch.
+   *
+   * Benefits:
+   * - Significantly reduces cold start times (typically 10x faster)
+   * - Improves API response time for infrequent requests
+   *
+   * Considerations:
+   * - Additional cost: charges for snapshot storage and restore operations
+   * - Requires Lambda versioning (automatically configured by this construct)
+   * - Database connections are recreated on restore using snapshot lifecycle hooks
+   *
+   * @see https://docs.aws.amazon.com/lambda/latest/dg/snapstart.html
+   * @default false
    */
   readonly enableSnapStart?: boolean;
 
