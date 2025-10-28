@@ -3554,22 +3554,24 @@ const pgStacDatabaseProps: PgStacDatabaseProps = { ... }
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.cloudwatchLogsRetention">cloudwatchLogsRetention</a></code> | <code>aws-cdk-lib.aws_logs.RetentionDays</code> | The number of days log events are kept in CloudWatch Logs. |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.cloudwatchLogsRetentionRole">cloudwatchLogsRetentionRole</a></code> | <code>aws-cdk-lib.aws_iam.IRole</code> | The IAM role for the Lambda function associated with the custom resource that sets the retention policy. |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.copyTagsToSnapshot">copyTagsToSnapshot</a></code> | <code>boolean</code> | Indicates whether to copy all of the user-defined tags from the DB instance to snapshots of the DB instance. |
+| <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.databaseInsightsMode">databaseInsightsMode</a></code> | <code>aws-cdk-lib.aws_rds.DatabaseInsightsMode</code> | The database insights mode. |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.deleteAutomatedBackups">deleteAutomatedBackups</a></code> | <code>boolean</code> | Indicates whether automated backups should be deleted or retained when you delete a DB instance. |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.deletionProtection">deletionProtection</a></code> | <code>boolean</code> | Indicates whether the DB instance should have deletion protection enabled. |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.domain">domain</a></code> | <code>string</code> | The Active Directory directory ID to create the DB instance in. |
-| <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.domainRole">domainRole</a></code> | <code>aws-cdk-lib.aws_iam.IRole</code> | The IAM role to be used when making API calls to the Directory Service. |
+| <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.domainRole">domainRole</a></code> | <code>aws-cdk-lib.aws_iam.IRoleRef</code> | The IAM role to be used when making API calls to the Directory Service. |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.enablePerformanceInsights">enablePerformanceInsights</a></code> | <code>boolean</code> | Whether to enable Performance Insights for the DB instance. |
+| <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.engineLifecycleSupport">engineLifecycleSupport</a></code> | <code>aws-cdk-lib.aws_rds.EngineLifecycleSupport</code> | The life cycle type for this DB instance. |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.iamAuthentication">iamAuthentication</a></code> | <code>boolean</code> | Whether to enable mapping of AWS Identity and Access Management (IAM) accounts to database accounts. |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.instanceIdentifier">instanceIdentifier</a></code> | <code>string</code> | A name for the DB instance. |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.iops">iops</a></code> | <code>number</code> | The number of I/O operations per second (IOPS) that the database provisions. |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.maxAllocatedStorage">maxAllocatedStorage</a></code> | <code>number</code> | Upper limit to which RDS can scale the storage in GiB(Gibibyte). |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.monitoringInterval">monitoringInterval</a></code> | <code>aws-cdk-lib.Duration</code> | The interval, in seconds, between points when Amazon RDS collects enhanced monitoring metrics for the DB instance. |
-| <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.monitoringRole">monitoringRole</a></code> | <code>aws-cdk-lib.aws_iam.IRole</code> | Role that will be used to manage DB instance monitoring. |
+| <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.monitoringRole">monitoringRole</a></code> | <code>aws-cdk-lib.aws_iam.IRoleRef</code> | Role that will be used to manage DB instance monitoring. |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.multiAz">multiAz</a></code> | <code>boolean</code> | Specifies if the database instance is a multiple Availability Zone deployment. |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.networkType">networkType</a></code> | <code>aws-cdk-lib.aws_rds.NetworkType</code> | The network type of the DB instance. |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.optionGroup">optionGroup</a></code> | <code>aws-cdk-lib.aws_rds.IOptionGroup</code> | The option group to associate with the instance. |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.parameterGroup">parameterGroup</a></code> | <code>aws-cdk-lib.aws_rds.IParameterGroup</code> | The DB parameter group to associate with the instance. |
-| <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.performanceInsightEncryptionKey">performanceInsightEncryptionKey</a></code> | <code>aws-cdk-lib.aws_kms.IKey</code> | The AWS KMS key for encryption of Performance Insights data. |
+| <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.performanceInsightEncryptionKey">performanceInsightEncryptionKey</a></code> | <code>aws-cdk-lib.aws_kms.IKeyRef</code> | The AWS KMS key for encryption of Performance Insights data. |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.performanceInsightRetention">performanceInsightRetention</a></code> | <code>aws-cdk-lib.aws_rds.PerformanceInsightRetention</code> | The amount of time, in days, to retain Performance Insights data. |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.port">port</a></code> | <code>number</code> | The port for the instance. |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.preferredBackupWindow">preferredBackupWindow</a></code> | <code>string</code> | The daily time range during which automated backups are performed. |
@@ -3583,7 +3585,7 @@ const pgStacDatabaseProps: PgStacDatabaseProps = { ... }
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.s3ImportRole">s3ImportRole</a></code> | <code>aws-cdk-lib.aws_iam.IRole</code> | Role that will be associated with this DB instance to enable S3 import. |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.securityGroups">securityGroups</a></code> | <code>aws-cdk-lib.aws_ec2.ISecurityGroup[]</code> | The security groups to assign to the DB instance. |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.storageThroughput">storageThroughput</a></code> | <code>number</code> | The storage throughput, specified in mebibytes per second (MiBps). |
-| <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.storageType">storageType</a></code> | <code>aws-cdk-lib.aws_rds.StorageType</code> | The storage type. |
+| <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.storageType">storageType</a></code> | <code>aws-cdk-lib.aws_rds.StorageType</code> | The storage type to associate with the DB instance. |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.subnetGroup">subnetGroup</a></code> | <code>aws-cdk-lib.aws_rds.ISubnetGroup</code> | Existing subnet group for the instance. |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.vpcSubnets">vpcSubnets</a></code> | <code>aws-cdk-lib.aws_ec2.SubnetSelection</code> | The type of subnets to add to the created DB subnet group. |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.engine">engine</a></code> | <code>aws-cdk-lib.aws_rds.IInstanceEngine</code> | The database engine. |
@@ -3597,7 +3599,7 @@ const pgStacDatabaseProps: PgStacDatabaseProps = { ... }
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.characterSetName">characterSetName</a></code> | <code>string</code> | For supported engines, specifies the character set to associate with the DB instance. |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.credentials">credentials</a></code> | <code>aws-cdk-lib.aws_rds.Credentials</code> | Credentials for the administrative user. |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.storageEncrypted">storageEncrypted</a></code> | <code>boolean</code> | Indicates whether the DB instance is encrypted. |
-| <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.storageEncryptionKey">storageEncryptionKey</a></code> | <code>aws-cdk-lib.aws_kms.IKey</code> | The KMS key that's used to encrypt the DB instance. |
+| <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.storageEncryptionKey">storageEncryptionKey</a></code> | <code>aws-cdk-lib.aws_kms.IKeyRef</code> | The KMS key that's used to encrypt the DB instance. |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.addPgbouncer">addPgbouncer</a></code> | <code>boolean</code> | Add pgbouncer instance for managing traffic to the pgSTAC database. |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.bootstrapperLambdaFunctionOptions">bootstrapperLambdaFunctionOptions</a></code> | <code>any</code> | Can be used to override the default lambda function properties. |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.customResourceProperties">customResourceProperties</a></code> | <code>{[ key: string ]: any}</code> | Lambda function Custom Resource properties. |
@@ -3761,6 +3763,19 @@ Indicates whether to copy all of the user-defined tags from the DB instance to s
 
 ---
 
+##### `databaseInsightsMode`<sup>Optional</sup> <a name="databaseInsightsMode" id="eoapi-cdk.PgStacDatabaseProps.property.databaseInsightsMode"></a>
+
+```typescript
+public readonly databaseInsightsMode: DatabaseInsightsMode;
+```
+
+- *Type:* aws-cdk-lib.aws_rds.DatabaseInsightsMode
+- *Default:* DatabaseInsightsMode.STANDARD when performance insights are enabled, otherwise not set.
+
+The database insights mode.
+
+---
+
 ##### `deleteAutomatedBackups`<sup>Optional</sup> <a name="deleteAutomatedBackups" id="eoapi-cdk.PgStacDatabaseProps.property.deleteAutomatedBackups"></a>
 
 ```typescript
@@ -3803,10 +3818,10 @@ The Active Directory directory ID to create the DB instance in.
 ##### `domainRole`<sup>Optional</sup> <a name="domainRole" id="eoapi-cdk.PgStacDatabaseProps.property.domainRole"></a>
 
 ```typescript
-public readonly domainRole: IRole;
+public readonly domainRole: IRoleRef;
 ```
 
-- *Type:* aws-cdk-lib.aws_iam.IRole
+- *Type:* aws-cdk-lib.aws_iam.IRoleRef
 - *Default:* The role will be created for you if `DatabaseInstanceNewProps#domain` is specified
 
 The IAM role to be used when making API calls to the Directory Service.
@@ -3826,6 +3841,23 @@ public readonly enablePerformanceInsights: boolean;
 - *Default:* false, unless ``performanceInsightRetention`` or ``performanceInsightEncryptionKey`` is set.
 
 Whether to enable Performance Insights for the DB instance.
+
+---
+
+##### `engineLifecycleSupport`<sup>Optional</sup> <a name="engineLifecycleSupport" id="eoapi-cdk.PgStacDatabaseProps.property.engineLifecycleSupport"></a>
+
+```typescript
+public readonly engineLifecycleSupport: EngineLifecycleSupport;
+```
+
+- *Type:* aws-cdk-lib.aws_rds.EngineLifecycleSupport
+- *Default:* undefined - AWS RDS default setting is `EngineLifecycleSupport.OPEN_SOURCE_RDS_EXTENDED_SUPPORT`
+
+The life cycle type for this DB instance.
+
+This setting applies only to RDS for MySQL and RDS for PostgreSQL.
+
+> [https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/extended-support.html](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/extended-support.html)
 
 ---
 
@@ -3904,10 +3936,10 @@ The interval, in seconds, between points when Amazon RDS collects enhanced monit
 ##### `monitoringRole`<sup>Optional</sup> <a name="monitoringRole" id="eoapi-cdk.PgStacDatabaseProps.property.monitoringRole"></a>
 
 ```typescript
-public readonly monitoringRole: IRole;
+public readonly monitoringRole: IRoleRef;
 ```
 
-- *Type:* aws-cdk-lib.aws_iam.IRole
+- *Type:* aws-cdk-lib.aws_iam.IRoleRef
 - *Default:* A role is automatically created for you
 
 Role that will be used to manage DB instance monitoring.
@@ -3969,10 +4001,10 @@ The DB parameter group to associate with the instance.
 ##### `performanceInsightEncryptionKey`<sup>Optional</sup> <a name="performanceInsightEncryptionKey" id="eoapi-cdk.PgStacDatabaseProps.property.performanceInsightEncryptionKey"></a>
 
 ```typescript
-public readonly performanceInsightEncryptionKey: IKey;
+public readonly performanceInsightEncryptionKey: IKeyRef;
 ```
 
-- *Type:* aws-cdk-lib.aws_kms.IKey
+- *Type:* aws-cdk-lib.aws_kms.IKeyRef
 - *Default:* default master key
 
 The AWS KMS key for encryption of Performance Insights data.
@@ -3989,6 +4021,8 @@ public readonly performanceInsightRetention: PerformanceInsightRetention;
 - *Default:* 7 this is the free tier
 
 The amount of time, in days, to retain Performance Insights data.
+
+If you set `databaseInsightsMode` to `DatabaseInsightsMode.ADVANCED`, you must set this property to `PerformanceInsightRetention.MONTHS_15`.
 
 ---
 
@@ -4200,11 +4234,11 @@ public readonly storageType: StorageType;
 ```
 
 - *Type:* aws-cdk-lib.aws_rds.StorageType
-- *Default:* GP2
+- *Default:* StorageType.GP2
 
-The storage type.
+The storage type to associate with the DB instance.
 
-Storage types supported are gp2, io1, standard.
+Storage types supported are gp2, gp3, io1, io2, and standard.
 
 > [https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_Storage.html#Concepts.Storage.GeneralSSD](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_Storage.html#Concepts.Storage.GeneralSSD)
 
@@ -4386,10 +4420,10 @@ Indicates whether the DB instance is encrypted.
 ##### `storageEncryptionKey`<sup>Optional</sup> <a name="storageEncryptionKey" id="eoapi-cdk.PgStacDatabaseProps.property.storageEncryptionKey"></a>
 
 ```typescript
-public readonly storageEncryptionKey: IKey;
+public readonly storageEncryptionKey: IKeyRef;
 ```
 
-- *Type:* aws-cdk-lib.aws_kms.IKey
+- *Type:* aws-cdk-lib.aws_kms.IKeyRef
 - *Default:* default master key if storageEncrypted is true, no key otherwise
 
 The KMS key that's used to encrypt the DB instance.
