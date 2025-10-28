@@ -37,22 +37,22 @@ jobs:
       - name: Generate documentation
         run: npm run docgen
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         with:
           name: docs
           path: docs
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         with:
           name: python
           path: dist/python/*
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         with:
           name: js
           path: dist/js/*
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         with:
           name: jsii
           path: .jsii
