@@ -13,7 +13,7 @@ members = ["lib/stac-loader/runtime", "lib/stactools-item-generator/runtime"]
 
 [dependency-groups]
 deploy = [
-    "aws-cdk-lib==2.190.0",
+    "aws-cdk-lib==2.220.0",
     "constructs==10.3.0",
     "pydantic>=2.11.5",
     "pydantic-settings[yaml]>=2.8.1",
