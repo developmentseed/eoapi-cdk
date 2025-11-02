@@ -530,11 +530,11 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "stac-api", virtual = "lib/stac-api/runtime" },
+    { name = "stac-api", directory = "lib/stac-api/runtime" },
     { name = "stac-loader", directory = "lib/stac-loader/runtime" },
     { name = "stactools-item-generator", directory = "lib/stactools-item-generator/runtime" },
-    { name = "tipg-api", virtual = "lib/tipg-api/runtime" },
-    { name = "titiler-pgstac-api", virtual = "lib/titiler-pgstac-api/runtime" },
+    { name = "tipg-api", directory = "lib/tipg-api/runtime" },
+    { name = "titiler-pgstac-api", directory = "lib/titiler-pgstac-api/runtime" },
 ]
 
 [package.metadata.requires-dev]
@@ -1754,7 +1754,7 @@ wheels = [
 [[package]]
 name = "stac-api"
 version = "0.1.0"
-source = { virtual = "lib/stac-api/runtime" }
+source = { directory = "lib/stac-api/runtime" }
 dependencies = [
     { name = "stac-fastapi-pgstac", extra = ["awslambda"] },
     { name = "starlette-cramjam" },
@@ -1967,7 +1967,7 @@ wheels = [
 [[package]]
 name = "tipg-api"
 version = "0.1.0"
-source = { virtual = "lib/tipg-api/runtime" }
+source = { directory = "lib/tipg-api/runtime" }
 dependencies = [
     { name = "tipg" },
 ]
@@ -2032,7 +2032,7 @@ psycopg-binary = [
 [[package]]
 name = "titiler-pgstac-api"
 version = "0.1.0"
-source = { virtual = "lib/titiler-pgstac-api/runtime" }
+source = { directory = "lib/titiler-pgstac-api/runtime" }
 dependencies = [
     { name = "mangum" },
     { name = "titiler-pgstac", extra = ["psycopg-binary"] },
