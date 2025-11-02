@@ -1753,7 +1753,7 @@ wheels = [
 
 [[package]]
 name = "stac-api"
-version = "0.1.0"
+version = "0.0.0"
 source = { directory = "lib/stac-api/runtime" }
 dependencies = [
     { name = "stac-fastapi-pgstac", extra = ["awslambda"] },
@@ -1840,7 +1840,7 @@ wheels = [
 
 [[package]]
 name = "stac-loader"
-version = "0.1.0"
+version = "0.0.0"
 source = { directory = "lib/stac-loader/runtime" }
 dependencies = [
     { name = "boto3" },
@@ -1871,7 +1871,7 @@ wheels = [
 
 [[package]]
 name = "stactools-item-generator"
-version = "0.1.0"
+version = "0.0.0"
 source = { directory = "lib/stactools-item-generator/runtime" }
 dependencies = [
     { name = "pydantic" },
@@ -1966,14 +1966,18 @@ wheels = [
 
 [[package]]
 name = "tipg-api"
-version = "0.1.0"
+version = "0.0.0"
 source = { directory = "lib/tipg-api/runtime" }
 dependencies = [
+    { name = "mangum" },
     { name = "tipg" },
 ]
 
 [package.metadata]
-requires-dist = [{ name = "tipg", specifier = ">=1.2,<1.3" }]
+requires-dist = [
+    { name = "mangum", specifier = ">=0.19.0" },
+    { name = "tipg", specifier = ">=1.2,<1.3" },
+]
 
 [[package]]
 name = "titiler-core"
@@ -2031,7 +2035,7 @@ psycopg-binary = [
 
 [[package]]
 name = "titiler-pgstac-api"
-version = "0.1.0"
+version = "0.0.0"
 source = { directory = "lib/titiler-pgstac-api/runtime" }
 dependencies = [
     { name = "mangum" },
