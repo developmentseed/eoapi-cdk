@@ -1,6 +1,6 @@
 [project]
 name = "stac-api"
-version = "0.1.0"
+version = "0.0.0"
 description = "stac-api runtime"
 authors = [{ name = "hrodmn", email = "henry@developmentseed.org" }]
 requires-python = ">=3.12"

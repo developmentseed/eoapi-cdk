@@ -1,6 +1,6 @@
 [project]
 name = "titiler-pgstac-api"
-version = "0.1.0"
+version = "0.0.0"
 description = "titiler-pgstac-api runtime"
 requires-python = ">=3.12"
 dependencies = [

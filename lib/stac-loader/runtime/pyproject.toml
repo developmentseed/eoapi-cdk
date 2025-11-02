@@ -1,6 +1,6 @@
 [project]
 name = "stac-loader"
-version = "0.1.0"
+version = "0.0.0"
 description = "An application for loading STAC collections and items into a pgstac database"
 authors = [{ name = "hrodmn", email = "henry@developmentseed.org" }]
 requires-python = ">=3.12"
