@@ -13,7 +13,7 @@ export class StacAuthProxyLambdaRuntime extends Construct {
   constructor(
     scope: Construct,
     id: string,
-    props: StacAuthProxyLambdaRuntimeProps
+    props: StacAuthProxyLambdaRuntimeProps,
   ) {
     super(scope, id);
 
@@ -22,7 +22,7 @@ export class StacAuthProxyLambdaRuntime extends Construct {
 
     this.lambdaFunction = new lambda.Function(this, "lambda", {
       runtime: lambda.Runtime.PYTHON_3_13,
-      handler: "handler.handler",
+      handler: "stac_auth_proxy_api.handler.handler",
       memorySize: 8192,
       logRetention: cdk.aws_logs.RetentionDays.ONE_WEEK,
       timeout: cdk.Duration.seconds(30),
@@ -114,7 +114,7 @@ export class StacAuthProxyLambda extends Construct {
     const runtime = new StacAuthProxyLambdaRuntime(
       this,
       "runtime",
-      runtimeProps
+      runtimeProps,
     );
     this.lambdaFunction = runtime.lambdaFunction;
 

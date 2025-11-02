@@ -6,7 +6,7 @@ lib/**/*.d.ts
 dist
 docs
 __pycache__
-.venv
+/.venv
 .tox
 tests/*.egg*
 tests/*venv*

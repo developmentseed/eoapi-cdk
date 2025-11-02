@@ -26,7 +26,7 @@ export class TiPgApiLambdaRuntime extends Construct {
     this.lambdaFunction = new lambda.Function(this, "lambda", {
       // defaults
       runtime: lambda.Runtime.PYTHON_3_12,
-      handler: "handler.handler",
+      handler: "tipg_api.handler.handler",
       memorySize: 1024,
       logRetention: logs.RetentionDays.ONE_WEEK,
       timeout: Duration.seconds(30),
@@ -56,7 +56,7 @@ export class TiPgApiLambdaRuntime extends Construct {
       this.lambdaFunction.connections.allowTo(
         props.db,
         ec2.Port.tcp(5432),
-        "allow connections from tipg"
+        "allow connections from tipg",
       );
     }
   }
