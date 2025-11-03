@@ -2,14 +2,21 @@
 name = "eoapi-cdk"
 version = "0.0"
 requires-python = ">=3.12"
-dependencies = ["stactools-item-generator", "stac-loader"]
+dependencies = [
+    "stac-api",
+    "tipg-api",
+    "titiler-pgstac-api",
+    "stac-loader",
+    "stactools-item-generator",
+]
 
 [tool.uv.sources]
-stactools-item-generator = { workspace = true }
-stac-loader = { workspace = true }
+stactools-item-generator = { path = "lib/stactools-item-generator/runtime" }
+stac-loader = { path = "lib/stac-loader/runtime" }
+tipg-api = { path = "lib/tipg-api/runtime" }
+titiler-pgstac-api = { path = "lib/titiler-pgstac-api/runtime" }
+stac-api = { path = "lib/stac-api/runtime" }
 
-[tool.uv.workspace]
-members = ["lib/stac-loader/runtime", "lib/stactools-item-generator/runtime"]
 
 [dependency-groups]
 deploy = [

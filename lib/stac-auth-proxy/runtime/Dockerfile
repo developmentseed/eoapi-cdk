@@ -1,11 +1,18 @@
 ARG PYTHON_VERSION
 FROM --platform=linux/amd64 public.ecr.aws/lambda/python:${PYTHON_VERSION}
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
 WORKDIR /tmp
-RUN python -m pip install pip -U
+COPY stac-auth-proxy/runtime/uv.lock stac-auth-proxy/runtime/pyproject.toml ./
+COPY stac-auth-proxy/runtime/src/ ./src/
 
-COPY stac-auth-proxy/runtime/requirements.txt requirements.txt
-RUN python -m pip install -r requirements.txt "mangum>=0.14,<0.15" -t /asset
-
-RUN mkdir -p /asset/src
-COPY stac-auth-proxy/runtime/src/*.py /asset/
+RUN <<EOF
+uv export --locked --no-editable --no-dev --format requirements.txt -o requirements.txt
+uv pip install \
+  --compile-bytecode \
+  --no-binary pydantic \
+  --target /asset \
+  --no-cache-dir \
+  --disable-pip-version-check \
+  -r requirements.txt
+EOF

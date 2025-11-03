@@ -41,7 +41,7 @@ export class PgStacApiLambdaRuntime extends Construct {
   constructor(
     scope: Construct,
     id: string,
-    props: PgStacApiLambdaRuntimeProps
+    props: PgStacApiLambdaRuntimeProps,
   ) {
     super(scope, id);
 
@@ -60,8 +60,8 @@ export class PgStacApiLambdaRuntime extends Construct {
         if (!isValidExtension(ext)) {
           throw new Error(
             `Invalid extension: "${ext}". Must be one of: ${Object.values(
-              EXTENSIONS
-            ).join(", ")}`
+              EXTENSIONS,
+            ).join(", ")}`,
           );
         }
       }
@@ -75,7 +75,7 @@ export class PgStacApiLambdaRuntime extends Construct {
     this.lambdaFunction = new lambda.Function(this, "lambda", {
       // defaults
       runtime: lambda.Runtime.PYTHON_3_12,
-      handler: "handler.handler",
+      handler: "stac_api.handler.handler",
       memorySize: 8192,
       logRetention: aws_logs.RetentionDays.ONE_WEEK,
       timeout: Duration.seconds(30),
@@ -106,7 +106,7 @@ export class PgStacApiLambdaRuntime extends Construct {
       this.lambdaFunction.connections.allowTo(
         props.db,
         ec2.Port.tcp(5432),
-        "allow connections from stac-fastapi-pgstac"
+        "allow connections from stac-fastapi-pgstac",
       );
     }
   }

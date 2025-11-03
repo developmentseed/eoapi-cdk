@@ -37,7 +37,7 @@ export class TitilerPgstacApiLambdaRuntime extends Construct {
   constructor(
     scope: Construct,
     id: string,
-    props: TitilerPgstacApiLambdaRuntimeProps
+    props: TitilerPgstacApiLambdaRuntimeProps,
   ) {
     super(scope, id);
 
@@ -47,7 +47,7 @@ export class TitilerPgstacApiLambdaRuntime extends Construct {
     this.lambdaFunction = new lambda.Function(this, "lambda", {
       // defaults
       runtime: lambda.Runtime.PYTHON_3_12,
-      handler: "handler.handler",
+      handler: "titiler_pgstac_api.handler.handler",
       memorySize: 3008,
       logRetention: aws_logs.RetentionDays.ONE_WEEK,
       timeout: Duration.seconds(30),
@@ -77,7 +77,7 @@ export class TitilerPgstacApiLambdaRuntime extends Construct {
           new iam.PolicyStatement({
             actions: ["s3:GetObject"],
             resources: [`arn:aws:s3:::${bucket}/*`],
-          })
+          }),
         );
       });
     }
@@ -88,7 +88,7 @@ export class TitilerPgstacApiLambdaRuntime extends Construct {
       this.lambdaFunction.connections.allowTo(
         props.db,
         ec2.Port.tcp(5432),
-        "allow connections from titiler"
+        "allow connections from titiler",
       );
     }
   }
@@ -173,7 +173,7 @@ export class TitilerPgstacApiLambda extends Construct {
   constructor(
     scope: Construct,
     id: string,
-    props: TitilerPgstacApiLambdaProps
+    props: TitilerPgstacApiLambdaProps,
   ) {
     super(scope, id);
 

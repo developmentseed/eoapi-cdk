@@ -1,6 +1,6 @@
 [project]
 name = "stactools-item-generator"
-version = "0.1.0"
+version = "0.0.0"
 description = "An application for generating STAC metadata with any stactools package"
 authors = [{ name = "hrodmn", email = "henry@developmentseed.org" }]
 requires-python = ">=3.12"
