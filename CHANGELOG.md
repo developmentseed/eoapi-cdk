@@ -1,3 +1,10 @@
+# [10.4.0](https://github.com/developmentseed/eoapi-cdk/compare/v10.3.0...v10.4.0) (2025-11-03)
+
+
+### Features
+
+* update runtime versions, use uv in docker builds ([#208](https://github.com/developmentseed/eoapi-cdk/issues/208)) ([1a228e1](https://github.com/developmentseed/eoapi-cdk/commit/1a228e1f4c91499b5a2b62e76a59736648ec3168))
+
 # [10.3.0](https://github.com/developmentseed/eoapi-cdk/compare/v10.2.5...v10.3.0) (2025-09-30)
 
 
