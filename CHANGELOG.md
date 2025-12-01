@@ -1,3 +1,10 @@
+## [10.4.1](https://github.com/developmentseed/eoapi-cdk/compare/v10.4.0...v10.4.1) (2025-12-01)
+
+
+### Bug Fixes
+
+* node lambda version ([#216](https://github.com/developmentseed/eoapi-cdk/issues/216)) ([f777304](https://github.com/developmentseed/eoapi-cdk/commit/f777304130b15e1be56a7203db4c175ba95b2c2d))
+
 # [10.4.0](https://github.com/developmentseed/eoapi-cdk/compare/v10.3.0...v10.4.0) (2025-11-03)
 
 
