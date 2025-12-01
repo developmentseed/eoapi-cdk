@@ -196,7 +196,7 @@ export class PgBouncer extends Construct {
 
     // Update pgbouncerSecret to contain pgstacSecret values but with new value for host
     const secretUpdaterFn = new lambda.Function(this, "SecretUpdaterFunction", {
-      runtime: lambda.Runtime.NODEJS_20_X,
+      runtime: lambda.Runtime.NODEJS_LATEST,
       handler: "index.handler",
       code: lambda.Code.fromAsset(
         path.join(__dirname, "lambda/pgbouncer-secret-updater")
@@ -228,7 +228,7 @@ export class PgBouncer extends Construct {
       this,
       "HealthCheckFunction",
       {
-        runtime: lambda.Runtime.NODEJS_20_X,
+        runtime: lambda.Runtime.NODEJS_LATEST,
         handler: "index.handler",
         timeout: Duration.minutes(10),
         code: lambda.Code.fromAsset(
