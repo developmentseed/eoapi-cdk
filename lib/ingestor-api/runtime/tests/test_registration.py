@@ -65,7 +65,7 @@ class TestCreate:
             json=jsonable_encoder(self.example_ingestion.item),
         )
 
-        assert response.status_code == 403
+        assert response.status_code == 401
 
     def test_create(self, client_authenticated, collection_exists, asset_exists):
         response = self.api_client.post(

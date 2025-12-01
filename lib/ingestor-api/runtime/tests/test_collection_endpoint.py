@@ -20,7 +20,7 @@ def test_auth_publish_collection(
 
 def test_unauth_publish_collection(client, example_stac_collection):
     response = client.post(publish_collections_endpoint, json=example_stac_collection)
-    assert response.status_code == 403
+    assert response.status_code == 401
 
 
 @patch("src.collection.delete")
@@ -38,4 +38,4 @@ def test_unauth_delete_collection(client, example_stac_collection):
     response = client.delete(
         delete_collection_endpoint.format(collection_id=example_stac_collection["id"]),
     )
-    assert response.status_code == 403
+    assert response.status_code == 401
