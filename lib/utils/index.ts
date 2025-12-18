@@ -1,5 +1,4 @@
 import { aws_lambda as lambda, CustomResource } from "aws-cdk-lib";
-import { Construct } from "constructs";
 
 export type CustomLambdaFunctionProps = lambda.FunctionProps | any;
 export const DEFAULT_PGSTAC_VERSION = "0.9.5";
@@ -82,15 +81,11 @@ export function extractDatabaseDependencies(db: any): CustomResource[] {
  * This prevents race conditions where the SnapStart snapshot might capture
  * incorrect or incomplete configuration.
  *
- * @param scope - CDK construct scope
- * @param id - Construct ID for the version
  * @param lambdaFunction - Lambda function to create a version from
  * @param dependencies - Optional array of resources to depend on
  * @returns Lambda version with dependencies applied
  */
 export function createLambdaVersionWithDependencies(
-  scope: Construct,
-  id: string,
   lambdaFunction: lambda.Function,
   dependencies?: CustomResource[],
 ): lambda.Version {

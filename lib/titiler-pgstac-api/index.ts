@@ -203,10 +203,8 @@ export class TitilerPgstacApiLambda extends Construct {
 
       // Create version with dependencies to ensure snapshot creation waits
       apiLambda = createLambdaVersionWithDependencies(
-        this,
-        "lambda-version",
         runtime.lambdaFunction,
-        dbDependencies
+        dbDependencies,
       );
     } else {
       apiLambda = runtime.lambdaFunction;

@@ -159,8 +159,6 @@ export class TiPgApiLambda extends Construct {
 
       // Create version with dependencies to ensure snapshot creation waits
       apiLambda = createLambdaVersionWithDependencies(
-        this,
-        "lambda-version",
         runtime.lambdaFunction,
         dbDependencies,
       );
