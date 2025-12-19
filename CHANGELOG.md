@@ -1,3 +1,10 @@
+## [10.4.2](https://github.com/developmentseed/eoapi-cdk/compare/v10.4.1...v10.4.2) (2025-12-19)
+
+
+### Bug Fixes
+
+* add pgbouncer secretBootstrapper as a dependency for lambda functions ([#221](https://github.com/developmentseed/eoapi-cdk/issues/221)) ([6b141e9](https://github.com/developmentseed/eoapi-cdk/commit/6b141e93e0c2a60658047e1d8bbd569e0ff0b312))
+
 ## [10.4.1](https://github.com/developmentseed/eoapi-cdk/compare/v10.4.0...v10.4.1) (2025-12-01)
 
 
