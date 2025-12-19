@@ -12,7 +12,12 @@ import {
 import { Construct } from "constructs";
 import * as path from "path";
 import { LambdaApiGateway } from "../lambda-api-gateway";
-import { CustomLambdaFunctionProps, resolveLambdaCode } from "../utils";
+import {
+  CustomLambdaFunctionProps,
+  resolveLambdaCode,
+  extractDatabaseDependencies,
+  createLambdaVersionWithDependencies,
+} from "../utils";
 
 export class TiPgApiLambdaRuntime extends Construct {
   public readonly lambdaFunction: lambda.Function;
@@ -146,10 +151,23 @@ export class TiPgApiLambda extends Construct {
     });
     this.tiPgLambdaFunction = this.lambdaFunction = runtime.lambdaFunction;
 
+    // Determine which lambda to use for API Gateway
+    let apiLambda: lambda.Function | lambda.Version;
+    if (props.enableSnapStart) {
+      // Extract dependencies from database if it's a PgStacDatabase with PgBouncer
+      const dbDependencies = extractDatabaseDependencies(props.db);
+
+      // Create version with dependencies to ensure snapshot creation waits
+      apiLambda = createLambdaVersionWithDependencies(
+        runtime.lambdaFunction,
+        dbDependencies,
+      );
+    } else {
+      apiLambda = runtime.lambdaFunction;
+    }
+
     const { api } = new LambdaApiGateway(this, "api", {
-      lambdaFunction: props.enableSnapStart!
-        ? runtime.lambdaFunction.currentVersion
-        : runtime.lambdaFunction,
+      lambdaFunction: apiLambda,
       domainName: props.domainName ?? props.tipgApiDomainName,
     });
 

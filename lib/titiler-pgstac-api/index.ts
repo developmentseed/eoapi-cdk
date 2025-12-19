@@ -13,7 +13,12 @@ import {
 import { Construct } from "constructs";
 import * as path from "path";
 import { LambdaApiGateway } from "../lambda-api-gateway";
-import { CustomLambdaFunctionProps, resolveLambdaCode } from "../utils";
+import {
+  CustomLambdaFunctionProps,
+  resolveLambdaCode,
+  extractDatabaseDependencies,
+  createLambdaVersionWithDependencies,
+} from "../utils";
 
 // default settings that can be overridden by the user-provided environment.
 let defaultTitilerPgstacEnv: Record<string, string> = {
@@ -190,10 +195,23 @@ export class TitilerPgstacApiLambda extends Construct {
     this.titilerPgstacLambdaFunction = this.lambdaFunction =
       runtime.lambdaFunction;
 
+    // Determine which lambda to use for API Gateway
+    let apiLambda: lambda.Function | lambda.Version;
+    if (props.enableSnapStart) {
+      // Extract dependencies from database if it's a PgStacDatabase with PgBouncer
+      const dbDependencies = extractDatabaseDependencies(props.db);
+
+      // Create version with dependencies to ensure snapshot creation waits
+      apiLambda = createLambdaVersionWithDependencies(
+        runtime.lambdaFunction,
+        dbDependencies,
+      );
+    } else {
+      apiLambda = runtime.lambdaFunction;
+    }
+
     const { api } = new LambdaApiGateway(this, "titlier-pgstac-api", {
-      lambdaFunction: props.enableSnapStart
-        ? runtime.lambdaFunction.currentVersion
-        : runtime.lambdaFunction,
+      lambdaFunction: apiLambda,
       domainName: props.domainName ?? props.titilerPgstacApiDomainName,
     });
 
