@@ -72,7 +72,7 @@ export function extractDatabaseDependencies(db: any): CustomResource[] {
 }
 
 /**
- * Creates a Lambda version with optional dependencies for SnapStart.
+ * Creates a Lambda version with dependencies for SnapStart.
  *
  * When SnapStart is enabled, the version creation triggers snapshot creation.
  * Dependencies ensure the snapshot isn't created until prerequisites are met,
@@ -82,12 +82,12 @@ export function extractDatabaseDependencies(db: any): CustomResource[] {
  * incorrect or incomplete configuration.
  *
  * @param lambdaFunction - Lambda function to create a version from
- * @param dependencies - Optional array of resources to depend on
+ * @param dependencies - Array of resources to depend on (pass empty array if none)
  * @returns Lambda version with dependencies applied
  */
 export function createLambdaVersionWithDependencies(
   lambdaFunction: lambda.Function,
-  dependencies?: CustomResource[],
+  dependencies: CustomResource[],
 ): lambda.Version {
   const version = lambdaFunction.currentVersion;
 
