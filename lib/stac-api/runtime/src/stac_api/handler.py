@@ -3,6 +3,7 @@ Handler for AWS Lambda.
 """
 
 import asyncio
+import logging
 import os
 
 from mangum import Mangum
@@ -12,14 +13,21 @@ from stac_fastapi.pgstac.config import PostgresSettings
 from stac_fastapi.pgstac.db import close_db_connection, connect_to_db
 from utils import get_secret_dict
 
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+)
+logger = logging.getLogger(__name__)
+
+
+logger.info("fetching pgstac secret")
 secret = get_secret_dict(secret_arn_env_var="PGSTAC_SECRET_ARN")
 postgres_settings = PostgresSettings(
-    postgres_host_reader=secret["host"],
-    postgres_host_writer=secret["host"],
-    postgres_dbname=secret["dbname"],
-    postgres_user=secret["username"],
-    postgres_pass=secret["password"],
-    postgres_port=int(secret["port"]),
+    pghost=secret["host"],
+    pgdatabase=secret["dbname"],
+    pguser=secret["username"],
+    pgpassword=secret["password"],
+    pgport=int(secret["port"]),
 )
 
 _connection_initialized = False
@@ -38,14 +46,14 @@ def on_snapshot():
             app.state.readpool.close()
             app.state.readpool = None
         except Exception as e:
-            print(f"SnapStart: Error closing database readpool: {e}")
+            logger.info(f"SnapStart: Error closing database readpool: {e}")
 
     if hasattr(app, "state") and hasattr(app.state, "writepool") and app.state.writepool:
         try:
             app.state.writepool.close()
             app.state.writepool = None
         except Exception as e:
-            print(f"SnapStart: Error closing database writepool: {e}")
+            logger.info(f"SnapStart: Error closing database writepool: {e}")
 
     return {"statusCode": 200}
 
@@ -71,14 +79,14 @@ def on_snap_restore():
             try:
                 app.state.readpool.close()
             except Exception as e:
-                print(f"SnapStart: Error closing stale readpool: {e}")
+                logger.info(f"SnapStart: Error closing stale readpool: {e}")
             app.state.readpool = None
 
         if hasattr(app.state, "writepool") and app.state.writepool:
             try:
                 app.state.writepool.close()
             except Exception as e:
-                print(f"SnapStart: Error closing stale writepool: {e}")
+                logger.info(f"SnapStart: Error closing stale writepool: {e}")
             app.state.writepool = None
 
         # Create fresh connection pool
@@ -93,7 +101,7 @@ def on_snap_restore():
         _connection_initialized = True
 
     except Exception as e:
-        print(f"SnapStart: Failed to initialize database connection: {e}")
+        logger.error(f"SnapStart: Failed to initialize database connection: {e}")
         raise
 
     return {"statusCode": 200}
@@ -102,13 +110,13 @@ def on_snap_restore():
 @app.on_event("startup")
 async def startup_event():
     """Connect to database on startup."""
-    print("Setting up DB connection...")
+    logger.info("Setting up DB connection...")
     await connect_to_db(
         app,
         postgres_settings=postgres_settings,
         add_write_connection_pool=with_transactions,
     )
-    print("DB connection setup.")
+    logger.info("DB connection setup.")
 
 
 @app.on_event("shutdown")
