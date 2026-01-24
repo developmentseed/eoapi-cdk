@@ -139,5 +139,14 @@ handler = Mangum(
 
 
 if "AWS_EXECUTION_ENV" in os.environ:
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(app.router.startup())
+    logger.info("Cold start: initializing database connection...")
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    loop.run_until_complete(
+        connect_to_db(
+            app,
+            postgres_settings=postgres_settings,
+            add_write_connection_pool=with_transactions,
+        )
+    )
+    logger.info("Database connection initialized.")
