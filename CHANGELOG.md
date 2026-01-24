@@ -1,3 +1,10 @@
+## [10.4.3](https://github.com/developmentseed/eoapi-cdk/compare/v10.4.2...v10.4.3) (2026-01-24)
+
+
+### Bug Fixes
+
+* **deps:** upgrade python packages in uv.lock files ([#222](https://github.com/developmentseed/eoapi-cdk/issues/222)) ([6d6a3d4](https://github.com/developmentseed/eoapi-cdk/commit/6d6a3d49efcc1375dbb0d90cbf3c5a6fb96b773c))
+
 ## [10.4.2](https://github.com/developmentseed/eoapi-cdk/compare/v10.4.1...v10.4.2) (2025-12-19)
 
 
