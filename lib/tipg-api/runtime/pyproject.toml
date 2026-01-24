@@ -4,7 +4,7 @@ version = "0.0.0"
 description = "tipg-api runtime"
 requires-python = ">=3.12"
 dependencies = [
-    "mangum>=0.19.0",
+    "mangum==0.19.0",
     "tipg>=1.2,<1.3",
 ]
 

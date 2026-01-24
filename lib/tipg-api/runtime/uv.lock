@@ -1,5 +1,5 @@
 version = 1
-revision = 2
+revision = 3
 requires-python = ">=3.12"
 
 [[package]]
@@ -763,7 +763,7 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
-    { name = "mangum", specifier = ">=0.19.0" },
+    { name = "mangum", specifier = "==0.19.0" },
     { name = "tipg", specifier = ">=1.2,<1.3" },
 ]
 

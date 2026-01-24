@@ -14,12 +14,11 @@ from utils import get_secret_dict
 
 secret = get_secret_dict(secret_arn_env_var="PGSTAC_SECRET_ARN")
 postgres_settings = PostgresSettings(
-    postgres_host_reader=secret["host"],
-    postgres_host_writer=secret["host"],
-    postgres_dbname=secret["dbname"],
-    postgres_user=secret["username"],
-    postgres_pass=secret["password"],
-    postgres_port=int(secret["port"]),
+    pghost=secret["host"],
+    pgdatabase=secret["dbname"],
+    pguser=secret["username"],
+    pgpassword=secret["password"],
+    pgport=int(secret["port"]),
 )
 
 _connection_initialized = False
