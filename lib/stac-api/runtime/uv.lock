@@ -543,7 +543,7 @@ dependencies = [
 requires-dist = [
     { name = "mangum", specifier = "==0.19.0" },
     { name = "stac-fastapi-pgstac", specifier = ">=6.2,<6.3" },
-    { name = "starlette-cramjam", specifier = ">=0.6,<1.0" },
+    { name = "starlette-cramjam", specifier = ">=0.4,<0.6" },
 ]
 
 [[package]]
@@ -642,15 +642,15 @@ wheels = [
 
 [[package]]
 name = "starlette-cramjam"
-version = "0.6.0"
+version = "0.5.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "cramjam" },
     { name = "starlette" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/00/f5/17097c8643255185ec9c3f03bf7d3cd3a967a16675a7cbbc47ef7e12784c/starlette_cramjam-0.6.0.tar.gz", hash = "sha256:7a18095ada00a474e951191ace15992ce6a7777fb400927e1d55ee1de6f48dbd", size = 7586, upload-time = "2026-01-15T17:34:10.92Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/6e/f8/ffcc61b1448f9ecb00134a27bdae2e156c2180fdf5f8de765657d9e1bcf1/starlette_cramjam-0.5.1.tar.gz", hash = "sha256:538fe9fad7a58af97ac32517fb0981d9462490cbaf332f73648005dd0a14eaef", size = 8038, upload-time = "2025-10-27T13:33:03.917Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/09/43/5d579dc290d43b9cfd0ca82765c0a571a550c3e1f9f52cd86b87a3c45c34/starlette_cramjam-0.6.0-py3-none-any.whl", hash = "sha256:9a4a408207c9a0a93ef781bb397710fe5b5be4be88beac99c38d153fabfeae58", size = 8030, upload-time = "2026-01-15T17:34:12.424Z" },
+    { url = "https://files.pythonhosted.org/packages/48/c8/3ad3cc9e2c431234fb940f31486f7ce3ebf3fe248d6d50a1e338ed2ecccf/starlette_cramjam-0.5.1-py3-none-any.whl", hash = "sha256:d3488b5648c7b3263c6b7d0f41d7856af6d6566c0cbd851f165838db0692c324", size = 7458, upload-time = "2025-10-27T13:33:02.902Z" },
 ]
 
 [[package]]
