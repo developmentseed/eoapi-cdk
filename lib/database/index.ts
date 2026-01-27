@@ -16,6 +16,9 @@ import {
   resolveLambdaCode,
 } from "../utils";
 import { PgBouncer } from "./PgBouncer";
+import * as crypto from "crypto";
+import * as fs from "fs";
+import * as path from "path";
 
 const instanceSizes: Record<string, number> = require("./instance-memory.json");
 
@@ -25,9 +28,47 @@ let defaultPgSTACCustomOptions: { [key: string]: any } = {
 };
 
 function hasVpc(
-  instance: rds.DatabaseInstance | rds.IDatabaseInstance
+  instance: rds.DatabaseInstance | rds.IDatabaseInstance,
 ): instance is rds.DatabaseInstance {
   return (instance as rds.DatabaseInstance).vpc !== undefined;
+}
+
+/**
+ * Computes a content-based hash for Lambda Docker build assets.
+ *
+ * This hash includes:
+ * - Dockerfile content
+ * - Handler code content
+ * - Build arguments (PGSTAC_VERSION, PYTHON_VERSION)
+ *
+ * @param basePath - Base directory containing the bootstrapper_runtime folder
+ * @param buildArgs - Docker build arguments that affect the Lambda
+ * @returns SHA256 hash as hex string
+ */
+function computeLambdaCodeHash(
+  basePath: string,
+  buildArgs: { [key: string]: string }
+): string {
+  const hash = crypto.createHash("sha256");
+
+  // Hash Dockerfile content
+  const dockerfilePath = path.join(basePath, "bootstrapper_runtime/Dockerfile");
+  const dockerfileContent = fs.readFileSync(dockerfilePath, "utf8");
+  hash.update(`Dockerfile:${dockerfileContent}`);
+
+  // Hash handler code
+  const handlerPath = path.join(basePath, "bootstrapper_runtime/handler.py");
+  const handlerContent = fs.readFileSync(handlerPath, "utf8");
+  hash.update(`handler:${handlerContent}`);
+
+  // Hash build arguments in sorted order for consistency
+  const sortedArgs = Object.keys(buildArgs)
+    .sort()
+    .map(key => `${key}=${buildArgs[key]}`)
+    .join(",");
+  hash.update(`buildArgs:${sortedArgs}`);
+
+  return hash.digest("hex");
 }
 
 /**
@@ -89,7 +130,7 @@ export class PgStacDatabase extends Construct {
 
     const defaultParameters = this.getParameters(
       props.instanceType?.toString() || "m5.large",
-      props.parameters
+      props.parameters,
     );
     const parameterGroup = new rds.ParameterGroup(this, "parameterGroup", {
       engine: props.engine,
@@ -118,19 +159,22 @@ export class PgStacDatabase extends Construct {
     const { code: userCode, ...otherLambdaOptions } =
       props.bootstrapperLambdaFunctionOptions || {};
 
+    // Store build args for hash computation
+    const buildArgs = {
+      PYTHON_VERSION: "3.12",
+      PGSTAC_VERSION: this.pgstacVersion,
+    };
+
     const handler = new aws_lambda.Function(this, "lambda", {
       // defaults
       runtime: aws_lambda.Runtime.PYTHON_3_12,
       handler: "handler.handler",
       memorySize: 128,
       logRetention: aws_logs.RetentionDays.ONE_WEEK,
-      timeout: Duration.minutes(2),
+      timeout: Duration.minutes(15),
       code: resolveLambdaCode(userCode, __dirname, {
         file: "bootstrapper_runtime/Dockerfile",
-        buildArgs: {
-          PYTHON_VERSION: "3.12",
-          PGSTAC_VERSION: this.pgstacVersion,
-        },
+        buildArgs: buildArgs,
       }),
       vpc: hasVpc(this.db) ? this.db.vpc : props.vpc,
       allowPublicSubnet: true,
@@ -181,10 +225,18 @@ export class PgStacDatabase extends Construct {
     // if props.lambdaFunctionOptions doesn't have 'code' defined, update pgstac_version (needed for default runtime)
     if (!userCode) {
       customResourceProperties["pgstac_version"] = this.pgstacVersion;
+
+      // Add content-based hash to ensure the Lambda gets re-executed only when code or config changes
+      customResourceProperties["code_hash"] = computeLambdaCodeHash(
+        __dirname,
+        buildArgs,
+      );
     }
 
-    // add timestamp to properties to ensure the Lambda gets re-executed on each deploy
-    customResourceProperties["timestamp"] = new Date().toISOString();
+    // force the bootstrap process to run by adding a timestamp which will ensure the custom resource executes the Lambda function
+    if (props.forceBootstrap) {
+      customResourceProperties["timestamp"] = new Date().toISOString();
+    }
 
     const bootstrapper = new CustomResource(this, "bootstrapper", {
       serviceToken: handler.functionArn,
@@ -197,7 +249,7 @@ export class PgStacDatabase extends Construct {
       instanceName: `${Stack.of(this).stackName}-pgbouncer`,
       instanceType: ec2.InstanceType.of(
         ec2.InstanceClass.T3,
-        ec2.InstanceSize.MICRO
+        ec2.InstanceSize.MICRO,
       ),
     };
     const addPgbouncer = props.addPgbouncer ?? true;
@@ -240,7 +292,7 @@ export class PgStacDatabase extends Construct {
 
   public getParameters(
     instanceType: string,
-    parameters: PgStacDatabaseProps["parameters"]
+    parameters: PgStacDatabaseProps["parameters"],
   ): DatabaseParameters {
     // https://github.com/aws/aws-cli/issues/1279#issuecomment-909318236
     const memory_in_kb = instanceSizes[instanceType] * 1024;
@@ -337,6 +389,25 @@ export interface PgStacDatabaseProps extends rds.DatabaseInstanceProps {
    * @default - defined in the construct.
    */
   readonly bootstrapperLambdaFunctionOptions?: CustomLambdaFunctionProps;
+
+  /**
+   * Force redeployment of the database bootstrapper Lambda on every deploy.
+   *
+   * This is only applicable when using custom Lambda code via bootstrapperLambdaFunctionOptions.
+   * When enabled, a timestamp will be added to the custom resource properties to ensure
+   * the bootstrapper Lambda runs on every deployment.
+   *
+   * For the default Docker-based bootstrap code, this flag is ignored and a content-based
+   * hash is used instead (which automatically triggers redeployment when code changes).
+   *
+   * **Alternative approach:** Instead of using this flag, you can trigger bootstrap by
+   * modifying any property in `customResourceProperties` (e.g., increment `pgstac_version`
+   * or add a `rebuild_trigger` property with a new value). This gives you more granular
+   * control over when redeployment happens.
+   *
+   * @default false
+   */
+  readonly forceBootstrap?: boolean;
 }
 
 export interface DatabaseParameters {
