@@ -751,7 +751,7 @@ wheels = [
 
 [[package]]
 name = "tipg"
-version = "1.2.1"
+version = "1.3.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "asyncpg" },
@@ -767,9 +767,9 @@ dependencies = [
     { name = "pygeofilter" },
     { name = "starlette-cramjam" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/20/01/5b8fd4b83b278550f37ef8c868907b9c361c76f2dfa46db8df6daf8cb610/tipg-1.2.1.tar.gz", hash = "sha256:91110f31a39afa44757a7a5f416706e120bee5b57ae43f9ea8ea99caee080a81", size = 458505, upload-time = "2025-08-27T07:45:23.272Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/d8/47/0a65f1b55cfdd5ace31359148d6c3344288e96bfa3fd54516a371498b35e/tipg-1.3.0.tar.gz", hash = "sha256:31329ce749c451bedc9824a6c009ab831e8ec5198b0002e631b6339f86d7299c", size = 59822, upload-time = "2025-11-17T14:05:47.442Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/ac/ec/9cf8cf83afb9dce60d3de059ba841cb09a8799bbd69e3234ad9592ae520b/tipg-1.2.1-py3-none-any.whl", hash = "sha256:16da447fbdf1e255e55fb1529513a1f98a0c4935fe301f92f252b5a18eb43f11", size = 79114, upload-time = "2025-08-27T07:45:24.669Z" },
+    { url = "https://files.pythonhosted.org/packages/e5/fa/8e5fd281aa76e51e7f8ca4b52e302955a57f34f4b8af281479a046743fc5/tipg-1.3.0-py3-none-any.whl", hash = "sha256:b9adf26a903ae1394466399cd16adc5cd12782e76ee3a6115e5e41b1f9cc5f09", size = 90104, upload-time = "2025-11-17T14:05:48.67Z" },
 ]
 
 [[package]]
@@ -784,7 +784,7 @@ dependencies = [
 [package.metadata]
 requires-dist = [
     { name = "mangum", specifier = "==0.19" },
-    { name = "tipg", specifier = ">=1.2,<1.3" },
+    { name = "tipg", specifier = ">=1.3,<1.4" },
 ]
 
 [[package]]

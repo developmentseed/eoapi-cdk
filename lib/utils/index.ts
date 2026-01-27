@@ -1,7 +1,7 @@
 import { aws_lambda as lambda, CustomResource } from "aws-cdk-lib";
 
 export type CustomLambdaFunctionProps = lambda.FunctionProps | any;
-export const DEFAULT_PGSTAC_VERSION = "0.9.5";
+export const DEFAULT_PGSTAC_VERSION = "0.9.9";
 
 /**
  * Resolves Lambda code by using custom user code if provided,

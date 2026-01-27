@@ -20,7 +20,7 @@ from eoapi_cdk import (
     TitilerPgstacApiLambda,
 )
 
-PGSTAC_VERSION = "0.9.5"
+PGSTAC_VERSION = "0.9.9"
 
 
 class VpcStack(Stack):

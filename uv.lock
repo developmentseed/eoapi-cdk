@@ -324,18 +324,6 @@ wheels = [
 ]
 
 [[package]]
-name = "click-plugins"
-version = "1.1.1.2"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "click" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/c3/a4/34847b59150da33690a36da3681d6bbc2ec14ee9a846bc30a6746e5984e4/click_plugins-1.1.1.2.tar.gz", hash = "sha256:d7af3984a99d243c131aa1a828331e7630f4a88a9741fd05c927b204bcf92261", size = 8343, upload-time = "2025-06-25T00:47:37.555Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/3d/9a/2abecb28ae875e39c8cad711eb1186d8d14eab564705325e77e4e6ab9ae5/click_plugins-1.1.1.2-py2.py3-none-any.whl", hash = "sha256:008d65743833ffc1f5417bf0e78e8d2c23aab04d9745ba817bd3e71b0feb6aa6", size = 11051, upload-time = "2025-06-25T00:47:36.731Z" },
-]
-
-[[package]]
 name = "cligj"
 version = "0.7.2"
 source = { registry = "https://pypi.org/simple" }
@@ -345,31 +333,6 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/ea/0d/837dbd5d8430fd0f01ed72c4cfb2f548180f4c68c635df84ce87956cff32/cligj-0.7.2.tar.gz", hash = "sha256:a4bc13d623356b373c2c27c53dbd9c68cae5d526270bfa71f6c6fa69669c6b27", size = 9803, upload-time = "2021-05-28T21:23:27.935Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/73/86/43fa9f15c5b9fb6e82620428827cd3c284aa933431405d1bcf5231ae3d3e/cligj-0.7.2-py3-none-any.whl", hash = "sha256:c1ca117dbce1fe20a5809dc96f01e1c2840f6dcc939b3ddbb1111bf330ba82df", size = 7069, upload-time = "2021-05-28T21:23:26.877Z" },
-]
-
-[[package]]
-name = "cogeo-mosaic"
-version = "8.2.0"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "attrs" },
-    { name = "cachetools" },
-    { name = "click" },
-    { name = "click-plugins" },
-    { name = "cligj" },
-    { name = "httpx" },
-    { name = "morecantile" },
-    { name = "numpy" },
-    { name = "pydantic" },
-    { name = "pydantic-settings" },
-    { name = "rasterio" },
-    { name = "rio-tiler" },
-    { name = "shapely" },
-    { name = "supermorecado" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/2c/dd/64a58399a87d21828ebda01b28f0b66a962ca71380ff10111269834ef499/cogeo_mosaic-8.2.0.tar.gz", hash = "sha256:5dfc79dde66e8563959d9896124209c12a97edb611d87f255550c14840818bfa", size = 33948, upload-time = "2025-05-06T08:42:39.753Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/98/e0/2a8446c97c8dc190cd627eaecd476b5b3a872398c359e32e8316ec1a4d62/cogeo_mosaic-8.2.0-py3-none-any.whl", hash = "sha256:b943cd21e9a8b68135553c5484fb88dd065a23e24349430a39eb5e6487cf11e5", size = 40477, upload-time = "2025-05-06T08:42:38.64Z" },
 ]
 
 [[package]]
@@ -1698,7 +1661,7 @@ wheels = [
 
 [[package]]
 name = "rio-tiler"
-version = "7.9.2"
+version = "8.0.5"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "attrs" },
@@ -1713,9 +1676,9 @@ dependencies = [
     { name = "rasterio" },
     { name = "typing-extensions" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/85/1b/684dd2478fdbf69befa7518936639c37c9fa1694fd75cca5c0430a2ab542/rio_tiler-7.9.2.tar.gz", hash = "sha256:55f96adcffcf67825c83a9906085b4d5b740139ec66432949a0e4c0b4ea6916b", size = 175772, upload-time = "2025-10-09T11:34:12.843Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/91/00/3d4ee47e63eb1848acd996cbc02e915adc78360206847b11d26531029c53/rio_tiler-8.0.5.tar.gz", hash = "sha256:c1ce2b9ef166620541c21fe3a0d911a2127354fa68c17131d73ae4e889522cd9", size = 180790, upload-time = "2026-01-05T13:15:10.484Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/40/8c/cbb6feed404ab0b2883b81349d8642d96047878394e7195d1bacfe36a277/rio_tiler-7.9.2-py3-none-any.whl", hash = "sha256:aeb078e63b59ef1041c99bdd4f776341ee8e940fa57ca2e37bab498738b49b56", size = 269983, upload-time = "2025-10-09T11:34:14.44Z" },
+    { url = "https://files.pythonhosted.org/packages/2a/b1/8ea5458d63ef63565e6e7c38ef419c034f1ba8cdfd69fb0ae9c9c90195a1/rio_tiler-8.0.5-py3-none-any.whl", hash = "sha256:137c558c29be1e7312719d2d865ac74f4198afd02e655cdcba306069380d44c9", size = 276693, upload-time = "2026-01-05T13:15:08.793Z" },
 ]
 
 [[package]]
@@ -1728,57 +1691,6 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/05/04/74127fc843314818edfa81b5540e26dd537353b123a4edc563109d8f17dd/s3transfer-0.16.0.tar.gz", hash = "sha256:8e990f13268025792229cd52fa10cb7163744bf56e719e0b9cb925ab79abf920", size = 153827, upload-time = "2025-12-01T02:30:59.114Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/fc/51/727abb13f44c1fcf6d145979e1535a35794db0f6e450a0cb46aa24732fe2/s3transfer-0.16.0-py3-none-any.whl", hash = "sha256:18e25d66fed509e3868dc1572b3f427ff947dd2c56f844a5bf09481ad3f3b2fe", size = 86830, upload-time = "2025-12-01T02:30:57.729Z" },
-]
-
-[[package]]
-name = "shapely"
-version = "2.1.2"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "numpy" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/4d/bc/0989043118a27cccb4e906a46b7565ce36ca7b57f5a18b78f4f1b0f72d9d/shapely-2.1.2.tar.gz", hash = "sha256:2ed4ecb28320a433db18a5bf029986aa8afcfd740745e78847e330d5d94922a9", size = 315489, upload-time = "2025-09-24T13:51:41.432Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/24/c0/f3b6453cf2dfa99adc0ba6675f9aaff9e526d2224cbd7ff9c1a879238693/shapely-2.1.2-cp312-cp312-macosx_10_13_x86_64.whl", hash = "sha256:fe2533caae6a91a543dec62e8360fe86ffcdc42a7c55f9dfd0128a977a896b94", size = 1833550, upload-time = "2025-09-24T13:50:30.019Z" },
-    { url = "https://files.pythonhosted.org/packages/86/07/59dee0bc4b913b7ab59ab1086225baca5b8f19865e6101db9ebb7243e132/shapely-2.1.2-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:ba4d1333cc0bc94381d6d4308d2e4e008e0bd128bdcff5573199742ee3634359", size = 1643556, upload-time = "2025-09-24T13:50:32.291Z" },
-    { url = "https://files.pythonhosted.org/packages/26/29/a5397e75b435b9895cd53e165083faed5d12fd9626eadec15a83a2411f0f/shapely-2.1.2-cp312-cp312-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:0bd308103340030feef6c111d3eb98d50dc13feea33affc8a6f9fa549e9458a3", size = 2988308, upload-time = "2025-09-24T13:50:33.862Z" },
-    { url = "https://files.pythonhosted.org/packages/b9/37/e781683abac55dde9771e086b790e554811a71ed0b2b8a1e789b7430dd44/shapely-2.1.2-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:1e7d4d7ad262a48bb44277ca12c7c78cb1b0f56b32c10734ec9a1d30c0b0c54b", size = 3099844, upload-time = "2025-09-24T13:50:35.459Z" },
-    { url = "https://files.pythonhosted.org/packages/d8/f3/9876b64d4a5a321b9dc482c92bb6f061f2fa42131cba643c699f39317cb9/shapely-2.1.2-cp312-cp312-musllinux_1_2_aarch64.whl", hash = "sha256:e9eddfe513096a71896441a7c37db72da0687b34752c4e193577a145c71736fc", size = 3988842, upload-time = "2025-09-24T13:50:37.478Z" },
-    { url = "https://files.pythonhosted.org/packages/d1/a0/704c7292f7014c7e74ec84eddb7b109e1fbae74a16deae9c1504b1d15565/shapely-2.1.2-cp312-cp312-musllinux_1_2_x86_64.whl", hash = "sha256:980c777c612514c0cf99bc8a9de6d286f5e186dcaf9091252fcd444e5638193d", size = 4152714, upload-time = "2025-09-24T13:50:39.9Z" },
-    { url = "https://files.pythonhosted.org/packages/53/46/319c9dc788884ad0785242543cdffac0e6530e4d0deb6c4862bc4143dcf3/shapely-2.1.2-cp312-cp312-win32.whl", hash = "sha256:9111274b88e4d7b54a95218e243282709b330ef52b7b86bc6aaf4f805306f454", size = 1542745, upload-time = "2025-09-24T13:50:41.414Z" },
-    { url = "https://files.pythonhosted.org/packages/ec/bf/cb6c1c505cb31e818e900b9312d514f381fbfa5c4363edfce0fcc4f8c1a4/shapely-2.1.2-cp312-cp312-win_amd64.whl", hash = "sha256:743044b4cfb34f9a67205cee9279feaf60ba7d02e69febc2afc609047cb49179", size = 1722861, upload-time = "2025-09-24T13:50:43.35Z" },
-    { url = "https://files.pythonhosted.org/packages/c3/90/98ef257c23c46425dc4d1d31005ad7c8d649fe423a38b917db02c30f1f5a/shapely-2.1.2-cp313-cp313-macosx_10_13_x86_64.whl", hash = "sha256:b510dda1a3672d6879beb319bc7c5fd302c6c354584690973c838f46ec3e0fa8", size = 1832644, upload-time = "2025-09-24T13:50:44.886Z" },
-    { url = "https://files.pythonhosted.org/packages/6d/ab/0bee5a830d209adcd3a01f2d4b70e587cdd9fd7380d5198c064091005af8/shapely-2.1.2-cp313-cp313-macosx_11_0_arm64.whl", hash = "sha256:8cff473e81017594d20ec55d86b54bc635544897e13a7cfc12e36909c5309a2a", size = 1642887, upload-time = "2025-09-24T13:50:46.735Z" },
-    { url = "https://files.pythonhosted.org/packages/2d/5e/7d7f54ba960c13302584c73704d8c4d15404a51024631adb60b126a4ae88/shapely-2.1.2-cp313-cp313-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:fe7b77dc63d707c09726b7908f575fc04ff1d1ad0f3fb92aec212396bc6cfe5e", size = 2970931, upload-time = "2025-09-24T13:50:48.374Z" },
-    { url = "https://files.pythonhosted.org/packages/f2/a2/83fc37e2a58090e3d2ff79175a95493c664bcd0b653dd75cb9134645a4e5/shapely-2.1.2-cp313-cp313-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:7ed1a5bbfb386ee8332713bf7508bc24e32d24b74fc9a7b9f8529a55db9f4ee6", size = 3082855, upload-time = "2025-09-24T13:50:50.037Z" },
-    { url = "https://files.pythonhosted.org/packages/44/2b/578faf235a5b09f16b5f02833c53822294d7f21b242f8e2d0cf03fb64321/shapely-2.1.2-cp313-cp313-musllinux_1_2_aarch64.whl", hash = "sha256:a84e0582858d841d54355246ddfcbd1fce3179f185da7470f41ce39d001ee1af", size = 3979960, upload-time = "2025-09-24T13:50:51.74Z" },
-    { url = "https://files.pythonhosted.org/packages/4d/04/167f096386120f692cc4ca02f75a17b961858997a95e67a3cb6a7bbd6b53/shapely-2.1.2-cp313-cp313-musllinux_1_2_x86_64.whl", hash = "sha256:dc3487447a43d42adcdf52d7ac73804f2312cbfa5d433a7d2c506dcab0033dfd", size = 4142851, upload-time = "2025-09-24T13:50:53.49Z" },
-    { url = "https://files.pythonhosted.org/packages/48/74/fb402c5a6235d1c65a97348b48cdedb75fb19eca2b1d66d04969fc1c6091/shapely-2.1.2-cp313-cp313-win32.whl", hash = "sha256:9c3a3c648aedc9f99c09263b39f2d8252f199cb3ac154fadc173283d7d111350", size = 1541890, upload-time = "2025-09-24T13:50:55.337Z" },
-    { url = "https://files.pythonhosted.org/packages/41/47/3647fe7ad990af60ad98b889657a976042c9988c2807cf322a9d6685f462/shapely-2.1.2-cp313-cp313-win_amd64.whl", hash = "sha256:ca2591bff6645c216695bdf1614fca9c82ea1144d4a7591a466fef64f28f0715", size = 1722151, upload-time = "2025-09-24T13:50:57.153Z" },
-    { url = "https://files.pythonhosted.org/packages/3c/49/63953754faa51ffe7d8189bfbe9ca34def29f8c0e34c67cbe2a2795f269d/shapely-2.1.2-cp313-cp313t-macosx_10_13_x86_64.whl", hash = "sha256:2d93d23bdd2ed9dc157b46bc2f19b7da143ca8714464249bef6771c679d5ff40", size = 1834130, upload-time = "2025-09-24T13:50:58.49Z" },
-    { url = "https://files.pythonhosted.org/packages/7f/ee/dce001c1984052970ff60eb4727164892fb2d08052c575042a47f5a9e88f/shapely-2.1.2-cp313-cp313t-macosx_11_0_arm64.whl", hash = "sha256:01d0d304b25634d60bd7cf291828119ab55a3bab87dc4af1e44b07fb225f188b", size = 1642802, upload-time = "2025-09-24T13:50:59.871Z" },
-    { url = "https://files.pythonhosted.org/packages/da/e7/fc4e9a19929522877fa602f705706b96e78376afb7fad09cad5b9af1553c/shapely-2.1.2-cp313-cp313t-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:8d8382dd120d64b03698b7298b89611a6ea6f55ada9d39942838b79c9bc89801", size = 3018460, upload-time = "2025-09-24T13:51:02.08Z" },
-    { url = "https://files.pythonhosted.org/packages/a1/18/7519a25db21847b525696883ddc8e6a0ecaa36159ea88e0fef11466384d0/shapely-2.1.2-cp313-cp313t-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:19efa3611eef966e776183e338b2d7ea43569ae99ab34f8d17c2c054d3205cc0", size = 3095223, upload-time = "2025-09-24T13:51:04.472Z" },
-    { url = "https://files.pythonhosted.org/packages/48/de/b59a620b1f3a129c3fecc2737104a0a7e04e79335bd3b0a1f1609744cf17/shapely-2.1.2-cp313-cp313t-musllinux_1_2_aarch64.whl", hash = "sha256:346ec0c1a0fcd32f57f00e4134d1200e14bf3f5ae12af87ba83ca275c502498c", size = 4030760, upload-time = "2025-09-24T13:51:06.455Z" },
-    { url = "https://files.pythonhosted.org/packages/96/b3/c6655ee7232b417562bae192ae0d3ceaadb1cc0ffc2088a2ddf415456cc2/shapely-2.1.2-cp313-cp313t-musllinux_1_2_x86_64.whl", hash = "sha256:6305993a35989391bd3476ee538a5c9a845861462327efe00dd11a5c8c709a99", size = 4170078, upload-time = "2025-09-24T13:51:08.584Z" },
-    { url = "https://files.pythonhosted.org/packages/a0/8e/605c76808d73503c9333af8f6cbe7e1354d2d238bda5f88eea36bfe0f42a/shapely-2.1.2-cp313-cp313t-win32.whl", hash = "sha256:c8876673449f3401f278c86eb33224c5764582f72b653a415d0e6672fde887bf", size = 1559178, upload-time = "2025-09-24T13:51:10.73Z" },
-    { url = "https://files.pythonhosted.org/packages/36/f7/d317eb232352a1f1444d11002d477e54514a4a6045536d49d0c59783c0da/shapely-2.1.2-cp313-cp313t-win_amd64.whl", hash = "sha256:4a44bc62a10d84c11a7a3d7c1c4fe857f7477c3506e24c9062da0db0ae0c449c", size = 1739756, upload-time = "2025-09-24T13:51:12.105Z" },
-    { url = "https://files.pythonhosted.org/packages/fc/c4/3ce4c2d9b6aabd27d26ec988f08cb877ba9e6e96086eff81bfea93e688c7/shapely-2.1.2-cp314-cp314-macosx_10_13_x86_64.whl", hash = "sha256:9a522f460d28e2bf4e12396240a5fc1518788b2fcd73535166d748399ef0c223", size = 1831290, upload-time = "2025-09-24T13:51:13.56Z" },
-    { url = "https://files.pythonhosted.org/packages/17/b9/f6ab8918fc15429f79cb04afa9f9913546212d7fb5e5196132a2af46676b/shapely-2.1.2-cp314-cp314-macosx_11_0_arm64.whl", hash = "sha256:1ff629e00818033b8d71139565527ced7d776c269a49bd78c9df84e8f852190c", size = 1641463, upload-time = "2025-09-24T13:51:14.972Z" },
-    { url = "https://files.pythonhosted.org/packages/a5/57/91d59ae525ca641e7ac5551c04c9503aee6f29b92b392f31790fcb1a4358/shapely-2.1.2-cp314-cp314-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:f67b34271dedc3c653eba4e3d7111aa421d5be9b4c4c7d38d30907f796cb30df", size = 2970145, upload-time = "2025-09-24T13:51:16.961Z" },
-    { url = "https://files.pythonhosted.org/packages/8a/cb/4948be52ee1da6927831ab59e10d4c29baa2a714f599f1f0d1bc747f5777/shapely-2.1.2-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:21952dc00df38a2c28375659b07a3979d22641aeb104751e769c3ee825aadecf", size = 3073806, upload-time = "2025-09-24T13:51:18.712Z" },
-    { url = "https://files.pythonhosted.org/packages/03/83/f768a54af775eb41ef2e7bec8a0a0dbe7d2431c3e78c0a8bdba7ab17e446/shapely-2.1.2-cp314-cp314-musllinux_1_2_aarch64.whl", hash = "sha256:1f2f33f486777456586948e333a56ae21f35ae273be99255a191f5c1fa302eb4", size = 3980803, upload-time = "2025-09-24T13:51:20.37Z" },
-    { url = "https://files.pythonhosted.org/packages/9f/cb/559c7c195807c91c79d38a1f6901384a2878a76fbdf3f1048893a9b7534d/shapely-2.1.2-cp314-cp314-musllinux_1_2_x86_64.whl", hash = "sha256:cf831a13e0d5a7eb519e96f58ec26e049b1fad411fc6fc23b162a7ce04d9cffc", size = 4133301, upload-time = "2025-09-24T13:51:21.887Z" },
-    { url = "https://files.pythonhosted.org/packages/80/cd/60d5ae203241c53ef3abd2ef27c6800e21afd6c94e39db5315ea0cbafb4a/shapely-2.1.2-cp314-cp314-win32.whl", hash = "sha256:61edcd8d0d17dd99075d320a1dd39c0cb9616f7572f10ef91b4b5b00c4aeb566", size = 1583247, upload-time = "2025-09-24T13:51:23.401Z" },
-    { url = "https://files.pythonhosted.org/packages/74/d4/135684f342e909330e50d31d441ace06bf83c7dc0777e11043f99167b123/shapely-2.1.2-cp314-cp314-win_amd64.whl", hash = "sha256:a444e7afccdb0999e203b976adb37ea633725333e5b119ad40b1ca291ecf311c", size = 1773019, upload-time = "2025-09-24T13:51:24.873Z" },
-    { url = "https://files.pythonhosted.org/packages/a3/05/a44f3f9f695fa3ada22786dc9da33c933da1cbc4bfe876fe3a100bafe263/shapely-2.1.2-cp314-cp314t-macosx_10_13_x86_64.whl", hash = "sha256:5ebe3f84c6112ad3d4632b1fd2290665aa75d4cef5f6c5d77c4c95b324527c6a", size = 1834137, upload-time = "2025-09-24T13:51:26.665Z" },
-    { url = "https://files.pythonhosted.org/packages/52/7e/4d57db45bf314573427b0a70dfca15d912d108e6023f623947fa69f39b72/shapely-2.1.2-cp314-cp314t-macosx_11_0_arm64.whl", hash = "sha256:5860eb9f00a1d49ebb14e881f5caf6c2cf472c7fd38bd7f253bbd34f934eb076", size = 1642884, upload-time = "2025-09-24T13:51:28.029Z" },
-    { url = "https://files.pythonhosted.org/packages/5a/27/4e29c0a55d6d14ad7422bf86995d7ff3f54af0eba59617eb95caf84b9680/shapely-2.1.2-cp314-cp314t-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:b705c99c76695702656327b819c9660768ec33f5ce01fa32b2af62b56ba400a1", size = 3018320, upload-time = "2025-09-24T13:51:29.903Z" },
-    { url = "https://files.pythonhosted.org/packages/9f/bb/992e6a3c463f4d29d4cd6ab8963b75b1b1040199edbd72beada4af46bde5/shapely-2.1.2-cp314-cp314t-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:a1fd0ea855b2cf7c9cddaf25543e914dd75af9de08785f20ca3085f2c9ca60b0", size = 3094931, upload-time = "2025-09-24T13:51:32.699Z" },
-    { url = "https://files.pythonhosted.org/packages/9c/16/82e65e21070e473f0ed6451224ed9fa0be85033d17e0c6e7213a12f59d12/shapely-2.1.2-cp314-cp314t-musllinux_1_2_aarch64.whl", hash = "sha256:df90e2db118c3671a0754f38e36802db75fe0920d211a27481daf50a711fdf26", size = 4030406, upload-time = "2025-09-24T13:51:34.189Z" },
-    { url = "https://files.pythonhosted.org/packages/7c/75/c24ed871c576d7e2b64b04b1fe3d075157f6eb54e59670d3f5ffb36e25c7/shapely-2.1.2-cp314-cp314t-musllinux_1_2_x86_64.whl", hash = "sha256:361b6d45030b4ac64ddd0a26046906c8202eb60d0f9f53085f5179f1d23021a0", size = 4169511, upload-time = "2025-09-24T13:51:36.297Z" },
-    { url = "https://files.pythonhosted.org/packages/b1/f7/b3d1d6d18ebf55236eec1c681ce5e665742aab3c0b7b232720a7d43df7b6/shapely-2.1.2-cp314-cp314t-win32.whl", hash = "sha256:b54df60f1fbdecc8ebc2c5b11870461a6417b3d617f555e5033f1505d36e5735", size = 1602607, upload-time = "2025-09-24T13:51:37.757Z" },
-    { url = "https://files.pythonhosted.org/packages/9a/f6/f09272a71976dfc138129b8faf435d064a811ae2f708cb147dccdf7aacdb/shapely-2.1.2-cp314-cp314t-win_amd64.whl", hash = "sha256:0036ac886e0923417932c2e6369b6c52e38e0ff5d9120b90eef5cd9a5fc5cae9", size = 1796682, upload-time = "2025-09-24T13:51:39.233Z" },
 ]
 
 [[package]]
@@ -1843,14 +1755,14 @@ version = "0.0.0"
 source = { directory = "lib/stac-api/runtime" }
 dependencies = [
     { name = "mangum" },
-    { name = "stac-fastapi-pgstac", extra = ["awslambda"] },
+    { name = "stac-fastapi-pgstac" },
     { name = "starlette-cramjam" },
 ]
 
 [package.metadata]
 requires-dist = [
     { name = "mangum", specifier = "==0.19" },
-    { name = "stac-fastapi-pgstac", extras = ["awslambda"], specifier = ">=6.0,<6.1" },
+    { name = "stac-fastapi-pgstac", specifier = ">=6.2,<6.3" },
     { name = "starlette-cramjam", specifier = ">=0.4,<0.5" },
 ]
 
@@ -1882,7 +1794,7 @@ wheels = [
 
 [[package]]
 name = "stac-fastapi-pgstac"
-version = "6.0.2"
+version = "6.2.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "asyncpg" },
@@ -1890,24 +1802,19 @@ dependencies = [
     { name = "brotli-asgi" },
     { name = "buildpg" },
     { name = "cql2" },
+    { name = "hydraters" },
     { name = "json-merge-patch" },
     { name = "jsonpatch" },
     { name = "orjson" },
     { name = "pydantic" },
-    { name = "pypgstac" },
+    { name = "pydantic-settings" },
     { name = "stac-fastapi-api" },
     { name = "stac-fastapi-extensions" },
     { name = "stac-fastapi-types" },
-    { name = "typing-extensions" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/0b/5a/77c93746491d08eb98e5d255079751deebdc26577c7ce9977ca77fa76fc1/stac_fastapi_pgstac-6.0.2.tar.gz", hash = "sha256:db2fdaff727b5d05bb080f56ecd1a0b30dea7641ae9422ba96802a5dc68de043", size = 46297, upload-time = "2025-10-03T04:44:54.173Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/ca/b9/bf308a8be65982921b2931236f7564c5f7a4605018d2063cecd52b0e0703/stac_fastapi_pgstac-6.2.1.tar.gz", hash = "sha256:be68c7fb851873cf3140e30774ba97d96482467b1a4c12f4898a57fbd980023a", size = 22287, upload-time = "2026-01-23T15:12:14.953Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/55/37/fbea7cc93ca00e8ce9b9cea6c79d7bdeb170346ba5c8f2acba22530e2b16/stac_fastapi_pgstac-6.0.2-py3-none-any.whl", hash = "sha256:9fbe09577162f1397156c315464ae0b9f8391bb31c20380a13441711c79d1a89", size = 51041, upload-time = "2025-10-03T04:44:52.797Z" },
-]
-
-[package.optional-dependencies]
-awslambda = [
-    { name = "mangum" },
+    { url = "https://files.pythonhosted.org/packages/9c/39/c257cc20fbb4002922dba8cfc40ddfc1d8bd54885bd96d21d1c44296fb2b/stac_fastapi_pgstac-6.2.1-py3-none-any.whl", hash = "sha256:907184f440e208a49c58b2bf200ccf1a6ab2c1dfe25cef2534498e4bfa550311", size = 26705, upload-time = "2026-01-23T15:12:14.001Z" },
 ]
 
 [[package]]
@@ -1999,19 +1906,6 @@ wheels = [
 ]
 
 [[package]]
-name = "supermorecado"
-version = "0.1.2"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "morecantile" },
-    { name = "rasterio" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/7e/cc/97693e7c34e56a9f3c869ff10a962e14d38c48b2c56436f0483ee77c3cc4/supermorecado-0.1.2.tar.gz", hash = "sha256:b51664d2eb12326e657a9d80c6849857c42ef3876545515ef988e266e6cc9654", size = 12171, upload-time = "2023-09-11T14:40:15.737Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/73/25/909292b8a012282d3b535e51c2626095f0ff0cfea796da637b34512fb9f6/supermorecado-0.1.2-py3-none-any.whl", hash = "sha256:5116b9ff8c8aa0b0da235cb5962449dc878515c8155adf1440268c3cf271bed6", size = 14486, upload-time = "2023-09-11T14:40:13.349Z" },
-]
-
-[[package]]
 name = "tenacity"
 version = "9.1.2"
 source = { registry = "https://pypi.org/simple" }
@@ -2031,7 +1925,7 @@ wheels = [
 
 [[package]]
 name = "tipg"
-version = "1.2.1"
+version = "1.3.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "asyncpg" },
@@ -2047,9 +1941,9 @@ dependencies = [
     { name = "pygeofilter" },
     { name = "starlette-cramjam" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/20/01/5b8fd4b83b278550f37ef8c868907b9c361c76f2dfa46db8df6daf8cb610/tipg-1.2.1.tar.gz", hash = "sha256:91110f31a39afa44757a7a5f416706e120bee5b57ae43f9ea8ea99caee080a81", size = 458505, upload-time = "2025-08-27T07:45:23.272Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/d8/47/0a65f1b55cfdd5ace31359148d6c3344288e96bfa3fd54516a371498b35e/tipg-1.3.0.tar.gz", hash = "sha256:31329ce749c451bedc9824a6c009ab831e8ec5198b0002e631b6339f86d7299c", size = 59822, upload-time = "2025-11-17T14:05:47.442Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/ac/ec/9cf8cf83afb9dce60d3de059ba841cb09a8799bbd69e3234ad9592ae520b/tipg-1.2.1-py3-none-any.whl", hash = "sha256:16da447fbdf1e255e55fb1529513a1f98a0c4935fe301f92f252b5a18eb43f11", size = 79114, upload-time = "2025-08-27T07:45:24.669Z" },
+    { url = "https://files.pythonhosted.org/packages/e5/fa/8e5fd281aa76e51e7f8ca4b52e302955a57f34f4b8af281479a046743fc5/tipg-1.3.0-py3-none-any.whl", hash = "sha256:b9adf26a903ae1394466399cd16adc5cd12782e76ee3a6115e5e41b1f9cc5f09", size = 90104, upload-time = "2025-11-17T14:05:48.67Z" },
 ]
 
 [[package]]
@@ -2064,12 +1958,12 @@ dependencies = [
 [package.metadata]
 requires-dist = [
     { name = "mangum", specifier = "==0.19" },
-    { name = "tipg", specifier = ">=1.2,<1.3" },
+    { name = "tipg", specifier = ">=1.3,<1.4" },
 ]
 
 [[package]]
 name = "titiler-core"
-version = "0.24.2"
+version = "1.1.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "fastapi" },
@@ -2083,37 +1977,50 @@ dependencies = [
     { name = "simplejson" },
     { name = "typing-extensions" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/6a/9e/b3e33453395f7771c43f7dd844c47b8074f4a9f636d6cd312d534d5b4cda/titiler_core-0.24.2.tar.gz", hash = "sha256:fea3253bf31bf4cfb4b53f2afe360da9c62d4e64173e72f01e70b932c2677a80", size = 71561, upload-time = "2025-10-16T15:16:37.488Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/9b/68/c6ea6a4de4673934b74e7c9cd626917ecccca491e717730e286340b2482c/titiler_core-1.1.1.tar.gz", hash = "sha256:69568d86d1e1bffd211d3089fb6f006ae24653d84749f8f85b2319d4307d8358", size = 68572, upload-time = "2026-01-22T15:53:18.391Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/83/e2/c7421adf35f6725af75b062de1a3ebdeadbc111aaca857515f5f6b1823f8/titiler_core-0.24.2-py3-none-any.whl", hash = "sha256:dc974e447b805505b45862a418128392d85a4390fc6f0b4234b0bd4a01d9c296", size = 88432, upload-time = "2025-10-16T15:16:36.083Z" },
+    { url = "https://files.pythonhosted.org/packages/0d/8e/e284715e92608cfe4f858880418759550fae4fc37559bc865de1f4f41d31/titiler_core-1.1.1-py3-none-any.whl", hash = "sha256:638897f0f54bf3f1e4151f551aeccd2eea8baf8b7728ccbef57ee24d677167fa", size = 86775, upload-time = "2026-01-22T15:53:19.404Z" },
+]
+
+[[package]]
+name = "titiler-extensions"
+version = "1.1.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "titiler-core" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/aa/f0/3435d1aafa3f730fe19cce6022aa997f3f2c9a67d98274fc890645a49a6d/titiler_extensions-1.1.1.tar.gz", hash = "sha256:7963cfdbd3bd94a2a8934e3208091fbaef6fcb45dde796ddcd3823085cc4b22f", size = 31270, upload-time = "2026-01-22T15:53:29.628Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/7f/31/2c44d0726ddfb1f0ad56ae5a80bd73f2d911190d2de06ba245a1e14bbef2/titiler_extensions-1.1.1-py3-none-any.whl", hash = "sha256:10d5a7ec7dd1efde49ef51103bb03a8e211a31a35bb6335688a2a960f5ed4732", size = 38011, upload-time = "2026-01-22T15:53:28.267Z" },
 ]
 
 [[package]]
 name = "titiler-mosaic"
-version = "0.24.2"
+version = "1.1.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "cogeo-mosaic" },
     { name = "titiler-core" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/b1/b1/dc312cd6b741e80c7e81fd50b23fc340cacfebe6ac3702f2169d08c441e4/titiler_mosaic-0.24.2.tar.gz", hash = "sha256:8745bc7c22ae10dcfd173f56d858732f11c55f883fbebe50aa248967647ceda0", size = 10832, upload-time = "2025-10-16T15:16:45.327Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/9a/ff/526c70f3214dc4112d4abe1edbf62e52f75385a851821fb79abc73a35b4b/titiler_mosaic-1.1.1.tar.gz", hash = "sha256:d7d9f5f1be8c22ad51b8bd063e3d11d2289d058e4ae6856bcf8f13760d815b1c", size = 14761, upload-time = "2026-01-22T15:53:23.836Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/43/0d/8b73be675fd23ec766d5e422936b252945079cbb6420fc0fd05509c23eaf/titiler_mosaic-0.24.2-py3-none-any.whl", hash = "sha256:aa524ad189f9ce5056894b23f9bdcaf500906ff5ff80664db5ddf746a4545490", size = 11580, upload-time = "2025-10-16T15:16:44.502Z" },
+    { url = "https://files.pythonhosted.org/packages/a3/5f/f56fb8d9d437f39c0fd7b6aa89c355054992269adfa263acdaeae40f444d/titiler_mosaic-1.1.1-py3-none-any.whl", hash = "sha256:e78c2e346fd5badd8fd4104c1219068b9e83961ba223aa1a767c66b2b6c0b47b", size = 17492, upload-time = "2026-01-22T15:53:22.991Z" },
 ]
 
 [[package]]
 name = "titiler-pgstac"
-version = "1.9.0"
+version = "2.0.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
+    { name = "cql2" },
     { name = "pydantic" },
     { name = "pydantic-settings" },
     { name = "titiler-core" },
+    { name = "titiler-extensions" },
     { name = "titiler-mosaic" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/92/32/bd9aa5b6f7e79f00d30c3a1ba8238786d7ecc70c49e850217cbdff1244e2/titiler_pgstac-1.9.0.tar.gz", hash = "sha256:90e055dca09a255b128867e8a8795f9f58fcdc4258856b167a4275c54caf6452", size = 41750, upload-time = "2025-09-23T23:44:24.333Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/a0/79/623a786e5e64e563a0ce64143c480b3db94a8503a47dfe4bc64a32c29279/titiler_pgstac-2.0.0.tar.gz", hash = "sha256:4e91f0adaeee07db87468b97fd59da5ba84c584df9f55b2b3bc0fa3211be1eb8", size = 35041, upload-time = "2026-01-13T09:52:51.211Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/d8/ed/35694de7c40865663231449006f13260fd7a0bc4745672bae1c97455ed55/titiler_pgstac-1.9.0-py3-none-any.whl", hash = "sha256:527cd78978dc63eaa77567a1e4e1165b1141c524b3c9729922747352abb25199", size = 46589, upload-time = "2025-09-23T23:44:23.358Z" },
+    { url = "https://files.pythonhosted.org/packages/d4/37/9959c24f22ea49956e5aeff8cc27f4702d01b4569030c764f2c1e76c807e/titiler_pgstac-2.0.0-py3-none-any.whl", hash = "sha256:32dc894f4fdfd2547bd626b34e3366fd5ad9998114c0378728ad464f9ffc2cc1", size = 41280, upload-time = "2026-01-13T09:52:50.286Z" },
 ]
 
 [package.optional-dependencies]
@@ -2133,7 +2040,7 @@ dependencies = [
 [package.metadata]
 requires-dist = [
     { name = "mangum", specifier = "==0.19" },
-    { name = "titiler-pgstac", extras = ["psycopg-binary"], specifier = ">=1.9.0,<1.10" },
+    { name = "titiler-pgstac", extras = ["psycopg-binary"], specifier = ">=2.0.0,<2.1.0" },
 ]
 
 [package.metadata.requires-dev]
