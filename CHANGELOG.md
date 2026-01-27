@@ -1,3 +1,15 @@
+# [11.0.0](https://github.com/developmentseed/eoapi-cdk/compare/v10.4.3...v11.0.0) (2026-01-27)
+
+
+* feat!: upgrade to latest major/minor versions of core runtime libraries ([#224](https://github.com/developmentseed/eoapi-cdk/issues/224)) ([da42aea](https://github.com/developmentseed/eoapi-cdk/commit/da42aeaf028a7f80df751e9def47d4c1daae2d7a))
+
+
+### BREAKING CHANGES
+
+* upgrade to titiler-pgstac>=2.0.0,<2.1.0,
+deps: upgrade to tipg>=1.3,<1.4
+deps: upgrade to stac-fastapi-pgstac>=6.2,<6.3
+
 ## [10.4.3](https://github.com/developmentseed/eoapi-cdk/compare/v10.4.2...v10.4.3) (2026-01-24)
 
 
