@@ -1,3 +1,10 @@
+# [11.1.0](https://github.com/developmentseed/eoapi-cdk/compare/v11.0.0...v11.1.0) (2026-01-30)
+
+
+### Features
+
+* only re-deploy db bootstrap if code or config parameters change ([#225](https://github.com/developmentseed/eoapi-cdk/issues/225)) ([ef48d98](https://github.com/developmentseed/eoapi-cdk/commit/ef48d982f50a107396975854fc0b00d39ce2f4b2))
+
 # [11.0.0](https://github.com/developmentseed/eoapi-cdk/compare/v10.4.3...v11.0.0) (2026-01-27)
 
 
