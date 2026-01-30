@@ -47,7 +47,7 @@ function hasVpc(
  */
 function computeLambdaCodeHash(
   basePath: string,
-  buildArgs: { [key: string]: string }
+  buildArgs: { [key: string]: string },
 ): string {
   const hash = crypto.createHash("sha256");
 
@@ -64,7 +64,7 @@ function computeLambdaCodeHash(
   // Hash build arguments in sorted order for consistency
   const sortedArgs = Object.keys(buildArgs)
     .sort()
-    .map(key => `${key}=${buildArgs[key]}`)
+    .map((key) => `${key}=${buildArgs[key]}`)
     .join(",");
   hash.update(`buildArgs:${sortedArgs}`);
 
