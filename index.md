@@ -3603,6 +3603,7 @@ const pgStacDatabaseProps: PgStacDatabaseProps = { ... }
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.addPgbouncer">addPgbouncer</a></code> | <code>boolean</code> | Add pgbouncer instance for managing traffic to the pgSTAC database. |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.bootstrapperLambdaFunctionOptions">bootstrapperLambdaFunctionOptions</a></code> | <code>any</code> | Can be used to override the default lambda function properties. |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.customResourceProperties">customResourceProperties</a></code> | <code>{[ key: string ]: any}</code> | Lambda function Custom Resource properties. |
+| <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.forceBootstrap">forceBootstrap</a></code> | <code>boolean</code> | Force redeployment of the database bootstrapper Lambda on every deploy. |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.pgbouncerInstanceProps">pgbouncerInstanceProps</a></code> | <code>any</code> | Properties for the pgbouncer ec2 instance. |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.pgstacDbName">pgstacDbName</a></code> | <code>string</code> | Name of database that is to be created and onto which pgSTAC will be installed. |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.pgstacUsername">pgstacUsername</a></code> | <code>string</code> | Name of user that will be generated for connecting to the pgSTAC database. |
@@ -4469,6 +4470,31 @@ Lambda function Custom Resource properties.
 A custom resource property is going to be created
 to trigger the boostrapping lambda function. This parameter allows the user to specify additional properties
 on top of the defaults ones.
+
+---
+
+##### `forceBootstrap`<sup>Optional</sup> <a name="forceBootstrap" id="eoapi-cdk.PgStacDatabaseProps.property.forceBootstrap"></a>
+
+```typescript
+public readonly forceBootstrap: boolean;
+```
+
+- *Type:* boolean
+- *Default:* false
+
+Force redeployment of the database bootstrapper Lambda on every deploy.
+
+This is only applicable when using custom Lambda code via bootstrapperLambdaFunctionOptions.
+When enabled, a timestamp will be added to the custom resource properties to ensure
+the bootstrapper Lambda runs on every deployment.
+
+For the default Docker-based bootstrap code, this flag is ignored and a content-based
+hash is used instead (which automatically triggers redeployment when code changes).
+
+**Alternative approach:** Instead of using this flag, you can trigger bootstrap by
+modifying any property in `customResourceProperties` (e.g., increment `pgstac_version`
+or add a `rebuild_trigger` property with a new value). This gives you more granular
+control over when redeployment happens.
 
 ---
 
