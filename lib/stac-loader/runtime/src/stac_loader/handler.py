@@ -11,6 +11,7 @@ from typing import (
     Dict,
     List,
     Optional,
+    Tuple,
     TypedDict,
 )
 
@@ -171,10 +172,12 @@ def handler(
 
     batch_failures: List[BatchItemFailure] = []
 
-    collections: List[Dict[str, Any]] = []
-    collection_message_ids: List[str] = []
-    items_by_collection: DefaultDict[str, List[Dict[str, Any]]] = defaultdict(list)
-    message_ids_by_collection: DefaultDict[str, List[str]] = defaultdict(list)
+    collections_dict: DefaultDict[str, Tuple[Dict[str, Any], str]] = defaultdict()
+    # Track items by collection and item id to deduplicate within a batch
+    # Maps: collection_id -> item_id -> (item_data, message_id)
+    items_by_collection: DefaultDict[str, Dict[str, Tuple[Dict[str, Any], str]]] = (
+        defaultdict(dict)
+    )
 
     for record in records:
         message_id = record.get("messageId")
@@ -202,12 +205,17 @@ def handler(
                 if not item.collection:
                     raise KeyError(f"item {item.id} is missing a collection id!")
 
-                items_by_collection[item.collection].append(item.model_dump(mode="json"))
-                message_ids_by_collection[item.collection].append(message_id)
+                # Store item by id, replacing any previous version in this batch
+                items_by_collection[item.collection][item.id] = (
+                    item.model_dump(mode="json"),
+                    message_id,
+                )
             elif message_data["type"] == "Collection":
                 collection = Collection(**message_data)
-                collections.append(collection.model_dump(mode="json"))
-                collection_message_ids.append(message_id)
+                collections_dict[collection.id] = (
+                    collection.model_dump(mode="json"),
+                    message_id,
+                )
             else:
                 raise ValueError(
                     f"expected either a 'Feature' or a 'Collection', received a {message_data['type']}"
@@ -222,7 +230,9 @@ def handler(
             logger.error(f"[{message_id}] Unexpected error: {e}", extra=record)
             batch_failures.append({"itemIdentifier": message_id})
 
-    if collections:
+    if collections_dict:
+        collections = [collection for collection, _ in collections_dict.values()]
+        message_ids = [msg_id for _, msg_id in collections_dict.values()]
         try:
             with PgstacDB(dsn=pgstac_dsn) as db:
                 loader = Loader(db=db)
@@ -235,10 +245,18 @@ def handler(
         except Exception as e:
             logger.error(f"failed to load collections: {str(e)}")
             batch_failures.extend(
-                [{"itemIdentifier": message_id} for message_id in collection_message_ids]
+                [{"itemIdentifier": message_id} for message_id in message_ids]
             )
 
-    for collection_id, items in items_by_collection.items():
+    for collection_id, items_dict in items_by_collection.items():
+        # Extract items and message_ids from the dict structure
+        items = [item_data for item_data, _ in items_dict.values()]
+        message_ids = [msg_id for _, msg_id in items_dict.values()]
+
+        logger.debug(
+            f"[{collection_id}] Processing {len(items)} unique items from {len(items_dict)} dict entries. Item IDs: {list(items_dict.keys())}"
+        )
+
         try:
             with PgstacDB(dsn=pgstac_dsn) as db:
                 loader = Loader(db=db)
@@ -276,12 +294,7 @@ def handler(
         except Exception as e:
             logger.error(f"[{collection_id}] failed to load items: {str(e)}")
 
-            batch_failures.extend(
-                [
-                    {"itemIdentifier": message_id}
-                    for message_id in message_ids_by_collection[collection_id]
-                ]
-            )
+            batch_failures.extend([{"itemIdentifier": msg_id} for msg_id in message_ids])
 
     if batch_failures:
         logger.warning(
