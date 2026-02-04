@@ -12,6 +12,7 @@ from conftest import (
     count_collections,
     get_all_collection_items,
     get_collection,
+    get_item,
 )
 from pypgstac.db import PgstacDB
 from stac_loader.handler import get_pgstac_dsn, handler
@@ -200,6 +201,52 @@ def test_handler_with_multiple_items(mock_aws_context, mock_pgstac_dsn, database
     assert new_count == initial_count + len(items), (
         f"Expected {initial_count + len(items)} items, but found {new_count}"
     )
+
+
+def test_handler_with_identical_ids(mock_aws_context, mock_pgstac_dsn, database_url):
+    """Test handler with multiple valid STAC items"""
+    collection_id = TEST_COLLECTION_IDS[0]
+
+    # Create multiple valid items with the same id
+    item_id = "new-item"
+    items = [
+        create_valid_stac_item(item_id=item_id, collection_id=collection_id)
+        for _ in range(2)
+    ]
+
+    items[0]["properties"]["priority"] = 2
+    items[-1]["properties"]["priority"] = 1
+
+    # Create event with multiple records
+    event = {
+        "Records": [
+            create_sqs_record(item, message_id=f"test-message-{i}")
+            for i, item in enumerate(items)
+        ]
+    }
+
+    # Get initial count of items in the collection
+    initial_count = count_collection_items(database_url, collection_id)
+
+    # Call handler
+    result = handler(event, mock_aws_context)
+
+    # All should succeed
+    assert result is None
+
+    # Verify the item was added
+    assert check_item_exists(database_url, collection_id, item_id), (
+        f"Item {item_id} was not found in the database"
+    )
+
+    # Verify the count increased by the expected amount
+    new_count = count_collection_items(database_url, collection_id)
+    assert new_count == initial_count + 1, (
+        f"Expected {initial_count + 1} items, but found {new_count}"
+    )
+
+    ingested_item = get_item(database_url, collection_id, item_id)
+    assert ingested_item["content"]["properties"]["priority"] == 1
 
 
 def test_handler_with_mixed_items(mock_aws_context, mock_pgstac_dsn, database_url):
@@ -733,6 +780,52 @@ def test_handler_with_multiple_collections(
     assert new_count == initial_count + len(collections), (
         f"Expected {initial_count + len(collections)} collections, but found {new_count}"
     )
+
+
+def test_handler_with_identical_collections(
+    mock_aws_context, mock_pgstac_dsn, database_url
+):
+    """Test handler with multiple collections with the same ID"""
+    collection_id = "new-collection"
+    collections = [
+        create_valid_stac_collection(collection_id=collection_id) for _ in range(2)
+    ]
+
+    collections[0]["priority"] = 2
+    collections[-1]["priority"] = 1
+
+    # Create event with multiple collection records
+    event = {
+        "Records": [
+            create_sqs_record(collection, message_id=f"test-collection-message-{i}")
+            for i, collection in enumerate(collections)
+        ]
+    }
+
+    # Get initial count of collections
+    initial_count = count_collections(database_url)
+
+    # Call handler
+    result = handler(event, mock_aws_context)
+
+    # All should succeed
+    assert result is None
+
+    # Verify the collection was added
+    assert check_collection_exists(database_url, collection_id), (
+        f"Collection {collection_id} was not found in the database"
+    )
+
+    # Verify the count increased by the expected amount
+    new_count = count_collections(database_url)
+    assert new_count == initial_count + 1, (
+        f"Expected {initial_count + 1} collections, but found {new_count}"
+    )
+
+    # Make sure the last entry for the collection was ingested
+    ingested_collection = get_collection(database_url, collection_id)
+
+    assert ingested_collection["content"]["priority"] == 1
 
 
 def test_handler_with_invalid_collection(mock_aws_context, mock_pgstac_dsn):

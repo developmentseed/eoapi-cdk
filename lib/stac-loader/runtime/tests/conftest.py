@@ -120,6 +120,30 @@ def check_item_exists(database_url, collection_id, item_id):
         return result[0][0] > 0
 
 
+def get_item(database_url, collection_id, item_id):
+    """
+    Get the item with the given ID in the specified collection.
+
+    Args:
+        database_url: Connection string for the database
+        collection_id: The collection ID to check
+        item_id: The item ID to check
+
+    Returns:
+        dict: STAC item dict
+    """
+    with PgstacDB(dsn=database_url) as db:
+        # Direct SQL query to check if the item exists
+        query = """
+        SELECT id, collection, content
+        FROM pgstac.items
+        WHERE collection = %s AND id = %s
+        """
+
+        result = list(db.query(query, (collection_id, item_id)))[0]
+        return {"id": result[0], "collection": result[1], "content": result[2]}
+
+
 def get_all_collection_items(database_url, collection_id):
     """
     Get all items in a collection from the database.
