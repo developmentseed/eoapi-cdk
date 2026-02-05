@@ -419,7 +419,7 @@ export class StacLoader extends Construct {
       visibilityTimeout: Duration.seconds(timeoutSeconds + 10),
       encryption: sqs.QueueEncryption.SQS_MANAGED,
       deadLetterQueue: {
-        maxReceiveCount: 5,
+        maxReceiveCount: 2,
         queue: this.deadLetterQueue,
       },
     });
@@ -431,7 +431,7 @@ export class StacLoader extends Construct {
 
     // Subscribe the queue to the topic
     this.topic.addSubscription(
-      new snsSubscriptions.SqsSubscription(this.queue)
+      new snsSubscriptions.SqsSubscription(this.queue),
     );
 
     // Create the lambda function
@@ -471,11 +471,11 @@ export class StacLoader extends Construct {
       new lambdaEventSources.SqsEventSource(this.queue, {
         batchSize: props.batchSize ?? 500,
         maxBatchingWindow: Duration.minutes(
-          props.maxBatchingWindowMinutes ?? 1
+          props.maxBatchingWindowMinutes ?? 1,
         ),
         maxConcurrency: maxConcurrency,
         reportBatchItemFailures: true,
-      })
+      }),
     );
 
     // Create outputs
@@ -513,7 +513,7 @@ export class StacItemLoader extends StacLoader {
   constructor(scope: Construct, id: string, props: StacLoaderProps) {
     console.warn(
       `StacItemLoader is deprecated. Please use StacLoader instead. ` +
-        `StacItemLoader will be removed in a future version.`
+        `StacItemLoader will be removed in a future version.`,
     );
 
     super(scope, id, props);
