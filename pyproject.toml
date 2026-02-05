@@ -44,6 +44,27 @@ testpaths = [
     "lib/stac-loader/runtime/tests",
 ]
 
+
 [tool.ruff]
+line-length = 90
 
 [tool.ruff.lint]
+select = [
+    "F",    # flake8
+    "C",    # flake8-comprehensions
+    "B",    # flake8-bugbear
+    "I001", # isort
+]
+
+ignore = [
+    "E203",
+    "E266",
+    "F403",
+    "E231",
+    "E501",  # line too long, handled by black
+    "B008",  # do not perform function calls in argument defaults
+    "B905",  # ignore zip() without an explicit strict= parameter
+]
+
+[tool.ruff.lint.mccabe]
+max-complexity = 18

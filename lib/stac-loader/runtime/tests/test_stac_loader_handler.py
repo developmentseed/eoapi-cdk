@@ -18,9 +18,11 @@ from pypgstac.db import PgstacDB
 from stac_loader.handler import get_pgstac_dsn, handler
 
 
-def create_sqs_record(item_data, message_id="test-message-id"):
+def create_sqs_record(item_data, message_id="test-message-id", timestamp=None):
     """Helper to create a mock SQS record with SNS message"""
-    sns_message = {"Message": json.dumps(item_data)}
+    if timestamp is None:
+        timestamp = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+    sns_message = {"Message": json.dumps(item_data), "Timestamp": timestamp}
     return {"messageId": message_id, "body": json.dumps(sns_message)}
 
 
@@ -204,7 +206,7 @@ def test_handler_with_multiple_items(mock_aws_context, mock_pgstac_dsn, database
 
 
 def test_handler_with_identical_ids(mock_aws_context, mock_pgstac_dsn, database_url):
-    """Test handler with multiple valid STAC items"""
+    """Test handler with multiple items with the same ID - newest timestamp wins"""
     collection_id = TEST_COLLECTION_IDS[0]
 
     # Create multiple valid items with the same id
@@ -214,14 +216,25 @@ def test_handler_with_identical_ids(mock_aws_context, mock_pgstac_dsn, database_
         for _ in range(2)
     ]
 
-    items[0]["properties"]["priority"] = 2
-    items[-1]["properties"]["priority"] = 1
+    # Set different priorities to distinguish them
+    items[0]["properties"]["priority"] = 1  # Will have newer timestamp
+    items[1]["properties"]["priority"] = 2  # Will have older timestamp
 
-    # Create event with multiple records
+    # Create timestamps
+    older_timestamp = "2024-01-01T10:00:00.000Z"
+    newer_timestamp = "2024-01-01T10:01:00.000Z"
+
+    # Create event with records in REVERSE chronological order
+    # (newer timestamp first, older timestamp second)
+    # This proves we're using timestamps, not just list order
     event = {
         "Records": [
-            create_sqs_record(item, message_id=f"test-message-{i}")
-            for i, item in enumerate(items)
+            create_sqs_record(
+                items[1], message_id="older-message", timestamp=older_timestamp
+            ),
+            create_sqs_record(
+                items[0], message_id="newer-message", timestamp=newer_timestamp
+            ),
         ]
     }
 
@@ -245,8 +258,11 @@ def test_handler_with_identical_ids(mock_aws_context, mock_pgstac_dsn, database_
         f"Expected {initial_count + 1} items, but found {new_count}"
     )
 
+    # Verify the item with newer timestamp (priority=1) was ingested
     ingested_item = get_item(database_url, collection_id, item_id)
-    assert ingested_item["content"]["properties"]["priority"] == 1
+    assert ingested_item["content"]["properties"]["priority"] == 1, (
+        "Expected the item with newer timestamp (priority=1) to be ingested"
+    )
 
 
 def test_handler_with_mixed_items(mock_aws_context, mock_pgstac_dsn, database_url):
@@ -481,11 +497,13 @@ def create_s3_event_notification(bucket_name, object_key):
 
 
 def create_sqs_record_with_s3_event(
-    bucket_name, object_key, message_id="test-s3-message-id"
+    bucket_name, object_key, message_id="test-s3-message-id", timestamp=None
 ):
     """Helper to create a mock SQS record containing an S3 event notification via SNS"""
+    if timestamp is None:
+        timestamp = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
     s3_event = create_s3_event_notification(bucket_name, object_key)
-    sns_message = {"Message": json.dumps(s3_event)}
+    sns_message = {"Message": json.dumps(s3_event), "Timestamp": timestamp}
     return {"messageId": message_id, "body": json.dumps(sns_message)}
 
 
@@ -785,20 +803,35 @@ def test_handler_with_multiple_collections(
 def test_handler_with_identical_collections(
     mock_aws_context, mock_pgstac_dsn, database_url
 ):
-    """Test handler with multiple collections with the same ID"""
+    """Test handler with multiple collections with the same ID - newest timestamp wins"""
     collection_id = "new-collection"
     collections = [
         create_valid_stac_collection(collection_id=collection_id) for _ in range(2)
     ]
 
-    collections[0]["priority"] = 2
-    collections[-1]["priority"] = 1
+    # Set different priorities to distinguish them
+    collections[0]["priority"] = 1  # Will have newer timestamp
+    collections[1]["priority"] = 2  # Will have older timestamp
 
-    # Create event with multiple collection records
+    # Create timestamps
+    older_timestamp = "2024-01-01T10:00:00.000Z"
+    newer_timestamp = "2024-01-01T10:01:00.000Z"
+
+    # Create event with records in REVERSE chronological order
+    # (newer timestamp first, older timestamp second)
+    # This proves we're using timestamps, not just list order
     event = {
         "Records": [
-            create_sqs_record(collection, message_id=f"test-collection-message-{i}")
-            for i, collection in enumerate(collections)
+            create_sqs_record(
+                collections[1],
+                message_id="older-collection-message",
+                timestamp=older_timestamp,
+            ),
+            create_sqs_record(
+                collections[0],
+                message_id="newer-collection-message",
+                timestamp=newer_timestamp,
+            ),
         ]
     }
 
@@ -822,10 +855,11 @@ def test_handler_with_identical_collections(
         f"Expected {initial_count + 1} collections, but found {new_count}"
     )
 
-    # Make sure the last entry for the collection was ingested
+    # Verify the collection with newer timestamp (priority=1) was ingested
     ingested_collection = get_collection(database_url, collection_id)
-
-    assert ingested_collection["content"]["priority"] == 1
+    assert ingested_collection["content"]["priority"] == 1, (
+        "Expected the collection with newer timestamp (priority=1) to be ingested"
+    )
 
 
 def test_handler_with_invalid_collection(mock_aws_context, mock_pgstac_dsn):
