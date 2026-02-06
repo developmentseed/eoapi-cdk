@@ -60,6 +60,12 @@ export interface PgBouncerProps {
    * EC2 instance options
    */
   instanceProps?: Partial<ec2.InstanceProps>;
+
+  /**
+   * Optional reference to the database bootstrapper CustomResource.
+   * When provided, the health check will re-trigger if the database setup changes.
+   */
+  databaseBootstrapper?: CustomResource;
 }
 
 export class PgBouncer extends Construct {
@@ -255,8 +261,10 @@ export class PgBouncer extends Construct {
       serviceToken: healthCheckFunction.functionArn,
       properties: {
         InstanceId: this.instance.instanceId,
-        // Add timestamp to force re-execution on stack updates
-        Timestamp: new Date().toISOString(),
+        // Reference the database bootstrapper to re-trigger on database changes
+        ...(props.databaseBootstrapper && {
+          DatabaseBootstrapperRef: props.databaseBootstrapper.ref,
+        }),
       },
     });
 
