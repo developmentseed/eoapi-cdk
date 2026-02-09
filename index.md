@@ -1775,6 +1775,29 @@ The SQS-to-Lambda integration uses intelligent batching to optimize performance:
 This approach balances throughput (larger batches = fewer database connections)
 with latency (time-based triggers prevent indefinite waiting).
 
+## Message Ordering and Deduplication
+
+**Standard Queues**: This construct uses standard (non-FIFO) SNS topics and SQS queues,
+which means messages are **not guaranteed to arrive in order**. Multiple messages
+with the same STAC item or collection ID may arrive in any sequence.
+
+**Timestamp-Based Deduplication**: Within each batch, the loader uses SNS timestamps
+to ensure only the newest version of each item/collection is ingested:
+
+- When multiple messages have the same item/collection ID in a batch, the loader
+  compares their SNS Timestamps (automatically set when messages are published)
+- Only the message with the **newest timestamp** is kept for database insertion
+- Older versions are discarded and logged at the debug level
+- This guarantees that within a batch, the chronologically latest update wins
+
+**Important Limitations**:
+- Deduplication only occurs **within a single batch** - messages in different batches
+  are not compared across batches
+- The database upsert operation will update existing records, so later batches can
+  still overwrite earlier batches regardless of timestamps
+- For guaranteed ordering across all messages, consider implementing version tracking
+  in your STAC metadata and database constraints
+
 ## Error Handling and Dead Letter Queue
 
 Failed messages are sent to the dead letter queue after 5 processing attempts.
