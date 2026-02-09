@@ -276,6 +276,7 @@ export class PgStacDatabase extends Construct {
           reservePoolSize: 5,
           reservePoolTimeout: 5,
         },
+        databaseBootstrapper: bootstrapper,
       });
 
       this._pgBouncerServer.node.addDependency(bootstrapper);
