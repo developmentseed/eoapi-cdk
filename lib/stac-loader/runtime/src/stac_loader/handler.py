@@ -46,6 +46,9 @@ logger.addHandler(log_handler)
 botocore_logger = logging.getLogger("botocore")
 botocore_logger.setLevel(logging.WARN)
 
+CollectionRecords = DefaultDict[str, Tuple[Dict[str, Any], str, datetime]]
+CollectionItems = DefaultDict[str, Dict[str, Tuple[Dict[str, Any], str, datetime]]]
+
 
 class BatchItemFailure(TypedDict):
     itemIdentifier: str
@@ -199,7 +202,7 @@ def store_item_if_newer(
 
 
 def store_collection_if_newer(
-    collections_dict: DefaultDict[str, Tuple[Dict[str, Any], str, datetime]],
+    collections_dict: CollectionRecords,
     collection: Collection,
     message_id: str,
     sns_timestamp: datetime,
@@ -226,10 +229,8 @@ def store_collection_if_newer(
 
 def process_record(
     record: Dict[str, Any],
-    collections_dict: DefaultDict[str, Tuple[Dict[str, Any], str, datetime]],
-    items_by_collection: DefaultDict[
-        str, Dict[str, Tuple[Dict[str, Any], str, datetime]]
-    ],
+    collections_dict: CollectionRecords,
+    items_by_collection: CollectionItems,
 ) -> Optional[BatchItemFailure]:
     """Process a single SQS record and return failure if processing fails."""
     message_id = record.get("messageId")
@@ -377,16 +378,11 @@ def handler(
     pgstac_dsn = get_pgstac_dsn()
 
     batch_failures: List[BatchItemFailure] = []
-    collections_dict: DefaultDict[str, Tuple[Dict[str, Any], str, datetime]] = (
-        defaultdict()
-    )
-    items_by_collection: DefaultDict[
-        str, Dict[str, Tuple[Dict[str, Any], str, datetime]]
-    ] = defaultdict(dict)
+    collections_dict: CollectionRecords = defaultdict(tuple)
+    items_by_collection: CollectionItems = defaultdict(dict)
 
     for record in records:
-        failure = process_record(record, collections_dict, items_by_collection)
-        if failure:
+        if failure := process_record(record, collections_dict, items_by_collection):
             batch_failures.append(failure)
 
     batch_failures.extend(load_collections_to_db(collections_dict, pgstac_dsn))
