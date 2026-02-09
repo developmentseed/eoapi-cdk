@@ -1,3 +1,10 @@
+## [11.1.2](https://github.com/developmentseed/eoapi-cdk/compare/v11.1.1...v11.1.2) (2026-02-09)
+
+
+### Bug Fixes
+
+* only trigger the pgbouncer healthcheck when the database changes ([#229](https://github.com/developmentseed/eoapi-cdk/issues/229)) ([ea58e50](https://github.com/developmentseed/eoapi-cdk/commit/ea58e50958b3b25c89902a265dd15af94801a9cf)), closes [#228](https://github.com/developmentseed/eoapi-cdk/issues/228)
+
 ## [11.1.1](https://github.com/developmentseed/eoapi-cdk/compare/v11.1.0...v11.1.1) (2026-02-09)
 
 
