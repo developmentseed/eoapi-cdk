@@ -1,3 +1,10 @@
+## [11.1.1](https://github.com/developmentseed/eoapi-cdk/compare/v11.1.0...v11.1.1) (2026-02-09)
+
+
+### Bug Fixes
+
+* **stac-loader:** only ingest the last item/collection for a given id in a batch ([#227](https://github.com/developmentseed/eoapi-cdk/issues/227)) ([de1ae17](https://github.com/developmentseed/eoapi-cdk/commit/de1ae1774abade3a96078a93f7261372187a3a59))
+
 # [11.1.0](https://github.com/developmentseed/eoapi-cdk/compare/v11.0.0...v11.1.0) (2026-01-30)
 
 
