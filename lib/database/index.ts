@@ -8,6 +8,7 @@ import {
   aws_ec2 as ec2,
   aws_rds as rds,
   aws_secretsmanager as secretsmanager,
+  aws_ssm as ssm,
 } from "aws-cdk-lib";
 import { Construct } from "constructs";
 import {
@@ -16,6 +17,7 @@ import {
   resolveLambdaCode,
 } from "../utils";
 import { PgBouncer } from "./PgBouncer";
+import { PatchManager } from "./PatchManager";
 import * as crypto from "crypto";
 import * as fs from "fs";
 import * as path from "path";
@@ -124,6 +126,7 @@ export class PgStacDatabase extends Construct {
   public readonly securityGroup?: ec2.SecurityGroup;
   public readonly secretBootstrapper?: CustomResource;
   public readonly pgbouncerHealthCheck?: CustomResource;
+  public readonly pgbouncerInstanceId?: string;
 
   constructor(scope: Construct, id: string, props: PgStacDatabaseProps) {
     super(scope, id);
@@ -281,11 +284,21 @@ export class PgStacDatabase extends Construct {
 
       this._pgBouncerServer.node.addDependency(bootstrapper);
 
+      // Patching infrastructure for PgBouncer instance
+      const addPatchManager = props.addPatchManager ?? true;
+      if (addPatchManager) {
+        new PatchManager(this, "PatchManager", {
+          instanceId: this._pgBouncerServer.instance.instanceId,
+          maintenanceWindow: props.maintenanceWindow,
+        });
+      }
+
       this.pgstacSecret = this._pgBouncerServer.pgbouncerSecret;
       this.connectionTarget = this._pgBouncerServer.instance;
       this.securityGroup = this._pgBouncerServer.securityGroup;
       this.secretBootstrapper = this._pgBouncerServer.secretUpdateComplete;
       this.pgbouncerHealthCheck = this._pgBouncerServer.healthCheck;
+      this.pgbouncerInstanceId = this._pgBouncerServer.instance.instanceId;
     } else {
       this.connectionTarget = this.db;
     }
@@ -373,6 +386,21 @@ export interface PgStacDatabaseProps extends rds.DatabaseInstanceProps {
    * @default - defined in the construct
    */
   readonly pgbouncerInstanceProps?: ec2.InstanceProps | any;
+
+  /**
+   * Add patching system using AWS SSM for pgbouncer instance maintenance
+   * `addPgbouncer` must be true for this to have an effect
+   *
+   * @default true
+   */
+  readonly addPatchManager?: boolean;
+
+  /**
+   * Custom maintenance window for patching
+   *
+   * @default - A new maintenance window will be created, defined in construct
+   */
+  readonly maintenanceWindow?: ssm.CfnMaintenanceWindow;
 
   /**
    * Lambda function Custom Resource properties. A custom resource property is going to be created

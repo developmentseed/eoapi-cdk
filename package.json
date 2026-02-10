@@ -43,7 +43,7 @@
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
     "@types/node": "^24.9.1",
-    "aws-cdk-lib": "^2.220.0",
+    "aws-cdk-lib": "2.220.0",
     "constructs": "10.4.2",
     "jsii": "5.9.10",
     "jsii-docgen": "10.11.0",
