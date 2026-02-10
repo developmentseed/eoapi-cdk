@@ -3,7 +3,7 @@ import * as iam from 'aws-cdk-lib/aws-iam';
 import { Construct } from 'constructs';
 
 export interface PatchManagerProps {
-  /** 
+  /**
    * The EC2 instance ID to apply patches
    */
   instanceId: string;
