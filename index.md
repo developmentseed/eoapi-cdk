@@ -765,6 +765,7 @@ Any object.
 | <code><a href="#eoapi-cdk.PgStacDatabase.property.connectionTarget">connectionTarget</a></code> | <code>aws-cdk-lib.aws_ec2.Instance \| aws-cdk-lib.aws_rds.IDatabaseInstance</code> | *No description.* |
 | <code><a href="#eoapi-cdk.PgStacDatabase.property.pgstacVersion">pgstacVersion</a></code> | <code>string</code> | *No description.* |
 | <code><a href="#eoapi-cdk.PgStacDatabase.property.pgbouncerHealthCheck">pgbouncerHealthCheck</a></code> | <code>aws-cdk-lib.CustomResource</code> | *No description.* |
+| <code><a href="#eoapi-cdk.PgStacDatabase.property.pgbouncerInstanceId">pgbouncerInstanceId</a></code> | <code>string</code> | *No description.* |
 | <code><a href="#eoapi-cdk.PgStacDatabase.property.secretBootstrapper">secretBootstrapper</a></code> | <code>aws-cdk-lib.CustomResource</code> | *No description.* |
 | <code><a href="#eoapi-cdk.PgStacDatabase.property.securityGroup">securityGroup</a></code> | <code>aws-cdk-lib.aws_ec2.SecurityGroup</code> | *No description.* |
 | <code><a href="#eoapi-cdk.PgStacDatabase.property.db">db</a></code> | <code>aws-cdk-lib.aws_rds.DatabaseInstance</code> | *No description.* |
@@ -811,6 +812,16 @@ public readonly pgbouncerHealthCheck: CustomResource;
 ```
 
 - *Type:* aws-cdk-lib.CustomResource
+
+---
+
+##### `pgbouncerInstanceId`<sup>Optional</sup> <a name="pgbouncerInstanceId" id="eoapi-cdk.PgStacDatabase.property.pgbouncerInstanceId"></a>
+
+```typescript
+public readonly pgbouncerInstanceId: string;
+```
+
+- *Type:* string
 
 ---
 
@@ -3623,10 +3634,12 @@ const pgStacDatabaseProps: PgStacDatabaseProps = { ... }
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.credentials">credentials</a></code> | <code>aws-cdk-lib.aws_rds.Credentials</code> | Credentials for the administrative user. |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.storageEncrypted">storageEncrypted</a></code> | <code>boolean</code> | Indicates whether the DB instance is encrypted. |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.storageEncryptionKey">storageEncryptionKey</a></code> | <code>aws-cdk-lib.aws_kms.IKeyRef</code> | The KMS key that's used to encrypt the DB instance. |
+| <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.addPatchManager">addPatchManager</a></code> | <code>boolean</code> | Add patching system using AWS SSM for pgbouncer instance maintenance `addPgbouncer` must be true for this to have an effect. |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.addPgbouncer">addPgbouncer</a></code> | <code>boolean</code> | Add pgbouncer instance for managing traffic to the pgSTAC database. |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.bootstrapperLambdaFunctionOptions">bootstrapperLambdaFunctionOptions</a></code> | <code>any</code> | Can be used to override the default lambda function properties. |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.customResourceProperties">customResourceProperties</a></code> | <code>{[ key: string ]: any}</code> | Lambda function Custom Resource properties. |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.forceBootstrap">forceBootstrap</a></code> | <code>boolean</code> | Force redeployment of the database bootstrapper Lambda on every deploy. |
+| <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.maintenanceWindow">maintenanceWindow</a></code> | <code>aws-cdk-lib.aws_ssm.CfnMaintenanceWindow</code> | Custom maintenance window for patching. |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.pgbouncerInstanceProps">pgbouncerInstanceProps</a></code> | <code>any</code> | Properties for the pgbouncer ec2 instance. |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.pgstacDbName">pgstacDbName</a></code> | <code>string</code> | Name of database that is to be created and onto which pgSTAC will be installed. |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.pgstacUsername">pgstacUsername</a></code> | <code>string</code> | Name of user that will be generated for connecting to the pgSTAC database. |
@@ -4454,6 +4467,19 @@ The KMS key that's used to encrypt the DB instance.
 
 ---
 
+##### `addPatchManager`<sup>Optional</sup> <a name="addPatchManager" id="eoapi-cdk.PgStacDatabaseProps.property.addPatchManager"></a>
+
+```typescript
+public readonly addPatchManager: boolean;
+```
+
+- *Type:* boolean
+- *Default:* true
+
+Add patching system using AWS SSM for pgbouncer instance maintenance `addPgbouncer` must be true for this to have an effect.
+
+---
+
 ##### `addPgbouncer`<sup>Optional</sup> <a name="addPgbouncer" id="eoapi-cdk.PgStacDatabaseProps.property.addPgbouncer"></a>
 
 ```typescript
@@ -4518,6 +4544,19 @@ hash is used instead (which automatically triggers redeployment when code change
 modifying any property in `customResourceProperties` (e.g., increment `pgstac_version`
 or add a `rebuild_trigger` property with a new value). This gives you more granular
 control over when redeployment happens.
+
+---
+
+##### `maintenanceWindow`<sup>Optional</sup> <a name="maintenanceWindow" id="eoapi-cdk.PgStacDatabaseProps.property.maintenanceWindow"></a>
+
+```typescript
+public readonly maintenanceWindow: CfnMaintenanceWindow;
+```
+
+- *Type:* aws-cdk-lib.aws_ssm.CfnMaintenanceWindow
+- *Default:* A new maintenance window will be created, defined in construct
+
+Custom maintenance window for patching.
 
 ---
 
