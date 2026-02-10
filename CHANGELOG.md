@@ -1,3 +1,10 @@
+# [11.2.0](https://github.com/developmentseed/eoapi-cdk/compare/v11.1.2...v11.2.0) (2026-02-10)
+
+
+### Features
+
+* add patching infrastructure for pgbouncer instance ([#230](https://github.com/developmentseed/eoapi-cdk/issues/230)) ([94cbbeb](https://github.com/developmentseed/eoapi-cdk/commit/94cbbebdcafa229da27ac14c95dfadbe4ea2e691))
+
 ## [11.1.2](https://github.com/developmentseed/eoapi-cdk/compare/v11.1.1...v11.1.2) (2026-02-09)
 
 
