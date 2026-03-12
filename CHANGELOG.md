@@ -1,3 +1,10 @@
+# [11.3.0](https://github.com/developmentseed/eoapi-cdk/compare/v11.2.0...v11.3.0) (2026-03-12)
+
+
+### Features
+
+* pin pgbouncer EC2 AMI tag, pin uv version in Lambda docker builds ([#235](https://github.com/developmentseed/eoapi-cdk/issues/235)) ([9f138cf](https://github.com/developmentseed/eoapi-cdk/commit/9f138cf52032dfb3b189d7bf30794e2ed27ccf74))
+
 # [11.2.0](https://github.com/developmentseed/eoapi-cdk/compare/v11.1.2...v11.2.0) (2026-02-10)
 
 
