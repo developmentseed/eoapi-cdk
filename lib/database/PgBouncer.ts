@@ -25,6 +25,9 @@ export interface PgBouncerConfigProps {
   maxUserConnections?: number;
 }
 
+const DEFAULT_AMI_SSM_PARAMETER =
+  "/aws/service/canonical/ubuntu/server/noble/stable/20260218/amd64/hvm/ebs-gp3/ami-id";
+
 export interface PgBouncerProps {
   /**
    * VPC to deploy PgBouncer into
@@ -62,10 +65,24 @@ export interface PgBouncerProps {
   instanceProps?: Partial<ec2.InstanceProps>;
 
   /**
-   * Optional reference to the database bootstrapper CustomResource.
-   * When provided, the health check will re-trigger if the database setup changes.
+   * SSM parameter path for the PgBouncer EC2 instance machine image (AMI).
+   *
+   * Defaults to the latest Ubuntu Noble AMI. For stable deployments where
+   * EC2 replacement should only happen on explicit intent (not on Canonical
+   * AMI releases), pin this to a specific date-versioned path:
+   *   /aws/service/canonical/ubuntu/server/noble/stable/YYYYMMDD.X/amd64/hvm/ebs-gp3/ami-id
+   *
+   * To list available date-versioned paths in your region:
+   *   aws ssm get-parameters-by-path --path "/aws/service/canonical/ubuntu/server/noble/stable/" --recursive --query "Parameters[?ends_with(Name, 'amd64/hvm/ebs-gp3/ami-id')].Name"
+   *
+   * See: https://documentation.ubuntu.com/aws/aws-how-to/instances/find-ubuntu-images/
+   *
+   * With addPatchManager: true (default), SSM Patch Manager handles OS
+   * security updates without requiring instance replacement.
+   *
+   * @default /aws/service/canonical/ubuntu/server/noble/stable/20260218/amd64/hvm/ebs-gp3/ami-id
    */
-  databaseBootstrapper?: CustomResource;
+  readonly machineImageSsmParameter?: string;
 }
 
 export class PgBouncer extends Construct {
@@ -81,7 +98,7 @@ export class PgBouncer extends Construct {
   // so we perform this calculation.
 
   private getDefaultPgbouncerConfig(
-    dbMaxConnections: number
+    dbMaxConnections: number,
   ): Required<PgBouncerConfigProps> {
     // maxDbConnections (and maxUserConnections) are the only settings that need
     // to be responsive to the database size/max_connections setting
@@ -103,7 +120,7 @@ export class PgBouncer extends Construct {
     // Set defaults for optional props
 
     const defaultPgbouncerConfig = this.getDefaultPgbouncerConfig(
-      props.dbMaxConnections
+      props.dbMaxConnections,
     );
 
     // Merge provided config with defaults
@@ -119,10 +136,10 @@ export class PgBouncer extends Construct {
       assumedBy: new iam.ServicePrincipal("ec2.amazonaws.com"),
       managedPolicies: [
         iam.ManagedPolicy.fromAwsManagedPolicyName(
-          "AmazonSSMManagedInstanceCore"
+          "AmazonSSMManagedInstanceCore",
         ),
         iam.ManagedPolicy.fromAwsManagedPolicyName(
-          "CloudWatchAgentServerPolicy"
+          "CloudWatchAgentServerPolicy",
         ),
       ],
     });
@@ -132,7 +149,7 @@ export class PgBouncer extends Construct {
       new iam.PolicyStatement({
         actions: ["secretsmanager:GetSecretValue"],
         resources: [props.database.secret.secretArn],
-      })
+      }),
     );
 
     // Create a security group and allow connections from the Lambda IP ranges for this region
@@ -147,7 +164,7 @@ export class PgBouncer extends Construct {
       instanceName: "pgbouncer",
       instanceType: ec2.InstanceType.of(
         ec2.InstanceClass.T3,
-        ec2.InstanceSize.MICRO
+        ec2.InstanceSize.MICRO,
       ),
       vpcSubnets: {
         subnetType: props.usePublicSubnet
@@ -155,8 +172,8 @@ export class PgBouncer extends Construct {
           : ec2.SubnetType.PRIVATE_WITH_EGRESS,
       },
       machineImage: ec2.MachineImage.fromSsmParameter(
-        "/aws/service/canonical/ubuntu/server/noble/stable/current/amd64/hvm/ebs-gp3/ami-id",
-        { os: ec2.OperatingSystemType.LINUX }
+        props.machineImageSsmParameter ?? DEFAULT_AMI_SSM_PARAMETER,
+        { os: ec2.OperatingSystemType.LINUX },
       ),
       blockDevices: [
         {
@@ -185,7 +202,7 @@ export class PgBouncer extends Construct {
     props.database.connections.allowFrom(
       this.instance,
       ec2.Port.tcp(5432),
-      "Allow PgBouncer to connect to RDS"
+      "Allow PgBouncer to connect to RDS",
     );
 
     // Create a new secret for pgbouncer connection credentials
@@ -205,7 +222,7 @@ export class PgBouncer extends Construct {
       runtime: lambda.Runtime.NODEJS_LATEST,
       handler: "index.handler",
       code: lambda.Code.fromAsset(
-        path.join(__dirname, "lambda/pgbouncer-secret-updater")
+        path.join(__dirname, "lambda/pgbouncer-secret-updater"),
       ),
       environment: {
         SOURCE_SECRET_ARN: props.database.secret.secretArn,
@@ -226,7 +243,7 @@ export class PgBouncer extends Construct {
             ? this.instance.instancePublicIp
             : this.instance.instancePrivateIp,
         },
-      }
+      },
     );
 
     // Add health check custom resource
@@ -238,10 +255,10 @@ export class PgBouncer extends Construct {
         handler: "index.handler",
         timeout: Duration.minutes(10),
         code: lambda.Code.fromAsset(
-          path.join(__dirname, "lambda/pgbouncer-health-check")
+          path.join(__dirname, "lambda/pgbouncer-health-check"),
         ),
         description: "PgBouncer health check function",
-      }
+      },
     );
 
     // Grant SSM permissions for health check
@@ -254,17 +271,13 @@ export class PgBouncer extends Construct {
           "ssm:ListCommandInvocations",
         ],
         resources: ["*"],
-      })
+      }),
     );
 
     this.healthCheck = new CustomResource(this, "PgBouncerHealthCheck", {
       serviceToken: healthCheckFunction.functionArn,
       properties: {
         InstanceId: this.instance.instanceId,
-        // Reference the database bootstrapper to re-trigger on database changes
-        ...(props.databaseBootstrapper && {
-          DatabaseBootstrapperRef: props.databaseBootstrapper.ref,
-        }),
       },
     });
 
@@ -275,7 +288,7 @@ export class PgBouncer extends Construct {
 
   private loadUserDataScript(
     pgBouncerConfig: Required<NonNullable<PgBouncerProps["pgBouncerConfig"]>>,
-    database: { secret: secretsmanager.ISecret }
+    database: { secret: secretsmanager.ISecret },
   ): ec2.UserData {
     const userDataScript = ec2.UserData.forLinux();
 
@@ -292,7 +305,9 @@ export class PgBouncer extends Construct {
         pgBouncerConfig.reservePoolTimeout +
         '"',
       'export MAX_DB_CONNECTIONS="' + pgBouncerConfig.maxDbConnections + '"',
-      'export MAX_USER_CONNECTIONS="' + pgBouncerConfig.maxUserConnections + '"'
+      'export MAX_USER_CONNECTIONS="' +
+        pgBouncerConfig.maxUserConnections +
+        '"',
     );
 
     // Load the startup script
