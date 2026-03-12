@@ -10,7 +10,7 @@ ENV PATH=/tmp/.local/bin:$PATH
 
 WORKDIR /tmp
 
-COPY stactools-item-generator/runtime/pyproject.toml stac-loader/runtime/uv.lock ./
+COPY stactools-item-generator/runtime/pyproject.toml stactools-item-generator/runtime/uv.lock ./
 COPY stactools-item-generator/runtime/src/ ./src/
 
 RUN <<EOF
