@@ -1,6 +1,6 @@
 ARG PYTHON_VERSION
 FROM --platform=linux/amd64 public.ecr.aws/lambda/python:${PYTHON_VERSION}
-COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
+COPY --from=ghcr.io/astral-sh/uv:0.10.9 /uv /uvx /bin/
 
 WORKDIR /tmp
 COPY titiler-pgstac-api/runtime/uv.lock titiler-pgstac-api/runtime/pyproject.toml ./

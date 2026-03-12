@@ -1,6 +1,6 @@
 ARG PYTHON_VERSION=3.12
 FROM public.ecr.aws/lambda/python:${PYTHON_VERSION}
-COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
+COPY --from=ghcr.io/astral-sh/uv:0.10.9 /uv /uvx /bin/
 
 ENV UV_CACHE_DIR=/tmp/uv-cache/
 ENV UV_COMPILE_BYTECODE=1
@@ -10,7 +10,7 @@ ENV PATH=/tmp/.local/bin:$PATH
 
 WORKDIR /tmp
 
-COPY stactools-item-generator/runtime/pyproject.toml stac-loader/runtime/uv.lock ./
+COPY stactools-item-generator/runtime/pyproject.toml stactools-item-generator/runtime/uv.lock ./
 COPY stactools-item-generator/runtime/src/ ./src/
 
 RUN <<EOF

@@ -171,8 +171,15 @@ def handler(event, context):
     """Lambda Handler."""
     print(f"Handling {event}")
 
+    physicalResourceId = event.get("PhysicalResourceId") or context.log_stream_name
     if event["RequestType"] not in ["Create", "Update"]:
-        return send(event, context, "SUCCESS", {"msg": "No action to be taken"})
+        return send(
+            event,
+            context,
+            "SUCCESS",
+            {"msg": "No action to be taken"},
+            physicalResourceId=physicalResourceId,
+        )
 
     try:
         params = event["ResourceProperties"]
@@ -261,8 +268,14 @@ def handler(event, context):
 
     except Exception as e:
         print(f"Unable to bootstrap database with exception={e}")
-        send(event, context, "FAILED", {"message": str(e)})
+        send(
+            event,
+            context,
+            "FAILED",
+            {"message": str(e)},
+            physicalResourceId=physicalResourceId,
+        )
         raise e
 
     print("Complete.")
-    return send(event, context, "SUCCESS", {})
+    return send(event, context, "SUCCESS", {}, physicalResourceId=physicalResourceId)

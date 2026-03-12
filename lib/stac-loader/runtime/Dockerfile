@@ -1,6 +1,6 @@
 ARG PYTHON_VERSION=3.12
 FROM public.ecr.aws/lambda/python:${PYTHON_VERSION}
-COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
+COPY --from=ghcr.io/astral-sh/uv:0.10.9 /uv /uvx /bin/
 
 ENV UV_COMPILE_BYTECODE=1
 ENV PYTHONUNBUFFERED=1

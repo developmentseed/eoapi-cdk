@@ -1,0 +1,86 @@
+name: Remind to update PgBouncer AMI pin
+
+on:
+  schedule:
+    # Run quarterly: 1st of January, April, July, October
+    - cron: '0 9 1 1,4,7,10 *'
+  workflow_dispatch:
+
+jobs:
+  check-ami-pin:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Check age of pinned AMI date
+        id: check
+        run: |
+          # Extract the pinned date from PgBouncer.ts
+          PINNED=$(grep -oP '(?<=/noble/stable/)\d{8}(?=/)' lib/database/PgBouncer.ts | head -1)
+          if [ -z "$PINNED" ]; then
+            echo "No pinned date found (using 'current' or unrecognised format) — nothing to check."
+            echo "should_remind=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          PINNED_DATE=$(date -d "$PINNED" +%s)
+          NOW=$(date +%s)
+          AGE_DAYS=$(( (NOW - PINNED_DATE) / 86400 ))
+
+          echo "Pinned date: $PINNED ($AGE_DAYS days ago)"
+          echo "pinned=$PINNED" >> "$GITHUB_OUTPUT"
+          echo "age_days=$AGE_DAYS" >> "$GITHUB_OUTPUT"
+
+          if [ "$AGE_DAYS" -ge 90 ]; then
+            echo "should_remind=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "should_remind=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Open reminder issue
+        if: steps.check.outputs.should_remind == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const pinned = '${{ steps.check.outputs.pinned }}';
+            const ageDays = '${{ steps.check.outputs.age_days }}';
+
+            // Check if a reminder issue is already open
+            const issues = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              labels: 'maintenance',
+            });
+            const existing = issues.data.find(i => i.title.includes('PgBouncer AMI pin'));
+            if (existing) {
+              console.log(`Reminder issue already open: ${existing.html_url}`);
+              return;
+            }
+
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `chore: update PgBouncer AMI pin (currently ${pinned}, ${ageDays} days old)`,
+              body: [
+                `The PgBouncer EC2 AMI is pinned to \`${pinned}\`, which is ${ageDays} days old.`,
+                '',
+                'To find a more recent date-versioned path in your region:',
+                '```',
+                'aws ssm get-parameters-by-path \\',
+                '  --path "/aws/service/canonical/ubuntu/server/noble/stable/" \\',
+                '  --recursive \\',
+                '  --query "Parameters[?ends_with(Name, \'amd64/hvm/ebs-gp3/ami-id\')].Name"',
+                '```',
+                '',
+                'Then update the `DEFAULT_AMI_SSM_PARAMETER` constant in `lib/database/PgBouncer.ts`',
+                'and the `@default` tag in both `PgBouncer.ts` and `lib/database/index.ts`.',
+                '',
+                'See: https://documentation.ubuntu.com/aws/aws-how-to/instances/find-ubuntu-images/',
+              ].join('\n'),
+              labels: ['maintenance'],
+            });

@@ -279,7 +279,7 @@ export class PgStacDatabase extends Construct {
           reservePoolSize: 5,
           reservePoolTimeout: 5,
         },
-        databaseBootstrapper: bootstrapper,
+        machineImageSsmParameter: props.pgbouncerAmiSsmParameter,
       });
 
       this._pgBouncerServer.node.addDependency(bootstrapper);
@@ -386,6 +386,26 @@ export interface PgStacDatabaseProps extends rds.DatabaseInstanceProps {
    * @default - defined in the construct
    */
   readonly pgbouncerInstanceProps?: ec2.InstanceProps | any;
+
+  /**
+   * SSM parameter path for the PgBouncer EC2 instance machine image (AMI).
+   *
+   * Defaults to the latest Ubuntu Noble AMI (`current`). For stable deployments
+   * where EC2 replacement should only happen on explicit intent, pin this to a
+   * specific date-versioned path:
+   *   /aws/service/canonical/ubuntu/server/noble/stable/YYYYMMDD.X/amd64/hvm/ebs-gp3/ami-id
+   *
+   * To list available date-versioned paths in your region:
+   *   aws ssm get-parameters-by-path --path "/aws/service/canonical/ubuntu/server/noble/stable/" --recursive --query "Parameters[?ends_with(Name, 'amd64/hvm/ebs-gp3/ami-id')].Name"
+   *
+   * See: https://documentation.ubuntu.com/aws/aws-how-to/instances/find-ubuntu-images/
+   *
+   * With addPatchManager: true (default), SSM Patch Manager handles OS security
+   * updates without requiring instance replacement.
+   *
+   * @default /aws/service/canonical/ubuntu/server/noble/stable/20260218/amd64/hvm/ebs-gp3/ami-id
+   */
+  readonly pgbouncerAmiSsmParameter?: string;
 
   /**
    * Add patching system using AWS SSM for pgbouncer instance maintenance
