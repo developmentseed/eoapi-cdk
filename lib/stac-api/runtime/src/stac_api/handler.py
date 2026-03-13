@@ -20,17 +20,20 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
-logger.info("fetching pgstac secret")
-secret = get_secret_dict(secret_arn_env_var="PGSTAC_SECRET_ARN")
-postgres_settings = PostgresSettings(
-    pghost=secret["host"],
-    pgdatabase=secret["dbname"],
-    pguser=secret["username"],
-    pgpassword=secret["password"],
-    pgport=int(secret["port"]),
-)
-
 _connection_initialized = False
+
+
+def _build_postgres_settings() -> PostgresSettings:
+    """Fetch credentials from Secrets Manager and build PostgresSettings."""
+    logger.info("fetching pgstac secret")
+    secret = get_secret_dict(secret_arn_env_var="PGSTAC_SECRET_ARN")
+    return PostgresSettings(
+        pghost=secret["host"],
+        pgdatabase=secret["dbname"],
+        pguser=secret["username"],
+        pgpassword=secret["password"],
+        pgport=int(secret["port"]),
+    )
 
 
 @register_before_snapshot
@@ -90,6 +93,7 @@ def on_snap_restore():
             app.state.writepool = None
 
         # Create fresh connection pool
+        postgres_settings = _build_postgres_settings()
         loop.run_until_complete(
             connect_to_db(
                 app,
@@ -111,6 +115,7 @@ def on_snap_restore():
 async def startup_event():
     """Connect to database on startup."""
     logger.info("Setting up DB connection...")
+    postgres_settings = _build_postgres_settings()
     await connect_to_db(
         app,
         postgres_settings=postgres_settings,
@@ -145,7 +150,7 @@ if "AWS_EXECUTION_ENV" in os.environ:
     loop.run_until_complete(
         connect_to_db(
             app,
-            postgres_settings=postgres_settings,
+            postgres_settings=_build_postgres_settings(),
             add_write_connection_pool=with_transactions,
         )
     )
