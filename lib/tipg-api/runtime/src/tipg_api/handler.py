@@ -17,18 +17,22 @@ from tipg.settings import (
 )
 from utils import get_secret_dict
 
-secret = get_secret_dict(secret_arn_env_var="PGSTAC_SECRET_ARN")
-postgres_settings = PostgresSettings(
-    postgres_host=secret["host"],
-    postgres_dbname=secret["dbname"],
-    postgres_user=secret["username"],
-    postgres_pass=secret["password"],
-    postgres_port=int(secret["port"]),
-)
 db_settings = DatabaseSettings()
 custom_sql_settings = CustomSQLSettings()
 
 _connection_initialized = False
+
+
+def _build_postgres_settings() -> PostgresSettings:
+    """Fetch credentials from Secrets Manager and build PostgresSettings."""
+    secret = get_secret_dict(secret_arn_env_var="PGSTAC_SECRET_ARN")
+    return PostgresSettings(
+        postgres_host=secret["host"],
+        postgres_dbname=secret["dbname"],
+        postgres_user=secret["username"],
+        postgres_pass=secret["password"],
+        postgres_port=int(secret["port"]),
+    )
 
 
 @register_before_snapshot
@@ -74,6 +78,7 @@ def on_snap_restore():
             app.state.pool = None
 
         # Create fresh connection pool
+        postgres_settings = _build_postgres_settings()
         loop.run_until_complete(
             connect_to_db(
                 app,
@@ -103,6 +108,7 @@ def on_snap_restore():
 @app.on_event("startup")
 async def startup_event() -> None:
     """Connect to database on startup."""
+    postgres_settings = _build_postgres_settings()
     await connect_to_db(
         app,
         schemas=db_settings.schemas,

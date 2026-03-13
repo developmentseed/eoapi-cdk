@@ -12,16 +12,19 @@ from titiler.pgstac.main import app
 from titiler.pgstac.settings import PostgresSettings
 from utils import get_secret_dict
 
-secret = get_secret_dict(secret_arn_env_var="PGSTAC_SECRET_ARN")
-postgres_settings = PostgresSettings(
-    pghost=secret["host"],
-    pgdatabase=secret["dbname"],
-    pguser=secret["username"],
-    pgpassword=secret["password"],
-    pgport=int(secret["port"]),
-)
-
 _connection_initialized = False
+
+
+def _build_postgres_settings() -> PostgresSettings:
+    """Fetch credentials from Secrets Manager and build PostgresSettings."""
+    secret = get_secret_dict(secret_arn_env_var="PGSTAC_SECRET_ARN")
+    return PostgresSettings(
+        pghost=secret["host"],
+        pgdatabase=secret["dbname"],
+        pguser=secret["username"],
+        pgpassword=secret["password"],
+        pgport=int(secret["port"]),
+    )
 
 
 @register_before_snapshot
@@ -67,7 +70,7 @@ def on_snap_restore():
             app.state.dbpool = None
 
         # Create fresh connection pool
-        loop.run_until_complete(connect_to_db(app, settings=postgres_settings))
+        loop.run_until_complete(connect_to_db(app, settings=_build_postgres_settings()))
 
         _connection_initialized = True
 
@@ -81,7 +84,7 @@ def on_snap_restore():
 @app.on_event("startup")
 async def startup_event() -> None:
     """Connect to database on startup."""
-    await connect_to_db(app, settings=postgres_settings)
+    await connect_to_db(app, settings=_build_postgres_settings())
 
 
 handler = Mangum(app, lifespan="off")
