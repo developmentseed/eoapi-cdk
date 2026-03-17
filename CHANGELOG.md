@@ -1,3 +1,10 @@
+## [11.3.1](https://github.com/developmentseed/eoapi-cdk/compare/v11.3.0...v11.3.1) (2026-03-17)
+
+
+### Bug Fixes
+
+* fetch postgres creds on each app startup ([#237](https://github.com/developmentseed/eoapi-cdk/issues/237)) ([6e4f5b8](https://github.com/developmentseed/eoapi-cdk/commit/6e4f5b8ab43a5505aa5ae0c145be2038621f9d95)), closes [#236](https://github.com/developmentseed/eoapi-cdk/issues/236)
+
 # [11.3.0](https://github.com/developmentseed/eoapi-cdk/compare/v11.2.0...v11.3.0) (2026-03-12)
 
 
