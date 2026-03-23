@@ -1,0 +1,27 @@
+name: CDK Compatibility
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  check:
+    name: aws-cdk-lib@${{ matrix.aws-cdk-version }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - aws-cdk-version: "2.220.0"
+            constructs-version: "10.4.2"
+          - aws-cdk-version: "latest"
+            constructs-version: "latest"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm run install:all
+      - run: npm install --no-save aws-cdk-lib@${{ matrix.aws-cdk-version }} constructs@${{ matrix.constructs-version }}
+      - run: npm run build
