@@ -6,6 +6,11 @@ updates:
       interval: "weekly"
     open-pull-requests-limit: 10
     versioning-strategy: "auto"
+    ignore:
+      # aws-cdk-lib and constructs are peer dependencies — their minimum floor
+      # is managed manually in package.json and should not be auto-bumped.
+      - dependency-name: "aws-cdk-lib"
+      - dependency-name: "constructs"
     groups:
       all-dependencies:
         patterns:
