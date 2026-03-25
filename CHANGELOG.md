@@ -1,3 +1,10 @@
+# [11.4.0](https://github.com/developmentseed/eoapi-cdk/compare/v11.3.1...v11.4.0) (2026-03-25)
+
+
+### Features
+
+* add pgstac settings for use_queue and update_collection_extent ([#241](https://github.com/developmentseed/eoapi-cdk/issues/241)) ([f84eb7d](https://github.com/developmentseed/eoapi-cdk/commit/f84eb7daf24d505ced99ff40b372f3f28a50cc1a))
+
 ## [11.3.1](https://github.com/developmentseed/eoapi-cdk/compare/v11.3.0...v11.3.1) (2026-03-17)
 
 
