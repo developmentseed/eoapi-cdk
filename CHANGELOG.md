@@ -1,3 +1,10 @@
+## [11.4.1](https://github.com/developmentseed/eoapi-cdk/compare/v11.4.0...v11.4.1) (2026-03-25)
+
+
+### Bug Fixes
+
+* set search_path once for the pgstac database ([#245](https://github.com/developmentseed/eoapi-cdk/issues/245)) ([db1ddcd](https://github.com/developmentseed/eoapi-cdk/commit/db1ddcd23d9f7953d5f7dc8ad02d5eb6bf4cd29e))
+
 # [11.4.0](https://github.com/developmentseed/eoapi-cdk/compare/v11.3.1...v11.4.0) (2026-03-25)
 
 
