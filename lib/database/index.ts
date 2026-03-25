@@ -25,7 +25,6 @@ import * as path from "path";
 const instanceSizes: Record<string, number> = require("./instance-memory.json");
 
 let defaultPgSTACCustomOptions: { [key: string]: any } = {
-  context: "FALSE",
   mosaic_index: "TRUE",
 };
 
@@ -135,6 +134,7 @@ export class PgStacDatabase extends Construct {
       props.instanceType?.toString() || "m5.large",
       props.parameters,
     );
+
     const parameterGroup = new rds.ParameterGroup(this, "parameterGroup", {
       engine: props.engine,
       parameters: {
@@ -151,10 +151,11 @@ export class PgStacDatabase extends Construct {
       },
     });
 
+    const { parameters: _parameters, ...dbProps } = props;
     this.db = new rds.DatabaseInstance(this, "db", {
       instanceIdentifier: Stack.of(this).stackName,
       parameterGroup,
-      ...props,
+      ...dbProps,
     });
 
     this.pgstacVersion = props.pgstacVersion || DEFAULT_PGSTAC_VERSION;
@@ -423,10 +424,42 @@ export interface PgStacDatabaseProps extends rds.DatabaseInstanceProps {
   readonly maintenanceWindow?: ssm.CfnMaintenanceWindow;
 
   /**
-   * Lambda function Custom Resource properties. A custom resource property is going to be created
-   * to trigger the boostrapping lambda function. This parameter allows the user to specify additional properties
-   * on top of the defaults ones.
+   * Additional properties passed to the bootstrapper Lambda as CloudFormation
+   * Custom Resource properties. These are merged with the defaults and forwarded
+   * to the handler as `event["ResourceProperties"]`.
    *
+   * ## Supported pgSTAC settings
+   *
+   * Each setting follows honest boolean semantics: `"TRUE"` enables, `"FALSE"`
+   * disables (reverts to pgSTAC's built-in default), and omitting the key
+   * entirely is a no-op — the database is left as-is. This means upgrading
+   * without changing config never silently alters a manually-managed setting.
+   *
+   * | Property                   | Default  | Description |
+   * |----------------------------|----------|-------------|
+   * | `context`                  | (unset)  | Enable `CONTEXT=ON` in pgSTAC (item count on search). |
+   * | `mosaic_index`             | `"TRUE"` | Create a partial index on searches of type `mosaic`. Set `"FALSE"` to drop it. |
+   * | `update_collection_extent` | (unset)  | Automatically update collection spatial/temporal extents on item ingest. Combine with `use_queue` to reduce per-transaction overhead. |
+   * | `use_queue`                | (unset)  | Process extent updates asynchronously via an internal queue. `"TRUE"` installs pg_cron and schedules the drain job; `"FALSE"` removes the job. Requires `pg_cron` (see below). |
+   * | `pg_cron_schedule`         | `"*\/10 * * * *"` | Cron schedule for `CALL run_queued_queries()`. Only used when `use_queue` is `"TRUE"`. |
+   *
+   * ## pg_cron requirement
+   *
+   * When `use_queue` is `"TRUE"`, the bootstrapper installs the `pg_cron`
+   * extension and schedules a job to periodically drain the queue.
+   * `pg_cron` must be present in `shared_preload_libraries` **before**
+   * deployment or the bootstrap will fail. Add it via `props.parameters`:
+   *
+   * ```
+   * parameters: { shared_preload_libraries: "pg_cron" }
+   * ```
+   *
+   * @example
+   * customResourceProperties: {
+   *   update_collection_extent: "TRUE",
+   *   use_queue: "TRUE",
+   *   pg_cron_schedule: "*\/10 * * * *",
+   * }
    */
   readonly customResourceProperties?: {
     [key: string]: any;

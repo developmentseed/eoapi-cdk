@@ -99,6 +99,15 @@ class pgStacInfraStack(Stack):
             },
             removal_policy=RemovalPolicy.DESTROY,
             pgstac_version=PGSTAC_VERSION,
+            parameters={
+                "shared_preload_libraries": "pg_cron",
+            },
+            custom_resource_properties={
+                "context": "TRUE",
+                "update_collection_extent": "TRUE",
+                "use_queue": "TRUE",
+                "pg_cron_schedule": "*/10 * * * *",  # every 10 minutes (default)
+            },
         )
 
         assert pgstac_db.security_group
