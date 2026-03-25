@@ -3637,7 +3637,7 @@ const pgStacDatabaseProps: PgStacDatabaseProps = { ... }
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.addPatchManager">addPatchManager</a></code> | <code>boolean</code> | Add patching system using AWS SSM for pgbouncer instance maintenance `addPgbouncer` must be true for this to have an effect. |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.addPgbouncer">addPgbouncer</a></code> | <code>boolean</code> | Add pgbouncer instance for managing traffic to the pgSTAC database. |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.bootstrapperLambdaFunctionOptions">bootstrapperLambdaFunctionOptions</a></code> | <code>any</code> | Can be used to override the default lambda function properties. |
-| <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.customResourceProperties">customResourceProperties</a></code> | <code>{[ key: string ]: any}</code> | Lambda function Custom Resource properties. |
+| <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.customResourceProperties">customResourceProperties</a></code> | <code>{[ key: string ]: any}</code> | Additional properties passed to the bootstrapper Lambda as CloudFormation Custom Resource properties. |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.forceBootstrap">forceBootstrap</a></code> | <code>boolean</code> | Force redeployment of the database bootstrapper Lambda on every deploy. |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.maintenanceWindow">maintenanceWindow</a></code> | <code>aws-cdk-lib.aws_ssm.CfnMaintenanceWindow</code> | Custom maintenance window for patching. |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.pgbouncerAmiSsmParameter">pgbouncerAmiSsmParameter</a></code> | <code>string</code> | SSM parameter path for the PgBouncer EC2 instance machine image (AMI). |
@@ -4515,13 +4515,49 @@ public readonly customResourceProperties: {[ key: string ]: any};
 
 - *Type:* {[ key: string ]: any}
 
-Lambda function Custom Resource properties.
+Additional properties passed to the bootstrapper Lambda as CloudFormation Custom Resource properties.
 
-A custom resource property is going to be created
-to trigger the boostrapping lambda function. This parameter allows the user to specify additional properties
-on top of the defaults ones.
+These are merged with the defaults and forwarded
+to the handler as `event["ResourceProperties"]`.
+
+## Supported pgSTAC settings
+
+Each setting follows honest boolean semantics: `"TRUE"` enables, `"FALSE"`
+disables (reverts to pgSTAC's built-in default), and omitting the key
+entirely is a no-op — the database is left as-is. This means upgrading
+without changing config never silently alters a manually-managed setting.
+
+| Property                   | Default  | Description |
+|----------------------------|----------|-------------|
+| `context`                  | (unset)  | Enable `CONTEXT=ON` in pgSTAC (item count on search). |
+| `mosaic_index`             | `"TRUE"` | Create a partial index on searches of type `mosaic`. Set `"FALSE"` to drop it. |
+| `update_collection_extent` | (unset)  | Automatically update collection spatial/temporal extents on item ingest. Combine with `use_queue` to reduce per-transaction overhead. |
+| `use_queue`                | (unset)  | Process extent updates asynchronously via an internal queue. `"TRUE"` installs pg_cron and schedules the drain job; `"FALSE"` removes the job. Requires `pg_cron` (see below). |
+| `pg_cron_schedule`         | `"*\/10 * * * *"` | Cron schedule for `CALL run_queued_queries()`. Only used when `use_queue` is `"TRUE"`. |
+
+## pg_cron requirement
+
+When `use_queue` is `"TRUE"`, the bootstrapper installs the `pg_cron`
+extension and schedules a job to periodically drain the queue.
+`pg_cron` must be present in `shared_preload_libraries` **before**
+deployment or the bootstrap will fail. Add it via `props.parameters`:
+
+```
+parameters: { shared_preload_libraries: "pg_cron" }
+```
 
 ---
+
+*Example*
+
+```typescript
+customResourceProperties: {
+  update_collection_extent: "TRUE",
+  use_queue: "TRUE",
+  pg_cron_schedule: "*\/10 * * * *",
+}
+```
+
 
 ##### `forceBootstrap`<sup>Optional</sup> <a name="forceBootstrap" id="eoapi-cdk.PgStacDatabaseProps.property.forceBootstrap"></a>
 
