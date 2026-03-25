@@ -130,7 +130,6 @@ def update_user_permissions(cursor, db_name: str, username: str) -> None:
             "GRANT pgstac_read TO {username};"
             "GRANT pgstac_ingest TO {username};"
             "GRANT pgstac_admin TO {username};"
-            "ALTER USER {username} SET search_path TO pgstac, public;"  # add pgstac to search_path by default
         ).format(
             db_name=sql.Identifier(db_name),
             username=sql.Identifier(username),
@@ -252,6 +251,27 @@ def unregister_pg_cron(cursor) -> None:
         )
 
 
+def set_database_search_path(cursor, db_name: str) -> None:
+    """Set the default search_path for all connections to the pgSTAC database.
+
+    Uses ``ALTER DATABASE`` so the setting applies to every session (including
+    pg_cron background workers, which start with no ``search_path``). This is
+    preferred over per-user or per-connection settings because it is a single
+    authoritative place.
+
+    The cursor must be connected as a superuser (the RDS admin user).
+
+    Args:
+        cursor: Database cursor connected as a superuser.
+        db_name: Name of the pgSTAC database to configure.
+    """
+    cursor.execute(
+        sql.SQL("ALTER DATABASE {db_name} SET search_path TO pgstac, public;").format(
+            db_name=sql.Identifier(db_name),
+        )
+    )
+
+
 def register_pg_cron(cursor, db_name: str, schedule: str) -> None:
     """Install the pg_cron extension and schedule run_queued_queries.
 
@@ -263,23 +283,12 @@ def register_pg_cron(cursor, db_name: str, schedule: str) -> None:
     pg_cron must be listed in ``shared_preload_libraries`` in the RDS parameter
     group before this will succeed.
 
-    Side effect: sets ``search_path = pgstac, public`` as the default for all
-    connections to ``db_name`` via ``ALTER DATABASE``. This is required because
-    pg_cron background worker sessions start with no ``search_path``, and
-    prepending ``SET search_path`` to the cron command would open a transaction
-    that prevents ``run_queued_queries()`` from issuing its own ``COMMIT``.
-
     Args:
         cursor: Database cursor connected to the ``postgres`` database as a superuser.
         db_name: Name of the pgSTAC database where run_queued_queries will run.
         schedule: Cron schedule expression (e.g. ``"*/5 * * * *"``).
     """
     cursor.execute(sql.SQL("CREATE EXTENSION IF NOT EXISTS pg_cron;"))
-    cursor.execute(
-        sql.SQL("ALTER DATABASE {db_name} SET search_path TO pgstac, public;").format(
-            db_name=sql.Identifier(db_name),
-        )
-    )
     cursor.execute(
         sql.SQL(
             "SELECT cron.schedule_in_database({job_name}, {schedule}, 'CALL pgstac.run_queued_queries();', {db_name});"
@@ -335,6 +344,14 @@ def handler(event, context):
                     cursor=cur,
                     username=eoapi_params["username"],
                     password=eoapi_params["password"],
+                )
+
+                print(
+                    f"Setting default search_path for '{eoapi_params['dbname']}' database..."
+                )
+                set_database_search_path(
+                    cursor=cur,
+                    db_name=eoapi_params["dbname"],
                 )
 
                 if "use_queue" in params:
