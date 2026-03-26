@@ -4,6 +4,7 @@ from datetime import timedelta
 from typing import TYPE_CHECKING, List
 from unittest.mock import call, patch
 
+import pydantic
 import pytest
 from fastapi.encoders import jsonable_encoder
 
@@ -80,7 +81,9 @@ class TestCreate:
 
         stored_data = self.db.fetch_many(status="queued")["items"]
         assert len(stored_data) == 1
-        assert json.loads(stored_data[0].json(by_alias=True)) == response.json()
+        assert (
+            json.loads(stored_data[0].model_dump_json(by_alias=True)) == response.json()
+        )
 
     def test_validates_missing_collection(
         self, client_authenticated, collection_missing, asset_exists
@@ -176,7 +179,7 @@ class TestList:
 
         limit = 25
         expected_next = json.loads(
-            example_ingestions[limit - 1].json(
+            example_ingestions[limit - 1].model_dump_json(
                 include={"created_by", "id", "status", "created_at"}
             )
         )
@@ -193,7 +196,7 @@ class TestList:
         limit = 25
         next_param = base64.b64encode(
             example_ingestions[limit - 1]
-            .json(include={"created_by", "id", "status", "created_at"})
+            .model_dump_json(include={"created_by", "id", "status", "created_at"})
             .encode()
         )
 
@@ -202,6 +205,34 @@ class TestList:
         )
         assert response.status_code == 200
         assert response.json()["items"] == [
-            json.loads(ingestion.json(by_alias=True))
+            json.loads(ingestion.model_dump_json(by_alias=True))
             for ingestion in example_ingestions[limit : limit * 2]
         ]
+
+
+class TestDecodeNextToken:
+    """Unit tests for ListIngestionRequest.decode_next_token field_validator.
+
+    Regression: previously used __post_init_post_parse__ which is dropped in
+    pydantic v2, causing the next token to never be decoded.
+    """
+
+    def test_none_passes_through(self):
+        from src.schemas import ListIngestionRequest
+
+        req = ListIngestionRequest()
+        assert req.next is None
+
+    def test_valid_token_is_decoded(self):
+        from src.schemas import ListIngestionRequest
+
+        payload = {"created_by": "user", "id": "item-1", "status": "queued"}
+        token = base64.b64encode(json.dumps(payload).encode()).decode()
+        req = ListIngestionRequest(next=token)
+        assert req.next == payload
+
+    def test_invalid_token_raises_validation_error(self):
+        from src.schemas import ListIngestionRequest
+
+        with pytest.raises(pydantic.ValidationError, match="Unable to decode next token"):
+            ListIngestionRequest(next="not!!valid!!base64")

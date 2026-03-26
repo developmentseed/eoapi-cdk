@@ -3,17 +3,15 @@ import binascii
 import enum
 import json
 from datetime import datetime
-from typing import TYPE_CHECKING, Dict, List, Optional, Union
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, Union
 from urllib.parse import urlparse
 
 from fastapi.encoders import jsonable_encoder
-from fastapi.exceptions import RequestValidationError
 from pydantic import (
     BaseModel,
     Json,
     PositiveInt,
     dataclasses,
-    error_wrappers,
     field_validator,
 )
 from stac_pydantic import Collection, Item, shared
@@ -107,25 +105,19 @@ class Ingestion(BaseModel):
 class ListIngestionRequest:
     status: Status = Status.queued
     limit: Optional[PositiveInt] = None
-    next: Optional[str] = None
+    next: Optional[Any] = None
 
-    def __post_init_post_parse__(self) -> None:
-        # https://github.com/tiangolo/fastapi/issues/1474#issuecomment-1049987786
-        if self.next is None:
-            return
-
+    @field_validator("next", mode="before")
+    @classmethod
+    def decode_next_token(cls, v: Optional[str]) -> Optional[Any]:
+        """Decode the base64-encoded JSON pagination token supplied as a query param."""
+        if v is None:
+            return None
         try:
-            self.next = json.loads(base64.b64decode(self.next))
+            return json.loads(base64.b64decode(v))
         except (UnicodeDecodeError, binascii.Error) as e:
-            raise RequestValidationError(
-                [
-                    error_wrappers.ErrorWrapper(
-                        ValueError(
-                            "Unable to decode next token. Should be base64 encoded JSON"
-                        ),
-                        "query.next",
-                    )
-                ]
+            raise ValueError(
+                "Unable to decode next token. Should be base64 encoded JSON"
             ) from e
 
 

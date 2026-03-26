@@ -12,6 +12,7 @@ def test_environ(monkeypatch):
     monkeypatch.setenv("AWS_SECRET_ACCESS_KEY", "testing")
     monkeypatch.setenv("AWS_SECURITY_TOKEN", "testing")
     monkeypatch.setenv("AWS_SESSION_TOKEN", "testing")
+    monkeypatch.setenv("AWS_DEFAULT_REGION", "us-east-1")
 
     # Config mocks
     monkeypatch.setenv("DYNAMODB_TABLE", "test_table")

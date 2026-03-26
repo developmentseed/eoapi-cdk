@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING, List
 
 from boto3.dynamodb import conditions
-from pydantic import parse_obj_as
+from pydantic import TypeAdapter
 
 from . import schemas
 
@@ -35,7 +35,9 @@ class Database:
             **{"ExclusiveStartKey": next} if next else {},
         )
         return {
-            "items": parse_obj_as(List[schemas.Ingestion], response["Items"]),
+            "items": TypeAdapter(List[schemas.Ingestion]).validate_python(
+                response["Items"]
+            ),
             "next": response.get("LastEvaluatedKey"),
         }
 
