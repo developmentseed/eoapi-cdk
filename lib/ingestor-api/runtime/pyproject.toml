@@ -21,7 +21,6 @@ dependencies = [
 
 [dependency-groups]
 dev = [
-    "boto3",
     "httpx>=0.24",
     "moto[dynamodb,ssm]>=4.0,<5.0",
     "pytest>=7.0",
