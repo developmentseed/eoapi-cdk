@@ -1,6 +1,7 @@
 import {
   aws_apigateway as apigateway,
   aws_logs,
+  CfnOutput,
   Duration,
   aws_dynamodb as dynamodb,
   aws_ec2 as ec2,
@@ -22,6 +23,11 @@ import {
 export class StacIngestor extends Construct {
   table: dynamodb.Table;
   public handlerRole: iam.Role;
+
+  /**
+   * URL of the Ingestor API.
+   */
+  public readonly url: string;
 
   constructor(scope: Construct, id: string, props: StacIngestorProps) {
     super(scope, id);
@@ -64,12 +70,19 @@ export class StacIngestor extends Construct {
       pgstacVersion: props.pgstacVersion,
     });
 
-    this.buildApiEndpoint({
+    const api = this.buildApiEndpoint({
       handler,
       stage: props.stage,
       endpointConfiguration: props.apiEndpointConfiguration,
       policy: props.apiPolicy,
       ingestorDomainNameOptions: props.ingestorDomainNameOptions,
+    });
+
+    this.url = api.url;
+
+    new CfnOutput(this, "ingestor-api-output", {
+      exportName: `${Stack.of(this).stackName}-ingestor-url`,
+      value: this.url,
     });
 
     this.buildIngestor({

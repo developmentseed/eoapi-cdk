@@ -42,7 +42,7 @@ def update_dynamodb(
     with table.batch_writer(overwrite_by_pkeys=["created_by", "id"]) as batch:
         for ingestion in ingestions:
             batch.put_item(
-                Item=ingestion.copy(
+                Item=ingestion.model_copy(
                     update={
                         "status": status,
                         "message": message,

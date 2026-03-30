@@ -8,11 +8,13 @@ dependencies = [
     "titiler-pgstac-api",
     "stac-loader",
     "stactools-item-generator",
+    "ingestor-api",
 ]
 
 [tool.uv.sources]
 stactools-item-generator = { path = "lib/stactools-item-generator/runtime" }
 stac-loader = { path = "lib/stac-loader/runtime" }
+ingestor-api = { path = "lib/ingestor-api/runtime" }
 tipg-api = { path = "lib/tipg-api/runtime" }
 titiler-pgstac-api = { path = "lib/titiler-pgstac-api/runtime" }
 stac-api = { path = "lib/stac-api/runtime" }
@@ -31,6 +33,7 @@ deploy = [
 dev = [
     "aws-lambda-typing>=2.20.0",
     "httpx>=0.28.1",
+    "moto[dynamodb,ssm]>=4.0,<5.0",
     "pytest>=8.3.5",
     "pytest-mock>=3.14.0",
     "pytest-postgresql>=7.0.1",
@@ -42,6 +45,7 @@ pythonpath = "."
 testpaths = [
     "lib/stactools-item-generator/runtime/tests",
     "lib/stac-loader/runtime/tests",
+    "lib/ingestor-api/runtime/tests",
 ]
 
 

@@ -7,6 +7,7 @@ from pydantic import (
     AnyHttpUrl,
     Field,
     constr,
+    field_validator,
 )
 from pydantic_settings import BaseSettings
 from pydantic_ssm_settings.settings import SsmBaseSettings
@@ -25,6 +26,14 @@ class Settings(BaseSettings):
         default=None,
         description="URL of JWKS, e.g. https://cognito-idp.{region}.amazonaws.com/{userpool_id}/.well-known/jwks.json",  # noqa
     )
+
+    @field_validator("jwks_url", mode="before")
+    @classmethod
+    def empty_str_to_none(cls, v):
+        """Treat empty string as None so callers can disable auth by setting JWKS_URL=''."""
+        if v == "":
+            return None
+        return v
 
     stac_url: HttpUrlString = Field(description="URL of STAC API")
 

@@ -130,16 +130,23 @@ jobs:
             select(.key | test("tipgapioutput"; "i")) |
             .value' | head -1)
 
+          INGESTOR_API_URL=$(cat stack_outputs.json | jq -r '
+            to_entries[] |
+            select(.key | test("ingestorapioutput"; "i")) |
+            .value' | head -1)
+
           echo "Extracted URLs:"
           echo "STAC_API_URL: $STAC_API_URL"
           echo "TITILER_PGSTAC_API_URL: $TITILER_PGSTAC_API_URL"
           echo "TIPG_API_URL: $TIPG_API_URL"
+          echo "INGESTOR_API_URL: $INGESTOR_API_URL"
 
           # Array of API URLs to check
           declare -a API_HEALTH_ENDPOINTS=(
             "STAC_API_URL:${STAC_API_URL}_mgmt/health"
             "TITILER_PGSTAC_API_URL:${TITILER_PGSTAC_API_URL}healthz"
             "TIPG_API_URL:${TIPG_API_URL}healthz"
+            "INGESTOR_API_URL:${INGESTOR_API_URL}ingestions"
           )
 
           # Check each API
@@ -165,6 +172,127 @@ jobs:
               echo "⚠️ $API_NAME URL not found in stack outputs"
             fi
           done
+
+          echo "=== Ingestor Integration Test ==="
+
+          if [ -n "$INGESTOR_API_URL" ] && [ "$INGESTOR_API_URL" != "null" ]; then
+            COLLECTION_ID="integration-test-collection"
+            ITEM_ID="integration-test-item-001"
+
+            # Use a public URL that responds to HEAD requests for asset validation
+            PUBLIC_ASSET_URL="https://raw.githubusercontent.com/radiantearth/stac-spec/v1.0.0/examples/simple-item.json"
+
+            # No JWKS_URL configured, so identity is provided via ?provided_by query param
+            INGESTOR_USER="ci-test"
+
+            echo "--- Posting collection $COLLECTION_ID ---"
+            COLLECTION_STATUS=$(curl -s -o /tmp/collection_response.json -w "%{http_code}" \
+              --max-time 30 \
+              -X POST "${INGESTOR_API_URL}collections?provided_by=${INGESTOR_USER}" \
+              -H "Content-Type: application/json" \
+              -d "{
+                \"id\": \"$COLLECTION_ID\",
+                \"type\": \"Collection\",
+                \"stac_version\": \"1.0.0\",
+                \"description\": \"Integration test collection\",
+                \"title\": \"Integration Test Collection\",
+                \"license\": \"proprietary\",
+                \"item_assets\": {
+                  \"data\": {\"type\": \"application/json\", \"roles\": [\"data\"]}
+                },
+                \"extent\": {
+                  \"spatial\": {\"bbox\": [[-180, -90, 180, 90]]},
+                  \"temporal\": {\"interval\": [[\"2020-01-01T00:00:00Z\", null]]}
+                },
+                \"links\": [],
+                \"stac_extensions\": []
+              }")
+
+            echo "Collection POST status: $COLLECTION_STATUS"
+            cat /tmp/collection_response.json
+
+            if [ "$COLLECTION_STATUS" != "201" ]; then
+              echo "❌ Failed to post collection (status $COLLECTION_STATUS)"
+              exit 1
+            fi
+            echo "✅ Collection posted successfully"
+
+            echo "--- Posting item $ITEM_ID ---"
+            ITEM_STATUS=$(curl -s -o /tmp/item_response.json -w "%{http_code}" \
+              --max-time 30 \
+              -X POST "${INGESTOR_API_URL}ingestions?provided_by=${INGESTOR_USER}" \
+              -H "Content-Type: application/json" \
+              -d "{
+                \"stac_version\": \"1.0.0\",
+                \"stac_extensions\": [],
+                \"type\": \"Feature\",
+                \"id\": \"$ITEM_ID\",
+                \"collection\": \"$COLLECTION_ID\",
+                \"bbox\": [-180, -90, 180, 90],
+                \"geometry\": {
+                  \"type\": \"Polygon\",
+                  \"coordinates\": [[[-180, -90], [180, -90], [180, 90], [-180, 90], [-180, -90]]]
+                },
+                \"properties\": {\"datetime\": \"2020-01-01T00:00:00Z\"},
+                \"assets\": {
+                  \"data\": {
+                    \"href\": \"$PUBLIC_ASSET_URL\",
+                    \"type\": \"application/json\",
+                    \"roles\": [\"data\"]
+                  }
+                },
+                \"links\": []
+              }")
+
+            echo "Item POST status: $ITEM_STATUS"
+            cat /tmp/item_response.json
+
+            if [ "$ITEM_STATUS" != "201" ]; then
+              echo "❌ Failed to post item (status $ITEM_STATUS)"
+              exit 1
+            fi
+            echo "✅ Item queued for ingestion"
+
+            echo "--- Polling ingestion status for $ITEM_ID ---"
+            INGESTION_STATUS="queued"
+            POLL_ATTEMPTS=0
+            MAX_POLL_ATTEMPTS=20
+
+            while [ "$INGESTION_STATUS" = "queued" ] || [ "$INGESTION_STATUS" = "started" ]; do
+              if [ "$POLL_ATTEMPTS" -ge "$MAX_POLL_ATTEMPTS" ]; then
+                echo "❌ Timed out waiting for ingestion of $ITEM_ID (status: $INGESTION_STATUS)"
+                exit 1
+              fi
+
+              sleep 15
+              POLL_ATTEMPTS=$((POLL_ATTEMPTS + 1))
+
+              INGESTION_RESPONSE=$(curl -s --max-time 30 "${INGESTOR_API_URL}ingestions/${ITEM_ID}?provided_by=${INGESTOR_USER}")
+              INGESTION_STATUS=$(echo "$INGESTION_RESPONSE" | jq -r '.status // "unknown"')
+              echo "Attempt $POLL_ATTEMPTS: ingestion status = $INGESTION_STATUS"
+            done
+
+            if [ "$INGESTION_STATUS" != "succeeded" ]; then
+              echo "❌ Ingestion failed with status: $INGESTION_STATUS"
+              echo "$INGESTION_RESPONSE" | jq .
+              exit 1
+            fi
+            echo "✅ Item ingested successfully"
+
+            echo "--- Verifying item in STAC API ---"
+            STAC_ITEM_STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+              --max-time 30 \
+              "${STAC_API_URL}collections/$COLLECTION_ID/items/$ITEM_ID")
+
+            if [ "$STAC_ITEM_STATUS" = "200" ]; then
+              echo "✅ Item $ITEM_ID is accessible in STAC API"
+            else
+              echo "❌ Item $ITEM_ID not found in STAC API (status $STAC_ITEM_STATUS)"
+              exit 1
+            fi
+          else
+            echo "⚠️ INGESTOR_API_URL not found in stack outputs, skipping ingestor test"
+          fi
 
           echo "=== Operational Checks Complete ==="
           cd -
