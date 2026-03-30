@@ -1,3 +1,10 @@
+# [11.5.0](https://github.com/developmentseed/eoapi-cdk/compare/v11.4.1...v11.5.0) (2026-03-30)
+
+
+### Features
+
+* apply security patches and freeze ingestor-api deps ([#246](https://github.com/developmentseed/eoapi-cdk/issues/246)) ([e64ee74](https://github.com/developmentseed/eoapi-cdk/commit/e64ee74792bfa39969799dd9050c46100d5ce4ae))
+
 ## [11.4.1](https://github.com/developmentseed/eoapi-cdk/compare/v11.4.0...v11.4.1) (2026-03-25)
 
 
