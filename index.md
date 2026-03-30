@@ -1496,6 +1496,7 @@ Any object.
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
 | <code><a href="#eoapi-cdk.StacIngestor.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
+| <code><a href="#eoapi-cdk.StacIngestor.property.url">url</a></code> | <code>string</code> | URL of the Ingestor API. |
 | <code><a href="#eoapi-cdk.StacIngestor.property.handlerRole">handlerRole</a></code> | <code>aws-cdk-lib.aws_iam.Role</code> | *No description.* |
 | <code><a href="#eoapi-cdk.StacIngestor.property.table">table</a></code> | <code>aws-cdk-lib.aws_dynamodb.Table</code> | *No description.* |
 
@@ -1510,6 +1511,18 @@ public readonly node: Node;
 - *Type:* constructs.Node
 
 The tree node.
+
+---
+
+##### `url`<sup>Required</sup> <a name="url" id="eoapi-cdk.StacIngestor.property.url"></a>
+
+```typescript
+public readonly url: string;
+```
+
+- *Type:* string
+
+URL of the Ingestor API.
 
 ---
 
