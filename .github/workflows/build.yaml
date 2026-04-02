@@ -18,9 +18,9 @@ jobs:
     name: Build and package
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
 
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6
         with:
           node-version: 22
           cache: "npm"
@@ -37,22 +37,22 @@ jobs:
       - name: Generate documentation
         run: npm run docgen
 
-      - uses: actions/upload-artifact@v7
+      - uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7
         with:
           name: docs
           path: docs
 
-      - uses: actions/upload-artifact@v7
+      - uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7
         with:
           name: python
           path: dist/python/*
 
-      - uses: actions/upload-artifact@v7
+      - uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7
         with:
           name: js
           path: dist/js/*
 
-      - uses: actions/upload-artifact@v7
+      - uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7
         with:
           name: jsii
           path: .jsii
@@ -60,7 +60,7 @@ jobs:
       - name: Get Release Bot Token
         id: get-token
         if: ${{ inputs.release && github.actor != 'dependabot[bot]' }}
-        uses: getsentry/action-github-app-token@v3
+        uses: getsentry/action-github-app-token@d4b5da6c5e37703f8c3b3e43abb5705b46e159cc # v3
         with:
           app_id: ${{ secrets.DS_RELEASE_BOT_ID }}
           private_key: ${{ secrets.DS_RELEASE_BOT_PRIVATE_KEY }}
