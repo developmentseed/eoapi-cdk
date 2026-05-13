@@ -47,7 +47,7 @@ jobs:
           cd -
 
       # use short commit SHA to name stacks
-      - uses: benjlevesque/short-sha@v3.0
+      - uses: benjlevesque/short-sha@v4.0
         id: short-sha
         with:
           length: 6
