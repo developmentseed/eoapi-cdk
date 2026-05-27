@@ -4,7 +4,7 @@ version = "0.0.0"
 description = "titiler-pgstac-api runtime"
 requires-python = ">=3.12"
 dependencies = [
-    "mangum==0.19",
+    "mangum>=0.21.0",
     "titiler-pgstac[psycopg-binary]>=2.1.0,<3.0.0",
 ]
 
