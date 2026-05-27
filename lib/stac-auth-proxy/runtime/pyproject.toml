@@ -5,7 +5,7 @@ description = "stac-auth-proxy-api runtime"
 requires-python = ">=3.12"
 dependencies = [
     "mangum==0.19",
-    "stac-auth-proxy>=0.6,<1",
+    "stac-auth-proxy>=1.1.1,<2",
 ]
 
 [build-system]
