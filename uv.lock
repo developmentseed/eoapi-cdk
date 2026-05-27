@@ -904,7 +904,6 @@ requires-dist = [
 
 [package.metadata.requires-dev]
 dev = [
-    { name = "boto3" },
     { name = "httpx", specifier = ">=0.24" },
     { name = "moto", extras = ["dynamodb", "ssm"], specifier = ">=4.0,<5.0" },
     { name = "pytest", specifier = ">=7.0" },

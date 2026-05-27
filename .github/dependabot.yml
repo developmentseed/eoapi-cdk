@@ -25,3 +25,23 @@ updates:
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 5
+
+  - package-ecosystem: "uv"
+    directories:
+      - "/lib/ingestor-api/runtime"
+      - "/lib/stac-api/runtime"
+      - "/lib/stac-auth-proxy/runtime"
+      - "/lib/stac-loader/runtime"
+      - "/lib/stactools-item-generator/runtime"
+      - "/lib/tipg-api/runtime"
+      - "/lib/titiler-pgstac-api/runtime"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 10
+    groups:
+      python-runtime-dependencies:
+        patterns:
+          - "*"
+    commit-message:
+      prefix: "chore"
+      include: "scope"
