@@ -73,11 +73,7 @@ async def _shutdown_connection() -> None:
     """Close the current database connection pools if they exist."""
     global _connection_initialized
 
-    if (
-        hasattr(app, "state")
-        and hasattr(app.state, "readpool")
-        and app.state.readpool
-    ):
+    if hasattr(app, "state") and hasattr(app.state, "readpool") and app.state.readpool:
         await close_db_connection(app)
         app.state.readpool = None
 
