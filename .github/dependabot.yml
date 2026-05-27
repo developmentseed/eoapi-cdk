@@ -37,6 +37,8 @@ updates:
       - "/lib/titiler-pgstac-api/runtime"
     schedule:
       interval: "weekly"
+    ignore:
+      - dependency-name: "pypgstac"
     open-pull-requests-limit: 10
     groups:
       python-runtime-dependencies:
