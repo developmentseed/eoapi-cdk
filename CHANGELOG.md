@@ -1,3 +1,10 @@
+# [11.6.0](https://github.com/developmentseed/eoapi-cdk/compare/v11.5.0...v11.6.0) (2026-05-28)
+
+
+### Features
+
+* upgrade API runtime dependencies ([#262](https://github.com/developmentseed/eoapi-cdk/issues/262)) ([0d1ab80](https://github.com/developmentseed/eoapi-cdk/commit/0d1ab808d62fe59d77e937bec344f1bb497ed75e))
+
 # [11.5.0](https://github.com/developmentseed/eoapi-cdk/compare/v11.4.1...v11.5.0) (2026-03-30)
 
 
