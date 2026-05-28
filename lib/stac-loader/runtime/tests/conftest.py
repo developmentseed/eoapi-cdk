@@ -1,3 +1,5 @@
+import sys
+from pathlib import Path
 from unittest.mock import patch
 
 import pytest
@@ -9,6 +11,10 @@ from stac_pydantic.collection import Collection, Extent, SpatialExtent, TimeInte
 from stac_pydantic.links import Link, Links
 
 TEST_COLLECTION_IDS = ["test-collection-1", "test-collection-2"]
+
+# Temporary test-only shim so local pytest runs can import the shared Lambda
+# helper module from lib/utils until it is moved into a proper Python package.
+sys.path.insert(0, str(Path(__file__).resolve().parents[3] / "utils"))
 
 
 class MockContext:
