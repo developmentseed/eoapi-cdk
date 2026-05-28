@@ -1,6 +1,5 @@
 """Handler for AWS Lambda."""
 
-import asyncio
 import logging
 import os
 from collections.abc import AsyncIterator, Mapping
@@ -12,7 +11,7 @@ from snapshot_restore_py import register_after_restore, register_before_snapshot
 from titiler.pgstac.db import close_db_connection, connect_to_db
 from titiler.pgstac.main import app
 from titiler.pgstac.settings import PostgresSettings
-from utils import get_secret_dict
+from utils import ensure_event_loop, get_secret_dict, run_async
 
 logger = logging.getLogger(__name__)
 
@@ -63,32 +62,6 @@ async def _shutdown_connection() -> None:
     _connection_initialized = False
 
 
-def _ensure_event_loop() -> asyncio.AbstractEventLoop:
-    """Return the current event loop, creating and installing one if needed."""
-    try:
-        return asyncio.get_running_loop()
-    except RuntimeError:
-        pass
-
-    try:
-        return asyncio.get_event_loop()
-    except RuntimeError:
-        loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(loop)
-        return loop
-
-
-def _run_async(coro: Any) -> Any:
-    """Run an async coroutine from a synchronous Lambda initialization hook."""
-    try:
-        asyncio.get_running_loop()
-    except RuntimeError:
-        loop = _ensure_event_loop()
-        return loop.run_until_complete(coro)
-
-    raise RuntimeError("Cannot run Lambda initialization inside an active event loop")
-
-
 @register_before_snapshot
 def on_snapshot() -> dict[str, int]:
     """Close database connections before Lambda SnapStart takes a snapshot."""
@@ -100,7 +73,7 @@ def on_snapshot() -> dict[str, int]:
 def on_snap_restore() -> dict[str, int]:
     """Recreate database connections after Lambda SnapStart restores a snapshot."""
     try:
-        _run_async(_initialize_connection())
+        run_async(_initialize_connection())
     except Exception:
         logger.exception("SnapStart: failed to initialize database connection")
         raise
@@ -110,7 +83,13 @@ def on_snap_restore() -> dict[str, int]:
 
 @asynccontextmanager
 async def lifespan(app_instance) -> AsyncIterator[Mapping[str, Any] | None]:
-    """Wrap the upstream lifespan with database setup and teardown."""
+    """Wrap the upstream lifespan with database setup and teardown.
+
+    We keep the app's lifespan wiring intact for non-Lambda contexts, but the
+    Lambda runtime below uses ``Mangum(..., lifespan="off")`` and performs
+    connection setup explicitly. In sandbox testing, Mangum lifespan handling
+    was not a drop-in replacement for Lambda-container-scoped pool reuse.
+    """
     async with _original_lifespan(app_instance) as state:
         await _initialize_connection()
         try:
@@ -121,14 +100,25 @@ async def lifespan(app_instance) -> AsyncIterator[Mapping[str, Any] | None]:
 
 app.router.lifespan_context = lifespan
 
+# The Lambda runtime initializes long-lived async resources on an installed
+# reusable loop, then hands request execution to Mangum. ``ensure_event_loop``
+# is a defensive step for those synchronous initialization paths. It is not here
+# because normal FastAPI route execution cannot run without it.
 _asgi_handler = Mangum(app, lifespan="off")
 
 
 def handler(event: Any, context: Any) -> dict[str, Any]:
-    """Handle AWS Lambda events with a guaranteed current event loop."""
-    _ensure_event_loop()
+    """Handle AWS Lambda events with a reusable installed event loop.
+
+    This supports synchronous Lambda-side async setup such as cold-start and
+    SnapStart restore initialization before control passes to Mangum.
+    """
+    ensure_event_loop()
     return _asgi_handler(event, context)
 
 
 if "AWS_EXECUTION_ENV" in os.environ:
-    _run_async(_initialize_connection())
+    # Avoid ``asyncio.run(...)`` here. It would create the pool on a temporary
+    # loop and then close it, which is a poor fit for container-scoped async
+    # resources that should live on the installed reusable loop.
+    run_async(_initialize_connection())

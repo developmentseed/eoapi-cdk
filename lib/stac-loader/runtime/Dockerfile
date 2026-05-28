@@ -9,6 +9,7 @@ WORKDIR /tmp
 
 COPY stac-loader/runtime/pyproject.toml stac-loader/runtime/uv.lock ./
 COPY stac-loader/runtime/src/ ./src/
+COPY utils/utils.py /asset/
 
 ARG PGSTAC_VERSION=0.9.6
 

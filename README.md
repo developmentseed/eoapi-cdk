@@ -20,6 +20,8 @@ An [RDS](https://aws.amazon.com/rds/) instance with [pgSTAC](https://github.com/
 ### [STAC API](https://developmentseed.org/eoapi-cdk/#pgstacapilambda-)
 A STAC API implementation using [stac-fastapi](https://github.com/stac-utils/stac-fastapi) with a [pgSTAC backend](https://github.com/stac-utils/stac-fastapi-pgstac). Packaged as a complete runtime for deployment with API Gateway and Lambda.
 
+For runtime notes on event loops, Mangum lifespan handling, and SnapStart-aware database pool initialization, see [`lib/stac-api/runtime/README.md`](lib/stac-api/runtime/README.md).
+
 ### [pgSTAC Titiler API](https://developmentseed.org/eoapi-cdk/#titilerpgstacapilambda-)
 A complete dynamic tiling API using [titiler-pgstac](https://github.com/stac-utils/titiler-pgstac) to create dynamic mosaics of assets based on [STAC Search queries](https://github.com/radiantearth/stac-api-spec/tree/master/item-search).  Packaged as a complete runtime for deployment with API Gateway and Lambda and fully integrated with the pgSTAC Database construct.
 
