@@ -1,4 +1,3 @@
-import base64
 import json
 import logging
 import os
@@ -23,6 +22,7 @@ from pypgstac.load import Loader, Methods
 from stac_pydantic.collection import Collection, Extent, SpatialExtent, TimeInterval
 from stac_pydantic.item import Item
 from stac_pydantic.links import Link, Links
+from utils import get_secret_dict_by_name
 
 if TYPE_CHECKING:
     from aws_lambda_typing.context import Context
@@ -58,36 +58,13 @@ class PartialBatchFailureResponse(TypedDict):
     batchItemFailures: List[BatchItemFailure]
 
 
-def get_secret_dict(secret_name: str) -> Dict:
-    """Retrieve secrets from AWS Secrets Manager
-
-    Args:
-        secret_name (str): name of aws secrets manager secret containing database connection secrets
-        profile_name (str, optional): optional name of aws profile for use in debugger only
-
-    Returns:
-        secrets (dict): decrypted secrets in dict
-    """
-
-    # Create a Secrets Manager client
-    session = boto3.session.Session()
-    client = session.client(service_name="secretsmanager")
-
-    get_secret_value_response = client.get_secret_value(SecretId=secret_name)
-
-    if "SecretString" in get_secret_value_response:
-        return json.loads(get_secret_value_response["SecretString"])
-    else:
-        return json.loads(base64.b64decode(get_secret_value_response["SecretBinary"]))
-
-
 def get_pgstac_dsn() -> str:
     secret_arn = os.getenv("PGSTAC_SECRET_ARN")
     if not secret_arn:
         logger.error("Environment variable PGSTAC_SECRET_ARN is not set.")
         raise EnvironmentError("PGSTAC_SECRET_ARN must be set")
 
-    secret_dict = get_secret_dict(secret_name=secret_arn)
+    secret_dict = get_secret_dict_by_name(secret_arn)
 
     return f"postgres://{secret_dict['username']}:{secret_dict['password']}@{secret_dict['host']}:{secret_dict['port']}/{secret_dict['dbname']}"
 

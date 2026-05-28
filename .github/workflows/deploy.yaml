@@ -72,6 +72,56 @@ jobs:
         run: |
           cd integration_tests/cdk
 
+          print_response_body() {
+            local response_file="$1"
+
+            if [ -s "$response_file" ]; then
+              echo "--- Response body ---"
+              jq . "$response_file" 2>/dev/null || cat "$response_file"
+              echo "--- End response body ---"
+            else
+              echo "--- Response body was empty ---"
+            fi
+          }
+
+          print_cloudwatch_logs() {
+            echo "=== Retrieving recent CloudWatch logs for deployed Lambda functions ==="
+
+            for STACK_NAME in $DEPLOYED_STACKS; do
+              echo "--- Stack: $STACK_NAME ---"
+
+              FUNCTION_NAMES=$(aws cloudformation list-stack-resources \
+                --stack-name "$STACK_NAME" \
+                --query 'StackResourceSummaries[?ResourceType==`AWS::Lambda::Function`].PhysicalResourceId' \
+                --output text 2>/dev/null || true)
+
+              if [ -z "$FUNCTION_NAMES" ] || [ "$FUNCTION_NAMES" = "None" ]; then
+                echo "No Lambda functions found for $STACK_NAME"
+                continue
+              fi
+
+              for FUNCTION_NAME in $FUNCTION_NAMES; do
+                echo "--- CloudWatch logs for $FUNCTION_NAME ---"
+                aws logs tail "/aws/lambda/$FUNCTION_NAME" --since 15m --format short 2>/dev/null \
+                  || echo "Unable to retrieve logs for $FUNCTION_NAME"
+              done
+            done
+          }
+
+          fail_with_diagnostics() {
+            local message="$1"
+            local response_file="${2:-}"
+
+            echo "❌ $message"
+
+            if [ -n "$response_file" ]; then
+              print_response_body "$response_file"
+            fi
+
+            print_cloudwatch_logs
+            exit 1
+          }
+
           echo "=== Retrieving Stack Outputs ==="
 
           # Get list of deployed stacks
@@ -160,13 +210,13 @@ jobs:
             if [ -n "$API_URL" ] && [ "$API_URL" != "null" ]; then
               echo "Checking $API_NAME at: $API_URL"
 
-              HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" --max-time 30 "$API_URL" || echo "000")
+              RESPONSE_FILE=$(mktemp)
+              HTTP_STATUS=$(curl -sS -o "$RESPONSE_FILE" -w "%{http_code}" --max-time 30 "$API_URL" || echo "000")
 
               if [ "$HTTP_STATUS" = "200" ]; then
                 echo "✅ $API_NAME returned 200"
               else
-                echo "❌ $API_NAME returned $HTTP_STATUS"
-                exit 1
+                fail_with_diagnostics "$API_NAME returned $HTTP_STATUS for $API_URL" "$RESPONSE_FILE"
               fi
             else
               echo "⚠️ $API_NAME URL not found in stack outputs"
@@ -212,8 +262,7 @@ jobs:
             cat /tmp/collection_response.json
 
             if [ "$COLLECTION_STATUS" != "201" ]; then
-              echo "❌ Failed to post collection (status $COLLECTION_STATUS)"
-              exit 1
+              fail_with_diagnostics "Failed to post collection (status $COLLECTION_STATUS)" "/tmp/collection_response.json"
             fi
             echo "✅ Collection posted successfully"
 
@@ -248,8 +297,7 @@ jobs:
             cat /tmp/item_response.json
 
             if [ "$ITEM_STATUS" != "201" ]; then
-              echo "❌ Failed to post item (status $ITEM_STATUS)"
-              exit 1
+              fail_with_diagnostics "Failed to post item (status $ITEM_STATUS)" "/tmp/item_response.json"
             fi
             echo "✅ Item queued for ingestion"
 
@@ -260,8 +308,9 @@ jobs:
 
             while [ "$INGESTION_STATUS" = "queued" ] || [ "$INGESTION_STATUS" = "started" ]; do
               if [ "$POLL_ATTEMPTS" -ge "$MAX_POLL_ATTEMPTS" ]; then
-                echo "❌ Timed out waiting for ingestion of $ITEM_ID (status: $INGESTION_STATUS)"
-                exit 1
+                INGESTION_RESPONSE_FILE=$(mktemp)
+                printf '%s\n' "$INGESTION_RESPONSE" > "$INGESTION_RESPONSE_FILE"
+                fail_with_diagnostics "Timed out waiting for ingestion of $ITEM_ID (status: $INGESTION_STATUS)" "$INGESTION_RESPONSE_FILE"
               fi
 
               sleep 15
@@ -273,22 +322,22 @@ jobs:
             done
 
             if [ "$INGESTION_STATUS" != "succeeded" ]; then
-              echo "❌ Ingestion failed with status: $INGESTION_STATUS"
-              echo "$INGESTION_RESPONSE" | jq .
-              exit 1
+              INGESTION_RESPONSE_FILE=$(mktemp)
+              printf '%s\n' "$INGESTION_RESPONSE" > "$INGESTION_RESPONSE_FILE"
+              fail_with_diagnostics "Ingestion failed with status: $INGESTION_STATUS" "$INGESTION_RESPONSE_FILE"
             fi
             echo "✅ Item ingested successfully"
 
             echo "--- Verifying item in STAC API ---"
-            STAC_ITEM_STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+            STAC_ITEM_RESPONSE_FILE=$(mktemp)
+            STAC_ITEM_STATUS=$(curl -sS -o "$STAC_ITEM_RESPONSE_FILE" -w "%{http_code}" \
               --max-time 30 \
-              "${STAC_API_URL}collections/$COLLECTION_ID/items/$ITEM_ID")
+              "${STAC_API_URL}collections/$COLLECTION_ID/items/$ITEM_ID" || echo "000")
 
             if [ "$STAC_ITEM_STATUS" = "200" ]; then
               echo "✅ Item $ITEM_ID is accessible in STAC API"
             else
-              echo "❌ Item $ITEM_ID not found in STAC API (status $STAC_ITEM_STATUS)"
-              exit 1
+              fail_with_diagnostics "Item $ITEM_ID not found in STAC API (status $STAC_ITEM_STATUS)" "$STAC_ITEM_RESPONSE_FILE"
             fi
           else
             echo "⚠️ INGESTOR_API_URL not found in stack outputs, skipping ingestor test"

@@ -1,17 +1,17 @@
-"""
-Handler for AWS Lambda.
-"""
+"""Handler for AWS Lambda."""
 
-import asyncio
 import logging
 import os
+from collections.abc import AsyncIterator, Mapping
+from contextlib import asynccontextmanager
+from typing import Any
 
 from mangum import Mangum
 from snapshot_restore_py import register_after_restore, register_before_snapshot
 from stac_fastapi.pgstac.app import app, with_transactions
 from stac_fastapi.pgstac.config import PostgresSettings
 from stac_fastapi.pgstac.db import close_db_connection, connect_to_db
-from utils import get_secret_dict
+from utils import ensure_event_loop, get_secret_dict, run_async
 
 logging.basicConfig(
     level=logging.INFO,
@@ -19,8 +19,8 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-
 _connection_initialized = False
+_original_lifespan = app.router.lifespan_context
 
 
 def _build_postgres_settings() -> PostgresSettings:
@@ -36,122 +36,118 @@ def _build_postgres_settings() -> PostgresSettings:
     )
 
 
-@register_before_snapshot
-def on_snapshot():
-    """
-    Runtime hook called by Lambda before taking a snapshot.
-    We close database connections that shouldn't be in the snapshot.
-    """
-
-    # Close any existing database connections before the snapshot is taken
+def _close_db_pools() -> None:
+    """Close the current database pools if they exist."""
     if hasattr(app, "state") and hasattr(app.state, "readpool") and app.state.readpool:
         try:
             app.state.readpool.close()
+        except Exception:
+            logger.exception("SnapStart: error closing database readpool")
+        finally:
             app.state.readpool = None
-        except Exception as e:
-            logger.info(f"SnapStart: Error closing database readpool: {e}")
 
     if hasattr(app, "state") and hasattr(app.state, "writepool") and app.state.writepool:
         try:
             app.state.writepool.close()
+        except Exception:
+            logger.exception("SnapStart: error closing database writepool")
+        finally:
             app.state.writepool = None
-        except Exception as e:
-            logger.info(f"SnapStart: Error closing database writepool: {e}")
 
+
+async def _initialize_connection() -> None:
+    """Create fresh database connection pools for the application."""
+    global _connection_initialized
+
+    _close_db_pools()
+    await connect_to_db(
+        app,
+        postgres_settings=_build_postgres_settings(),
+        add_write_connection_pool=with_transactions,
+    )
+    _connection_initialized = True
+
+
+async def _shutdown_connection() -> None:
+    """Close the current database connection pools if they exist."""
+    global _connection_initialized
+
+    if hasattr(app, "state") and hasattr(app.state, "readpool") and app.state.readpool:
+        await close_db_connection(app)
+        app.state.readpool = None
+
+    if hasattr(app, "state") and hasattr(app.state, "writepool"):
+        app.state.writepool = None
+
+    _connection_initialized = False
+
+
+@register_before_snapshot
+def on_snapshot() -> dict[str, int]:
+    """Close database connections before Lambda SnapStart takes a snapshot."""
+    _close_db_pools()
     return {"statusCode": 200}
 
 
 @register_after_restore
-def on_snap_restore():
-    """
-    Runtime hook called by Lambda after restoring from a snapshot.
-    We recreate database connections that were closed before the snapshot.
-    """
-    global _connection_initialized
-
+def on_snap_restore() -> dict[str, int]:
+    """Recreate database connections after Lambda SnapStart restores a snapshot."""
     try:
-        # Get the event loop or create a new one
-        try:
-            loop = asyncio.get_running_loop()
-        except RuntimeError:
-            loop = asyncio.new_event_loop()
-            asyncio.set_event_loop(loop)
-
-        # Close any existing pool (from snapshot)
-        if hasattr(app.state, "readpool") and app.state.readpool:
-            try:
-                app.state.readpool.close()
-            except Exception as e:
-                logger.info(f"SnapStart: Error closing stale readpool: {e}")
-            app.state.readpool = None
-
-        if hasattr(app.state, "writepool") and app.state.writepool:
-            try:
-                app.state.writepool.close()
-            except Exception as e:
-                logger.info(f"SnapStart: Error closing stale writepool: {e}")
-            app.state.writepool = None
-
-        # Create fresh connection pool
-        postgres_settings = _build_postgres_settings()
-        loop.run_until_complete(
-            connect_to_db(
-                app,
-                postgres_settings=postgres_settings,
-                add_write_connection_pool=with_transactions,
-            )
-        )
-
-        _connection_initialized = True
-
-    except Exception as e:
-        logger.error(f"SnapStart: Failed to initialize database connection: {e}")
+        run_async(_initialize_connection())
+    except Exception:
+        logger.exception("SnapStart: failed to initialize database connection")
         raise
 
     return {"statusCode": 200}
 
 
-@app.on_event("startup")
-async def startup_event():
-    """Connect to database on startup."""
-    logger.info("Setting up DB connection...")
-    postgres_settings = _build_postgres_settings()
-    await connect_to_db(
-        app,
-        postgres_settings=postgres_settings,
-        add_write_connection_pool=with_transactions,
-    )
-    logger.info("DB connection setup.")
+@asynccontextmanager
+async def lifespan(app_instance) -> AsyncIterator[Mapping[str, Any] | None]:
+    """Wrap the upstream lifespan with database setup and teardown.
+
+    We keep the app's lifespan wiring intact for non-Lambda contexts, but the
+    Lambda runtime below uses ``Mangum(..., lifespan="off")`` and performs
+    connection setup explicitly. In sandbox testing, Mangum lifespan handling
+    was not a drop-in replacement for Lambda-container-scoped pool reuse.
+    """
+    async with _original_lifespan(app_instance) as state:
+        await _initialize_connection()
+        try:
+            yield state
+        finally:
+            await _shutdown_connection()
 
 
-@app.on_event("shutdown")
-async def shutdown_event():
-    """Close database connection."""
-    print("Closing up DB connection...")
-    await close_db_connection(app)
-    print("DB connection closed.")
+app.router.lifespan_context = lifespan
 
-
-handler = Mangum(
+# The Lambda runtime initializes long-lived async resources on an installed
+# reusable loop, then hands request execution to Mangum. ``ensure_event_loop``
+# is a defensive step for those synchronous initialization paths. It is not here
+# because normal FastAPI route execution cannot run without it.
+_asgi_handler = Mangum(
     app,
     lifespan="off",
     text_mime_types=[
-        # Avoid base64 encoding any text/* or application/* mime-types
         "text/",
         "application/",
     ],
 )
 
 
+def handler(event: Any, context: Any) -> dict[str, Any]:
+    """Handle AWS Lambda events with a reusable installed event loop.
+
+    This supports synchronous Lambda-side async setup such as cold-start and
+    SnapStart restore initialization before control passes to Mangum.
+    """
+    ensure_event_loop()
+    return _asgi_handler(event, context)
+
+
 if "AWS_EXECUTION_ENV" in os.environ:
     logger.info("Cold start: initializing database connection...")
-    loop = asyncio.new_event_loop()
-    asyncio.set_event_loop(loop)
-    loop.run_until_complete(
-        connect_to_db(
-            app,
-            postgres_settings=_build_postgres_settings(),
-            add_write_connection_pool=with_transactions,
-        )
-    )
+    # Avoid ``asyncio.run(...)`` here. It would create the pools on a temporary
+    # loop and then close it, which is a poor fit for container-scoped async
+    # resources that should live on the installed reusable loop.
+    run_async(_initialize_connection())
     logger.info("Database connection initialized.")
