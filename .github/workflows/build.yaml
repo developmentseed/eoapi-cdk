@@ -1,29 +1,25 @@
-name: Build & package workflow
+name: Build and package workflow
 
 on:
   workflow_call:
-    inputs:
-      release:
-        required: false
-        type: boolean
-        default: false
-    secrets:
-      DS_RELEASE_BOT_ID:
-        required: false
-      DS_RELEASE_BOT_PRIVATE_KEY:
-        required: false
+
+permissions: {}
 
 jobs:
   build_and_package:
     name: Build and package
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
 
-      - uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6
+      - uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
         with:
           node-version: 22
-          cache: "npm"
+          cache: npm
 
       - name: Install Dependencies
         run: npm run install:all
@@ -37,37 +33,22 @@ jobs:
       - name: Generate documentation
         run: npm run docgen
 
-      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: docs
           path: docs
 
-      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: python
           path: dist/python/*
 
-      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: js
           path: dist/js/*
 
-      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: jsii
           path: .jsii
-
-      - name: Get Release Bot Token
-        id: get-token
-        if: ${{ inputs.release && github.actor != 'dependabot[bot]' }}
-        uses: getsentry/action-github-app-token@d4b5da6c5e37703f8c3b3e43abb5705b46e159cc # v3
-        with:
-          app_id: ${{ secrets.DS_RELEASE_BOT_ID }}
-          private_key: ${{ secrets.DS_RELEASE_BOT_PRIVATE_KEY }}
-
-      - name: Maybe Release 🚀
-        if: ${{ inputs.release && github.actor != 'dependabot[bot]' }}
-        run: |
-          npm run semantic-release
-        env:
-          GITHUB_TOKEN: ${{ steps.get-token.outputs.token }}

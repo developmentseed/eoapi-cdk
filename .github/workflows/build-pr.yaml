@@ -1,0 +1,10 @@
+name: Build PR artifacts
+
+on:
+  pull_request:
+
+permissions: {}
+
+jobs:
+  build:
+    uses: ./.github/workflows/build.yaml
