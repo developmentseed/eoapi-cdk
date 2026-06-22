@@ -7,4 +7,6 @@ permissions: {}
 
 jobs:
   build:
+    permissions:
+      contents: read
     uses: ./.github/workflows/build.yaml
