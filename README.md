@@ -57,9 +57,11 @@ And for configuration instructions for this construct see [the docs](https://dev
 
 ## Release
 
-Versioning is automatically handled via [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) and [Semantic Release](https://semantic-release.gitbook.io/semantic-release/).
+Versioning is handled via [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) and [Release Please](https://github.com/googleapis/release-please).
 
-_Warning_: If you rebase `main`, you must ensure that the commits referenced by tags point to commits that are within the `main` branch. If a commit references a commit that is no longer on the `main` branch, Semantic Release will fail to detect the correct version of the project. [More information](https://github.com/semantic-release/semantic-release/issues/1121#issuecomment-517945233).
+Commits merged to `main` are collected into a release PR. A maintainer reviews and merges that PR to cut a release. After the release is created on GitHub, the distribution workflow publishes the generated Python package to PyPI and the generated JavaScript package to npm.
+
+The release workflow uses the `DS_RELEASE_BOT_ID` and `DS_RELEASE_BOT_PRIVATE_KEY` repository secrets to authenticate the release bot.
 
 
 ## Tests
