@@ -158,7 +158,6 @@ export interface StacBrowserProps {
 
     /**
      * STAC catalog URL. Overrides the catalog URL in the stac-browser configuration.
-     * Backwards compatibility for version prior to v5.0.0.
      */
     readonly stacCatalogUrl: string;
 
@@ -174,8 +173,6 @@ export interface StacBrowserProps {
 
     /**
      * Tag of the radiant earth stac-browser repo to use to build the app.
-     * Supports v3.x, v4.x, and v5.x tags — the build invocation is automatically
-     * adjusted to match the config mechanism supported by that version.
      */
     readonly githubRepoTag: string;
 
@@ -183,8 +180,8 @@ export interface StacBrowserProps {
      * Sub-path the app will be hosted under (e.g. "/stac-browser"), if not deployed at
      * the root of the domain.
      *
-     * Passed as a `--pathPrefix` CLI flag for v3.x, or as the `SB_pathPrefix`
-     * environment variable for v4.x/v5.x.
+     * Passed as a `--pathPrefix` CLI flag for <=v3.x, or as the `SB_pathPrefix`
+     * environment variable for >=v4.x.
      *
      * @default - No path prefix. The app is built assuming it is served from the domain root.
      */
