@@ -12,6 +12,13 @@
 
 * apply security patches and freeze ingestor-api deps ([#246](https://github.com/developmentseed/eoapi-cdk/issues/246)) ([e64ee74](https://github.com/developmentseed/eoapi-cdk/commit/e64ee74792bfa39969799dd9050c46100d5ce4ae))
 
+## [11.6.2](https://github.com/developmentseed/eoapi-cdk/compare/v11.6.1...v11.6.2) (2026-08-05)
+
+
+### Bug Fixes
+
+* distribute workflow permissions ([#284](https://github.com/developmentseed/eoapi-cdk/issues/284)) ([9bd725d](https://github.com/developmentseed/eoapi-cdk/commit/9bd725def4f6ef68f1cd2e251c379b42897c7852))
+
 ## [11.6.1](https://github.com/developmentseed/eoapi-cdk/compare/v11.6.0...v11.6.1) (2026-08-05)
 
 
