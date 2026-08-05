@@ -12,6 +12,13 @@
 
 * apply security patches and freeze ingestor-api deps ([#246](https://github.com/developmentseed/eoapi-cdk/issues/246)) ([e64ee74](https://github.com/developmentseed/eoapi-cdk/commit/e64ee74792bfa39969799dd9050c46100d5ce4ae))
 
+## [11.6.1](https://github.com/developmentseed/eoapi-cdk/compare/v11.6.0...v11.6.1) (2026-08-05)
+
+
+### Bug Fixes
+
+* add stac-browser v5.x support ([#281](https://github.com/developmentseed/eoapi-cdk/issues/281)) ([c59c856](https://github.com/developmentseed/eoapi-cdk/commit/c59c85690584d9e38b27c2fd7d461396c06e47a6))
+
 ## [11.4.1](https://github.com/developmentseed/eoapi-cdk/compare/v11.4.0...v11.4.1) (2026-03-25)
 
 
