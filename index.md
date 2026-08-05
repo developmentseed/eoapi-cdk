@@ -5098,7 +5098,8 @@ const stacBrowserProps: StacBrowserProps = { ... }
 | <code><a href="#eoapi-cdk.StacBrowserProps.property.bucketArn">bucketArn</a></code> | <code>string</code> | Bucket ARN. |
 | <code><a href="#eoapi-cdk.StacBrowserProps.property.cloneDirectory">cloneDirectory</a></code> | <code>string</code> | Location in the filesystem where to compile the browser code. |
 | <code><a href="#eoapi-cdk.StacBrowserProps.property.cloudFrontDistributionArn">cloudFrontDistributionArn</a></code> | <code>string</code> | The ARN of the cloudfront distribution that will be added to the bucket policy with read access. |
-| <code><a href="#eoapi-cdk.StacBrowserProps.property.configFilePath">configFilePath</a></code> | <code>string</code> | Path to config file for the STAC browser. |
+| <code><a href="#eoapi-cdk.StacBrowserProps.property.configFilePath">configFilePath</a></code> | <code>string</code> | Path to config file for the STAC browser. If not provided, default configuration in the STAC browser repository is used. |
+| <code><a href="#eoapi-cdk.StacBrowserProps.property.pathPrefix">pathPrefix</a></code> | <code>string</code> | Sub-path the app will be hosted under (e.g. "/stac-browser"), if not deployed at the root of the domain. |
 | <code><a href="#eoapi-cdk.StacBrowserProps.property.websiteIndexDocument">websiteIndexDocument</a></code> | <code>string</code> | The name of the index document (e.g. "index.html") for the website. Enables static website hosting for this bucket. |
 
 ---
@@ -5181,10 +5182,27 @@ public readonly configFilePath: string;
 
 - *Type:* string
 
-Path to config file for the STAC browser.
+Path to config file for the STAC browser. If not provided, default configuration in the STAC browser repository is used.
 
-If not provided, default configuration in the STAC browser
-repository is used.
+Note: config.js option names have changed across major versions (particularly
+into v5, which removed/renamed several options). Make sure the config file you
+provide matches the schema of the `githubRepoTag` version you're building.
+
+---
+
+##### `pathPrefix`<sup>Optional</sup> <a name="pathPrefix" id="eoapi-cdk.StacBrowserProps.property.pathPrefix"></a>
+
+```typescript
+public readonly pathPrefix: string;
+```
+
+- *Type:* string
+- *Default:* No path prefix. The app is built assuming it is served from the domain root.
+
+Sub-path the app will be hosted under (e.g. "/stac-browser"), if not deployed at the root of the domain.
+
+Passed as a `--pathPrefix` CLI flag for <=v3.x, or as the `SB_pathPrefix`
+environment variable for >=v4.x.
 
 ---
 
