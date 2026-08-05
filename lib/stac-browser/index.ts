@@ -58,6 +58,17 @@ export class StacBrowser extends Construct {
 
     }
 
+    /**
+     * Extracts the major version number from a stac-browser git tag, e.g.
+     * "v4.0.1" -> 4, "v5.0.0-rc.2" -> 5, "4.0.1" -> 4.
+     * Returns null if the tag doesn't match a recognizable semver-ish pattern
+     * (e.g. a branch name or commit SHA was passed instead of a version tag).
+     */
+    private static parseMajorVersion(tag: string): number | null {
+        const match = tag.match(/^v?(\d+)\./);
+        return match ? parseInt(match[1], 10) : null;
+    }
+
     private buildApp(props: StacBrowserProps, cloneDirectory: string): string {
 
         // Define where to clone and build
@@ -102,11 +113,32 @@ export class StacBrowser extends Construct {
             fs.copyFileSync(props.configFilePath, `${cloneDirectory}/config.js`);
         }
 
-        // Build the app with catalogUrl
-        console.log(`Building app with catalogUrl=${props.stacCatalogUrl} into ${cloneDirectory}`)
-        execSync(`npm run build -- --catalogUrl=${props.stacCatalogUrl}`, { cwd: cloneDirectory });
+        // Build the app with catalogUrl.
+        // See: https://github.com/radiantearth/stac-browser/discussions/751
+        const majorVersion = StacBrowser.parseMajorVersion(props.githubRepoTag);
 
-        return './stac-browser/dist'
+        console.log(`Building app with catalogUrl=${props.stacCatalogUrl} into ${cloneDirectory} (detected major version: ${majorVersion ?? 'unknown'})`)
+
+        if (majorVersion !== null && majorVersion <= 3) {
+            // v3.x: CLI flag passthrough
+            const args = [`--catalogUrl="${props.stacCatalogUrl}"`];
+            if (props.pathPrefix) {
+                args.push(`--pathPrefix="${props.pathPrefix}"`);
+            }
+            execSync(`npm run build -- ${args.join(' ')}`, { cwd: cloneDirectory });
+        } else {
+            // v4.x and v5.x (and anything newer, by default assumption): SB_* env vars.
+            execSync('npm run build', {
+                cwd: cloneDirectory,
+                env: {
+                    ...process.env,
+                    SB_catalogUrl: props.stacCatalogUrl,
+                    ...(props.pathPrefix ? { SB_pathPrefix: props.pathPrefix } : {}),
+                },
+            });
+        }
+
+        return `${cloneDirectory}/dist`
 
     }
 
@@ -132,6 +164,10 @@ export interface StacBrowserProps {
     /**
      * Path to config file for the STAC browser. If not provided, default configuration in the STAC browser
      * repository is used.
+     *
+     * Note: config.js option names have changed across major versions (particularly
+     * into v5, which removed/renamed several options). Make sure the config file you
+     * provide matches the schema of the `githubRepoTag` version you're building.
      */
     readonly configFilePath?: string;
 
@@ -140,6 +176,16 @@ export interface StacBrowserProps {
      */
     readonly githubRepoTag: string;
 
+    /**
+     * Sub-path the app will be hosted under (e.g. "/stac-browser"), if not deployed at
+     * the root of the domain.
+     *
+     * Passed as a `--pathPrefix` CLI flag for <=v3.x, or as the `SB_pathPrefix`
+     * environment variable for >=v4.x.
+     *
+     * @default - No path prefix. The app is built assuming it is served from the domain root.
+     */
+    readonly pathPrefix?: string;
 
     /**
      * The ARN of the cloudfront distribution that will be added to the bucket policy with read access.
