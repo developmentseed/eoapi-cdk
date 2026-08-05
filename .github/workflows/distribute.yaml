@@ -10,6 +10,8 @@ permissions: {}
 
 jobs:
   package:
+    permissions:
+      contents: read
     uses: ./.github/workflows/build.yaml
 
   distribute-python:
