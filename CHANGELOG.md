@@ -12,6 +12,13 @@
 
 * apply security patches and freeze ingestor-api deps ([#246](https://github.com/developmentseed/eoapi-cdk/issues/246)) ([e64ee74](https://github.com/developmentseed/eoapi-cdk/commit/e64ee74792bfa39969799dd9050c46100d5ce4ae))
 
+## [11.6.3](https://github.com/developmentseed/eoapi-cdk/compare/v11.6.2...v11.6.3) (2026-08-05)
+
+
+### Bug Fixes
+
+* install npm latest for distribute-js ([#286](https://github.com/developmentseed/eoapi-cdk/issues/286)) ([c0f4544](https://github.com/developmentseed/eoapi-cdk/commit/c0f4544b5a618024e4cf532e3bd172c60a5fc8f5))
+
 ## [11.6.2](https://github.com/developmentseed/eoapi-cdk/compare/v11.6.1...v11.6.2) (2026-08-05)
 
 
