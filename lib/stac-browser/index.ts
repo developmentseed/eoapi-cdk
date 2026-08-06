@@ -25,6 +25,7 @@ export class StacBrowser extends Construct {
             this.bucket = new s3.Bucket(this, 'Bucket', {
                 accessControl: s3.BucketAccessControl.PRIVATE,
                 removalPolicy: RemovalPolicy.DESTROY,
+                autoDeleteObjects: props.autoDeleteObjects,
                 websiteIndexDocument: props.websiteIndexDocument
             })
         }
@@ -204,6 +205,17 @@ export interface StacBrowserProps {
      * @default - No index document.
      */
     readonly websiteIndexDocument?: string;
+
+    /**
+     * Whether to automatically delete all objects in the managed bucket before
+     * bucket deletion. Useful for ephemeral stacks and test environments.
+     *
+     * Ignored when `bucketArn` is provided because imported buckets are not
+     * managed by this construct.
+     *
+     * @default - false
+     */
+    readonly autoDeleteObjects?: boolean;
 
     /**
      * Location in the filesystem where to compile the browser code.
