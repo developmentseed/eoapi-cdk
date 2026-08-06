@@ -1,4 +1,4 @@
-import { Stack, aws_s3 as s3, aws_s3_deployment as s3_deployment} from "aws-cdk-lib";
+import { Size, Stack, aws_s3 as s3, aws_s3_deployment as s3_deployment} from "aws-cdk-lib";
 import { RemovalPolicy, CfnOutput } from "aws-cdk-lib";
 import { PolicyStatement, ServicePrincipal, Effect } from "aws-cdk-lib/aws-iam";
 
@@ -48,7 +48,9 @@ export class StacBrowser extends Construct {
         // add the compiled code to the bucket as a bucket deployment
         this.bucketDeployment = new s3_deployment.BucketDeployment(this, 'BucketDeployment', {
             destinationBucket: this.bucket,
-            sources: [s3_deployment.Source.asset(buildPath)]
+            sources: [s3_deployment.Source.asset(buildPath)],
+            memoryLimit: 1024,
+            ephemeralStorageSize: Size.mebibytes(1024),
           });
 
         new CfnOutput(this, "bucket-name", {
