@@ -13,6 +13,7 @@ from constructs import Construct
 from eoapi_cdk import (
     PgStacApiLambda,
     PgStacDatabase,
+    StacBrowser,
     StacIngestor,
     StacLoader,
     StactoolsItemGenerator,
@@ -216,6 +217,15 @@ class pgStacInfraStack(Stack):
         )
 
         stac_bucket.grant_read(self.stac_loader.lambda_function)
+
+        StacBrowser(
+            self,
+            "stac-browser",
+            stac_catalog_url=stac_api.url,
+            github_repo_tag=app_config.stac_browser_version,
+            auto_delete_objects=True,
+            website_index_document="index.html",
+        )
 
 
 app = App()

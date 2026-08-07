@@ -26,6 +26,10 @@ class AppConfig(BaseSettings):
         description="Allocated storage for the database", default=5
     )
 
+    stac_browser_version: str = pydantic.Field(
+        description="Tagged version of the STAC Browser to use", default="v5.0.0"
+    )
+
     @pydantic.field_validator("tags")
     def default_tags(cls, v, info: FieldValidationInfo):
         return v or {"project_id": info.data["project_id"], "stage": info.data["stage"]}

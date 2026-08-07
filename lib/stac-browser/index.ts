@@ -1,4 +1,4 @@
-import { Stack, aws_s3 as s3, aws_s3_deployment as s3_deployment} from "aws-cdk-lib";
+import { Size, Stack, aws_s3 as s3, aws_s3_deployment as s3_deployment} from "aws-cdk-lib";
 import { RemovalPolicy, CfnOutput } from "aws-cdk-lib";
 import { PolicyStatement, ServicePrincipal, Effect } from "aws-cdk-lib/aws-iam";
 
@@ -25,6 +25,7 @@ export class StacBrowser extends Construct {
             this.bucket = new s3.Bucket(this, 'Bucket', {
                 accessControl: s3.BucketAccessControl.PRIVATE,
                 removalPolicy: RemovalPolicy.DESTROY,
+                autoDeleteObjects: props.autoDeleteObjects,
                 websiteIndexDocument: props.websiteIndexDocument
             })
         }
@@ -48,7 +49,9 @@ export class StacBrowser extends Construct {
         // add the compiled code to the bucket as a bucket deployment
         this.bucketDeployment = new s3_deployment.BucketDeployment(this, 'BucketDeployment', {
             destinationBucket: this.bucket,
-            sources: [s3_deployment.Source.asset(buildPath)]
+            sources: [s3_deployment.Source.asset(buildPath)],
+            memoryLimit: 1024,
+            ephemeralStorageSize: Size.mebibytes(1024),
           });
 
         new CfnOutput(this, "bucket-name", {
@@ -202,6 +205,17 @@ export interface StacBrowserProps {
      * @default - No index document.
      */
     readonly websiteIndexDocument?: string;
+
+    /**
+     * Whether to automatically delete all objects in the managed bucket before
+     * bucket deletion. Useful for ephemeral stacks and test environments.
+     *
+     * Ignored when `bucketArn` is provided because imported buckets are not
+     * managed by this construct.
+     *
+     * @default - false
+     */
+    readonly autoDeleteObjects?: boolean;
 
     /**
      * Location in the filesystem where to compile the browser code.
