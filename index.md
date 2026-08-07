@@ -5095,6 +5095,7 @@ const stacBrowserProps: StacBrowserProps = { ... }
 | --- | --- | --- |
 | <code><a href="#eoapi-cdk.StacBrowserProps.property.githubRepoTag">githubRepoTag</a></code> | <code>string</code> | Tag of the radiant earth stac-browser repo to use to build the app. |
 | <code><a href="#eoapi-cdk.StacBrowserProps.property.stacCatalogUrl">stacCatalogUrl</a></code> | <code>string</code> | STAC catalog URL. |
+| <code><a href="#eoapi-cdk.StacBrowserProps.property.autoDeleteObjects">autoDeleteObjects</a></code> | <code>boolean</code> | Whether to automatically delete all objects in the managed bucket before bucket deletion. Useful for ephemeral stacks and test environments. |
 | <code><a href="#eoapi-cdk.StacBrowserProps.property.bucketArn">bucketArn</a></code> | <code>string</code> | Bucket ARN. |
 | <code><a href="#eoapi-cdk.StacBrowserProps.property.cloneDirectory">cloneDirectory</a></code> | <code>string</code> | Location in the filesystem where to compile the browser code. |
 | <code><a href="#eoapi-cdk.StacBrowserProps.property.cloudFrontDistributionArn">cloudFrontDistributionArn</a></code> | <code>string</code> | The ARN of the cloudfront distribution that will be added to the bucket policy with read access. |
@@ -5127,6 +5128,22 @@ public readonly stacCatalogUrl: string;
 STAC catalog URL.
 
 Overrides the catalog URL in the stac-browser configuration.
+
+---
+
+##### `autoDeleteObjects`<sup>Optional</sup> <a name="autoDeleteObjects" id="eoapi-cdk.StacBrowserProps.property.autoDeleteObjects"></a>
+
+```typescript
+public readonly autoDeleteObjects: boolean;
+```
+
+- *Type:* boolean
+- *Default:* false
+
+Whether to automatically delete all objects in the managed bucket before bucket deletion. Useful for ephemeral stacks and test environments.
+
+Ignored when `bucketArn` is provided because imported buckets are not
+managed by this construct.
 
 ---
 
