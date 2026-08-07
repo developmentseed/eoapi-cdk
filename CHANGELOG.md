@@ -12,6 +12,13 @@
 
 * apply security patches and freeze ingestor-api deps ([#246](https://github.com/developmentseed/eoapi-cdk/issues/246)) ([e64ee74](https://github.com/developmentseed/eoapi-cdk/commit/e64ee74792bfa39969799dd9050c46100d5ce4ae))
 
+## [11.6.4](https://github.com/developmentseed/eoapi-cdk/compare/v11.6.3...v11.6.4) (2026-08-07)
+
+
+### Bug Fixes
+
+* increase memory of stac-browser BucketDeployment ([#288](https://github.com/developmentseed/eoapi-cdk/issues/288)) ([55f0259](https://github.com/developmentseed/eoapi-cdk/commit/55f025951d8d4fa29b746633ce65f1d424292260))
+
 ## [11.6.3](https://github.com/developmentseed/eoapi-cdk/compare/v11.6.2...v11.6.3) (2026-08-05)
 
 
