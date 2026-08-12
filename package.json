@@ -41,7 +41,7 @@
     "@types/node": "^26.0.0",
     "aws-cdk-lib": "2.220.0",
     "constructs": "10.4.2",
-    "jsii": "6.0.7",
+    "jsii": "6.0.9",
     "jsii-docgen": "10.12.5",
     "jsii-pacmak": "1.139.0",
     "nodemon": "^3.1.10",
