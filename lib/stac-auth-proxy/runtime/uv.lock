@@ -619,7 +619,7 @@ wheels = [
 
 [[package]]
 name = "stac-auth-proxy"
-version = "1.1.1"
+version = "1.2.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "brotli" },
@@ -634,9 +634,9 @@ dependencies = [
     { name = "starlette-cramjam" },
     { name = "uvicorn" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/18/91/8084d337b3a90801670796580abfd7bdbab9a5069aa02e90e1a7af7c7274/stac_auth_proxy-1.1.1.tar.gz", hash = "sha256:a9ab800625089e14e33d4cadfa4ef908bad3ece21674e704dfc02f660d245ccf", size = 255492, upload-time = "2026-05-27T14:07:26.817Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/e1/10/e8bdec2436883aa304ff17f6ac6446c995137c5ff7b30dcf2200049b8d77/stac_auth_proxy-1.2.0.tar.gz", hash = "sha256:3dbcc085c23a0841f24609ec567dc70491bae43a86dc63f6af017a734dd07158", size = 306451, upload-time = "2026-07-23T21:30:35.856Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/88/cf/10a38f612c213a36e5186b69a85f4dc8eb02c6006f208842465742b2d053/stac_auth_proxy-1.1.1-py3-none-any.whl", hash = "sha256:a97a366ba989218ff1aa2633e4a98cced075af463ca654c4d255db852e42d414", size = 44071, upload-time = "2026-05-27T14:07:25.61Z" },
+    { url = "https://files.pythonhosted.org/packages/85/37/eb14a495cea8d98aafe00d126cb0531860bd53aea29047bc3af09cd5acd1/stac_auth_proxy-1.2.0-py3-none-any.whl", hash = "sha256:ede7d895754a83a5269c90a316abdc1f149f8e04dda17194723c474435915e1d", size = 46267, upload-time = "2026-07-23T21:30:34.75Z" },
 ]
 
 [[package]]
