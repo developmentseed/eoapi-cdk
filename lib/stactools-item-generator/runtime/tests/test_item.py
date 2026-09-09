@@ -70,6 +70,6 @@ def test_item(item_request: ItemRequest, mock_stactools_command: list[list[str]]
     stac_item = create_stac_item(item_request)
     command = mock_stactools_command[0]
     assert command[0] == "uvx"
-    assert command[2].endswith(item_request.package_name)
+    assert command[2] == (f"requests,numpy<2.3.0,affine<3,{item_request.package_name}")
     if item_request.collection_id:
         assert stac_item.collection == item_request.collection_id
