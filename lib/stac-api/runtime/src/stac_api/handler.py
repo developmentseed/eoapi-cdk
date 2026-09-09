@@ -8,9 +8,10 @@ from typing import Any
 
 from mangum import Mangum
 from snapshot_restore_py import register_after_restore, register_before_snapshot
-from stac_fastapi.pgstac.app import app, with_transactions
+from stac_fastapi.pgstac.app import instantiate_api
 from stac_fastapi.pgstac.config import PostgresSettings
 from stac_fastapi.pgstac.db import close_db_connection, connect_to_db
+from stac_fastapi.pgstac.models.extensions import Extensions
 from utils import ensure_event_loop, get_secret_dict, run_async
 
 logging.basicConfig(
@@ -20,6 +21,9 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 _connection_initialized = False
+_extensions = Extensions()
+app = instantiate_api(extensions=_extensions).app
+with_transactions = bool(_extensions.transaction)
 _original_lifespan = app.router.lifespan_context
 
 
