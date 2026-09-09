@@ -12,6 +12,13 @@
 
 * apply security patches and freeze ingestor-api deps ([#246](https://github.com/developmentseed/eoapi-cdk/issues/246)) ([e64ee74](https://github.com/developmentseed/eoapi-cdk/commit/e64ee74792bfa39969799dd9050c46100d5ce4ae))
 
+## [11.6.5](https://github.com/developmentseed/eoapi-cdk/compare/v11.6.4...v11.6.5) (2026-09-09)
+
+
+### Bug Fixes
+
+* pin to affine&lt;3 in stactools item generator ([#300](https://github.com/developmentseed/eoapi-cdk/issues/300)) ([81fe4a3](https://github.com/developmentseed/eoapi-cdk/commit/81fe4a3d7fe686f31a3f8c36ea6b4be159037b54))
+
 ## [11.6.4](https://github.com/developmentseed/eoapi-cdk/compare/v11.6.3...v11.6.4) (2026-08-07)
 
 
