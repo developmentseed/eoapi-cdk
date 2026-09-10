@@ -121,6 +121,7 @@ new BastionHost(scope: Construct, id: string, props: BastionHostProps)
 | **Name** | **Description** |
 | --- | --- |
 | <code><a href="#eoapi-cdk.BastionHost.toString">toString</a></code> | Returns a string representation of this construct. |
+| <code><a href="#eoapi-cdk.BastionHost.with">with</a></code> | Applies one or more mixins to this construct. |
 
 ---
 
@@ -131,6 +132,27 @@ public toString(): string
 ```
 
 Returns a string representation of this construct.
+
+##### `with` <a name="with" id="eoapi-cdk.BastionHost.with"></a>
+
+```typescript
+public with(mixins: ...IMixin[]): IConstruct
+```
+
+Applies one or more mixins to this construct.
+
+Mixins are applied in order. The list of constructs is captured at the
+start of the call, so constructs added by a mixin will not be visited.
+Use multiple `with()` calls if subsequent mixins should apply to added
+constructs.
+
+###### `mixins`<sup>Required</sup> <a name="mixins" id="eoapi-cdk.BastionHost.with.parameter.mixins"></a>
+
+- *Type:* ...constructs.IMixin[]
+
+The mixins to apply.
+
+---
 
 #### Static Functions <a name="Static Functions" id="Static Functions"></a>
 
@@ -245,6 +267,7 @@ new LambdaApiGateway(scope: Construct, id: string, props: LambdaApiGatewayProps)
 | **Name** | **Description** |
 | --- | --- |
 | <code><a href="#eoapi-cdk.LambdaApiGateway.toString">toString</a></code> | Returns a string representation of this construct. |
+| <code><a href="#eoapi-cdk.LambdaApiGateway.with">with</a></code> | Applies one or more mixins to this construct. |
 
 ---
 
@@ -255,6 +278,27 @@ public toString(): string
 ```
 
 Returns a string representation of this construct.
+
+##### `with` <a name="with" id="eoapi-cdk.LambdaApiGateway.with"></a>
+
+```typescript
+public with(mixins: ...IMixin[]): IConstruct
+```
+
+Applies one or more mixins to this construct.
+
+Mixins are applied in order. The list of constructs is captured at the
+start of the call, so constructs added by a mixin will not be visited.
+Use multiple `with()` calls if subsequent mixins should apply to added
+constructs.
+
+###### `mixins`<sup>Required</sup> <a name="mixins" id="eoapi-cdk.LambdaApiGateway.with.parameter.mixins"></a>
+
+- *Type:* ...constructs.IMixin[]
+
+The mixins to apply.
+
+---
 
 #### Static Functions <a name="Static Functions" id="Static Functions"></a>
 
@@ -369,6 +413,7 @@ new PgStacApiLambda(scope: Construct, id: string, props: PgStacApiLambdaProps)
 | **Name** | **Description** |
 | --- | --- |
 | <code><a href="#eoapi-cdk.PgStacApiLambda.toString">toString</a></code> | Returns a string representation of this construct. |
+| <code><a href="#eoapi-cdk.PgStacApiLambda.with">with</a></code> | Applies one or more mixins to this construct. |
 
 ---
 
@@ -379,6 +424,27 @@ public toString(): string
 ```
 
 Returns a string representation of this construct.
+
+##### `with` <a name="with" id="eoapi-cdk.PgStacApiLambda.with"></a>
+
+```typescript
+public with(mixins: ...IMixin[]): IConstruct
+```
+
+Applies one or more mixins to this construct.
+
+Mixins are applied in order. The list of constructs is captured at the
+start of the call, so constructs added by a mixin will not be visited.
+Use multiple `with()` calls if subsequent mixins should apply to added
+constructs.
+
+###### `mixins`<sup>Required</sup> <a name="mixins" id="eoapi-cdk.PgStacApiLambda.with.parameter.mixins"></a>
+
+- *Type:* ...constructs.IMixin[]
+
+The mixins to apply.
+
+---
 
 #### Static Functions <a name="Static Functions" id="Static Functions"></a>
 
@@ -521,6 +587,7 @@ new PgStacApiLambdaRuntime(scope: Construct, id: string, props: PgStacApiLambdaR
 | **Name** | **Description** |
 | --- | --- |
 | <code><a href="#eoapi-cdk.PgStacApiLambdaRuntime.toString">toString</a></code> | Returns a string representation of this construct. |
+| <code><a href="#eoapi-cdk.PgStacApiLambdaRuntime.with">with</a></code> | Applies one or more mixins to this construct. |
 
 ---
 
@@ -531,6 +598,27 @@ public toString(): string
 ```
 
 Returns a string representation of this construct.
+
+##### `with` <a name="with" id="eoapi-cdk.PgStacApiLambdaRuntime.with"></a>
+
+```typescript
+public with(mixins: ...IMixin[]): IConstruct
+```
+
+Applies one or more mixins to this construct.
+
+Mixins are applied in order. The list of constructs is captured at the
+start of the call, so constructs added by a mixin will not be visited.
+Use multiple `with()` calls if subsequent mixins should apply to added
+constructs.
+
+###### `mixins`<sup>Required</sup> <a name="mixins" id="eoapi-cdk.PgStacApiLambdaRuntime.with.parameter.mixins"></a>
+
+- *Type:* ...constructs.IMixin[]
+
+The mixins to apply.
+
+---
 
 #### Static Functions <a name="Static Functions" id="Static Functions"></a>
 
@@ -687,6 +775,7 @@ new PgStacDatabase(scope: Construct, id: string, props: PgStacDatabaseProps)
 | **Name** | **Description** |
 | --- | --- |
 | <code><a href="#eoapi-cdk.PgStacDatabase.toString">toString</a></code> | Returns a string representation of this construct. |
+| <code><a href="#eoapi-cdk.PgStacDatabase.with">with</a></code> | Applies one or more mixins to this construct. |
 | <code><a href="#eoapi-cdk.PgStacDatabase.getParameters">getParameters</a></code> | *No description.* |
 
 ---
@@ -698,6 +787,27 @@ public toString(): string
 ```
 
 Returns a string representation of this construct.
+
+##### `with` <a name="with" id="eoapi-cdk.PgStacDatabase.with"></a>
+
+```typescript
+public with(mixins: ...IMixin[]): IConstruct
+```
+
+Applies one or more mixins to this construct.
+
+Mixins are applied in order. The list of constructs is captured at the
+start of the call, so constructs added by a mixin will not be visited.
+Use multiple `with()` calls if subsequent mixins should apply to added
+constructs.
+
+###### `mixins`<sup>Required</sup> <a name="mixins" id="eoapi-cdk.PgStacDatabase.with.parameter.mixins"></a>
+
+- *Type:* ...constructs.IMixin[]
+
+The mixins to apply.
+
+---
 
 ##### `getParameters` <a name="getParameters" id="eoapi-cdk.PgStacDatabase.getParameters"></a>
 
@@ -907,6 +1017,7 @@ new PrivateLambdaApiGateway(scope: Construct, id: string, props: PrivateLambdaAp
 | **Name** | **Description** |
 | --- | --- |
 | <code><a href="#eoapi-cdk.PrivateLambdaApiGateway.toString">toString</a></code> | Returns a string representation of this construct. |
+| <code><a href="#eoapi-cdk.PrivateLambdaApiGateway.with">with</a></code> | Applies one or more mixins to this construct. |
 
 ---
 
@@ -917,6 +1028,27 @@ public toString(): string
 ```
 
 Returns a string representation of this construct.
+
+##### `with` <a name="with" id="eoapi-cdk.PrivateLambdaApiGateway.with"></a>
+
+```typescript
+public with(mixins: ...IMixin[]): IConstruct
+```
+
+Applies one or more mixins to this construct.
+
+Mixins are applied in order. The list of constructs is captured at the
+start of the call, so constructs added by a mixin will not be visited.
+Use multiple `with()` calls if subsequent mixins should apply to added
+constructs.
+
+###### `mixins`<sup>Required</sup> <a name="mixins" id="eoapi-cdk.PrivateLambdaApiGateway.with.parameter.mixins"></a>
+
+- *Type:* ...constructs.IMixin[]
+
+The mixins to apply.
+
+---
 
 #### Static Functions <a name="Static Functions" id="Static Functions"></a>
 
@@ -1042,6 +1174,7 @@ new StacAuthProxyLambda(scope: Construct, id: string, props: StacAuthProxyLambda
 | **Name** | **Description** |
 | --- | --- |
 | <code><a href="#eoapi-cdk.StacAuthProxyLambda.toString">toString</a></code> | Returns a string representation of this construct. |
+| <code><a href="#eoapi-cdk.StacAuthProxyLambda.with">with</a></code> | Applies one or more mixins to this construct. |
 
 ---
 
@@ -1052,6 +1185,27 @@ public toString(): string
 ```
 
 Returns a string representation of this construct.
+
+##### `with` <a name="with" id="eoapi-cdk.StacAuthProxyLambda.with"></a>
+
+```typescript
+public with(mixins: ...IMixin[]): IConstruct
+```
+
+Applies one or more mixins to this construct.
+
+Mixins are applied in order. The list of constructs is captured at the
+start of the call, so constructs added by a mixin will not be visited.
+Use multiple `with()` calls if subsequent mixins should apply to added
+constructs.
+
+###### `mixins`<sup>Required</sup> <a name="mixins" id="eoapi-cdk.StacAuthProxyLambda.with.parameter.mixins"></a>
+
+- *Type:* ...constructs.IMixin[]
+
+The mixins to apply.
+
+---
 
 #### Static Functions <a name="Static Functions" id="Static Functions"></a>
 
@@ -1181,6 +1335,7 @@ new StacAuthProxyLambdaRuntime(scope: Construct, id: string, props: StacAuthProx
 | **Name** | **Description** |
 | --- | --- |
 | <code><a href="#eoapi-cdk.StacAuthProxyLambdaRuntime.toString">toString</a></code> | Returns a string representation of this construct. |
+| <code><a href="#eoapi-cdk.StacAuthProxyLambdaRuntime.with">with</a></code> | Applies one or more mixins to this construct. |
 
 ---
 
@@ -1191,6 +1346,27 @@ public toString(): string
 ```
 
 Returns a string representation of this construct.
+
+##### `with` <a name="with" id="eoapi-cdk.StacAuthProxyLambdaRuntime.with"></a>
+
+```typescript
+public with(mixins: ...IMixin[]): IConstruct
+```
+
+Applies one or more mixins to this construct.
+
+Mixins are applied in order. The list of constructs is captured at the
+start of the call, so constructs added by a mixin will not be visited.
+Use multiple `with()` calls if subsequent mixins should apply to added
+constructs.
+
+###### `mixins`<sup>Required</sup> <a name="mixins" id="eoapi-cdk.StacAuthProxyLambdaRuntime.with.parameter.mixins"></a>
+
+- *Type:* ...constructs.IMixin[]
+
+The mixins to apply.
+
+---
 
 #### Static Functions <a name="Static Functions" id="Static Functions"></a>
 
@@ -1305,6 +1481,7 @@ new StacBrowser(scope: Construct, id: string, props: StacBrowserProps)
 | **Name** | **Description** |
 | --- | --- |
 | <code><a href="#eoapi-cdk.StacBrowser.toString">toString</a></code> | Returns a string representation of this construct. |
+| <code><a href="#eoapi-cdk.StacBrowser.with">with</a></code> | Applies one or more mixins to this construct. |
 
 ---
 
@@ -1315,6 +1492,27 @@ public toString(): string
 ```
 
 Returns a string representation of this construct.
+
+##### `with` <a name="with" id="eoapi-cdk.StacBrowser.with"></a>
+
+```typescript
+public with(mixins: ...IMixin[]): IConstruct
+```
+
+Applies one or more mixins to this construct.
+
+Mixins are applied in order. The list of constructs is captured at the
+start of the call, so constructs added by a mixin will not be visited.
+Use multiple `with()` calls if subsequent mixins should apply to added
+constructs.
+
+###### `mixins`<sup>Required</sup> <a name="mixins" id="eoapi-cdk.StacBrowser.with.parameter.mixins"></a>
+
+- *Type:* ...constructs.IMixin[]
+
+The mixins to apply.
+
+---
 
 #### Static Functions <a name="Static Functions" id="Static Functions"></a>
 
@@ -1440,6 +1638,7 @@ new StacIngestor(scope: Construct, id: string, props: StacIngestorProps)
 | **Name** | **Description** |
 | --- | --- |
 | <code><a href="#eoapi-cdk.StacIngestor.toString">toString</a></code> | Returns a string representation of this construct. |
+| <code><a href="#eoapi-cdk.StacIngestor.with">with</a></code> | Applies one or more mixins to this construct. |
 
 ---
 
@@ -1450,6 +1649,27 @@ public toString(): string
 ```
 
 Returns a string representation of this construct.
+
+##### `with` <a name="with" id="eoapi-cdk.StacIngestor.with"></a>
+
+```typescript
+public with(mixins: ...IMixin[]): IConstruct
+```
+
+Applies one or more mixins to this construct.
+
+Mixins are applied in order. The list of constructs is captured at the
+start of the call, so constructs added by a mixin will not be visited.
+Use multiple `with()` calls if subsequent mixins should apply to added
+constructs.
+
+###### `mixins`<sup>Required</sup> <a name="mixins" id="eoapi-cdk.StacIngestor.with.parameter.mixins"></a>
+
+- *Type:* ...constructs.IMixin[]
+
+The mixins to apply.
+
+---
 
 #### Static Functions <a name="Static Functions" id="Static Functions"></a>
 
@@ -1588,6 +1808,7 @@ new StacItemLoader(scope: Construct, id: string, props: StacLoaderProps)
 | **Name** | **Description** |
 | --- | --- |
 | <code><a href="#eoapi-cdk.StacItemLoader.toString">toString</a></code> | Returns a string representation of this construct. |
+| <code><a href="#eoapi-cdk.StacItemLoader.with">with</a></code> | Applies one or more mixins to this construct. |
 
 ---
 
@@ -1598,6 +1819,27 @@ public toString(): string
 ```
 
 Returns a string representation of this construct.
+
+##### ~~`with`~~ <a name="with" id="eoapi-cdk.StacItemLoader.with"></a>
+
+```typescript
+public with(mixins: ...IMixin[]): IConstruct
+```
+
+Applies one or more mixins to this construct.
+
+Mixins are applied in order. The list of constructs is captured at the
+start of the call, so constructs added by a mixin will not be visited.
+Use multiple `with()` calls if subsequent mixins should apply to added
+constructs.
+
+###### `mixins`<sup>Required</sup> <a name="mixins" id="eoapi-cdk.StacItemLoader.with.parameter.mixins"></a>
+
+- *Type:* ...constructs.IMixin[]
+
+The mixins to apply.
+
+---
 
 #### Static Functions <a name="Static Functions" id="Static Functions"></a>
 
@@ -1992,6 +2234,7 @@ new StacLoader(scope: Construct, id: string, props: StacLoaderProps)
 | **Name** | **Description** |
 | --- | --- |
 | <code><a href="#eoapi-cdk.StacLoader.toString">toString</a></code> | Returns a string representation of this construct. |
+| <code><a href="#eoapi-cdk.StacLoader.with">with</a></code> | Applies one or more mixins to this construct. |
 
 ---
 
@@ -2002,6 +2245,27 @@ public toString(): string
 ```
 
 Returns a string representation of this construct.
+
+##### `with` <a name="with" id="eoapi-cdk.StacLoader.with"></a>
+
+```typescript
+public with(mixins: ...IMixin[]): IConstruct
+```
+
+Applies one or more mixins to this construct.
+
+Mixins are applied in order. The list of constructs is captured at the
+start of the call, so constructs added by a mixin will not be visited.
+Use multiple `with()` calls if subsequent mixins should apply to added
+constructs.
+
+###### `mixins`<sup>Required</sup> <a name="mixins" id="eoapi-cdk.StacLoader.with.parameter.mixins"></a>
+
+- *Type:* ...constructs.IMixin[]
+
+The mixins to apply.
+
+---
 
 #### Static Functions <a name="Static Functions" id="Static Functions"></a>
 
@@ -2303,6 +2567,7 @@ new StactoolsItemGenerator(scope: Construct, id: string, props: StactoolsItemGen
 | **Name** | **Description** |
 | --- | --- |
 | <code><a href="#eoapi-cdk.StactoolsItemGenerator.toString">toString</a></code> | Returns a string representation of this construct. |
+| <code><a href="#eoapi-cdk.StactoolsItemGenerator.with">with</a></code> | Applies one or more mixins to this construct. |
 
 ---
 
@@ -2313,6 +2578,27 @@ public toString(): string
 ```
 
 Returns a string representation of this construct.
+
+##### `with` <a name="with" id="eoapi-cdk.StactoolsItemGenerator.with"></a>
+
+```typescript
+public with(mixins: ...IMixin[]): IConstruct
+```
+
+Applies one or more mixins to this construct.
+
+Mixins are applied in order. The list of constructs is captured at the
+start of the call, so constructs added by a mixin will not be visited.
+Use multiple `with()` calls if subsequent mixins should apply to added
+constructs.
+
+###### `mixins`<sup>Required</sup> <a name="mixins" id="eoapi-cdk.StactoolsItemGenerator.with.parameter.mixins"></a>
+
+- *Type:* ...constructs.IMixin[]
+
+The mixins to apply.
+
+---
 
 #### Static Functions <a name="Static Functions" id="Static Functions"></a>
 
@@ -2483,6 +2769,7 @@ new TiPgApiLambda(scope: Construct, id: string, props: TiPgApiLambdaProps)
 | **Name** | **Description** |
 | --- | --- |
 | <code><a href="#eoapi-cdk.TiPgApiLambda.toString">toString</a></code> | Returns a string representation of this construct. |
+| <code><a href="#eoapi-cdk.TiPgApiLambda.with">with</a></code> | Applies one or more mixins to this construct. |
 
 ---
 
@@ -2493,6 +2780,27 @@ public toString(): string
 ```
 
 Returns a string representation of this construct.
+
+##### `with` <a name="with" id="eoapi-cdk.TiPgApiLambda.with"></a>
+
+```typescript
+public with(mixins: ...IMixin[]): IConstruct
+```
+
+Applies one or more mixins to this construct.
+
+Mixins are applied in order. The list of constructs is captured at the
+start of the call, so constructs added by a mixin will not be visited.
+Use multiple `with()` calls if subsequent mixins should apply to added
+constructs.
+
+###### `mixins`<sup>Required</sup> <a name="mixins" id="eoapi-cdk.TiPgApiLambda.with.parameter.mixins"></a>
+
+- *Type:* ...constructs.IMixin[]
+
+The mixins to apply.
+
+---
 
 #### Static Functions <a name="Static Functions" id="Static Functions"></a>
 
@@ -2635,6 +2943,7 @@ new TiPgApiLambdaRuntime(scope: Construct, id: string, props: TiPgApiLambdaRunti
 | **Name** | **Description** |
 | --- | --- |
 | <code><a href="#eoapi-cdk.TiPgApiLambdaRuntime.toString">toString</a></code> | Returns a string representation of this construct. |
+| <code><a href="#eoapi-cdk.TiPgApiLambdaRuntime.with">with</a></code> | Applies one or more mixins to this construct. |
 
 ---
 
@@ -2645,6 +2954,27 @@ public toString(): string
 ```
 
 Returns a string representation of this construct.
+
+##### `with` <a name="with" id="eoapi-cdk.TiPgApiLambdaRuntime.with"></a>
+
+```typescript
+public with(mixins: ...IMixin[]): IConstruct
+```
+
+Applies one or more mixins to this construct.
+
+Mixins are applied in order. The list of constructs is captured at the
+start of the call, so constructs added by a mixin will not be visited.
+Use multiple `with()` calls if subsequent mixins should apply to added
+constructs.
+
+###### `mixins`<sup>Required</sup> <a name="mixins" id="eoapi-cdk.TiPgApiLambdaRuntime.with.parameter.mixins"></a>
+
+- *Type:* ...constructs.IMixin[]
+
+The mixins to apply.
+
+---
 
 #### Static Functions <a name="Static Functions" id="Static Functions"></a>
 
@@ -2759,6 +3089,7 @@ new TitilerPgstacApiLambda(scope: Construct, id: string, props: TitilerPgstacApi
 | **Name** | **Description** |
 | --- | --- |
 | <code><a href="#eoapi-cdk.TitilerPgstacApiLambda.toString">toString</a></code> | Returns a string representation of this construct. |
+| <code><a href="#eoapi-cdk.TitilerPgstacApiLambda.with">with</a></code> | Applies one or more mixins to this construct. |
 
 ---
 
@@ -2769,6 +3100,27 @@ public toString(): string
 ```
 
 Returns a string representation of this construct.
+
+##### `with` <a name="with" id="eoapi-cdk.TitilerPgstacApiLambda.with"></a>
+
+```typescript
+public with(mixins: ...IMixin[]): IConstruct
+```
+
+Applies one or more mixins to this construct.
+
+Mixins are applied in order. The list of constructs is captured at the
+start of the call, so constructs added by a mixin will not be visited.
+Use multiple `with()` calls if subsequent mixins should apply to added
+constructs.
+
+###### `mixins`<sup>Required</sup> <a name="mixins" id="eoapi-cdk.TitilerPgstacApiLambda.with.parameter.mixins"></a>
+
+- *Type:* ...constructs.IMixin[]
+
+The mixins to apply.
+
+---
 
 #### Static Functions <a name="Static Functions" id="Static Functions"></a>
 
@@ -2911,6 +3263,7 @@ new TitilerPgstacApiLambdaRuntime(scope: Construct, id: string, props: TitilerPg
 | **Name** | **Description** |
 | --- | --- |
 | <code><a href="#eoapi-cdk.TitilerPgstacApiLambdaRuntime.toString">toString</a></code> | Returns a string representation of this construct. |
+| <code><a href="#eoapi-cdk.TitilerPgstacApiLambdaRuntime.with">with</a></code> | Applies one or more mixins to this construct. |
 
 ---
 
@@ -2921,6 +3274,27 @@ public toString(): string
 ```
 
 Returns a string representation of this construct.
+
+##### `with` <a name="with" id="eoapi-cdk.TitilerPgstacApiLambdaRuntime.with"></a>
+
+```typescript
+public with(mixins: ...IMixin[]): IConstruct
+```
+
+Applies one or more mixins to this construct.
+
+Mixins are applied in order. The list of constructs is captured at the
+start of the call, so constructs added by a mixin will not be visited.
+Use multiple `with()` calls if subsequent mixins should apply to added
+constructs.
+
+###### `mixins`<sup>Required</sup> <a name="mixins" id="eoapi-cdk.TitilerPgstacApiLambdaRuntime.with.parameter.mixins"></a>
+
+- *Type:* ...constructs.IMixin[]
+
+The mixins to apply.
+
+---
 
 #### Static Functions <a name="Static Functions" id="Static Functions"></a>
 
@@ -3605,7 +3979,7 @@ const pgStacDatabaseProps: PgStacDatabaseProps = { ... }
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.deleteAutomatedBackups">deleteAutomatedBackups</a></code> | <code>boolean</code> | Indicates whether automated backups should be deleted or retained when you delete a DB instance. |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.deletionProtection">deletionProtection</a></code> | <code>boolean</code> | Indicates whether the DB instance should have deletion protection enabled. |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.domain">domain</a></code> | <code>string</code> | The Active Directory directory ID to create the DB instance in. |
-| <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.domainRole">domainRole</a></code> | <code>aws-cdk-lib.aws_iam.IRoleRef</code> | The IAM role to be used when making API calls to the Directory Service. |
+| <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.domainRole">domainRole</a></code> | <code>aws-cdk-lib.interfaces.aws_iam.IRoleRef</code> | The IAM role to be used when making API calls to the Directory Service. |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.enablePerformanceInsights">enablePerformanceInsights</a></code> | <code>boolean</code> | Whether to enable Performance Insights for the DB instance. |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.engineLifecycleSupport">engineLifecycleSupport</a></code> | <code>aws-cdk-lib.aws_rds.EngineLifecycleSupport</code> | The life cycle type for this DB instance. |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.iamAuthentication">iamAuthentication</a></code> | <code>boolean</code> | Whether to enable mapping of AWS Identity and Access Management (IAM) accounts to database accounts. |
@@ -3613,12 +3987,12 @@ const pgStacDatabaseProps: PgStacDatabaseProps = { ... }
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.iops">iops</a></code> | <code>number</code> | The number of I/O operations per second (IOPS) that the database provisions. |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.maxAllocatedStorage">maxAllocatedStorage</a></code> | <code>number</code> | Upper limit to which RDS can scale the storage in GiB(Gibibyte). |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.monitoringInterval">monitoringInterval</a></code> | <code>aws-cdk-lib.Duration</code> | The interval, in seconds, between points when Amazon RDS collects enhanced monitoring metrics for the DB instance. |
-| <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.monitoringRole">monitoringRole</a></code> | <code>aws-cdk-lib.aws_iam.IRoleRef</code> | Role that will be used to manage DB instance monitoring. |
+| <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.monitoringRole">monitoringRole</a></code> | <code>aws-cdk-lib.interfaces.aws_iam.IRoleRef</code> | Role that will be used to manage DB instance monitoring. |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.multiAz">multiAz</a></code> | <code>boolean</code> | Specifies if the database instance is a multiple Availability Zone deployment. |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.networkType">networkType</a></code> | <code>aws-cdk-lib.aws_rds.NetworkType</code> | The network type of the DB instance. |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.optionGroup">optionGroup</a></code> | <code>aws-cdk-lib.aws_rds.IOptionGroup</code> | The option group to associate with the instance. |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.parameterGroup">parameterGroup</a></code> | <code>aws-cdk-lib.aws_rds.IParameterGroup</code> | The DB parameter group to associate with the instance. |
-| <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.performanceInsightEncryptionKey">performanceInsightEncryptionKey</a></code> | <code>aws-cdk-lib.aws_kms.IKeyRef</code> | The AWS KMS key for encryption of Performance Insights data. |
+| <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.performanceInsightEncryptionKey">performanceInsightEncryptionKey</a></code> | <code>aws-cdk-lib.interfaces.aws_kms.IKeyRef</code> | The AWS KMS key for encryption of Performance Insights data. |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.performanceInsightRetention">performanceInsightRetention</a></code> | <code>aws-cdk-lib.aws_rds.PerformanceInsightRetention</code> | The amount of time, in days, to retain Performance Insights data. |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.port">port</a></code> | <code>number</code> | The port for the instance. |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.preferredBackupWindow">preferredBackupWindow</a></code> | <code>string</code> | The daily time range during which automated backups are performed. |
@@ -3633,7 +4007,7 @@ const pgStacDatabaseProps: PgStacDatabaseProps = { ... }
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.securityGroups">securityGroups</a></code> | <code>aws-cdk-lib.aws_ec2.ISecurityGroup[]</code> | The security groups to assign to the DB instance. |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.storageThroughput">storageThroughput</a></code> | <code>number</code> | The storage throughput, specified in mebibytes per second (MiBps). |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.storageType">storageType</a></code> | <code>aws-cdk-lib.aws_rds.StorageType</code> | The storage type to associate with the DB instance. |
-| <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.subnetGroup">subnetGroup</a></code> | <code>aws-cdk-lib.aws_rds.ISubnetGroup</code> | Existing subnet group for the instance. |
+| <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.subnetGroup">subnetGroup</a></code> | <code>aws-cdk-lib.interfaces.aws_rds.IDBSubnetGroupRef</code> | Existing subnet group for the instance. |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.vpcSubnets">vpcSubnets</a></code> | <code>aws-cdk-lib.aws_ec2.SubnetSelection</code> | The type of subnets to add to the created DB subnet group. |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.engine">engine</a></code> | <code>aws-cdk-lib.aws_rds.IInstanceEngine</code> | The database engine. |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.allocatedStorage">allocatedStorage</a></code> | <code>number</code> | The allocated storage size, specified in gibibytes (GiB). |
@@ -3645,8 +4019,9 @@ const pgStacDatabaseProps: PgStacDatabaseProps = { ... }
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.timezone">timezone</a></code> | <code>string</code> | The time zone of the instance. |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.characterSetName">characterSetName</a></code> | <code>string</code> | For supported engines, specifies the character set to associate with the DB instance. |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.credentials">credentials</a></code> | <code>aws-cdk-lib.aws_rds.Credentials</code> | Credentials for the administrative user. |
+| <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.manageMasterUserPassword">manageMasterUserPassword</a></code> | <code>boolean</code> | Whether to use RDS native integration with AWS Secrets Manager for master user password management. |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.storageEncrypted">storageEncrypted</a></code> | <code>boolean</code> | Indicates whether the DB instance is encrypted. |
-| <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.storageEncryptionKey">storageEncryptionKey</a></code> | <code>aws-cdk-lib.aws_kms.IKeyRef</code> | The KMS key that's used to encrypt the DB instance. |
+| <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.storageEncryptionKey">storageEncryptionKey</a></code> | <code>aws-cdk-lib.interfaces.aws_kms.IKeyRef</code> | The KMS key that's used to encrypt the DB instance. |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.addPatchManager">addPatchManager</a></code> | <code>boolean</code> | Add patching system using AWS SSM for pgbouncer instance maintenance `addPgbouncer` must be true for this to have an effect. |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.addPgbouncer">addPgbouncer</a></code> | <code>boolean</code> | Add pgbouncer instance for managing traffic to the pgSTAC database. |
 | <code><a href="#eoapi-cdk.PgStacDatabaseProps.property.bootstrapperLambdaFunctionOptions">bootstrapperLambdaFunctionOptions</a></code> | <code>any</code> | Can be used to override the default lambda function properties. |
@@ -3872,7 +4247,7 @@ The Active Directory directory ID to create the DB instance in.
 public readonly domainRole: IRoleRef;
 ```
 
-- *Type:* aws-cdk-lib.aws_iam.IRoleRef
+- *Type:* aws-cdk-lib.interfaces.aws_iam.IRoleRef
 - *Default:* The role will be created for you if `DatabaseInstanceNewProps#domain` is specified
 
 The IAM role to be used when making API calls to the Directory Service.
@@ -3990,7 +4365,7 @@ The interval, in seconds, between points when Amazon RDS collects enhanced monit
 public readonly monitoringRole: IRoleRef;
 ```
 
-- *Type:* aws-cdk-lib.aws_iam.IRoleRef
+- *Type:* aws-cdk-lib.interfaces.aws_iam.IRoleRef
 - *Default:* A role is automatically created for you
 
 Role that will be used to manage DB instance monitoring.
@@ -4055,7 +4430,7 @@ The DB parameter group to associate with the instance.
 public readonly performanceInsightEncryptionKey: IKeyRef;
 ```
 
-- *Type:* aws-cdk-lib.aws_kms.IKeyRef
+- *Type:* aws-cdk-lib.interfaces.aws_kms.IKeyRef
 - *Default:* default master key
 
 The AWS KMS key for encryption of Performance Insights data.
@@ -4298,10 +4673,10 @@ Storage types supported are gp2, gp3, io1, io2, and standard.
 ##### `subnetGroup`<sup>Optional</sup> <a name="subnetGroup" id="eoapi-cdk.PgStacDatabaseProps.property.subnetGroup"></a>
 
 ```typescript
-public readonly subnetGroup: ISubnetGroup;
+public readonly subnetGroup: IDBSubnetGroupRef;
 ```
 
-- *Type:* aws-cdk-lib.aws_rds.ISubnetGroup
+- *Type:* aws-cdk-lib.interfaces.aws_rds.IDBSubnetGroupRef
 - *Default:* a new subnet group will be created.
 
 Existing subnet group for the instance.
@@ -4455,6 +4830,24 @@ Credentials for the administrative user.
 
 ---
 
+##### `manageMasterUserPassword`<sup>Optional</sup> <a name="manageMasterUserPassword" id="eoapi-cdk.PgStacDatabaseProps.property.manageMasterUserPassword"></a>
+
+```typescript
+public readonly manageMasterUserPassword: boolean;
+```
+
+- *Type:* boolean
+- *Default:* false
+
+Whether to use RDS native integration with AWS Secrets Manager for master user password management.
+
+When enabled, RDS generates and manages the master user password in Secrets Manager.
+Cannot be used together with credentials containing a password.
+
+> [https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/rds-secrets-manager.html](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/rds-secrets-manager.html)
+
+---
+
 ##### `storageEncrypted`<sup>Optional</sup> <a name="storageEncrypted" id="eoapi-cdk.PgStacDatabaseProps.property.storageEncrypted"></a>
 
 ```typescript
@@ -4474,7 +4867,7 @@ Indicates whether the DB instance is encrypted.
 public readonly storageEncryptionKey: IKeyRef;
 ```
 
-- *Type:* aws-cdk-lib.aws_kms.IKeyRef
+- *Type:* aws-cdk-lib.interfaces.aws_kms.IKeyRef
 - *Default:* default master key if storageEncrypted is true, no key otherwise
 
 The KMS key that's used to encrypt the DB instance.
