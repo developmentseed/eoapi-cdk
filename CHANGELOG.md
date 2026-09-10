@@ -12,6 +12,13 @@
 
 * apply security patches and freeze ingestor-api deps ([#246](https://github.com/developmentseed/eoapi-cdk/issues/246)) ([e64ee74](https://github.com/developmentseed/eoapi-cdk/commit/e64ee74792bfa39969799dd9050c46100d5ce4ae))
 
+## [11.7.0](https://github.com/developmentseed/eoapi-cdk/compare/v11.6.5...v11.7.0) (2026-09-10)
+
+
+### Features
+
+* upgrade core runtime dependencies (stac-fastapi-pgstac 6.4, titiler-pgstac 3.1, tipg 1.6) ([#302](https://github.com/developmentseed/eoapi-cdk/issues/302)) ([f9cccc0](https://github.com/developmentseed/eoapi-cdk/commit/f9cccc020181fce39714fc6549733971d48fb095))
+
 ## [11.6.5](https://github.com/developmentseed/eoapi-cdk/compare/v11.6.4...v11.6.5) (2026-09-09)
 
 
