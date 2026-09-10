@@ -1,9 +1,12 @@
 version: 2
 updates:
   - package-ecosystem: "npm"
-    directory: "/"
+    directories:
+      - "/"
+      - "/integration_tests/cdk"
+      - "/lib/database/lambda"
     schedule:
-      interval: "weekly"
+      interval: "monthly"
     open-pull-requests-limit: 10
     versioning-strategy: "auto"
     ignore:
@@ -23,7 +26,7 @@ updates:
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: "weekly"
+      interval: "monthly"
     open-pull-requests-limit: 5
 
   - package-ecosystem: "uv"
@@ -36,7 +39,7 @@ updates:
       - "/lib/tipg-api/runtime"
       - "/lib/titiler-pgstac-api/runtime"
     schedule:
-      interval: "weekly"
+      interval: "monthly"
     ignore:
       - dependency-name: "pypgstac"
     open-pull-requests-limit: 10
