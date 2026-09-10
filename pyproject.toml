@@ -22,8 +22,8 @@ stac-api = { path = "lib/stac-api/runtime" }
 
 [dependency-groups]
 deploy = [
-    "aws-cdk-lib==2.220.0",
-    "constructs==10.3.0",
+    "aws-cdk-lib==2.268.0",
+    "constructs==10.5.0",
     "pydantic>=2.11.5",
     "pydantic-settings[yaml]>=2.8.1",
     "python-dotenv>=1.1.0",
