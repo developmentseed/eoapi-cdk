@@ -19,6 +19,7 @@ import boto3.session
 from pydantic import ValidationError
 from pypgstac.db import PgstacDB
 from pypgstac.load import Loader, Methods
+from stac_pydantic.catalog import Catalog
 from stac_pydantic.collection import Collection, Extent, SpatialExtent, TimeInterval
 from stac_pydantic.item import Item
 from stac_pydantic.links import Link, Links
@@ -180,7 +181,7 @@ def store_item_if_newer(
 
 def store_collection_if_newer(
     collections_dict: CollectionRecords,
-    collection: Collection,
+    collection: Collection | Catalog,
     message_id: str,
     sns_timestamp: datetime,
 ) -> None:
@@ -232,14 +233,17 @@ def process_record(
         if message_data["type"] == "Feature":
             item = Item(**message_data)
             store_item_if_newer(items_by_collection, item, message_id, sns_timestamp)
-        elif message_data["type"] == "Collection":
-            collection = Collection(**message_data)
+        elif message_data["type"] in ("Collection", "Catalog"):
+            collection_type = (
+                Collection if message_data["type"] == "Collection" else Catalog
+            )
+            collection = collection_type(**message_data)
             store_collection_if_newer(
                 collections_dict, collection, message_id, sns_timestamp
             )
         else:
             raise ValueError(
-                f"expected either a 'Feature' or a 'Collection', received a {message_data['type']}"
+                f"expected a 'Feature', 'Collection', or 'Catalog', received a {message_data['type']}"
             )
 
         logger.debug(f"[{message_id}] Successfully processed.")
