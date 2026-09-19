@@ -12,6 +12,13 @@
 
 * apply security patches and freeze ingestor-api deps ([#246](https://github.com/developmentseed/eoapi-cdk/issues/246)) ([e64ee74](https://github.com/developmentseed/eoapi-cdk/commit/e64ee74792bfa39969799dd9050c46100d5ce4ae))
 
+## [11.7.1](https://github.com/developmentseed/eoapi-cdk/compare/v11.7.0...v11.7.1) (2026-09-19)
+
+
+### Bug Fixes
+
+* ingest type=Catalog along with collections in stac-loader ([#310](https://github.com/developmentseed/eoapi-cdk/issues/310)) ([2437790](https://github.com/developmentseed/eoapi-cdk/commit/243779075859e8d3fc49f69d7f45710b59209599))
+
 ## [11.7.0](https://github.com/developmentseed/eoapi-cdk/compare/v11.6.5...v11.7.0) (2026-09-10)
 
 
