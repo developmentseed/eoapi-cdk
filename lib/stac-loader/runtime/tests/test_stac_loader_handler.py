@@ -63,6 +63,17 @@ def create_valid_stac_collection(collection_id="test-collection"):
     }
 
 
+def create_valid_stac_catalog(catalog_id="test-catalog"):
+    """Create a valid STAC catalog."""
+    return {
+        "id": catalog_id,
+        "type": "Catalog",
+        "description": f"A test catalog with ID {catalog_id}",
+        "links": [],
+        "stac_version": "1.1.0",
+    }
+
+
 def test_get_pgstac_dsn_missing_env_var():
     """Test get_pgstac_dsn when environment variable is missing"""
     # Save current env var if it exists
@@ -1053,13 +1064,30 @@ def test_handler_with_collection_load_error(
     assert any(f["itemIdentifier"] == message_id for f in result["batchItemFailures"])
 
 
+def test_handler_with_valid_catalog(mock_aws_context, mock_pgstac_dsn, database_url):
+    """Test handler with a valid STAC catalog."""
+    catalog_id = "test-catalog"
+    valid_catalog = create_valid_stac_catalog(catalog_id=catalog_id)
+    event = {
+        "Records": [create_sqs_record(valid_catalog, message_id="test-catalog-message-1")]
+    }
+
+    result = handler(event, mock_aws_context)
+
+    assert result is None
+    stored_catalog = get_collection(database_url, catalog_id)
+    assert stored_catalog is not None
+    assert stored_catalog["content"]["type"] == "Catalog"
+    assert "extent" not in stored_catalog["content"]
+    assert "license" not in stored_catalog["content"]
+
+
 def test_handler_with_unknown_type(mock_aws_context, mock_pgstac_dsn):
-    """Test handler with unknown STAC type (neither Feature nor Collection)"""
-    # Create an object with unknown type
+    """Test handler with an unsupported STAC type."""
     unknown_object = {
         "id": "test-unknown",
-        "type": "Catalog",  # Neither Feature nor Collection
-        "description": "A test catalog",
+        "type": "Unsupported",
+        "description": "An unsupported STAC object",
         "stac_version": "1.1.0",
     }
 
