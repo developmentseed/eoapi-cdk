@@ -49,6 +49,7 @@ export class StacBrowser extends Construct {
         // add the compiled code to the bucket as a bucket deployment
         this.bucketDeployment = new s3_deployment.BucketDeployment(this, 'BucketDeployment', {
             destinationBucket: this.bucket,
+            destinationKeyPrefix: props.s3Prefix?.replace(/^\/+|\/+$/g, ''),
             sources: [s3_deployment.Source.asset(buildPath)],
             memoryLimit: 1024,
             ephemeralStorageSize: Size.mebibytes(1024),
@@ -189,6 +190,13 @@ export interface StacBrowserProps {
      * @default - No path prefix. The app is built assuming it is served from the domain root.
      */
     readonly pathPrefix?: string;
+
+    /**
+     * S3 Prefix for the objects in the bucket. Aligns with the `destinationKeyPrefix` used in the deployment.
+     *
+     * @default - "/"
+     */
+    readonly s3Prefix?: string;
 
     /**
      * The ARN of the cloudfront distribution that will be added to the bucket policy with read access.
