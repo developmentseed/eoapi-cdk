@@ -12,6 +12,13 @@
 
 * apply security patches and freeze ingestor-api deps ([#246](https://github.com/developmentseed/eoapi-cdk/issues/246)) ([e64ee74](https://github.com/developmentseed/eoapi-cdk/commit/e64ee74792bfa39969799dd9050c46100d5ce4ae))
 
+## [11.8.0](https://github.com/developmentseed/eoapi-cdk/compare/v11.7.1...v11.8.0) (2026-09-30)
+
+
+### Features
+
+* add s3Prefix for stac-browser ([#314](https://github.com/developmentseed/eoapi-cdk/issues/314)) ([985aa22](https://github.com/developmentseed/eoapi-cdk/commit/985aa22ea84633cefd75b37959c83306a53e1f7a))
+
 ## [11.7.1](https://github.com/developmentseed/eoapi-cdk/compare/v11.7.0...v11.7.1) (2026-09-19)
 
 
