@@ -5494,6 +5494,7 @@ const stacBrowserProps: StacBrowserProps = { ... }
 | <code><a href="#eoapi-cdk.StacBrowserProps.property.cloudFrontDistributionArn">cloudFrontDistributionArn</a></code> | <code>string</code> | The ARN of the cloudfront distribution that will be added to the bucket policy with read access. |
 | <code><a href="#eoapi-cdk.StacBrowserProps.property.configFilePath">configFilePath</a></code> | <code>string</code> | Path to config file for the STAC browser. If not provided, default configuration in the STAC browser repository is used. |
 | <code><a href="#eoapi-cdk.StacBrowserProps.property.pathPrefix">pathPrefix</a></code> | <code>string</code> | Sub-path the app will be hosted under (e.g. "/stac-browser"), if not deployed at the root of the domain. |
+| <code><a href="#eoapi-cdk.StacBrowserProps.property.s3Prefix">s3Prefix</a></code> | <code>string</code> | S3 Prefix for the objects in the bucket. |
 | <code><a href="#eoapi-cdk.StacBrowserProps.property.websiteIndexDocument">websiteIndexDocument</a></code> | <code>string</code> | The name of the index document (e.g. "index.html") for the website. Enables static website hosting for this bucket. |
 
 ---
@@ -5613,6 +5614,21 @@ Sub-path the app will be hosted under (e.g. "/stac-browser"), if not deployed at
 
 Passed as a `--pathPrefix` CLI flag for <=v3.x, or as the `SB_pathPrefix`
 environment variable for >=v4.x.
+
+---
+
+##### `s3Prefix`<sup>Optional</sup> <a name="s3Prefix" id="eoapi-cdk.StacBrowserProps.property.s3Prefix"></a>
+
+```typescript
+public readonly s3Prefix: string;
+```
+
+- *Type:* string
+- *Default:* "/"
+
+S3 Prefix for the objects in the bucket.
+
+Aligns with the `destinationKeyPrefix` used in the deployment.
 
 ---
 
