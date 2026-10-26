@@ -12,6 +12,13 @@
 
 * apply security patches and freeze ingestor-api deps ([#246](https://github.com/developmentseed/eoapi-cdk/issues/246)) ([e64ee74](https://github.com/developmentseed/eoapi-cdk/commit/e64ee74792bfa39969799dd9050c46100d5ce4ae))
 
+## [11.8.1](https://github.com/developmentseed/eoapi-cdk/compare/v11.8.0...v11.8.1) (2026-10-26)
+
+
+### Bug Fixes
+
+* **deps:** update brotli to 1.2.1 in lockfiles (CVE-2026-111497) ([#318](https://github.com/developmentseed/eoapi-cdk/issues/318)) ([50ef50f](https://github.com/developmentseed/eoapi-cdk/commit/50ef50f056ca47f37b71315edaa71394fef22c76))
+
 ## [11.8.0](https://github.com/developmentseed/eoapi-cdk/compare/v11.7.1...v11.8.0) (2026-09-30)
 
 
